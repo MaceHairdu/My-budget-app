@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1f2937">
+
+<title>My Budget</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f3f4f6;
+  color: #1f2937;
+}
+
+.app {
+  max-width: 500px;
+  margin: auto;
+  padding: 20px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 32px;
+}
+
+header p {
+  color: #6b7280;
+}
+
+.card {
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+.card-title {
+  font-size: 17px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.balance {
+  font-size: 38px;
+  font-weight: bold;
+  margin: 8px 0;
+}
+
+.subtext {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+button {
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  padding: 16px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.add-button {
+  background: #1f2937;
+  color: white;
+  margin-bottom: 16px;
+}
+
+.form {
+  display: none;
+}
+
+.form.show {
+  display: block;
+}
+
+label {
+  display: block;
+  margin-top: 16px;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 17px;
+  background: white;
+}
+
+.save-button {
+  background: #1f2937;
+  color: white;
+  margin-top: 20px;
+}
+
+.cancel-button {
+  background: #e5e7eb;
+  color: #1f2937;
+  margin-top: 10px;
+}
+
+.transaction {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.transaction:last-child {
+  border-bottom: none;
+}
+
+.transaction-name {
+  font-weight: bold;
+}
+
+.transaction-category {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 3px;
+}
+
+.transaction-amount {
+  font-weight: bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <header>
+    <h1>My Budget</h1>
+    <p id="date"></p>
+  </header>
+
+  <div class="card">
+
+    <p class="card-title">Needs</p>
+
+    <div class="balance" id="needsBalance">
+      $0.00
+    </div>
+
+    <div class="subtext">
+      Available this week
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <p class="card-title">Fun Money</p>
+
+    <div class="balance" id="funBalance">
+      $0.00
+    </div>
+
+    <div class="subtext">
+      Available this week
+    </div>
+
+  </div>
+
+
+  <button
+    class="add-button"
+    id="addButton">
+    + Add Expense
+  </button>
+
+
+  <div
+    class="card form"
+    id="expenseForm">
+
+    <h2>Add Expense</h2>
+
+    <label>
+      Amount
+    </label>
+
+    <input
+      type="number"
+      id="amount"
+      placeholder="0.00"
+      step="0.01"
+      min="0">
+
+
+    <label>
+      Use money from
+    </label>
+
+    <select id="fund">
+
+      <option value="needs">
+        Needs
+      </option>
+
+      <option value="fun">
+        Fun Money
+      </option>
+
+    </select>
+
+
+    <label>
+      What did you buy?
+    </label>
+
+    <input
+      type="text"
+      id="description"
+      placeholder="Example: Walmart">
+
+
+    <button
+      class="save-button"
+      id="saveButton">
+      Save Expense
+    </button>
+
+
+    <button
+      class="cancel-button"
+      id="cancelButton">
+      Cancel
+    </button>
+
+  </div>
+
+
+  <div class="card">
+
+    <h2>This Week</h2>
+
+    <div id="transactions">
+
+      <p style="color:#6b7280;">
+        No expenses yet.
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+let needsBalance = 250;
+let funBalance = 75;
+
+let transactions = [];
+
+
+const addButton =
+  document.getElementById("addButton");
+
+const expenseForm =
+  document.getElementById("expenseForm");
+
+const saveButton =
+  document.getElementById("saveButton");
+
+const cancelButton =
+  document.getElementById("cancelButton");
+
+
+addButton.addEventListener(
+  "click",
+  function() {
+
+    expenseForm.classList.add("show");
+
+  }
+);
+
+
+cancelButton.addEventListener(
+  "click",
+  function() {
+
+    expenseForm.classList.remove("show");
+
+  }
+);
+
+
+saveButton.addEventListener(
+  "click",
+  function() {
+
+    const amount =
+      parseFloat(
+        document.getElementById("amount").value
+      );
+
+    const fund =
+      document.getElementById("fund").value;
+
+    const description =
+      document.getElementById("description").value.trim();
+
+
+    if (!amount || amount <= 0) {
+
+      alert("Enter an amount.");
+
+      return;
+
+    }
+
+
+    if (!description) {
+
+      alert("Enter what you bought.");
+
+      return;
+
+    }
+
+
+    if (fund === "needs") {
+
+      needsBalance -= amount;
+
+    } else {
+
+      funBalance -= amount;
+
+    }
+
+
+    transactions.push({
+
+      amount: amount,
+
+      fund: fund,
+
+      description: description
+
+    });
+
+
+    updateScreen();
+
+
+    document.getElementById("amount").value = "";
+
+    document.getElementById("description").value = "";
+
+    expenseForm.classList.remove("show");
+
+  }
+);
+
+
+function updateScreen() {
+
+  document.getElementById(
+    "needsBalance"
+  ).textContent =
+    money(needsBalance);
+
+
+  document.getElementById(
+    "funBalance"
+  ).textContent =
+    money(funBalance);
+
+
+  const container =
+    document.getElementById("transactions");
+
+
+  if (transactions.length === 0) {
+
+    container.innerHTML =
+      '<p style="color:#6b7280;">No expenses yet.</p>';
+
+    return;
+
+  }
+
+
+  container.innerHTML = "";
+
+
+  transactions.forEach(
+    function(transaction) {
+
+      const row =
+        document.createElement("div");
+
+      row.className =
+        "transaction";
+
+
+      row.innerHTML = `
+
+        <div>
+
+          <div class="transaction-name">
+
+            ${transaction.description}
+
+          </div>
+
+          <div class="transaction-category">
+
+            ${
+              transaction.fund === "needs"
+                ? "Needs"
+                : "Fun Money"
+            }
+
+          </div>
+
+        </div>
+
+
+        <div class="transaction-amount">
+
+          -${money(transaction.amount)}
+
+        </div>
+
+      `;
+
+
+      container.appendChild(row);
+
+    }
+  );
+
+}
+
+
+function money(amount) {
+
+  return amount.toLocaleString(
+    "en-US",
+    {
+      style: "currency",
+      currency: "USD"
+    }
+  );
+
+}
+
+
+document.getElementById("date").textContent =
+  new Date().toLocaleDateString(
+    "en-US",
+    {
+      month: "long",
+      day: "numeric",
+      year: "numeric"
+    }
+  );
+
+
+updateScreen();
+
+</script>
+
+</body>
+</html>
