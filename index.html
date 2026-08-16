@@ -1,11 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#1f2937">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+  name="theme-color"
+  content="#1f2937"
+>
 
 <title>My Budget</title>
+
 
 <style>
 
@@ -13,395 +24,1448 @@
   box-sizing: border-box;
 }
 
+
 body {
+
   margin: 0;
-  font-family: Arial, sans-serif;
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
   background: #f3f4f6;
+
   color: #1f2937;
+
 }
+
 
 .app {
+
   max-width: 500px;
+
   margin: auto;
+
   padding: 20px;
+
 }
+
 
 header {
+
   text-align: center;
+
   margin-bottom: 25px;
+
 }
+
 
 header h1 {
+
   margin: 0;
+
   font-size: 32px;
+
 }
+
 
 header p {
+
   color: #6b7280;
+
 }
 
-.card {
-  background: white;
-  border-radius: 20px;
-  padding: 24px;
-  margin-bottom: 16px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-}
 
-.card-title {
-  font-size: 17px;
-  font-weight: bold;
-  margin: 0;
-}
-
-.balance {
-  font-size: 38px;
-  font-weight: bold;
-  margin: 8px 0;
-}
-
-.subtext {
-  color: #6b7280;
-  font-size: 14px;
-}
+/* BUTTONS */
 
 button {
+
   width: 100%;
+
   border: none;
+
   border-radius: 14px;
-  padding: 16px;
+
+  padding: 15px;
+
   font-size: 17px;
-  font-weight: bold;
+
+  font-weight: 600;
+
   cursor: pointer;
+
 }
 
-.add-button {
+
+.primary-button {
+
   background: #1f2937;
+
   color: white;
+
+}
+
+
+.secondary-button {
+
+  background: #e5e7eb;
+
+  color: #1f2937;
+
+}
+
+
+.small-button {
+
+  width: auto;
+
+  padding: 9px 14px;
+
+  font-size: 14px;
+
+}
+
+
+/* CARDS */
+
+.card {
+
+  background: white;
+
+  border-radius: 20px;
+
+  padding: 22px;
+
   margin-bottom: 16px;
+
+  box-shadow:
+    0 3px 12px rgba(0,0,0,0.08);
+
 }
 
-.form {
-  display: none;
+
+.card h2 {
+
+  margin-top: 0;
+
 }
 
-.form.show {
-  display: block;
+
+/* BALANCES */
+
+.balance {
+
+  font-size: 38px;
+
+  font-weight: 700;
+
+  margin: 8px 0;
+
 }
+
+
+.subtext {
+
+  color: #6b7280;
+
+  font-size: 14px;
+
+}
+
+
+/* FORMS */
 
 label {
+
   display: block;
+
   margin-top: 16px;
+
   margin-bottom: 6px;
-  font-weight: bold;
+
+  font-weight: 600;
+
 }
 
-input,
-select {
+
+input {
+
   width: 100%;
-  padding: 14px;
+
+  padding: 13px;
+
   border: 1px solid #d1d5db;
+
   border-radius: 10px;
+
   font-size: 17px;
-  background: white;
+
 }
 
-.save-button {
-  background: #1f2937;
-  color: white;
-  margin-top: 20px;
+
+input[type="number"] {
+
+  text-align: right;
+
 }
 
-.cancel-button {
-  background: #e5e7eb;
-  color: #1f2937;
+
+.form-row {
+
+  display: flex;
+
+  gap: 8px;
+
+  align-items: center;
+
+  margin-bottom: 10px;
+
+}
+
+
+.form-row input {
+
+  flex: 1;
+
+}
+
+
+.remove-button {
+
+  width: 44px;
+
+  padding: 11px;
+
+  background: #fee2e2;
+
+  color: #991b1b;
+
+}
+
+
+/* SETUP */
+
+.setup-section {
+
+  margin-bottom: 25px;
+
+}
+
+
+.setup-section h3 {
+
+  margin-bottom: 5px;
+
+}
+
+
+.help-text {
+
+  color: #6b7280;
+
+  font-size: 14px;
+
+  margin-top: 5px;
+
+}
+
+
+.add-row {
+
   margin-top: 10px;
+
+  background: #e5e7eb;
+
+  color: #1f2937;
+
 }
+
+
+/* CALCULATIONS */
+
+.calculation {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  padding: 10px 0;
+
+  border-bottom:
+    1px solid #e5e7eb;
+
+}
+
+
+.calculation:last-child {
+
+  border-bottom: none;
+
+}
+
+
+.calculation strong {
+
+  font-size: 18px;
+
+}
+
+
+.fun-result {
+
+  font-size: 30px;
+
+  font-weight: 700;
+
+  margin-top: 5px;
+
+}
+
+
+/* NAVIGATION */
+
+.hidden {
+
+  display: none !important;
+
+}
+
+
+.nav-button {
+
+  margin-top: 10px;
+
+}
+
+
+/* EXPENSE FORM */
+
+.expense-form {
+
+  margin-top: 15px;
+
+}
+
+
+select {
+
+  width: 100%;
+
+  padding: 13px;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 10px;
+
+  font-size: 17px;
+
+  background: white;
+
+}
+
+
+/* TRANSACTIONS */
 
 .transaction {
+
   display: flex;
+
   justify-content: space-between;
-  padding: 14px 0;
-  border-bottom: 1px solid #e5e7eb;
+
+  padding: 13px 0;
+
+  border-bottom:
+    1px solid #e5e7eb;
+
 }
+
 
 .transaction:last-child {
+
   border-bottom: none;
+
 }
+
 
 .transaction-name {
-  font-weight: bold;
+
+  font-weight: 600;
+
 }
+
 
 .transaction-category {
-  font-size: 13px;
+
   color: #6b7280;
+
+  font-size: 13px;
+
   margin-top: 3px;
+
 }
 
+
 .transaction-amount {
-  font-weight: bold;
+
+  font-weight: 600;
+
 }
 
 </style>
+
 </head>
+
 
 <body>
 
+
 <div class="app">
 
-  <header>
-    <h1>My Budget</h1>
-    <p id="date"></p>
-  </header>
 
-  <div class="card">
+<!-- ========================= -->
+<!-- DASHBOARD -->
+<!-- ========================= -->
 
-    <p class="card-title">Needs</p>
-
-    <div class="balance" id="needsBalance">
-      $0.00
-    </div>
-
-    <div class="subtext">
-      Available this week
-    </div>
-
-  </div>
+<div id="dashboard">
 
 
-  <div class="card">
+<header>
 
-    <p class="card-title">Fun Money</p>
+<h1>My Budget</h1>
 
-    <div class="balance" id="funBalance">
-      $0.00
-    </div>
+<p id="currentDate"></p>
 
-    <div class="subtext">
-      Available this week
-    </div>
-
-  </div>
+</header>
 
 
-  <button
-    class="add-button"
-    id="addButton">
-    + Add Expense
-  </button>
+<div class="card">
+
+<div class="subtext">
+Needs
+</div>
+
+<div
+  class="balance"
+  id="needsBalance"
+>
+$0.00
+</div>
+
+<div class="subtext">
+Available
+</div>
+
+</div>
 
 
-  <div
-    class="card form"
-    id="expenseForm">
+<div class="card">
 
-    <h2>Add Expense</h2>
+<div class="subtext">
+Fun Money
+</div>
 
-    <label>
-      Amount
-    </label>
+<div
+  class="balance"
+  id="funBalance"
+>
+$0.00
+</div>
 
-    <input
-      type="number"
-      id="amount"
-      placeholder="0.00"
-      step="0.01"
-      min="0">
+<div class="subtext">
+Available
+</div>
 
-
-    <label>
-      Use money from
-    </label>
-
-    <select id="fund">
-
-      <option value="needs">
-        Needs
-      </option>
-
-      <option value="fun">
-        Fun Money
-      </option>
-
-    </select>
+</div>
 
 
-    <label>
-      What did you buy?
-    </label>
+<div class="card">
 
-    <input
-      type="text"
-      id="description"
-      placeholder="Example: Walmart">
+<div class="subtext">
+Weekly Budget
+</div>
 
+<div
+  class="balance"
+  id="weeklyBudgetDisplay"
+>
+$0.00
+</div>
 
-    <button
-      class="save-button"
-      id="saveButton">
-      Save Expense
-    </button>
+<div class="subtext">
+This month's calculated weekly budget
+</div>
 
-
-    <button
-      class="cancel-button"
-      id="cancelButton">
-      Cancel
-    </button>
-
-  </div>
+</div>
 
 
-  <div class="card">
+<button
+  class="primary-button"
+  id="addExpenseButton"
+>
++ Add Expense
+</button>
 
-    <h2>This Week</h2>
 
-    <div id="transactions">
+<div
+  class="card expense-form hidden"
+  id="expenseForm"
+>
 
-      <p style="color:#6b7280;">
-        No expenses yet.
-      </p>
 
-    </div>
+<h2>Add Expense</h2>
 
-  </div>
+
+<label>
+Amount
+</label>
+
+<input
+  type="number"
+  id="expenseAmount"
+  placeholder="0.00"
+  step="0.01"
+  min="0"
+>
+
+
+<label>
+Use money from
+</label>
+
+<select id="expenseFund">
+
+<option value="needs">
+Needs
+</option>
+
+<option value="fun">
+Fun Money
+</option>
+
+</select>
+
+
+<label>
+Description
+</label>
+
+<input
+  type="text"
+  id="expenseDescription"
+  placeholder="Example: Walmart"
+>
+
+
+<button
+  class="primary-button"
+  id="saveExpenseButton"
+  style="margin-top:20px;"
+>
+Save Expense
+</button>
+
+
+<button
+  class="secondary-button"
+  id="cancelExpenseButton"
+  style="margin-top:10px;"
+>
+Cancel
+</button>
+
+
+</div>
+
+
+<div class="card">
+
+<h2>This Week</h2>
+
+<div id="transactions">
+
+<p class="subtext">
+No expenses yet.
+</p>
+
+</div>
+
+</div>
+
+
+<button
+  class="secondary-button nav-button"
+  id="setupButton"
+>
+Budget Setup
+</button>
+
+
+</div>
+
+
+<!-- ========================= -->
+<!-- SETUP -->
+<!-- ========================= -->
+
+<div
+  id="setupScreen"
+  class="hidden"
+>
+
+
+<header>
+
+<h1>Budget Setup</h1>
+
+<p>
+Update your income and bills
+</p>
+
+</header>
+
+
+<!-- INCOME -->
+
+<div class="card setup-section">
+
+<h2>Monthly Income</h2>
+
+<p class="help-text">
+Enter the amount you normally receive
+each month from each income source.
+</p>
+
+
+<div id="incomeRows"></div>
+
+
+<button
+  class="add-row"
+  id="addIncomeButton"
+>
++ Add Income
+</button>
+
+</div>
+
+
+<!-- BILLS -->
+
+<div class="card setup-section">
+
+<h2>Monthly Bills</h2>
+
+<p class="help-text">
+Enter your regular monthly bills.
+</p>
+
+
+<div id="billRows"></div>
+
+
+<button
+  class="add-row"
+  id="addBillButton"
+>
++ Add Bill
+</button>
+
+</div>
+
+
+<!-- WEEKLY BUDGET -->
+
+<div class="card">
+
+<h2>Weekly Budget</h2>
+
+
+<div class="calculation">
+
+<span>
+Total Income
+</span>
+
+<strong id="totalIncome">
+$0.00
+</strong>
+
+</div>
+
+
+<div class="calculation">
+
+<span>
+Monthly Bills
+</span>
+
+<strong id="totalBills">
+$0.00
+</strong>
+
+</div>
+
+
+<div class="calculation">
+
+<span>
+Monthly Net
+</span>
+
+<strong id="monthlyNet">
+$0.00
+</strong>
+
+</div>
+
+
+<div class="calculation">
+
+<span>
+Weekly Budget
+</span>
+
+<strong id="calculatedWeekly">
+$0.00
+</strong>
+
+</div>
+
+</div>
+
+
+<!-- ALLOWANCES -->
+
+<div class="card">
+
+<h2>Weekly Allowances</h2>
+
+
+<label>
+Needs Allowance
+</label>
+
+<input
+  type="number"
+  id="needsAllowance"
+  placeholder="0.00"
+  step="0.01"
+  min="0"
+>
+
+
+<label>
+Savings
+</label>
+
+<input
+  type="number"
+  id="savingsAllowance"
+  placeholder="0.00"
+  step="0.01"
+  min="0"
+>
+
+
+<div
+  class="calculation"
+  style="margin-top:20px;"
+>
+
+<span>
+Fun Money
+</span>
+
+<strong
+  id="funAllowance"
+>
+$0.00
+</strong>
+
+</div>
+
+
+<p class="help-text">
+
+Fun Money is automatically calculated
+after Needs and Savings are deducted.
+
+</p>
+
+
+<button
+  class="primary-button"
+  id="saveBudgetButton"
+  style="margin-top:20px;"
+>
+Save Budget
+</button>
+
+
+<button
+  class="secondary-button"
+  id="cancelSetupButton"
+  style="margin-top:10px;"
+>
+Cancel
+</button>
+
+</div>
+
+
+</div>
+
 
 </div>
 
 
 <script>
 
-let needsBalance = 250;
-let funBalance = 75;
+
+/* ========================= */
+/* DATA */
+/* ========================= */
+
+
+let budget = {
+
+  income: [],
+
+  bills: [],
+
+  needsAllowance: 0,
+
+  savingsAllowance: 0,
+
+  weeklyBudget: 0,
+
+  funAllowance: 0
+
+};
+
+
+let balances = {
+
+  needs: 0,
+
+  fun: 0
+
+};
+
 
 let transactions = [];
 
 
-const addButton =
-  document.getElementById("addButton");
-
-const expenseForm =
-  document.getElementById("expenseForm");
-
-const saveButton =
-  document.getElementById("saveButton");
-
-const cancelButton =
-  document.getElementById("cancelButton");
+/* ========================= */
+/* ELEMENTS */
+/* ========================= */
 
 
-addButton.addEventListener(
-  "click",
-  function() {
+const dashboard =
+  document.getElementById("dashboard");
 
-    expenseForm.classList.add("show");
-
-  }
-);
+const setupScreen =
+  document.getElementById("setupScreen");
 
 
-cancelButton.addEventListener(
-  "click",
-  function() {
-
-    expenseForm.classList.remove("show");
-
-  }
-);
+/* ========================= */
+/* MONEY */
+/* ========================= */
 
 
-saveButton.addEventListener(
-  "click",
-  function() {
+function money(amount) {
 
-    const amount =
-      parseFloat(
-        document.getElementById("amount").value
+  return amount.toLocaleString(
+    "en-US",
+    {
+      style: "currency",
+      currency: "USD"
+    }
+  );
+
+}
+
+
+/* ========================= */
+/* SETUP NAVIGATION */
+/* ========================= */
+
+
+document
+  .getElementById("setupButton")
+  .addEventListener(
+    "click",
+    function() {
+
+      dashboard.classList.add("hidden");
+
+      setupScreen.classList.remove("hidden");
+
+      renderIncomeRows();
+
+      renderBillRows();
+
+      updateCalculations();
+
+    }
+  );
+
+
+document
+  .getElementById("cancelSetupButton")
+  .addEventListener(
+    "click",
+    function() {
+
+      setupScreen.classList.add("hidden");
+
+      dashboard.classList.remove("hidden");
+
+    }
+  );
+
+
+/* ========================= */
+/* INCOME ROWS */
+/* ========================= */
+
+
+function renderIncomeRows() {
+
+  const container =
+    document.getElementById("incomeRows");
+
+  container.innerHTML = "";
+
+
+  budget.income.forEach(
+    function(item, index) {
+
+      const row =
+        document.createElement("div");
+
+      row.className = "form-row";
+
+
+      row.innerHTML = `
+
+        <input
+          type="text"
+          placeholder="Income source"
+          value="${item.name}"
+          data-index="${index}"
+          class="income-name"
+        >
+
+        <input
+          type="number"
+          placeholder="Amount"
+          value="${item.amount}"
+          step="0.01"
+          min="0"
+          data-index="${index}"
+          class="income-amount"
+        >
+
+        <button
+          class="remove-button"
+          data-index="${index}"
+        >
+          ×
+        </button>
+
+      `;
+
+
+      container.appendChild(row);
+
+    }
+  );
+
+
+  container
+    .querySelectorAll(".income-name")
+    .forEach(
+      function(input) {
+
+        input.addEventListener(
+          "input",
+          function() {
+
+            budget.income[
+              input.dataset.index
+            ].name = input.value;
+
+          }
+        );
+
+      }
+    );
+
+
+  container
+    .querySelectorAll(".income-amount")
+    .forEach(
+      function(input) {
+
+        input.addEventListener(
+          "input",
+          function() {
+
+            budget.income[
+              input.dataset.index
+            ].amount =
+              parseFloat(input.value) || 0;
+
+            updateCalculations();
+
+          }
+        );
+
+      }
+    );
+
+
+  container
+    .querySelectorAll(".remove-button")
+    .forEach(
+      function(button) {
+
+        button.addEventListener(
+          "click",
+          function() {
+
+            budget.income.splice(
+              button.dataset.index,
+              1
+            );
+
+            renderIncomeRows();
+
+            updateCalculations();
+
+          }
+        );
+
+      }
+    );
+
+}
+
+
+document
+  .getElementById("addIncomeButton")
+  .addEventListener(
+    "click",
+    function() {
+
+      budget.income.push({
+
+        name: "",
+
+        amount: 0
+
+      });
+
+      renderIncomeRows();
+
+    }
+  );
+
+
+/* ========================= */
+/* BILL ROWS */
+/* ========================= */
+
+
+function renderBillRows() {
+
+  const container =
+    document.getElementById("billRows");
+
+  container.innerHTML = "";
+
+
+  budget.bills.forEach(
+    function(item, index) {
+
+      const row =
+        document.createElement("div");
+
+      row.className = "form-row";
+
+
+      row.innerHTML = `
+
+        <input
+          type="text"
+          placeholder="Bill name"
+          value="${item.name}"
+          data-index="${index}"
+          class="bill-name"
+        >
+
+        <input
+          type="number"
+          placeholder="Amount"
+          value="${item.amount}"
+          step="0.01"
+          min="0"
+          data-index="${index}"
+          class="bill-amount"
+        >
+
+        <button
+          class="remove-button"
+          data-index="${index}"
+        >
+          ×
+        </button>
+
+      `;
+
+
+      container.appendChild(row);
+
+    }
+  );
+
+
+  container
+    .querySelectorAll(".bill-name")
+    .forEach(
+      function(input) {
+
+        input.addEventListener(
+          "input",
+          function() {
+
+            budget.bills[
+              input.dataset.index
+            ].name = input.value;
+
+          }
+        );
+
+      }
+    );
+
+
+  container
+    .querySelectorAll(".bill-amount")
+    .forEach(
+      function(input) {
+
+        input.addEventListener(
+          "input",
+          function() {
+
+            budget.bills[
+              input.dataset.index
+            ].amount =
+              parseFloat(input.value) || 0;
+
+            updateCalculations();
+
+          }
+        );
+
+      }
+    );
+
+
+  container
+    .querySelectorAll(".remove-button")
+    .forEach(
+      function(button) {
+
+        button.addEventListener(
+          "click",
+          function() {
+
+            budget.bills.splice(
+              button.dataset.index,
+              1
+            );
+
+            renderBillRows();
+
+            updateCalculations();
+
+          }
+        );
+
+      }
+    );
+
+}
+
+
+document
+  .getElementById("addBillButton")
+  .addEventListener(
+    "click",
+    function() {
+
+      budget.bills.push({
+
+        name: "",
+
+        amount: 0
+
+      });
+
+      renderBillRows();
+
+    }
+  );
+
+
+/* ========================= */
+/* CALCULATIONS */
+/* ========================= */
+
+
+function updateCalculations() {
+
+
+  let totalIncome = 0;
+
+
+  budget.income.forEach(
+    function(item) {
+
+      totalIncome +=
+        Number(item.amount) || 0;
+
+    }
+  );
+
+
+  let totalBills = 0;
+
+
+  budget.bills.forEach(
+    function(item) {
+
+      totalBills +=
+        Number(item.amount) || 0;
+
+    }
+  );
+
+
+  const monthlyNet =
+    totalIncome - totalBills;
+
+
+  const weeklyBudget =
+    monthlyNet / 4.345;
+
+
+  const needs =
+    Number(
+      document.getElementById(
+        "needsAllowance"
+      ).value
+    ) || 0;
+
+
+  const savings =
+    Number(
+      document.getElementById(
+        "savingsAllowance"
+      ).value
+    ) || 0;
+
+
+  const fun =
+    weeklyBudget - needs - savings;
+
+
+  document.getElementById(
+    "totalIncome"
+  ).textContent =
+    money(totalIncome);
+
+
+  document.getElementById(
+    "totalBills"
+  ).textContent =
+    money(totalBills);
+
+
+  document.getElementById(
+    "monthlyNet"
+  ).textContent =
+    money(monthlyNet);
+
+
+  document.getElementById(
+    "calculatedWeekly"
+  ).textContent =
+    money(weeklyBudget);
+
+
+  document.getElementById(
+    "funAllowance"
+  ).textContent =
+    money(fun);
+
+}
+
+
+/* ========================= */
+/* ALLOWANCE INPUTS */
+/* ========================= */
+
+
+document
+  .getElementById("needsAllowance")
+  .addEventListener(
+    "input",
+    function() {
+
+      budget.needsAllowance =
+        Number(this.value) || 0;
+
+      updateCalculations();
+
+    }
+  );
+
+
+document
+  .getElementById("savingsAllowance")
+  .addEventListener(
+    "input",
+    function() {
+
+      budget.savingsAllowance =
+        Number(this.value) || 0;
+
+      updateCalculations();
+
+    }
+  );
+
+
+/* ========================= */
+/* SAVE BUDGET */
+/* ========================= */
+
+
+document
+  .getElementById("saveBudgetButton")
+  .addEventListener(
+    "click",
+    function() {
+
+
+      let totalIncome = 0;
+
+      budget.income.forEach(
+        function(item) {
+
+          totalIncome +=
+            Number(item.amount) || 0;
+
+        }
       );
 
-    const fund =
-      document.getElementById("fund").value;
 
-    const description =
-      document.getElementById("description").value.trim();
+      let totalBills = 0;
+
+      budget.bills.forEach(
+        function(item) {
+
+          totalBills +=
+            Number(item.amount) || 0;
+
+        }
+      );
 
 
-    if (!amount || amount <= 0) {
+      budget.weeklyBudget =
+        (totalIncome - totalBills)
+        / 4.345;
 
-      alert("Enter an amount.");
 
-      return;
+      budget.funAllowance =
+        budget.weeklyBudget
+        - budget.needsAllowance
+        - budget.savingsAllowance;
+
+
+      if (
+        budget.funAllowance < 0
+      ) {
+
+        alert(
+          "Your Needs and Savings allowances are greater than your weekly budget."
+        );
+
+        return;
+
+      }
+
+
+      dashboard.classList.remove(
+        "hidden"
+      );
+
+      setupScreen.classList.add(
+        "hidden"
+      );
+
+
+      updateDashboard();
 
     }
+  );
 
 
-    if (!description) {
-
-      alert("Enter what you bought.");
-
-      return;
-
-    }
+/* ========================= */
+/* DASHBOARD */
+/* ========================= */
 
 
-    if (fund === "needs") {
+function updateDashboard() {
 
-      needsBalance -= amount;
-
-    } else {
-
-      funBalance -= amount;
-
-    }
-
-
-    transactions.push({
-
-      amount: amount,
-
-      fund: fund,
-
-      description: description
-
-    });
-
-
-    updateScreen();
-
-
-    document.getElementById("amount").value = "";
-
-    document.getElementById("description").value = "";
-
-    expenseForm.classList.remove("show");
-
-  }
-);
-
-
-function updateScreen() {
 
   document.getElementById(
     "needsBalance"
   ).textContent =
-    money(needsBalance);
+    money(balances.needs);
 
 
   document.getElementById(
     "funBalance"
   ).textContent =
-    money(funBalance);
+    money(balances.fun);
+
+
+  document.getElementById(
+    "weeklyBudgetDisplay"
+  ).textContent =
+    money(budget.weeklyBudget);
 
 
   const container =
-    document.getElementById("transactions");
+    document.getElementById(
+      "transactions"
+    );
 
 
-  if (transactions.length === 0) {
+  if (
+    transactions.length === 0
+  ) {
 
     container.innerHTML =
-      '<p style="color:#6b7280;">No expenses yet.</p>';
+      '<p class="subtext">No expenses yet.</p>';
 
     return;
 
@@ -461,20 +1525,147 @@ function updateScreen() {
 }
 
 
-function money(amount) {
+/* ========================= */
+/* EXPENSES */
+/* ========================= */
 
-  return amount.toLocaleString(
-    "en-US",
-    {
-      style: "currency",
-      currency: "USD"
+
+document
+  .getElementById("addExpenseButton")
+  .addEventListener(
+    "click",
+    function() {
+
+      document
+        .getElementById("expenseForm")
+        .classList
+        .remove("hidden");
+
     }
   );
 
-}
+
+document
+  .getElementById("cancelExpenseButton")
+  .addEventListener(
+    "click",
+    function() {
+
+      document
+        .getElementById("expenseForm")
+        .classList
+        .add("hidden");
+
+    }
+  );
 
 
-document.getElementById("date").textContent =
+document
+  .getElementById("saveExpenseButton")
+  .addEventListener(
+    "click",
+    function() {
+
+
+      const amount =
+        Number(
+          document.getElementById(
+            "expenseAmount"
+          ).value
+        );
+
+
+      const fund =
+        document.getElementById(
+          "expenseFund"
+        ).value;
+
+
+      const description =
+        document.getElementById(
+          "expenseDescription"
+        ).value.trim();
+
+
+      if (
+        !amount ||
+        amount <= 0
+      ) {
+
+        alert(
+          "Please enter an amount."
+        );
+
+        return;
+
+      }
+
+
+      if (!description) {
+
+        alert(
+          "Please enter a description."
+        );
+
+        return;
+
+      }
+
+
+      if (fund === "needs") {
+
+        balances.needs -=
+          amount;
+
+      } else {
+
+        balances.fun -=
+          amount;
+
+      }
+
+
+      transactions.push({
+
+        amount: amount,
+
+        fund: fund,
+
+        description: description
+
+      });
+
+
+      updateDashboard();
+
+
+      document.getElementById(
+        "expenseAmount"
+      ).value = "";
+
+
+      document.getElementById(
+        "expenseDescription"
+      ).value = "";
+
+
+      document
+        .getElementById("expenseForm")
+        .classList
+        .add("hidden");
+
+    }
+  );
+
+
+/* ========================= */
+/* INITIAL DATE */
+/* ========================= */
+
+
+document.getElementById(
+  "currentDate"
+).textContent =
   new Date().toLocaleDateString(
     "en-US",
     {
@@ -485,9 +1676,15 @@ document.getElementById("date").textContent =
   );
 
 
-updateScreen();
+/* ========================= */
+/* STARTUP */
+/* ========================= */
+
+
+updateDashboard();
 
 </script>
 
 </body>
+
 </html>
