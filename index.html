@@ -1035,31 +1035,9 @@ async function loadHousehold() {
 
 
   householdId =
-  data.household_id;
-
-
-const profiles =
-  await loadProfiles();
-
-currentProfile =
-  profiles[0] || null;
-
-console.log(
-  "Loaded profiles:",
-  profiles
-);
-
-console.log(
-  "Current profile:",
-  currentProfile
-);
-
-await loadBudgetSettings();
-
-await loadExpenses();
+    data.household_id;
 
 }
-
 
 /* ================================= */
 /* LOAD BUDGET SETTINGS */
