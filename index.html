@@ -843,9 +843,20 @@ async function startApp() {
       "hidden"
     );
 
+
   document
     .getElementById(
       "appScreen"
+    )
+    .classList
+    .add(
+      "hidden"
+    );
+
+
+  document
+    .getElementById(
+      "profileScreen"
     )
     .classList
     .remove(
@@ -867,6 +878,56 @@ async function startApp() {
 
 
   await loadHousehold();
+
+
+  const profiles =
+    await loadProfiles();
+
+
+  const profileList =
+    document.getElementById(
+      "profileList"
+    );
+
+
+  profileList.innerHTML = "";
+
+
+  profiles.forEach(
+    profile => {
+
+      const button =
+        document.createElement(
+          "button"
+        );
+
+
+      button.className =
+        "primary-button";
+
+
+      button.textContent =
+        profile.display_name;
+
+
+      button.style.marginTop =
+        "12px";
+
+
+      button.addEventListener(
+        "click",
+        () => {
+          selectProfile(profile);
+        }
+      );
+
+
+      profileList.appendChild(
+        button
+      );
+
+    }
+  );
 
 }
 
@@ -2973,7 +3034,18 @@ async function loadProfiles() {
   return data || [];
 
 }
-  
+  function selectProfile(profile) {
+
+  currentProfile =
+    profile;
+
+
+  console.log(
+    "Selected profile:",
+    currentProfile
+  );
+
+}
 checkSession();
 
 </script>
