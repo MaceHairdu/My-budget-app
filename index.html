@@ -2888,7 +2888,42 @@ async function checkSession() {
 
 }
 
+async function loadProfiles() {
 
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("profiles")
+      .select(
+        "id, display_name, access_level"
+      )
+      .eq(
+        "household_id",
+        householdId
+      )
+      .order(
+        "display_name"
+      );
+
+
+  if (error) {
+
+    alert(
+      "Could not load profiles: "
+      + error.message
+    );
+
+    return [];
+
+  }
+
+
+  return data || [];
+
+}
+  
 checkSession();
 
 </script>
