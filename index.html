@@ -1,15 +1,4 @@
 <!DOCTYPE html>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-const SUPABASE_URL = "https://jivygwszzlaxnhhvxxsg.supabase.co";
-const SUPABASE_KEY = "sb_publishable_cZM-7AaU0xD6L_fMa_foOw_-Cjk2edj";
-
-const supabase = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-</script>
 <html lang="en">
 
 <head>
@@ -28,6 +17,7 @@ const supabase = window.supabase.createClient(
 
 <title>My Budget</title>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 
@@ -35,394 +25,142 @@ const supabase = window.supabase.createClient(
   box-sizing: border-box;
 }
 
-
 body {
-
   margin: 0;
-
   font-family:
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
     Arial,
     sans-serif;
-
   background: #f3f4f6;
-
   color: #1f2937;
-
 }
-
 
 .app {
-
   max-width: 500px;
-
   margin: auto;
-
   padding: 20px;
-
 }
-
 
 header {
-
   text-align: center;
-
   margin-bottom: 25px;
-
 }
-
 
 header h1 {
-
   margin: 0;
-
   font-size: 32px;
-
 }
-
 
 header p {
-
   color: #6b7280;
-
 }
-
-
-/* BUTTONS */
-
-button {
-
-  width: 100%;
-
-  border: none;
-
-  border-radius: 14px;
-
-  padding: 15px;
-
-  font-size: 17px;
-
-  font-weight: 600;
-
-  cursor: pointer;
-
-}
-
-
-.primary-button {
-
-  background: #1f2937;
-
-  color: white;
-
-}
-
-
-.secondary-button {
-
-  background: #e5e7eb;
-
-  color: #1f2937;
-
-}
-
-
-.small-button {
-
-  width: auto;
-
-  padding: 9px 14px;
-
-  font-size: 14px;
-
-}
-
-
-/* CARDS */
 
 .card {
-
   background: white;
-
   border-radius: 20px;
-
   padding: 22px;
-
   margin-bottom: 16px;
-
-  box-shadow:
-    0 3px 12px rgba(0,0,0,0.08);
-
+  box-shadow: 0 3px 12px rgba(0,0,0,0.08);
 }
 
-
-.card h2 {
-
-  margin-top: 0;
-
-}
-
-
-/* BALANCES */
-
-.balance {
-
-  font-size: 38px;
-
-  font-weight: 700;
-
-  margin: 8px 0;
-
-}
-
-
-.subtext {
-
-  color: #6b7280;
-
-  font-size: 14px;
-
-}
-
-
-/* FORMS */
-
-label {
-
-  display: block;
-
-  margin-top: 16px;
-
-  margin-bottom: 6px;
-
-  font-weight: 600;
-
-}
-
-
-input {
-
+button {
   width: 100%;
-
-  padding: 13px;
-
-  border: 1px solid #d1d5db;
-
-  border-radius: 10px;
-
+  border: none;
+  border-radius: 14px;
+  padding: 15px;
   font-size: 17px;
-
+  font-weight: 600;
+  cursor: pointer;
 }
 
-
-input[type="number"] {
-
-  text-align: right;
-
+.primary-button {
+  background: #1f2937;
+  color: white;
 }
 
-
-.form-row {
-
-  display: flex;
-
-  gap: 8px;
-
-  align-items: center;
-
-  margin-bottom: 10px;
-
-}
-
-
-.form-row input {
-
-  flex: 1;
-
-}
-
-
-.remove-button {
-
-  width: 44px;
-
-  padding: 11px;
-
-  background: #fee2e2;
-
-  color: #991b1b;
-
-}
-
-
-/* SETUP */
-
-.setup-section {
-
-  margin-bottom: 25px;
-
-}
-
-
-.setup-section h3 {
-
-  margin-bottom: 5px;
-
-}
-
-
-.help-text {
-
-  color: #6b7280;
-
-  font-size: 14px;
-
-  margin-top: 5px;
-
-}
-
-
-.add-row {
-
-  margin-top: 10px;
-
+.secondary-button {
   background: #e5e7eb;
-
   color: #1f2937;
-
 }
 
-
-/* CALCULATIONS */
-
-.calculation {
-
-  display: flex;
-
-  justify-content: space-between;
-
-  padding: 10px 0;
-
-  border-bottom:
-    1px solid #e5e7eb;
-
+.danger-button {
+  background: #fee2e2;
+  color: #991b1b;
 }
-
-
-.calculation:last-child {
-
-  border-bottom: none;
-
-}
-
-
-.calculation strong {
-
-  font-size: 18px;
-
-}
-
-
-.fun-result {
-
-  font-size: 30px;
-
-  font-weight: 700;
-
-  margin-top: 5px;
-
-}
-
-
-/* NAVIGATION */
 
 .hidden {
-
   display: none !important;
-
 }
 
-
-.nav-button {
-
-  margin-top: 10px;
-
+.balance {
+  font-size: 38px;
+  font-weight: 700;
+  margin: 8px 0;
 }
 
-
-/* EXPENSE FORM */
-
-.expense-form {
-
-  margin-top: 15px;
-
+.subtext {
+  color: #6b7280;
+  font-size: 14px;
 }
 
+label {
+  display: block;
+  margin-top: 16px;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
 
+input,
 select {
-
   width: 100%;
-
   padding: 13px;
-
   border: 1px solid #d1d5db;
-
   border-radius: 10px;
-
   font-size: 17px;
-
   background: white;
-
 }
 
+.error {
+  color: #b91c1c;
+  background: #fee2e2;
+  padding: 12px;
+  border-radius: 10px;
+  margin-top: 15px;
+}
 
-/* TRANSACTIONS */
+.success {
+  color: #166534;
+  background: #dcfce7;
+  padding: 12px;
+  border-radius: 10px;
+  margin-top: 15px;
+}
 
 .transaction {
-
   display: flex;
-
   justify-content: space-between;
-
   padding: 13px 0;
-
-  border-bottom:
-    1px solid #e5e7eb;
-
+  border-bottom: 1px solid #e5e7eb;
 }
-
 
 .transaction:last-child {
-
   border-bottom: none;
-
 }
-
 
 .transaction-name {
-
   font-weight: 600;
-
 }
-
 
 .transaction-category {
-
   color: #6b7280;
-
   font-size: 13px;
-
   margin-top: 3px;
-
 }
 
-
 .transaction-amount {
-
   font-weight: 600;
-
 }
 
 </style>
@@ -433,14 +171,77 @@ select {
 <body>
 
 
-<div class="app">
+<!-- ========================= -->
+<!-- LOGIN -->
+<!-- ========================= -->
+
+<div
+  class="app"
+  id="loginScreen"
+>
+
+<header>
+
+<h1>My Budget</h1>
+
+<p>Sign in to continue</p>
+
+</header>
+
+
+<div class="card">
+
+<label>
+Email
+</label>
+
+<input
+  type="email"
+  id="loginEmail"
+  placeholder="you@example.com"
+  autocomplete="email"
+>
+
+
+<label>
+Password
+</label>
+
+<input
+  type="password"
+  id="loginPassword"
+  placeholder="Password"
+  autocomplete="current-password"
+>
+
+
+<button
+  class="primary-button"
+  id="loginButton"
+  style="margin-top:20px;"
+>
+Sign In
+</button>
+
+
+<div
+  id="loginError"
+  class="error hidden"
+></div>
+
+</div>
+
+</div>
 
 
 <!-- ========================= -->
-<!-- DASHBOARD -->
+<!-- APP -->
 <!-- ========================= -->
 
-<div id="dashboard">
+<div
+  class="app hidden"
+  id="appScreen"
+>
 
 
 <header>
@@ -500,7 +301,7 @@ Weekly Budget
 
 <div
   class="balance"
-  id="weeklyBudgetDisplay"
+  id="weeklyBudget"
 >
 $0.00
 </div>
@@ -521,10 +322,9 @@ This month's calculated weekly budget
 
 
 <div
-  class="card expense-form hidden"
+  class="card hidden"
   id="expenseForm"
 >
-
 
 <h2>Add Expense</h2>
 
@@ -587,7 +387,6 @@ Save Expense
 Cancel
 </button>
 
-
 </div>
 
 
@@ -607,227 +406,11 @@ No expenses yet.
 
 
 <button
-  class="secondary-button nav-button"
-  id="setupButton"
->
-Budget Setup
-</button>
-
-
-</div>
-
-
-<!-- ========================= -->
-<!-- SETUP -->
-<!-- ========================= -->
-
-<div
-  id="setupScreen"
-  class="hidden"
->
-
-
-<header>
-
-<h1>Budget Setup</h1>
-
-<p>
-Update your income and bills
-</p>
-
-</header>
-
-
-<!-- INCOME -->
-
-<div class="card setup-section">
-
-<h2>Monthly Income</h2>
-
-<p class="help-text">
-Enter the amount you normally receive
-each month from each income source.
-</p>
-
-
-<div id="incomeRows"></div>
-
-
-<button
-  class="add-row"
-  id="addIncomeButton"
->
-+ Add Income
-</button>
-
-</div>
-
-
-<!-- BILLS -->
-
-<div class="card setup-section">
-
-<h2>Monthly Bills</h2>
-
-<p class="help-text">
-Enter your regular monthly bills.
-</p>
-
-
-<div id="billRows"></div>
-
-
-<button
-  class="add-row"
-  id="addBillButton"
->
-+ Add Bill
-</button>
-
-</div>
-
-
-<!-- WEEKLY BUDGET -->
-
-<div class="card">
-
-<h2>Weekly Budget</h2>
-
-
-<div class="calculation">
-
-<span>
-Total Income
-</span>
-
-<strong id="totalIncome">
-$0.00
-</strong>
-
-</div>
-
-
-<div class="calculation">
-
-<span>
-Monthly Bills
-</span>
-
-<strong id="totalBills">
-$0.00
-</strong>
-
-</div>
-
-
-<div class="calculation">
-
-<span>
-Monthly Net
-</span>
-
-<strong id="monthlyNet">
-$0.00
-</strong>
-
-</div>
-
-
-<div class="calculation">
-
-<span>
-Weekly Budget
-</span>
-
-<strong id="calculatedWeekly">
-$0.00
-</strong>
-
-</div>
-
-</div>
-
-
-<!-- ALLOWANCES -->
-
-<div class="card">
-
-<h2>Weekly Allowances</h2>
-
-
-<label>
-Needs Allowance
-</label>
-
-<input
-  type="number"
-  id="needsAllowance"
-  placeholder="0.00"
-  step="0.01"
-  min="0"
->
-
-
-<label>
-Savings
-</label>
-
-<input
-  type="number"
-  id="savingsAllowance"
-  placeholder="0.00"
-  step="0.01"
-  min="0"
->
-
-
-<div
-  class="calculation"
-  style="margin-top:20px;"
->
-
-<span>
-Fun Money
-</span>
-
-<strong
-  id="funAllowance"
->
-$0.00
-</strong>
-
-</div>
-
-
-<p class="help-text">
-
-Fun Money is automatically calculated
-after Needs and Savings are deducted.
-
-</p>
-
-
-<button
-  class="primary-button"
-  id="saveBudgetButton"
-  style="margin-top:20px;"
->
-Save Budget
-</button>
-
-
-<button
   class="secondary-button"
-  id="cancelSetupButton"
-  style="margin-top:10px;"
+  id="logoutButton"
 >
-Cancel
+Log Out
 </button>
-
-</div>
-
-
-</div>
 
 
 </div>
@@ -836,27 +419,34 @@ Cancel
 <script>
 
 
-/* ========================= */
-/* DATA */
-/* ========================= */
+/* ================================= */
+/* SUPABASE */
+/* ================================= */
 
 
-let budget = {
+const SUPABASE_URL =
+  "https://jivygwszzlaxnhhvxxsg.supabase.co";
 
-  income: [],
 
-  bills: [],
+const SUPABASE_KEY =
+  "sb_publishable_cZM-7AaU0xD6L_fMa_foOw_-Cjk2edj";
 
-  needsAllowance: 0,
 
-  savingsAllowance: 0,
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
-  weeklyBudget: 0,
 
-  funAllowance: 0
+/* ================================= */
+/* GLOBAL DATA */
+/* ================================= */
 
-};
 
+let currentUser = null;
+
+let householdId = null;
 
 let balances = {
 
@@ -867,29 +457,37 @@ let balances = {
 };
 
 
-let transactions = [];
-
-
-/* ========================= */
+/* ================================= */
 /* ELEMENTS */
-/* ========================= */
+/* ================================= */
 
 
-const dashboard =
-  document.getElementById("dashboard");
+const loginScreen =
+  document.getElementById(
+    "loginScreen"
+  );
 
-const setupScreen =
-  document.getElementById("setupScreen");
+
+const appScreen =
+  document.getElementById(
+    "appScreen"
+  );
 
 
-/* ========================= */
+const loginError =
+  document.getElementById(
+    "loginError"
+  );
+
+
+/* ================================= */
 /* MONEY */
-/* ========================= */
+/* ================================= */
 
 
 function money(amount) {
 
-  return amount.toLocaleString(
+  return Number(amount).toLocaleString(
     "en-US",
     {
       style: "currency",
@@ -900,569 +498,395 @@ function money(amount) {
 }
 
 
-/* ========================= */
-/* SETUP NAVIGATION */
-/* ========================= */
+/* ================================= */
+/* LOGIN */
+/* ================================= */
 
 
 document
-  .getElementById("setupButton")
+  .getElementById("loginButton")
   .addEventListener(
     "click",
-    function() {
-
-      dashboard.classList.add("hidden");
-
-      setupScreen.classList.remove("hidden");
-
-      renderIncomeRows();
-
-      renderBillRows();
-
-      updateCalculations();
-
-    }
+    login
   );
 
 
-document
-  .getElementById("cancelSetupButton")
-  .addEventListener(
-    "click",
-    function() {
+async function login() {
 
-      setupScreen.classList.add("hidden");
-
-      dashboard.classList.remove("hidden");
-
-    }
+  loginError.classList.add(
+    "hidden"
   );
 
 
-/* ========================= */
-/* INCOME ROWS */
-/* ========================= */
+  const email =
+    document
+      .getElementById("loginEmail")
+      .value
+      .trim();
 
 
-function renderIncomeRows() {
-
-  const container =
-    document.getElementById("incomeRows");
-
-  container.innerHTML = "";
+  const password =
+    document
+      .getElementById("loginPassword")
+      .value;
 
 
-  budget.income.forEach(
-    function(item, index) {
+  if (!email || !password) {
 
-      const row =
-        document.createElement("div");
-
-      row.className = "form-row";
-
-
-      row.innerHTML = `
-
-        <input
-          type="text"
-          placeholder="Income source"
-          value="${item.name}"
-          data-index="${index}"
-          class="income-name"
-        >
-
-        <input
-          type="number"
-          placeholder="Amount"
-          value="${item.amount}"
-          step="0.01"
-          min="0"
-          data-index="${index}"
-          class="income-amount"
-        >
-
-        <button
-          class="remove-button"
-          data-index="${index}"
-        >
-          ×
-        </button>
-
-      `;
-
-
-      container.appendChild(row);
-
-    }
-  );
-
-
-  container
-    .querySelectorAll(".income-name")
-    .forEach(
-      function(input) {
-
-        input.addEventListener(
-          "input",
-          function() {
-
-            budget.income[
-              input.dataset.index
-            ].name = input.value;
-
-          }
-        );
-
-      }
+    showLoginError(
+      "Enter your email and password."
     );
 
+    return;
 
-  container
-    .querySelectorAll(".income-amount")
-    .forEach(
-      function(input) {
+  }
 
-        input.addEventListener(
-          "input",
-          function() {
 
-            budget.income[
-              input.dataset.index
-            ].amount =
-              parseFloat(input.value) || 0;
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.auth.signInWithPassword({
 
-            updateCalculations();
+      email: email,
 
-          }
-        );
+      password: password
 
-      }
+    });
+
+
+  if (error) {
+
+    showLoginError(
+      error.message
     );
 
+    return;
 
-  container
-    .querySelectorAll(".remove-button")
-    .forEach(
-      function(button) {
+  }
 
-        button.addEventListener(
-          "click",
-          function() {
 
-            budget.income.splice(
-              button.dataset.index,
-              1
-            );
+  currentUser =
+    data.user;
 
-            renderIncomeRows();
 
-            updateCalculations();
-
-          }
-        );
-
-      }
-    );
+  await startApp();
 
 }
 
 
-document
-  .getElementById("addIncomeButton")
-  .addEventListener(
-    "click",
-    function() {
+/* ================================= */
+/* LOGIN ERROR */
+/* ================================= */
 
-      budget.income.push({
 
-        name: "",
+function showLoginError(message) {
 
-        amount: 0
+  loginError.textContent =
+    message;
 
-      });
-
-      renderIncomeRows();
-
-    }
+  loginError.classList.remove(
+    "hidden"
   );
-
-
-/* ========================= */
-/* BILL ROWS */
-/* ========================= */
-
-
-function renderBillRows() {
-
-  const container =
-    document.getElementById("billRows");
-
-  container.innerHTML = "";
-
-
-  budget.bills.forEach(
-    function(item, index) {
-
-      const row =
-        document.createElement("div");
-
-      row.className = "form-row";
-
-
-      row.innerHTML = `
-
-        <input
-          type="text"
-          placeholder="Bill name"
-          value="${item.name}"
-          data-index="${index}"
-          class="bill-name"
-        >
-
-        <input
-          type="number"
-          placeholder="Amount"
-          value="${item.amount}"
-          step="0.01"
-          min="0"
-          data-index="${index}"
-          class="bill-amount"
-        >
-
-        <button
-          class="remove-button"
-          data-index="${index}"
-        >
-          ×
-        </button>
-
-      `;
-
-
-      container.appendChild(row);
-
-    }
-  );
-
-
-  container
-    .querySelectorAll(".bill-name")
-    .forEach(
-      function(input) {
-
-        input.addEventListener(
-          "input",
-          function() {
-
-            budget.bills[
-              input.dataset.index
-            ].name = input.value;
-
-          }
-        );
-
-      }
-    );
-
-
-  container
-    .querySelectorAll(".bill-amount")
-    .forEach(
-      function(input) {
-
-        input.addEventListener(
-          "input",
-          function() {
-
-            budget.bills[
-              input.dataset.index
-            ].amount =
-              parseFloat(input.value) || 0;
-
-            updateCalculations();
-
-          }
-        );
-
-      }
-    );
-
-
-  container
-    .querySelectorAll(".remove-button")
-    .forEach(
-      function(button) {
-
-        button.addEventListener(
-          "click",
-          function() {
-
-            budget.bills.splice(
-              button.dataset.index,
-              1
-            );
-
-            renderBillRows();
-
-            updateCalculations();
-
-          }
-        );
-
-      }
-    );
 
 }
 
 
-document
-  .getElementById("addBillButton")
-  .addEventListener(
-    "click",
-    function() {
+/* ================================= */
+/* START APP */
+/* ================================= */
 
-      budget.bills.push({
 
-        name: "",
+async function startApp() {
 
-        amount: 0
 
-      });
-
-      renderBillRows();
-
-    }
+  loginScreen.classList.add(
+    "hidden"
   );
 
 
-/* ========================= */
-/* CALCULATIONS */
-/* ========================= */
-
-
-function updateCalculations() {
-
-
-  let totalIncome = 0;
-
-
-  budget.income.forEach(
-    function(item) {
-
-      totalIncome +=
-        Number(item.amount) || 0;
-
-    }
+  appScreen.classList.remove(
+    "hidden"
   );
 
 
-  let totalBills = 0;
-
-
-  budget.bills.forEach(
-    function(item) {
-
-      totalBills +=
-        Number(item.amount) || 0;
-
-    }
-  );
-
-
-  const monthlyNet =
-    totalIncome - totalBills;
-
-
-  const weeklyBudget =
-    monthlyNet / 4.345;
-
-
-  const needs =
-    Number(
-      document.getElementById(
-        "needsAllowance"
-      ).value
-    ) || 0;
-
-
-  const savings =
-    Number(
-      document.getElementById(
-        "savingsAllowance"
-      ).value
-    ) || 0;
-
-
-  const fun =
-    weeklyBudget - needs - savings;
-
-
   document.getElementById(
-    "totalIncome"
+    "currentDate"
   ).textContent =
-    money(totalIncome);
+    new Date().toLocaleDateString(
+      "en-US",
+      {
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+      }
+    );
 
 
-  document.getElementById(
-    "totalBills"
-  ).textContent =
-    money(totalBills);
-
-
-  document.getElementById(
-    "monthlyNet"
-  ).textContent =
-    money(monthlyNet);
-
-
-  document.getElementById(
-    "calculatedWeekly"
-  ).textContent =
-    money(weeklyBudget);
-
-
-  document.getElementById(
-    "funAllowance"
-  ).textContent =
-    money(fun);
+  await loadHousehold();
 
 }
 
 
-/* ========================= */
-/* ALLOWANCE INPUTS */
-/* ========================= */
+/* ================================= */
+/* LOAD HOUSEHOLD */
+/* ================================= */
 
 
-document
-  .getElementById("needsAllowance")
-  .addEventListener(
-    "input",
-    function() {
+async function loadHousehold() {
 
-      budget.needsAllowance =
-        Number(this.value) || 0;
 
-      updateCalculations();
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("household_members")
+      .select("household_id")
+      .eq(
+        "user_id",
+        currentUser.id
+      )
+      .limit(1)
+      .maybeSingle();
+
+
+  if (error) {
+
+    alert(
+      "Could not load household: "
+      + error.message
+    );
+
+    return;
+
+  }
+
+
+  if (!data) {
+
+    alert(
+      "This account is not connected to a household."
+    );
+
+    return;
+
+  }
+
+
+  householdId =
+    data.household_id;
+
+
+  await loadBalance();
+
+  await loadExpenses();
+
+}
+
+
+/* ================================= */
+/* LOAD BALANCE */
+/* ================================= */
+
+
+async function loadBalance() {
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("balances")
+      .select("*")
+      .eq(
+        "household_id",
+        householdId
+      )
+      .maybeSingle();
+
+
+  if (error) {
+
+    console.error(error);
+
+    return;
+
+  }
+
+
+  if (!data) {
+
+    const {
+      data: newBalance,
+      error: insertError
+    } =
+      await supabaseClient
+        .from("balances")
+        .insert({
+
+          household_id:
+            householdId,
+
+          needs_balance:
+            0,
+
+          fun_balance:
+            0
+
+        })
+        .select()
+        .single();
+
+
+    if (insertError) {
+
+      alert(
+        "Could not create balance: "
+        + insertError.message
+      );
+
+      return;
 
     }
-  );
 
 
-document
-  .getElementById("savingsAllowance")
-  .addEventListener(
-    "input",
-    function() {
-
-      budget.savingsAllowance =
-        Number(this.value) || 0;
-
-      updateCalculations();
-
-    }
-  );
-
-
-/* ========================= */
-/* SAVE BUDGET */
-/* ========================= */
-
-
-document
-  .getElementById("saveBudgetButton")
-  .addEventListener(
-    "click",
-    function() {
-
-
-      let totalIncome = 0;
-
-      budget.income.forEach(
-        function(item) {
-
-          totalIncome +=
-            Number(item.amount) || 0;
-
-        }
+    balances.needs =
+      Number(
+        newBalance.needs_balance
       );
 
 
-      let totalBills = 0;
-
-      budget.bills.forEach(
-        function(item) {
-
-          totalBills +=
-            Number(item.amount) || 0;
-
-        }
+    balances.fun =
+      Number(
+        newBalance.fun_balance
       );
 
 
-      budget.weeklyBudget =
-        (totalIncome - totalBills)
-        / 4.345;
+  } else {
 
 
-      budget.funAllowance =
-        budget.weeklyBudget
-        - budget.needsAllowance
-        - budget.savingsAllowance;
-
-
-      if (
-        budget.funAllowance < 0
-      ) {
-
-        alert(
-          "Your Needs and Savings allowances are greater than your weekly budget."
-        );
-
-        return;
-
-      }
-
-
-      dashboard.classList.remove(
-        "hidden"
-      );
-
-      setupScreen.classList.add(
-        "hidden"
+    balances.needs =
+      Number(
+        data.needs_balance
       );
 
 
-      updateDashboard();
+    balances.fun =
+      Number(
+        data.fun_balance
+      );
 
-    }
-  );
-
-
-/* ========================= */
-/* DASHBOARD */
-/* ========================= */
+  }
 
 
-function updateDashboard() {
+  updateBalances();
+
+}
+
+
+/* ================================= */
+/* SAVE BALANCE */
+/* ================================= */
+
+
+async function saveBalance() {
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("balances")
+      .update({
+
+        needs_balance:
+          balances.needs,
+
+        fun_balance:
+          balances.fun
+
+      })
+      .eq(
+        "household_id",
+        householdId
+      );
+
+
+  if (error) {
+
+    alert(
+      "Could not save balance: "
+      + error.message
+    );
+
+  }
+
+}
+
+
+/* ================================= */
+/* UPDATE BALANCES */
+/* ================================= */
+
+
+function updateBalances() {
 
 
   document.getElementById(
     "needsBalance"
   ).textContent =
-    money(balances.needs);
+    money(
+      balances.needs
+    );
 
 
   document.getElementById(
     "funBalance"
   ).textContent =
-    money(balances.fun);
+    money(
+      balances.fun
+    );
+
+}
 
 
-  document.getElementById(
-    "weeklyBudgetDisplay"
-  ).textContent =
-    money(budget.weeklyBudget);
+/* ================================= */
+/* LOAD EXPENSES */
+/* ================================= */
+
+
+async function loadExpenses() {
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("expenses")
+      .select("*")
+      .eq(
+        "household_id",
+        householdId
+      )
+      .order(
+        "spent_at",
+        {
+          ascending: false
+        }
+      )
+      .limit(50);
+
+
+  if (error) {
+
+    console.error(error);
+
+    return;
+
+  }
 
 
   const container =
@@ -1471,9 +895,7 @@ function updateDashboard() {
     );
 
 
-  if (
-    transactions.length === 0
-  ) {
+  if (!data || data.length === 0) {
 
     container.innerHTML =
       '<p class="subtext">No expenses yet.</p>';
@@ -1486,11 +908,15 @@ function updateDashboard() {
   container.innerHTML = "";
 
 
-  transactions.forEach(
-    function(transaction) {
+  data.forEach(
+    function(expense) {
+
 
       const row =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
+
 
       row.className =
         "transaction";
@@ -1502,14 +928,16 @@ function updateDashboard() {
 
           <div class="transaction-name">
 
-            ${transaction.description}
+            ${escapeHtml(
+              expense.description
+            )}
 
           </div>
 
           <div class="transaction-category">
 
             ${
-              transaction.fund === "needs"
+              expense.fund === "needs"
                 ? "Needs"
                 : "Fun Money"
             }
@@ -1521,14 +949,18 @@ function updateDashboard() {
 
         <div class="transaction-amount">
 
-          -${money(transaction.amount)}
+          -${money(
+            expense.amount
+          )}
 
         </div>
 
       `;
 
 
-      container.appendChild(row);
+      container.appendChild(
+        row
+      );
 
     }
   );
@@ -1536,19 +968,23 @@ function updateDashboard() {
 }
 
 
-/* ========================= */
-/* EXPENSES */
-/* ========================= */
+/* ================================= */
+/* ADD EXPENSE */
+/* ================================= */
 
 
 document
-  .getElementById("addExpenseButton")
+  .getElementById(
+    "addExpenseButton"
+  )
   .addEventListener(
     "click",
     function() {
 
       document
-        .getElementById("expenseForm")
+        .getElementById(
+          "expenseForm"
+        )
         .classList
         .remove("hidden");
 
@@ -1557,13 +993,17 @@ document
 
 
 document
-  .getElementById("cancelExpenseButton")
+  .getElementById(
+    "cancelExpenseButton"
+  )
   .addEventListener(
     "click",
     function() {
 
       document
-        .getElementById("expenseForm")
+        .getElementById(
+          "expenseForm"
+        )
         .classList
         .add("hidden");
 
@@ -1572,127 +1012,233 @@ document
 
 
 document
-  .getElementById("saveExpenseButton")
+  .getElementById(
+    "saveExpenseButton"
+  )
   .addEventListener(
     "click",
-    function() {
+    addExpense
+  );
 
 
-      const amount =
-        Number(
-          document.getElementById(
-            "expenseAmount"
-          ).value
-        );
+async function addExpense() {
 
 
-      const fund =
-        document.getElementById(
-          "expenseFund"
-        ).value;
+  const amount =
+    Number(
+      document
+        .getElementById(
+          "expenseAmount"
+        )
+        .value
+    );
 
 
-      const description =
-        document.getElementById(
-          "expenseDescription"
-        ).value.trim();
+  const fund =
+    document
+      .getElementById(
+        "expenseFund"
+      )
+      .value;
 
 
-      if (
-        !amount ||
-        amount <= 0
-      ) {
-
-        alert(
-          "Please enter an amount."
-        );
-
-        return;
-
-      }
+  const description =
+    document
+      .getElementById(
+        "expenseDescription"
+      )
+      .value
+      .trim();
 
 
-      if (!description) {
+  if (
+    !amount ||
+    amount <= 0
+  ) {
 
-        alert(
-          "Please enter a description."
-        );
+    alert(
+      "Enter an amount."
+    );
 
-        return;
+    return;
 
-      }
-
-
-      if (fund === "needs") {
-
-        balances.needs -=
-          amount;
-
-      } else {
-
-        balances.fun -=
-          amount;
-
-      }
+  }
 
 
-      transactions.push({
+  if (!description) {
 
-        amount: amount,
+    alert(
+      "Enter a description."
+    );
 
-        fund: fund,
+    return;
 
-        description: description
+  }
+
+
+  /* Update local balance */
+
+  if (fund === "needs") {
+
+    balances.needs -=
+      amount;
+
+  } else {
+
+    balances.fun -=
+      amount;
+
+  }
+
+
+  /* Save expense */
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("expenses")
+      .insert({
+
+        household_id:
+          householdId,
+
+        user_id:
+          currentUser.id,
+
+        amount:
+          amount,
+
+        fund:
+          fund,
+
+        description:
+          description
 
       });
 
 
-      updateDashboard();
+  if (error) {
+
+    alert(
+      "Could not save expense: "
+      + error.message
+    );
+
+    await loadBalance();
+
+    return;
+
+  }
 
 
-      document.getElementById(
-        "expenseAmount"
-      ).value = "";
+  await saveBalance();
 
 
-      document.getElementById(
-        "expenseDescription"
-      ).value = "";
+  updateBalances();
 
 
-      document
-        .getElementById("expenseForm")
-        .classList
-        .add("hidden");
+  await loadExpenses();
+
+
+  document.getElementById(
+    "expenseAmount"
+  ).value = "";
+
+
+  document.getElementById(
+    "expenseDescription"
+  ).value = "";
+
+
+  document
+    .getElementById(
+      "expenseForm"
+    )
+    .classList
+    .add("hidden");
+
+}
+
+
+/* ================================= */
+/* LOGOUT */
+/* ================================= */
+
+
+document
+  .getElementById(
+    "logoutButton"
+  )
+  .addEventListener(
+    "click",
+    async function() {
+
+      await supabaseClient.auth.signOut();
+
+      appScreen.classList.add(
+        "hidden"
+      );
+
+      loginScreen.classList.remove(
+        "hidden"
+      );
 
     }
   );
 
 
-/* ========================= */
-/* INITIAL DATE */
-/* ========================= */
+/* ================================= */
+/* HTML SAFETY */
+/* ================================= */
 
 
-document.getElementById(
-  "currentDate"
-).textContent =
-  new Date().toLocaleDateString(
-    "en-US",
-    {
-      month: "long",
-      day: "numeric",
-      year: "numeric"
-    }
-  );
+function escapeHtml(value) {
+
+  const div =
+    document.createElement(
+      "div"
+    );
+
+  div.textContent =
+    value;
+
+  return div.innerHTML;
+
+}
 
 
-/* ========================= */
-/* STARTUP */
-/* ========================= */
+/* ================================= */
+/* CHECK EXISTING LOGIN */
+/* ================================= */
 
 
-updateDashboard();
+async function checkSession() {
+
+
+  const {
+    data
+  } =
+    await supabaseClient.auth.getSession();
+
+
+  if (
+    data &&
+    data.session &&
+    data.session.user
+  ) {
+
+    currentUser =
+      data.session.user;
+
+    await startApp();
+
+  }
+
+}
+
+
+checkSession();
 
 </script>
 
