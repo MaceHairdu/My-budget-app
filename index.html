@@ -887,7 +887,10 @@ async function loadHousehold() {
 
 const profiles =
   await loadProfiles();
-
+console.log(
+  "Loaded profiles:",
+  profiles
+);
 
 await loadBudgetSettings();
 
