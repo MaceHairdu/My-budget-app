@@ -887,9 +887,18 @@ async function loadHousehold() {
 
 const profiles =
   await loadProfiles();
+
+currentProfile =
+  profiles[0] || null;
+
 console.log(
   "Loaded profiles:",
   profiles
+);
+
+console.log(
+  "Current profile:",
+  currentProfile
 );
 
 await loadBudgetSettings();
