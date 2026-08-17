@@ -882,12 +882,16 @@ async function loadHousehold() {
 
 
   householdId =
-    data.household_id;
+  data.household_id;
 
 
-  await loadBudgetSettings();
+const profiles =
+  await loadProfiles();
 
-  await loadExpenses();
+
+await loadBudgetSettings();
+
+await loadExpenses();
 
 }
 
