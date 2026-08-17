@@ -3169,7 +3169,17 @@ async function loadProfiles() {
 
 
     profileSessionToken =
-      data;
+  data;
+
+localStorage.setItem(
+  "profileSessionToken",
+  data
+);
+
+localStorage.setItem(
+  "profileId",
+  currentProfile.id
+);
 
 
     document.getElementById(
