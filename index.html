@@ -927,6 +927,17 @@ async function startApp() {
   await loadHousehold();
 
 
+  const restored =
+    await restoreProfileSession();
+
+
+  if (restored) {
+
+    return;
+
+  }
+
+
   const profiles =
     await loadProfiles();
 
@@ -3250,6 +3261,136 @@ function cancelPin() {
   ).classList.remove(
     "hidden"
   );
+
+}
+  async function restoreProfileSession() {
+
+  const savedToken =
+    localStorage.getItem(
+      "profileSessionToken"
+    );
+
+  const savedProfileId =
+    localStorage.getItem(
+      "profileId"
+    );
+
+
+  if (
+    !savedToken ||
+    !savedProfileId
+  ) {
+
+    return false;
+
+  }
+
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.rpc(
+        "validate_profile_session",
+        {
+          p_session_token:
+            savedToken
+        }
+      );
+
+
+    if (error) {
+
+      throw error;
+
+    }
+
+
+    if (
+      data !== savedProfileId
+    ) {
+
+      throw new Error(
+        "Profile session mismatch"
+      );
+
+    }
+
+
+    const {
+      data: profile,
+      error: profileError
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select(
+          "id, display_name, access_level"
+        )
+        .eq(
+          "id",
+          savedProfileId
+        )
+        .single();
+
+
+    if (profileError) {
+
+      throw profileError;
+
+    }
+
+
+    currentProfile =
+      profile;
+
+    profileSessionToken =
+      savedToken;
+
+
+    document.getElementById(
+      "profileScreen"
+    ).classList.add(
+      "hidden"
+    );
+
+
+    document.getElementById(
+      "appScreen"
+    ).classList.remove(
+      "hidden"
+    );
+
+
+    await loadBudgetSettings();
+
+    await loadExpenses();
+
+
+    return true;
+
+  }
+  catch (error) {
+
+    console.error(
+      "Could not restore profile session:",
+      error
+    );
+
+
+    localStorage.removeItem(
+      "profileSessionToken"
+    );
+
+    localStorage.removeItem(
+      "profileId"
+    );
+
+
+    return false;
+
+  }
 
 }
   document
