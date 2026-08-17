@@ -3014,7 +3014,58 @@ document
 
     }
   );
+document
+  .getElementById(
+    "profileLogoutButton"
+  )
+  .addEventListener(
+    "click",
+    async function() {
 
+      localStorage.removeItem(
+        "profileSessionToken"
+      );
+
+      localStorage.removeItem(
+        "profileId"
+      );
+
+
+      currentProfile =
+        null;
+
+      profileSessionToken =
+        null;
+
+
+      await supabaseClient.auth.signOut();
+
+
+      document
+        .getElementById(
+          "profileScreen"
+        )
+        .classList
+        .add(
+          "hidden"
+        );
+
+
+      document
+        .getElementById(
+          "loginScreen"
+        )
+        .classList
+        .remove(
+          "hidden"
+        );
+
+    }
+  );
+
+
+
+  
 /* ================================= */
 /* SAFETY */
 /* ================================= */
