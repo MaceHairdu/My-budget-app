@@ -131,6 +131,14 @@ select {
   margin-top: 15px;
 }
 
+.success {
+  color: #166534;
+  background: #dcfce7;
+  padding: 12px;
+  border-radius: 10px;
+  margin-top: 15px;
+}
+
 .transaction {
   padding: 15px 0;
   border-bottom: 1px solid #e5e7eb;
@@ -169,6 +177,45 @@ select {
 
 .transaction-actions button {
   flex: 0 0 auto;
+}
+
+.setup-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.setup-row input {
+  margin: 0;
+}
+
+.remove-button {
+  width: auto;
+  padding: 10px 13px;
+  background: #fee2e2;
+  color: #991b1b;
+  flex-shrink: 0;
+}
+
+.calculation {
+  background: #f3f4f6;
+  border-radius: 14px;
+  padding: 16px;
+  margin-top: 20px;
+}
+
+.calculation-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 0;
+}
+
+.calculation-row.total {
+  border-top: 1px solid #d1d5db;
+  margin-top: 7px;
+  padding-top: 12px;
+  font-weight: 700;
 }
 
 </style>
@@ -234,7 +281,7 @@ Sign In
 
 
 <!-- ========================= -->
-<!-- APP -->
+<!-- MAIN APP -->
 <!-- ========================= -->
 
 <div
@@ -305,7 +352,7 @@ $0.00
 </div>
 
 <div class="subtext">
-This month's calculated weekly budget
+Weekly Fun Money
 </div>
 
 </div>
@@ -384,7 +431,7 @@ Cancel
 
 
 <!-- ========================= -->
-<!-- TRANSACTIONS -->
+<!-- THIS WEEK -->
 <!-- ========================= -->
 
 <div class="card">
@@ -402,9 +449,175 @@ No expenses yet.
 </div>
 
 
+<!-- ========================= -->
+<!-- BUDGET SETUP BUTTON -->
+<!-- ========================= -->
+
+<button
+  class="secondary-button"
+  id="budgetSetupButton"
+>
+Budget Setup
+</button>
+
+
+<!-- ========================= -->
+<!-- BUDGET SETUP -->
+<!-- ========================= -->
+
+<div
+  class="card hidden"
+  id="budgetSetup"
+>
+
+<h2>Budget Setup</h2>
+
+<p class="subtext">
+Set your household's budget for this month.
+</p>
+
+
+<label>
+Monthly Income
+</label>
+
+<input
+  type="number"
+  id="monthlyIncome"
+  placeholder="0.00"
+  step="0.01"
+  min="0"
+>
+
+
+<label>
+Monthly Bills
+</label>
+
+<input
+  type="number"
+  id="monthlyBills"
+  placeholder="0.00"
+  step="0.01"
+  min="0"
+>
+
+
+<label>
+Monthly Needs
+</label>
+
+<input
+  type="number"
+  id="monthlyNeeds"
+  placeholder="0.00"
+  step="0.01"
+  min="0"
+>
+
+
+<label>
+Monthly Savings
+</label>
+
+<input
+  type="number"
+  id="monthlySavings"
+  placeholder="0.00"
+  step="0.01"
+  min="0"
+>
+
+
+<div class="calculation">
+
+<h3>
+Monthly Calculation
+</h3>
+
+<div class="calculation-row">
+
+<span>Income</span>
+
+<strong id="calcIncome">
+$0.00
+</strong>
+
+</div>
+
+<div class="calculation-row">
+
+<span>Bills</span>
+
+<strong id="calcBills">
+-$0.00
+</strong>
+
+</div>
+
+<div class="calculation-row">
+
+<span>Needs</span>
+
+<strong id="calcNeeds">
+-$0.00
+</strong>
+
+</div>
+
+<div class="calculation-row">
+
+<span>Savings</span>
+
+<strong id="calcSavings">
+-$0.00
+</strong>
+
+</div>
+
+<div class="calculation-row total">
+
+<span>Fun Money</span>
+
+<strong id="calcFun">
+$0.00
+</strong>
+
+</div>
+
+</div>
+
+
+<button
+  class="primary-button"
+  id="saveBudgetButton"
+  style="margin-top:20px;"
+>
+Save Budget
+</button>
+
+
+<button
+  class="secondary-button"
+  id="closeBudgetButton"
+  style="margin-top:10px;"
+>
+Close
+</button>
+
+
+<div
+  id="budgetMessage"
+  class="success hidden"
+></div>
+
+</div>
+
+
 <button
   class="secondary-button"
   id="logoutButton"
+  style="margin-top:16px;"
 >
 Log Out
 </button>
@@ -416,7 +629,7 @@ Log Out
 
 
 /* ================================= */
-/* SUPABASE CONNECTION */
+/* SUPABASE */
 /* ================================= */
 
 const SUPABASE_URL =
@@ -464,7 +677,7 @@ const loginError =
 
 
 /* ================================= */
-/* MONEY FORMAT */
+/* MONEY */
 /* ================================= */
 
 function money(amount) {
@@ -475,6 +688,27 @@ function money(amount) {
       style: "currency",
       currency: "USD"
     }
+  );
+
+}
+
+
+/* ================================= */
+/* MONTH */
+/* ================================= */
+
+function currentMonth() {
+
+  const date =
+    new Date();
+
+  return (
+    date.getFullYear()
+    + "-"
+    + String(
+        date.getMonth() + 1
+      ).padStart(2, "0")
+    + "-01"
   );
 
 }
@@ -653,16 +887,6 @@ async function loadHousehold() {
 
 async function loadBudget() {
 
-  const firstOfMonth =
-    new Date();
-
-  firstOfMonth.setDate(1);
-
-  const month =
-    firstOfMonth
-      .toISOString()
-      .split("T")[0];
-
   const {
     data,
     error
@@ -676,34 +900,354 @@ async function loadBudget() {
       )
       .eq(
         "month",
-        month
+        currentMonth()
       )
       .maybeSingle();
 
   if (error) {
 
-    console.error(error);
+    console.error(
+      error
+    );
 
     return;
 
   }
 
-  if (data) {
+  if (!data) {
 
     document.getElementById(
       "weeklyBudget"
     ).textContent =
-      money(
-        data.weekly_budget
-      );
+      "$0.00";
+
+    return;
 
   }
+
+
+  document.getElementById(
+    "monthlyIncome"
+  ).value =
+    data.monthly_income || "";
+
+  document.getElementById(
+    "monthlyBills"
+  ).value =
+    data.monthly_bills || "";
+
+  document.getElementById(
+    "monthlyNeeds"
+  ).value =
+    data.monthly_needs || "";
+
+  document.getElementById(
+    "monthlySavings"
+  ).value =
+    data.savings_allowance || "";
+
+
+  updateCalculation();
 
 }
 
 
 /* ================================= */
-/* GET START OF WEEK */
+/* CALCULATION */
+/* ================================= */
+
+function updateCalculation() {
+
+  const income =
+    Number(
+      document.getElementById(
+        "monthlyIncome"
+      ).value
+    ) || 0;
+
+  const bills =
+    Number(
+      document.getElementById(
+        "monthlyBills"
+      ).value
+    ) || 0;
+
+  const needs =
+    Number(
+      document.getElementById(
+        "monthlyNeeds"
+      ).value
+    ) || 0;
+
+  const savings =
+    Number(
+      document.getElementById(
+        "monthlySavings"
+      ).value
+    ) || 0;
+
+
+  const fun =
+    income
+    - bills
+    - needs
+    - savings;
+
+
+  document.getElementById(
+    "calcIncome"
+  ).textContent =
+    money(income);
+
+
+  document.getElementById(
+    "calcBills"
+  ).textContent =
+    "-" + money(bills);
+
+
+  document.getElementById(
+    "calcNeeds"
+  ).textContent =
+    "-" + money(needs);
+
+
+  document.getElementById(
+    "calcSavings"
+  ).textContent =
+    "-" + money(savings);
+
+
+  document.getElementById(
+    "calcFun"
+  ).textContent =
+    money(fun);
+
+
+  return {
+    income,
+    bills,
+    needs,
+    savings,
+    fun
+  };
+
+}
+
+
+/* ================================= */
+/* CALCULATION INPUT LISTENERS */
+/* ================================= */
+
+[
+  "monthlyIncome",
+  "monthlyBills",
+  "monthlyNeeds",
+  "monthlySavings"
+].forEach(
+  function(id) {
+
+    document
+      .getElementById(id)
+      .addEventListener(
+        "input",
+        updateCalculation
+      );
+
+  }
+);
+
+
+/* ================================= */
+/* BUDGET SETUP OPEN/CLOSE */
+/* ================================= */
+
+document
+  .getElementById(
+    "budgetSetupButton"
+  )
+  .addEventListener(
+    "click",
+    async function() {
+
+      await loadBudget();
+
+      document
+        .getElementById(
+          "budgetSetup"
+        )
+        .classList
+        .remove(
+          "hidden"
+        );
+
+      document
+        .getElementById(
+          "budgetSetup"
+        )
+        .scrollIntoView({
+          behavior: "smooth"
+        });
+
+    }
+  );
+
+
+document
+  .getElementById(
+    "closeBudgetButton"
+  )
+  .addEventListener(
+    "click",
+    function() {
+
+      document
+        .getElementById(
+          "budgetSetup"
+        )
+        .classList
+        .add(
+          "hidden"
+        );
+
+    }
+  );
+
+
+/* ================================= */
+/* SAVE BUDGET */
+/* ================================= */
+
+document
+  .getElementById(
+    "saveBudgetButton"
+  )
+  .addEventListener(
+    "click",
+    saveBudget
+  );
+
+
+async function saveBudget() {
+
+  const calculation =
+    updateCalculation();
+
+
+  if (
+    calculation.income < 0 ||
+    calculation.bills < 0 ||
+    calculation.needs < 0 ||
+    calculation.savings < 0
+  ) {
+
+    alert(
+      "Amounts cannot be negative."
+    );
+
+    return;
+
+  }
+
+
+  if (
+    calculation.fun < 0
+  ) {
+
+    alert(
+      "Your bills, needs, and savings are greater than your income."
+    );
+
+    return;
+
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("budgets")
+      .upsert({
+
+        household_id:
+          householdId,
+
+        month:
+          currentMonth(),
+
+        monthly_income:
+          calculation.income,
+
+        monthly_bills:
+          calculation.bills,
+
+        monthly_needs:
+          calculation.needs,
+
+        savings_allowance:
+          calculation.savings,
+
+        weekly_budget:
+          calculation.fun / 4.345
+
+      }, {
+
+        onConflict:
+          "household_id,month"
+
+      });
+
+
+  if (error) {
+
+    alert(
+      "Could not save budget: "
+      + error.message
+    );
+
+    return;
+
+  }
+
+
+  document.getElementById(
+    "weeklyBudget"
+  ).textContent =
+    money(
+      calculation.fun / 4.345
+    );
+
+
+  const message =
+    document.getElementById(
+      "budgetMessage"
+    );
+
+  message.textContent =
+    "Budget saved.";
+
+  message.classList.remove(
+    "hidden"
+  );
+
+
+  setTimeout(
+    function() {
+
+      message.classList.add(
+        "hidden"
+      );
+
+    },
+    3000
+  );
+
+}
+
+
+/* ================================= */
+/* GET WEEK START */
 /* ================================= */
 
 function getWeekStart(date) {
@@ -724,7 +1268,10 @@ function getWeekStart(date) {
   );
 
   d.setHours(
-    0, 0, 0, 0
+    0,
+    0,
+    0,
+    0
   );
 
   return d
@@ -746,11 +1293,14 @@ async function calculateBalances() {
   } =
     await supabaseClient
       .from("allowance_deposits")
-      .select("fund, amount")
+      .select(
+        "fund, amount"
+      )
       .eq(
         "household_id",
         householdId
       );
+
 
   if (depositError) {
 
@@ -769,11 +1319,14 @@ async function calculateBalances() {
   } =
     await supabaseClient
       .from("expenses")
-      .select("fund, amount")
+      .select(
+        "fund, amount"
+      )
       .eq(
         "household_id",
         householdId
       );
+
 
   if (expenseError) {
 
@@ -890,9 +1443,12 @@ async function loadExpenses() {
       )
       .limit(50);
 
+
   if (error) {
 
-    console.error(error);
+    console.error(
+      error
+    );
 
     return;
 
@@ -1008,7 +1564,7 @@ async function loadExpenses() {
 
 
 /* ================================= */
-/* ADD EXPENSE BUTTON */
+/* ADD EXPENSE */
 /* ================================= */
 
 document
@@ -1155,8 +1711,6 @@ async function saveExpense() {
   }
 
 
-  /* EDIT */
-
   if (editingExpenseId) {
 
     const {
@@ -1196,13 +1750,7 @@ async function saveExpense() {
 
     }
 
-
-  }
-
-
-  /* ADD */
-
-  else {
+  } else {
 
     const {
       error
@@ -1326,10 +1874,13 @@ async function editExpense(id) {
     );
 
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
+  document
+    .getElementById(
+      "expenseForm"
+    )
+    .scrollIntoView({
+      behavior: "smooth"
+    });
 
 }
 
@@ -1428,7 +1979,7 @@ function escapeHtml(value) {
 
 
 /* ================================= */
-/* CHECK EXISTING SESSION */
+/* EXISTING SESSION */
 /* ================================= */
 
 async function checkSession() {
