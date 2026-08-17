@@ -323,7 +323,54 @@ Select your profile to continue.
 <div
   id="profileList"
 ></div>
+<div
+  class="card hidden"
+  id="pinScreen"
+>
 
+<h2>
+Enter PIN
+</h2>
+
+<p
+  class="subtext"
+  id="pinProfileName"
+></p>
+
+<input
+  type="password"
+  id="profilePin"
+  inputmode="numeric"
+  pattern="[0-9]*"
+  maxlength="4"
+  placeholder="Enter PIN"
+  autocomplete="off"
+>
+
+<button
+  class="primary-button"
+  id="unlockProfileButton"
+  style="margin-top:12px;"
+>
+Unlock
+</button>
+
+<p
+  class="error hidden"
+  id="pinError"
+>
+Incorrect PIN.
+</p>
+
+<button
+  class="secondary-button"
+  id="cancelPinButton"
+  style="margin-top:10px;"
+>
+Back
+</button>
+
+</div>
 
 <button
   class="secondary-button"
@@ -3040,12 +3087,176 @@ async function loadProfiles() {
     profile;
 
 
-  console.log(
-    "Selected profile:",
-    currentProfile
+  document.getElementById(
+    "profileList"
+  ).classList.add(
+    "hidden"
+  );
+
+
+  document.getElementById(
+    "pinScreen"
+  ).classList.remove(
+    "hidden"
+  );
+
+
+  document.getElementById(
+    "pinProfileName"
+  ).textContent =
+    profile.display_name;
+
+
+  document.getElementById(
+    "profilePin"
+  ).value =
+    "";
+
+
+  document.getElementById(
+    "profilePin"
+  ).focus();
+
+
+  document.getElementById(
+    "pinError"
+  ).classList.add(
+    "hidden"
   );
 
 }
+  async function unlockProfile() {
+
+  const pin =
+    document.getElementById(
+      "profilePin"
+    ).value;
+
+
+  if (!pin) {
+
+    return;
+
+  }
+
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.rpc(
+        "create_profile_session",
+        {
+          p_profile_id:
+            currentProfile.id,
+
+          p_pin:
+            pin,
+
+          p_session_minutes:
+            1440
+        }
+      );
+
+
+    if (error) {
+
+      throw error;
+
+    }
+
+
+    profileSessionToken =
+      data;
+
+
+    document.getElementById(
+      "pinScreen"
+    ).classList.add(
+      "hidden"
+    );
+
+
+    document.getElementById(
+      "profileScreen"
+    ).classList.add(
+      "hidden"
+    );
+
+
+    document.getElementById(
+      "appScreen"
+    ).classList.remove(
+      "hidden"
+    );
+
+
+    await loadBudgetSettings();
+
+    await loadExpenses();
+
+  }
+  catch (error) {
+
+    document.getElementById(
+      "pinError"
+    ).textContent =
+      "Incorrect PIN.";
+
+    document.getElementById(
+      "pinError"
+    ).classList.remove(
+      "hidden"
+    );
+
+  }
+
+}
+
+
+function cancelPin() {
+
+  currentProfile =
+    null;
+
+
+  document.getElementById(
+    "pinScreen"
+  ).classList.add(
+    "hidden"
+  );
+
+
+  document.getElementById(
+    "profileList"
+  ).classList.remove(
+    "hidden"
+  );
+
+}
+  document
+  .getElementById(
+    "unlockProfileButton"
+  )
+  .addEventListener(
+    "click",
+    unlockProfile
+  );
+
+
+document
+  .getElementById(
+    "cancelPinButton"
+  )
+  .addEventListener(
+    "click",
+    cancelPin
+  );
+
+
+  
 checkSession();
 
 </script>
