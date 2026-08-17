@@ -2964,7 +2964,24 @@ document
     "click",
     async function() {
 
+      localStorage.removeItem(
+        "profileSessionToken"
+      );
+
+      localStorage.removeItem(
+        "profileId"
+      );
+
+
+      currentProfile =
+        null;
+
+      profileSessionToken =
+        null;
+
+
       await supabaseClient.auth.signOut();
+
 
       document
         .getElementById(
@@ -2974,6 +2991,17 @@ document
         .add(
           "hidden"
         );
+
+
+      document
+        .getElementById(
+          "profileScreen"
+        )
+        .classList
+        .add(
+          "hidden"
+        );
+
 
       document
         .getElementById(
@@ -2986,7 +3014,6 @@ document
 
     }
   );
-
 
 /* ================================= */
 /* SAFETY */
