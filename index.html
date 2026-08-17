@@ -3200,18 +3200,24 @@ async function loadProfiles() {
   }
   catch (error) {
 
-    document.getElementById(
-      "pinError"
-    ).textContent =
-      "Incorrect PIN.";
+  console.error(
+    "Profile unlock error:",
+    error
+  );
 
-    document.getElementById(
-      "pinError"
-    ).classList.remove(
-      "hidden"
-    );
+  document.getElementById(
+    "pinError"
+  ).textContent =
+    error.message ||
+    "Incorrect PIN.";
 
-  }
+  document.getElementById(
+    "pinError"
+  ).classList.remove(
+    "hidden"
+  );
+
+}
 
 }
 
