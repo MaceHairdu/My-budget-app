@@ -5,15 +5,9 @@
 
 <meta charset="UTF-8">
 
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0"
->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta
-  name="theme-color"
-  content="#1f2937"
->
+<meta name="theme-color" content="#1f2937">
 
 <title>My Budget</title>
 
@@ -69,8 +63,8 @@ button {
   width: 100%;
   border: none;
   border-radius: 14px;
-  padding: 15px;
-  font-size: 17px;
+  padding: 14px;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
 }
@@ -88,6 +82,13 @@ button {
 .danger-button {
   background: #fee2e2;
   color: #991b1b;
+}
+
+.small-button {
+  width: auto;
+  padding: 7px 11px;
+  font-size: 13px;
+  border-radius: 8px;
 }
 
 .hidden {
@@ -130,23 +131,19 @@ select {
   margin-top: 15px;
 }
 
-.success {
-  color: #166534;
-  background: #dcfce7;
-  padding: 12px;
-  border-radius: 10px;
-  margin-top: 15px;
-}
-
 .transaction {
-  display: flex;
-  justify-content: space-between;
-  padding: 13px 0;
+  padding: 15px 0;
   border-bottom: 1px solid #e5e7eb;
 }
 
 .transaction:last-child {
   border-bottom: none;
+}
+
+.transaction-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .transaction-name {
@@ -161,12 +158,22 @@ select {
 
 .transaction-amount {
   font-weight: 600;
+  white-space: nowrap;
+}
+
+.transaction-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 9px;
+}
+
+.transaction-actions button {
+  flex: 0 0 auto;
 }
 
 </style>
 
 </head>
-
 
 <body>
 
@@ -188,12 +195,9 @@ select {
 
 </header>
 
-
 <div class="card">
 
-<label>
-Email
-</label>
+<label>Email</label>
 
 <input
   type="email"
@@ -202,10 +206,7 @@ Email
   autocomplete="email"
 >
 
-
-<label>
-Password
-</label>
+<label>Password</label>
 
 <input
   type="password"
@@ -214,7 +215,6 @@ Password
   autocomplete="current-password"
 >
 
-
 <button
   class="primary-button"
   id="loginButton"
@@ -222,7 +222,6 @@ Password
 >
 Sign In
 </button>
-
 
 <div
   id="loginError"
@@ -242,7 +241,6 @@ Sign In
   class="app hidden"
   id="appScreen"
 >
-
 
 <header>
 
@@ -321,17 +319,20 @@ This month's calculated weekly budget
 </button>
 
 
+<!-- ========================= -->
+<!-- EXPENSE FORM -->
+<!-- ========================= -->
+
 <div
   class="card hidden"
   id="expenseForm"
 >
 
-<h2>Add Expense</h2>
+<h2 id="expenseFormTitle">
+Add Expense
+</h2>
 
-
-<label>
-Amount
-</label>
+<label>Amount</label>
 
 <input
   type="number"
@@ -341,10 +342,7 @@ Amount
   min="0"
 >
 
-
-<label>
-Use money from
-</label>
+<label>Use money from</label>
 
 <select id="expenseFund">
 
@@ -358,17 +356,13 @@ Fun Money
 
 </select>
 
-
-<label>
-Description
-</label>
+<label>Description</label>
 
 <input
   type="text"
   id="expenseDescription"
   placeholder="Example: Walmart"
 >
-
 
 <button
   class="primary-button"
@@ -377,7 +371,6 @@ Description
 >
 Save Expense
 </button>
-
 
 <button
   class="secondary-button"
@@ -389,6 +382,10 @@ Cancel
 
 </div>
 
+
+<!-- ========================= -->
+<!-- TRANSACTIONS -->
+<!-- ========================= -->
 
 <div class="card">
 
@@ -412,7 +409,6 @@ No expenses yet.
 Log Out
 </button>
 
-
 </div>
 
 
@@ -420,17 +416,14 @@ Log Out
 
 
 /* ================================= */
-/* SUPABASE */
+/* SUPABASE CONNECTION */
 /* ================================= */
-
 
 const SUPABASE_URL =
   "https://jivygwszzlaxnhhvxxsg.supabase.co";
 
-
 const SUPABASE_KEY =
   "sb_publishable_cZM-7AaU0xD6L_fMa_foOw_-Cjk2edj";
-
 
 const supabaseClient =
   window.supabase.createClient(
@@ -440,39 +433,29 @@ const supabaseClient =
 
 
 /* ================================= */
-/* GLOBAL DATA */
+/* GLOBAL VARIABLES */
 /* ================================= */
-
 
 let currentUser = null;
 
 let householdId = null;
 
-let balances = {
-
-  needs: 0,
-
-  fun: 0
-
-};
+let editingExpenseId = null;
 
 
 /* ================================= */
 /* ELEMENTS */
 /* ================================= */
 
-
 const loginScreen =
   document.getElementById(
     "loginScreen"
   );
 
-
 const appScreen =
   document.getElementById(
     "appScreen"
   );
-
 
 const loginError =
   document.getElementById(
@@ -481,9 +464,8 @@ const loginError =
 
 
 /* ================================= */
-/* MONEY */
+/* MONEY FORMAT */
 /* ================================= */
-
 
 function money(amount) {
 
@@ -502,7 +484,6 @@ function money(amount) {
 /* LOGIN */
 /* ================================= */
 
-
 document
   .getElementById("loginButton")
   .addEventListener(
@@ -517,19 +498,16 @@ async function login() {
     "hidden"
   );
 
-
   const email =
     document
       .getElementById("loginEmail")
       .value
       .trim();
 
-
   const password =
     document
       .getElementById("loginPassword")
       .value;
-
 
   if (!email || !password) {
 
@@ -540,7 +518,6 @@ async function login() {
     return;
 
   }
-
 
   const {
     data,
@@ -554,7 +531,6 @@ async function login() {
 
     });
 
-
   if (error) {
 
     showLoginError(
@@ -565,10 +541,8 @@ async function login() {
 
   }
 
-
   currentUser =
     data.user;
-
 
   await startApp();
 
@@ -578,7 +552,6 @@ async function login() {
 /* ================================= */
 /* LOGIN ERROR */
 /* ================================= */
-
 
 function showLoginError(message) {
 
@@ -596,19 +569,15 @@ function showLoginError(message) {
 /* START APP */
 /* ================================= */
 
-
 async function startApp() {
-
 
   loginScreen.classList.add(
     "hidden"
   );
 
-
   appScreen.classList.remove(
     "hidden"
   );
-
 
   document.getElementById(
     "currentDate"
@@ -622,7 +591,6 @@ async function startApp() {
       }
     );
 
-
   await loadHousehold();
 
 }
@@ -632,9 +600,7 @@ async function startApp() {
 /* LOAD HOUSEHOLD */
 /* ================================= */
 
-
 async function loadHousehold() {
-
 
   const {
     data,
@@ -650,7 +616,6 @@ async function loadHousehold() {
       .limit(1)
       .maybeSingle();
 
-
   if (error) {
 
     alert(
@@ -662,7 +627,6 @@ async function loadHousehold() {
 
   }
 
-
   if (!data) {
 
     alert(
@@ -673,12 +637,10 @@ async function loadHousehold() {
 
   }
 
-
   householdId =
     data.household_id;
 
-
-  await loadBalance();
+  await loadBudget();
 
   await loadExpenses();
 
@@ -686,26 +648,37 @@ async function loadHousehold() {
 
 
 /* ================================= */
-/* LOAD BALANCE */
+/* LOAD BUDGET */
 /* ================================= */
 
+async function loadBudget() {
 
-async function loadBalance() {
+  const firstOfMonth =
+    new Date();
 
+  firstOfMonth.setDate(1);
+
+  const month =
+    firstOfMonth
+      .toISOString()
+      .split("T")[0];
 
   const {
     data,
     error
   } =
     await supabaseClient
-      .from("balances")
+      .from("budgets")
       .select("*")
       .eq(
         "household_id",
         householdId
       )
+      .eq(
+        "month",
+        month
+      )
       .maybeSingle();
-
 
   if (error) {
 
@@ -715,139 +688,179 @@ async function loadBalance() {
 
   }
 
+  if (data) {
 
-  if (!data) {
-
-    const {
-      data: newBalance,
-      error: insertError
-    } =
-      await supabaseClient
-        .from("balances")
-        .insert({
-
-          household_id:
-            householdId,
-
-          needs_balance:
-            0,
-
-          fun_balance:
-            0
-
-        })
-        .select()
-        .single();
-
-
-    if (insertError) {
-
-      alert(
-        "Could not create balance: "
-        + insertError.message
-      );
-
-      return;
-
-    }
-
-
-    balances.needs =
-      Number(
-        newBalance.needs_balance
-      );
-
-
-    balances.fun =
-      Number(
-        newBalance.fun_balance
-      );
-
-
-  } else {
-
-
-    balances.needs =
-      Number(
-        data.needs_balance
-      );
-
-
-    balances.fun =
-      Number(
-        data.fun_balance
+    document.getElementById(
+      "weeklyBudget"
+    ).textContent =
+      money(
+        data.weekly_budget
       );
 
   }
-
-
-  updateBalances();
 
 }
 
 
 /* ================================= */
-/* SAVE BALANCE */
+/* GET START OF WEEK */
 /* ================================= */
 
+function getWeekStart(date) {
 
-async function saveBalance() {
+  const d =
+    new Date(date);
 
+  const day =
+    d.getDay();
+
+  const difference =
+    day === 0
+      ? -6
+      : 1 - day;
+
+  d.setDate(
+    d.getDate() + difference
+  );
+
+  d.setHours(
+    0, 0, 0, 0
+  );
+
+  return d
+    .toISOString()
+    .split("T")[0];
+
+}
+
+
+/* ================================= */
+/* CALCULATE BALANCES */
+/* ================================= */
+
+async function calculateBalances() {
 
   const {
-    error
+    data: deposits,
+    error: depositError
   } =
     await supabaseClient
-      .from("balances")
-      .update({
-
-        needs_balance:
-          balances.needs,
-
-        fun_balance:
-          balances.fun
-
-      })
+      .from("allowance_deposits")
+      .select("fund, amount")
       .eq(
         "household_id",
         householdId
       );
 
+  if (depositError) {
 
-  if (error) {
-
-    alert(
-      "Could not save balance: "
-      + error.message
+    console.error(
+      depositError
     );
+
+    return;
 
   }
 
-}
+
+  const {
+    data: expenses,
+    error: expenseError
+  } =
+    await supabaseClient
+      .from("expenses")
+      .select("fund, amount")
+      .eq(
+        "household_id",
+        householdId
+      );
+
+  if (expenseError) {
+
+    console.error(
+      expenseError
+    );
+
+    return;
+
+  }
 
 
-/* ================================= */
-/* UPDATE BALANCES */
-/* ================================= */
+  let needs =
+    0;
+
+  let fun =
+    0;
 
 
-function updateBalances() {
+  deposits.forEach(
+    function(deposit) {
+
+      if (
+        deposit.fund === "needs"
+      ) {
+
+        needs +=
+          Number(
+            deposit.amount
+          );
+
+      }
+
+      if (
+        deposit.fund === "fun"
+      ) {
+
+        fun +=
+          Number(
+            deposit.amount
+          );
+
+      }
+
+    }
+  );
+
+
+  expenses.forEach(
+    function(expense) {
+
+      if (
+        expense.fund === "needs"
+      ) {
+
+        needs -=
+          Number(
+            expense.amount
+          );
+
+      }
+
+      if (
+        expense.fund === "fun"
+      ) {
+
+        fun -=
+          Number(
+            expense.amount
+          );
+
+      }
+
+    }
+  );
 
 
   document.getElementById(
     "needsBalance"
   ).textContent =
-    money(
-      balances.needs
-    );
+    money(needs);
 
 
   document.getElementById(
     "funBalance"
   ).textContent =
-    money(
-      balances.fun
-    );
+    money(fun);
 
 }
 
@@ -856,9 +869,7 @@ function updateBalances() {
 /* LOAD EXPENSES */
 /* ================================= */
 
-
 async function loadExpenses() {
-
 
   const {
     data,
@@ -879,7 +890,6 @@ async function loadExpenses() {
       )
       .limit(50);
 
-
   if (error) {
 
     console.error(error);
@@ -895,28 +905,32 @@ async function loadExpenses() {
     );
 
 
-  if (!data || data.length === 0) {
+  if (
+    !data ||
+    data.length === 0
+  ) {
 
     container.innerHTML =
       '<p class="subtext">No expenses yet.</p>';
+
+    await calculateBalances();
 
     return;
 
   }
 
 
-  container.innerHTML = "";
+  container.innerHTML =
+    "";
 
 
   data.forEach(
     function(expense) {
 
-
       const row =
         document.createElement(
           "div"
         );
-
 
       row.className =
         "transaction";
@@ -924,34 +938,56 @@ async function loadExpenses() {
 
       row.innerHTML = `
 
-        <div>
+        <div class="transaction-top">
 
-          <div class="transaction-name">
+          <div>
 
-            ${escapeHtml(
-              expense.description
-            )}
+            <div class="transaction-name">
+
+              ${escapeHtml(
+                expense.description
+              )}
+
+            </div>
+
+            <div class="transaction-category">
+
+              ${
+                expense.fund === "needs"
+                  ? "Needs"
+                  : "Fun Money"
+              }
+
+            </div>
 
           </div>
 
-          <div class="transaction-category">
+          <div class="transaction-amount">
 
-            ${
-              expense.fund === "needs"
-                ? "Needs"
-                : "Fun Money"
-            }
+            -${money(
+              expense.amount
+            )}
 
           </div>
 
         </div>
 
 
-        <div class="transaction-amount">
+        <div class="transaction-actions">
 
-          -${money(
-            expense.amount
-          )}
+          <button
+            class="secondary-button small-button"
+            onclick="editExpense('${expense.id}')"
+          >
+            Edit
+          </button>
+
+          <button
+            class="danger-button small-button"
+            onclick="deleteExpense('${expense.id}')"
+          >
+            Delete
+          </button>
 
         </div>
 
@@ -965,13 +1001,15 @@ async function loadExpenses() {
     }
   );
 
+
+  await calculateBalances();
+
 }
 
 
 /* ================================= */
-/* ADD EXPENSE */
+/* ADD EXPENSE BUTTON */
 /* ================================= */
-
 
 document
   .getElementById(
@@ -981,16 +1019,35 @@ document
     "click",
     function() {
 
+      editingExpenseId =
+        null;
+
+      document.getElementById(
+        "expenseFormTitle"
+      ).textContent =
+        "Add Expense";
+
+      document.getElementById(
+        "saveExpenseButton"
+      ).textContent =
+        "Save Expense";
+
       document
         .getElementById(
           "expenseForm"
         )
         .classList
-        .remove("hidden");
+        .remove(
+          "hidden"
+        );
 
     }
   );
 
+
+/* ================================= */
+/* CANCEL EXPENSE */
+/* ================================= */
 
 document
   .getElementById(
@@ -998,18 +1055,43 @@ document
   )
   .addEventListener(
     "click",
-    function() {
-
-      document
-        .getElementById(
-          "expenseForm"
-        )
-        .classList
-        .add("hidden");
-
-    }
+    closeExpenseForm
   );
 
+
+function closeExpenseForm() {
+
+  editingExpenseId =
+    null;
+
+  document.getElementById(
+    "expenseAmount"
+  ).value = "";
+
+  document.getElementById(
+    "expenseDescription"
+  ).value = "";
+
+  document.getElementById(
+    "expenseFund"
+  ).value =
+    "needs";
+
+  document
+    .getElementById(
+      "expenseForm"
+    )
+    .classList
+    .add(
+      "hidden"
+    );
+
+}
+
+
+/* ================================= */
+/* SAVE EXPENSE */
+/* ================================= */
 
 document
   .getElementById(
@@ -1017,12 +1099,11 @@ document
   )
   .addEventListener(
     "click",
-    addExpense
+    saveExpense
   );
 
 
-async function addExpense() {
-
+async function saveExpense() {
 
   const amount =
     Number(
@@ -1033,14 +1114,12 @@ async function addExpense() {
         .value
     );
 
-
   const fund =
     document
       .getElementById(
         "expenseFund"
       )
       .value;
-
 
   const description =
     document
@@ -1076,79 +1155,165 @@ async function addExpense() {
   }
 
 
-  /* Update local balance */
+  /* EDIT */
 
-  if (fund === "needs") {
+  if (editingExpenseId) {
 
-    balances.needs -=
-      amount;
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("expenses")
+        .update({
 
-  } else {
+          amount:
+            amount,
 
-    balances.fun -=
-      amount;
+          fund:
+            fund,
+
+          description:
+            description,
+
+          updated_at:
+            new Date().toISOString()
+
+        })
+        .eq(
+          "id",
+          editingExpenseId
+        );
+
+
+    if (error) {
+
+      alert(
+        "Could not update expense: "
+        + error.message
+      );
+
+      return;
+
+    }
+
 
   }
 
 
-  /* Save expense */
+  /* ADD */
+
+  else {
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("expenses")
+        .insert({
+
+          household_id:
+            householdId,
+
+          user_id:
+            currentUser.id,
+
+          amount:
+            amount,
+
+          fund:
+            fund,
+
+          description:
+            description
+
+        });
+
+
+    if (error) {
+
+      alert(
+        "Could not save expense: "
+        + error.message
+      );
+
+      return;
+
+    }
+
+  }
+
+
+  closeExpenseForm();
+
+  await loadExpenses();
+
+}
+
+
+/* ================================= */
+/* EDIT EXPENSE */
+/* ================================= */
+
+async function editExpense(id) {
 
   const {
+    data,
     error
   } =
     await supabaseClient
       .from("expenses")
-      .insert({
-
-        household_id:
-          householdId,
-
-        user_id:
-          currentUser.id,
-
-        amount:
-          amount,
-
-        fund:
-          fund,
-
-        description:
-          description
-
-      });
+      .select("*")
+      .eq(
+        "id",
+        id
+      )
+      .single();
 
 
   if (error) {
 
     alert(
-      "Could not save expense: "
+      "Could not load expense: "
       + error.message
     );
-
-    await loadBalance();
 
     return;
 
   }
 
 
-  await saveBalance();
+  editingExpenseId =
+    id;
 
 
-  updateBalances();
+  document.getElementById(
+    "expenseFormTitle"
+  ).textContent =
+    "Edit Expense";
 
 
-  await loadExpenses();
+  document.getElementById(
+    "saveExpenseButton"
+  ).textContent =
+    "Save Changes";
 
 
   document.getElementById(
     "expenseAmount"
-  ).value = "";
+  ).value =
+    data.amount;
+
+
+  document.getElementById(
+    "expenseFund"
+  ).value =
+    data.fund;
 
 
   document.getElementById(
     "expenseDescription"
-  ).value = "";
+  ).value =
+    data.description;
 
 
   document
@@ -1156,7 +1321,63 @@ async function addExpense() {
       "expenseForm"
     )
     .classList
-    .add("hidden");
+    .remove(
+      "hidden"
+    );
+
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+}
+
+
+/* ================================= */
+/* DELETE EXPENSE */
+/* ================================= */
+
+async function deleteExpense(id) {
+
+  const confirmed =
+    confirm(
+      "Delete this expense?"
+    );
+
+
+  if (!confirmed) {
+
+    return;
+
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("expenses")
+      .delete()
+      .eq(
+        "id",
+        id
+      );
+
+
+  if (error) {
+
+    alert(
+      "Could not delete expense: "
+      + error.message
+    );
+
+    return;
+
+  }
+
+
+  await loadExpenses();
 
 }
 
@@ -1164,7 +1385,6 @@ async function addExpense() {
 /* ================================= */
 /* LOGOUT */
 /* ================================= */
-
 
 document
   .getElementById(
@@ -1192,7 +1412,6 @@ document
 /* HTML SAFETY */
 /* ================================= */
 
-
 function escapeHtml(value) {
 
   const div =
@@ -1209,12 +1428,10 @@ function escapeHtml(value) {
 
 
 /* ================================= */
-/* CHECK EXISTING LOGIN */
+/* CHECK EXISTING SESSION */
 /* ================================= */
 
-
 async function checkSession() {
-
 
   const {
     data
