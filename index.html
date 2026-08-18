@@ -921,14 +921,6 @@ async function startApp() {
 
 
   document.getElementById(
-  "currentProfileName"
-).textContent =
-  currentProfile
-    ? currentProfile.display_name
-    : "";
-
-
-document.getElementById(
   "currentDate"
 ).textContent =
   new Date().toLocaleDateString(
@@ -950,9 +942,14 @@ document.getElementById(
 
   if (restored) {
 
-    return;
+  document.getElementById(
+    "currentProfileName"
+  ).textContent =
+    currentProfile.display_name;
 
-  }
+  return;
+
+}
 
 
   const profiles =
