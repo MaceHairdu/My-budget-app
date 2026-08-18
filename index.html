@@ -3295,6 +3295,205 @@ document
 
     }
   );
+
+  document
+  .getElementById(
+    "saveProfileButton"
+  )
+  .addEventListener(
+    "click",
+    async function() {
+
+      const name =
+        document
+          .getElementById(
+            "newProfileName"
+          )
+          .value
+          .trim();
+
+
+      const pin =
+        document
+          .getElementById(
+            "newProfilePin"
+          )
+          .value;
+
+
+      const errorMessage =
+        document.getElementById(
+          "profileError"
+        );
+
+
+      errorMessage.classList.add(
+        "hidden"
+      );
+
+
+      if (!name) {
+
+        errorMessage.textContent =
+          "Profile name is required.";
+
+        errorMessage.classList.remove(
+          "hidden"
+        );
+
+        return;
+
+      }
+
+
+      if (!/^\d{4}$/.test(pin)) {
+
+        errorMessage.textContent =
+          "PIN must be exactly 4 digits.";
+
+        errorMessage.classList.remove(
+          "hidden"
+        );
+
+        return;
+
+      }
+
+
+      try {
+
+        const {
+          error
+        } =
+          await supabaseClient.rpc(
+            "create_profile",
+            {
+              p_household_id:
+                householdId,
+
+              p_display_name:
+                name,
+
+              p_pin:
+                pin
+            }
+          );
+
+
+        if (error) {
+
+          throw error;
+
+        }
+
+
+        document
+          .getElementById(
+            "newProfileName"
+          )
+          .value = "";
+
+        document
+          .getElementById(
+            "newProfilePin"
+          )
+          .value = "";
+
+
+        document
+          .getElementById(
+            "addProfileForm"
+          )
+          .classList
+          .add(
+            "hidden"
+          );
+
+
+        document
+          .getElementById(
+            "addProfileButton"
+          )
+          .classList
+          .remove(
+            "hidden"
+          );
+
+
+        document
+          .getElementById(
+            "profileList"
+          )
+          .classList
+          .remove(
+            "hidden"
+          );
+
+
+        const profiles =
+          await loadProfiles();
+
+
+        const profileList =
+          document.getElementById(
+            "profileList"
+          );
+
+
+        profileList.innerHTML = "";
+
+
+        profiles.forEach(
+          profile => {
+
+            const button =
+              document.createElement(
+                "button"
+              );
+
+
+            button.className =
+              "primary-button";
+
+
+            button.textContent =
+              profile.display_name;
+
+
+            button.style.marginTop =
+              "12px";
+
+
+            button.addEventListener(
+              "click",
+              () => {
+                selectProfile(profile);
+              }
+            );
+
+
+            profileList.appendChild(
+              button
+            );
+
+          }
+        );
+
+      }
+      catch (error) {
+
+        errorMessage.textContent =
+          error.message;
+
+        errorMessage.classList.remove(
+          "hidden"
+        );
+
+      }
+
+    }
+  );
+  
 /* ================================= */
 /* SAFETY */
 /* ================================= */
