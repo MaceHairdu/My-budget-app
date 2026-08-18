@@ -3047,7 +3047,100 @@ document
     }
   );
 
+document
+  .getElementById(
+    "switchProfileButton"
+  )
+  .addEventListener(
+    "click",
+    async function() {
 
+      currentProfile =
+        null;
+
+      profileSessionToken =
+        null;
+
+      localStorage.removeItem(
+        "profileSessionToken"
+      );
+
+      localStorage.removeItem(
+        "profileId"
+      );
+
+
+      document
+        .getElementById(
+          "appScreen"
+        )
+        .classList
+        .add(
+          "hidden"
+        );
+
+
+      document
+        .getElementById(
+          "profileScreen"
+        )
+        .classList
+        .remove(
+          "hidden"
+        );
+
+
+      const profiles =
+        await loadProfiles();
+
+
+      const profileList =
+        document.getElementById(
+          "profileList"
+        );
+
+
+      profileList.innerHTML = "";
+
+
+      profiles.forEach(
+        profile => {
+
+          const button =
+            document.createElement(
+              "button"
+            );
+
+
+          button.className =
+            "primary-button";
+
+
+          button.textContent =
+            profile.display_name;
+
+
+          button.style.marginTop =
+            "12px";
+
+
+          button.addEventListener(
+            "click",
+            () => {
+              selectProfile(profile);
+            }
+          );
+
+
+          profileList.appendChild(
+            button
+          );
+
+        }
+      );
+
+    }
+  );
 
   
 /* ================================= */
