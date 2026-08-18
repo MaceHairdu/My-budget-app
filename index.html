@@ -3223,9 +3223,75 @@ document
     "click",
     function() {
 
-      alert(
-        "Profile creation is coming next."
-      );
+      document
+        .getElementById(
+          "profileList"
+        )
+        .classList
+        .add(
+          "hidden"
+        );
+
+
+      document
+        .getElementById(
+          "addProfileButton"
+        )
+        .classList
+        .add(
+          "hidden"
+        );
+
+
+      document
+        .getElementById(
+          "addProfileForm"
+        )
+        .classList
+        .remove(
+          "hidden"
+        );
+
+    }
+  );
+
+
+document
+  .getElementById(
+    "cancelProfileButton"
+  )
+  .addEventListener(
+    "click",
+    function() {
+
+      document
+        .getElementById(
+          "addProfileForm"
+        )
+        .classList
+        .add(
+          "hidden"
+        );
+
+
+      document
+        .getElementById(
+          "profileList"
+        )
+        .classList
+        .remove(
+          "hidden"
+        );
+
+
+      document
+        .getElementById(
+          "addProfileButton"
+        )
+        .classList
+        .remove(
+          "hidden"
+        );
 
     }
   );
