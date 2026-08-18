@@ -332,6 +332,8 @@ Select your profile to continue.
 + Add Profile
 </button>
 
+
+
 <div
   class="card hidden"
   id="addProfileForm"
@@ -401,7 +403,13 @@ Enter PIN
   class="subtext"
   id="pinProfileName"
 ></p>
-
+<button
+  class="secondary-button"
+  id="editProfileButton"
+  style="margin-top:12px;"
+>
+Edit Profile
+</button>
 <input
   type="password"
   id="profilePin"
@@ -3523,7 +3531,20 @@ document
 
     }
   );
-  
+  document
+  .getElementById(
+    "editProfileButton"
+  )
+  .addEventListener(
+    "click",
+    function() {
+
+      alert(
+        "Profile editing is coming next."
+      );
+
+    }
+  );
 /* ================================= */
 /* SAFETY */
 /* ================================= */
