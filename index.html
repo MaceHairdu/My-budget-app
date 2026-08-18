@@ -3163,6 +3163,36 @@ document
         );
 
 
+      document
+        .getElementById(
+          "profileList"
+        )
+        .classList
+        .remove(
+          "hidden"
+        );
+
+
+      document
+        .getElementById(
+          "addProfileButton"
+        )
+        .classList
+        .remove(
+          "hidden"
+        );
+
+
+      document
+        .getElementById(
+          "addProfileForm"
+        )
+        .classList
+        .add(
+          "hidden"
+        );
+
+
       const profiles =
         await loadProfiles();
 
