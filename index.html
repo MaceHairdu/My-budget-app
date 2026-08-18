@@ -410,6 +410,62 @@ Enter PIN
 >
 Edit Profile
 </button>
+
+<div
+  class="card hidden"
+  id="editProfileForm"
+  style="margin-top:16px;"
+>
+
+<h2>
+Edit Profile
+</h2>
+
+<label>
+Name
+</label>
+
+<input
+  type="text"
+  id="editProfileName"
+  placeholder="Profile name"
+>
+
+<label>
+New 4-Digit PIN
+</label>
+
+<input
+  type="password"
+  id="editProfilePin"
+  inputmode="numeric"
+  pattern="[0-9]*"
+  maxlength="4"
+  placeholder="Leave blank to keep current PIN"
+>
+
+<button
+  class="primary-button"
+  id="saveEditedProfileButton"
+  style="margin-top:20px;"
+>
+Save Changes
+</button>
+
+<button
+  class="secondary-button"
+  id="cancelEditProfileButton"
+  style="margin-top:10px;"
+>
+Cancel
+</button>
+
+<p
+  class="error hidden"
+  id="editProfileError"
+></p>
+
+</div>
 <input
   type="password"
   id="profilePin"
@@ -3539,9 +3595,39 @@ document
     "click",
     function() {
 
-      alert(
-        "Profile editing is coming next."
-      );
+      document
+        .getElementById(
+          "editProfileName"
+        )
+        .value =
+        currentProfile.display_name;
+
+
+      document
+        .getElementById(
+          "editProfilePin"
+        )
+        .value = "";
+
+
+      document
+        .getElementById(
+          "editProfileError"
+        )
+        .classList
+        .add(
+          "hidden"
+        );
+
+
+      document
+        .getElementById(
+          "editProfileForm"
+        )
+        .classList
+        .remove(
+          "hidden"
+        );
 
     }
   );
