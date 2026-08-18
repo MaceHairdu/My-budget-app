@@ -805,6 +805,14 @@ Close
 
 <button
   class="secondary-button"
+  id="settingsButton"
+  style="margin-top:16px;"
+>
+Settings
+</button>
+
+<button
+  class="secondary-button"
   id="switchProfileButton"
   style="margin-top:16px;"
 >
@@ -817,6 +825,59 @@ Switch Profile
 >
 Log Out
 </button>
+
+
+<div
+  class="app hidden"
+  id="settingsScreen"
+>
+
+<header>
+
+<h1>Settings</h1>
+
+<p
+  class="subtext"
+  id="settingsProfileName"
+></p>
+
+<p
+  class="subtext"
+  id="settingsProfileType"
+></p>
+
+</header>
+
+
+<div
+  class="card"
+  style="margin-top:16px;"
+>
+
+<h2>
+Profile
+</h2>
+
+<button
+  class="primary-button"
+  id="profileSettingsButton"
+  style="margin-top:12px;"
+>
+Profile
+</button>
+
+</div>
+
+
+<button
+  class="secondary-button"
+  id="settingsBackButton"
+  style="margin-top:16px;"
+>
+Back
+</button>
+
+</div>
 
 </div>
 
@@ -3528,7 +3589,57 @@ document
     }
   );
   
+document
+  .getElementById(
+    "settingsButton"
+  )
+  .addEventListener(
+    "click",
+    function() {
 
+      document
+        .getElementById(
+          "appScreen"
+        )
+        .classList
+        .add(
+          "hidden"
+        );
+
+
+      document
+        .getElementById(
+          "settingsScreen"
+        )
+        .classList
+        .remove(
+          "hidden"
+        );
+
+
+      document
+        .getElementById(
+          "settingsProfileName"
+        )
+        .textContent =
+        currentProfile.display_name;
+
+
+      document
+        .getElementById(
+          "settingsProfileType"
+        )
+        .textContent =
+        currentProfile.access_level
+          .charAt(0)
+          .toUpperCase() +
+        currentProfile.access_level
+          .slice(1) +
+        " Profile";
+
+    }
+  );
+  
 /* ================================= */
 /* SAFETY */
 /* ================================= */
