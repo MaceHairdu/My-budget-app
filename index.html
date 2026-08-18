@@ -323,6 +323,15 @@ Select your profile to continue.
 <div
   id="profileList"
 ></div>
+
+<button
+  class="secondary-button"
+  id="addProfileButton"
+  style="margin-top:16px;"
+>
++ Add Profile
+</button>
+  
 <div
   class="card hidden"
   id="pinScreen"
@@ -3150,7 +3159,20 @@ document
     }
   );
 
-  
+  document
+  .getElementById(
+    "addProfileButton"
+  )
+  .addEventListener(
+    "click",
+    function() {
+
+      alert(
+        "Profile creation is coming next."
+      );
+
+    }
+  );
 /* ================================= */
 /* SAFETY */
 /* ================================= */
