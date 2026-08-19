@@ -826,7 +826,7 @@ Switch Profile
 Log Out
 </button>
 
-
+</div>
 <div
   class="app hidden"
   id="settingsScreen"
@@ -878,8 +878,9 @@ Back
 </button>
 
 </div>
-
 </div>
+
+
 
 
 <script>
@@ -3639,6 +3640,38 @@ document
 
     }
   );
+  document
+  .getElementById(
+    "settingsBackButton"
+  )
+  .addEventListener(
+    "click",
+    function() {
+
+      document
+        .getElementById(
+          "settingsScreen"
+        )
+        .classList
+        .add(
+          "hidden"
+        );
+
+
+      document
+        .getElementById(
+          "appScreen"
+        )
+        .classList
+        .remove(
+          "hidden"
+        );
+
+    }
+  );
+
+
+
   
 /* ================================= */
 /* SAFETY */
@@ -3899,7 +3932,123 @@ document.getElementById(
 }
 
 }
+async function restoreProfileSession() {
 
+  const savedToken =
+    localStorage.getItem(
+      "profileSessionToken"
+    );
+
+  const savedProfileId =
+    localStorage.getItem(
+      "profileId"
+    );
+
+  if (
+    !savedToken ||
+    !savedProfileId
+  ) {
+
+    return false;
+
+  }
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.rpc(
+        "validate_profile_session",
+        {
+          p_session_token:
+            savedToken
+        }
+      );
+
+    if (error) {
+
+      throw error;
+
+    }
+
+    if (
+      data !== savedProfileId
+    ) {
+
+      throw new Error(
+        "Profile session mismatch"
+      );
+
+    }
+
+    const {
+      data: profile,
+      error: profileError
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select(
+          "id, display_name, access_level"
+        )
+        .eq(
+          "id",
+          savedProfileId
+        )
+        .single();
+
+    if (profileError) {
+
+      throw profileError;
+
+    }
+
+    currentProfile =
+      profile;
+
+    profileSessionToken =
+      savedToken;
+
+    document.getElementById(
+      "profileScreen"
+    ).classList.add(
+      "hidden"
+    );
+
+    document.getElementById(
+      "appScreen"
+    ).classList.remove(
+      "hidden"
+    );
+
+    await loadBudgetSettings();
+
+    await loadExpenses();
+
+    return true;
+
+  }
+  catch (error) {
+
+    console.error(
+      "Could not restore profile session:",
+      error
+    );
+
+    localStorage.removeItem(
+      "profileSessionToken"
+    );
+
+    localStorage.removeItem(
+      "profileId"
+    );
+
+    return false;
+
+  }
+
+}
 
 function cancelPin() {
 
@@ -3920,162 +4069,4 @@ function cancelPin() {
     "hidden"
   );
 
-}
-  async function restoreProfileSession() {
-
-  const savedToken =
-    localStorage.getItem(
-      "profileSessionToken"
-    );
-
-  const savedProfileId =
-    localStorage.getItem(
-      "profileId"
-    );
-
-
-  if (
-    !savedToken ||
-    !savedProfileId
-  ) {
-
-    return false;
-
-  }
-
-
-  try {
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient.rpc(
-        "validate_profile_session",
-        {
-          p_session_token:
-            savedToken
-        }
-      );
-
-
-    if (error) {
-
-      throw error;
-
-    }
-
-
-    if (
-      data !== savedProfileId
-    ) {
-
-      throw new Error(
-        "Profile session mismatch"
-      );
-
-    }
-
-
-    const {
-      data: profile,
-      error: profileError
-    } =
-      await supabaseClient
-        .from("profiles")
-        .select(
-          "id, display_name, access_level"
-        )
-        .eq(
-          "id",
-          savedProfileId
-        )
-        .single();
-
-
-    if (profileError) {
-
-      throw profileError;
-
-    }
-
-
-    currentProfile =
-      profile;
-
-    profileSessionToken =
-      savedToken;
-
-
-    document.getElementById(
-      "profileScreen"
-    ).classList.add(
-      "hidden"
-    );
-
-
-    document.getElementById(
-      "appScreen"
-    ).classList.remove(
-      "hidden"
-    );
-
-
-    await loadBudgetSettings();
-
-    await loadExpenses();
-
-
-    return true;
-
-  }
-  catch (error) {
-
-    console.error(
-      "Could not restore profile session:",
-      error
-    );
-
-
-    localStorage.removeItem(
-      "profileSessionToken"
-    );
-
-    localStorage.removeItem(
-      "profileId"
-    );
-
-
-    return false;
-
-  }
-
-}
-  document
-  .getElementById(
-    "unlockProfileButton"
-  )
-  .addEventListener(
-    "click",
-    unlockProfile
-  );
-
-
-document
-  .getElementById(
-    "cancelPinButton"
-  )
-  .addEventListener(
-    "click",
-    cancelPin
-  );
-
-
   
-checkSession();
-
-</script>
-
-</body>
-
-</html>
