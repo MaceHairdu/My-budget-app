@@ -2183,9 +2183,14 @@ async function updateBudgetCalculation() {
 
 
   document.getElementById(
-    "calcFun"
-  ).textContent =
-    money(weeklyFun);
+  "calcFun"
+).textContent =
+  money(weeklyFun);
+
+document.getElementById(
+  "weeklyBudget"
+).textContent =
+  money(weeklyFun);
 
 
   return {
