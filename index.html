@@ -3821,6 +3821,20 @@ async function loadProfiles() {
   );
 
 }
+  document
+  .getElementById("unlockProfileButton")
+  .addEventListener(
+    "click",
+    unlockProfile
+  );
+
+document
+  .getElementById("cancelPinButton")
+  .addEventListener(
+    "click",
+    cancelPin
+  );
+  
   async function unlockProfile() {
 
   const pin =
