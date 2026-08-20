@@ -1,20 +1,15 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <meta name="theme-color" content="#1f2937">
-
 <title>My Budget</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-
 * {
   box-sizing: border-box;
 }
@@ -193,14 +188,6 @@ select {
   gap: 10px;
 }
 
-.setup-item-name {
-  font-weight: 600;
-}
-
-.setup-item-amount {
-  font-weight: 600;
-}
-
 .setup-item-actions {
   display: flex;
   gap: 8px;
@@ -209,13 +196,6 @@ select {
 
 .setup-item-actions button {
   flex: 1;
-}
-
-.setup-form {
-  background: #f9fafb;
-  border-radius: 14px;
-  padding: 15px;
-  margin-top: 12px;
 }
 
 .calculation {
@@ -243,652 +223,723 @@ select {
   margin-bottom: 5px;
 }
 
-</style>
+.profile-button {
+  margin-top: 12px;
+}
 
+.fund-balance {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-card {
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.negative {
+  color: #b91c1c;
+}
+
+.positive {
+  color: #166534;
+}
+</style>
 </head>
 
 <body>
 
-
 <!-- LOGIN -->
 
-<div
-  class="app"
-  id="loginScreen"
->
+<div class="app" id="loginScreen">
 
-<header>
+  <header>
+    <h1>My Budget</h1>
+    <p>Sign in to continue</p>
+  </header>
 
-<h1>My Budget</h1>
+  <div class="card">
 
-<p>Sign in to continue</p>
+    <label>Email</label>
 
-</header>
+    <input
+      type="email"
+      id="loginEmail"
+      placeholder="you@example.com"
+      autocomplete="email"
+    >
 
-<div class="card">
+    <label>Password</label>
 
-<label>Email</label>
+    <input
+      type="password"
+      id="loginPassword"
+      placeholder="Password"
+      autocomplete="current-password"
+    >
 
-<input
-  type="email"
-  id="loginEmail"
-  placeholder="you@example.com"
-  autocomplete="email"
->
+    <button
+      class="primary-button"
+      id="loginButton"
+      style="margin-top:20px;"
+    >
+      Sign In
+    </button>
 
-<label>Password</label>
+    <div
+      id="loginError"
+      class="error hidden"
+    ></div>
 
-<input
-  type="password"
-  id="loginPassword"
-  placeholder="Password"
-  autocomplete="current-password"
->
-
-<button
-  class="primary-button"
-  id="loginButton"
-  style="margin-top:20px;"
->
-Sign In
-</button>
-
-<div
-  id="loginError"
-  class="error hidden"
-></div>
+  </div>
 
 </div>
 
-</div>
 
 <!-- PROFILE SELECTION -->
 
-<div
-  class="app hidden"
-  id="profileScreen"
->
+<div class="app hidden" id="profileScreen">
 
-<header>
+  <header>
+    <h1>Who's using My Budget?</h1>
+    <p class="subtext">Select your profile to continue.</p>
+  </header>
 
-<h1>Who's using My Budget?</h1>
+  <div id="profileList"></div>
 
-<p class="subtext">
-Select your profile to continue.
-</p>
+  <button
+    class="secondary-button"
+    id="addProfileButton"
+    style="margin-top:16px;"
+  >
+    + Add Profile
+  </button>
 
-</header>
+  <div
+    class="card hidden"
+    id="addProfileForm"
+    style="margin-top:16px;"
+  >
 
+    <h2>Add Profile</h2>
 
-<div
-  id="profileList"
-></div>
+    <label>Name</label>
 
-<button
-  class="secondary-button"
-  id="addProfileButton"
-  style="margin-top:16px;"
->
-+ Add Profile
-</button>
+    <input
+      type="text"
+      id="newProfileName"
+      placeholder="Profile name"
+    >
 
+    <label>4-Digit PIN</label>
 
+    <input
+      type="password"
+      id="newProfilePin"
+      inputmode="numeric"
+      maxlength="4"
+      placeholder="Enter PIN"
+    >
 
-<div
-  class="card hidden"
-  id="addProfileForm"
-  style="margin-top:16px;"
->
+    <button
+      class="primary-button"
+      id="saveProfileButton"
+      style="margin-top:20px;"
+    >
+      Save Profile
+    </button>
 
-<h2>
-Add Profile
-</h2>
+    <button
+      class="secondary-button"
+      id="cancelProfileButton"
+      style="margin-top:10px;"
+    >
+      Cancel
+    </button>
 
-<label>
-Name
-</label>
+    <p
+      class="error hidden"
+      id="profileError"
+    ></p>
 
-<input
-  type="text"
-  id="newProfileName"
-  placeholder="Profile name"
->
+  </div>
 
-<label>
-4-Digit PIN
-</label>
+  <div
+    class="card hidden"
+    id="pinScreen"
+  >
 
-<input
-  type="password"
-  id="newProfilePin"
-  inputmode="numeric"
-  pattern="[0-9]*"
-  maxlength="4"
-  placeholder="Enter PIN"
->
+    <h2>Enter PIN</h2>
 
-<button
-  class="primary-button"
-  id="saveProfileButton"
-  style="margin-top:20px;"
->
-Save Profile
-</button>
+    <p
+      class="subtext"
+      id="pinProfileName"
+    ></p>
 
-<button
-  class="secondary-button"
-  id="cancelProfileButton"
-  style="margin-top:10px;"
->
-Cancel
-</button>
+    <input
+      type="password"
+      id="profilePin"
+      inputmode="numeric"
+      maxlength="4"
+      placeholder="Enter PIN"
+      autocomplete="off"
+    >
 
-<p
-  class="error hidden"
-  id="profileError"
-></p>
+    <button
+      class="primary-button"
+      id="unlockProfileButton"
+      style="margin-top:12px;"
+    >
+      Unlock
+    </button>
 
-</div>
-  
-<div
-  class="card hidden"
-  id="pinScreen"
->
+    <p
+      class="error hidden"
+      id="pinError"
+    >
+      Incorrect PIN.
+    </p>
 
-<h2>
-Enter PIN
-</h2>
+    <button
+      class="secondary-button"
+      id="cancelPinButton"
+      style="margin-top:10px;"
+    >
+      Back
+    </button>
 
-<p
-  class="subtext"
-  id="pinProfileName"
-></p>
+  </div>
 
-
-
-<input
-  type="password"
-  id="profilePin"
-  inputmode="numeric"
-  pattern="[0-9]*"
-  maxlength="4"
-  placeholder="Enter PIN"
-  autocomplete="off"
->
-
-<button
-  class="primary-button"
-  id="unlockProfileButton"
-  style="margin-top:12px;"
->
-Unlock
-</button>
-
-<p
-  class="error hidden"
-  id="pinError"
->
-Incorrect PIN.
-</p>
-
-<button
-  class="secondary-button"
-  id="cancelPinButton"
-  style="margin-top:10px;"
->
-Back
-</button>
-
-</div>
-
-<button
-  class="secondary-button"
-  id="profileLogoutButton"
-  style="margin-top:20px;"
->
-Log Out
-</button>
+  <button
+    class="secondary-button"
+    id="profileLogoutButton"
+    style="margin-top:20px;"
+  >
+    Log Out
+  </button>
 
 </div>
 
 
 <!-- MAIN APP -->
-<!-- MAIN APP -->
 
-<div
-  class="app hidden"
-  id="appScreen"
->
+<div class="app hidden" id="appScreen">
 
-<header>
+  <header>
 
-<h1>My Budget</h1>
-<p
-  class="subtext"
-  id="currentProfileName"
-></p>
-<p id="currentDate"></p>
+    <h1>My Budget</h1>
 
-</header>
+    <p
+      class="subtext"
+      id="currentProfileName"
+    ></p>
+
+    <p id="currentDate"></p>
+
+  </header>
 
 
-<div class="card">
+  <!-- NEEDS -->
 
-<div class="subtext">
-Needs
+  <div class="card">
+
+    <div class="subtext">Needs</div>
+
+    <div
+      class="balance"
+      id="needsBalance"
+    >
+      $0.00
+    </div>
+
+    <div class="subtext">
+      Available
+    </div>
+
+  </div>
+
+
+  <!-- FUN -->
+
+  <div class="card">
+
+    <div class="subtext">Fun Money</div>
+
+    <div
+      class="balance"
+      id="funBalance"
+    >
+      $0.00
+    </div>
+
+    <div class="subtext">
+      Available
+    </div>
+
+  </div>
+
+
+  <!-- WEEKLY BUDGET -->
+
+  <div class="card">
+
+    <div class="subtext">
+      This Week's Fun Money
+    </div>
+
+    <div
+      class="balance"
+      id="weeklyBudget"
+    >
+      $0.00
+    </div>
+
+    <div
+      class="subtext"
+      id="weeklyBudgetDescription"
+    >
+      Weekly Fun Money
+    </div>
+
+  </div>
+
+
+  <!-- ADD EXPENSE -->
+
+  <button
+    class="primary-button"
+    id="addExpenseButton"
+  >
+    + Add Expense
+  </button>
+
+
+  <!-- EXPENSE FORM -->
+
+  <div
+    class="card hidden"
+    id="expenseForm"
+  >
+
+    <h2 id="expenseFormTitle">
+      Add Expense
+    </h2>
+
+    <label>Amount</label>
+
+    <input
+      type="number"
+      id="expenseAmount"
+      placeholder="0.00"
+      step="0.01"
+      min="0"
+    >
+
+    <label>Use money from</label>
+
+    <select id="expenseFund">
+
+      <option value="needs">
+        Needs
+      </option>
+
+      <option value="fun">
+        Fun Money
+      </option>
+
+    </select>
+
+    <label>Description</label>
+
+    <input
+      type="text"
+      id="expenseDescription"
+      placeholder="Example: Walmart"
+    >
+
+    <button
+      class="primary-button"
+      id="saveExpenseButton"
+      style="margin-top:20px;"
+    >
+      Save Expense
+    </button>
+
+    <button
+      class="secondary-button"
+      id="cancelExpenseButton"
+      style="margin-top:10px;"
+    >
+      Cancel
+    </button>
+
+  </div>
+
+
+  <!-- THIS WEEK -->
+
+  <div class="card">
+
+    <h2>This Week</h2>
+
+    <div id="transactions">
+      <p class="subtext">
+        No expenses yet.
+      </p>
+    </div>
+
+  </div>
+
+
+  <!-- BUDGET SETUP -->
+
+  <button
+    class="secondary-button"
+    id="budgetSetupButton"
+  >
+    Budget Setup
+  </button>
+
+
+  <div
+    class="card hidden"
+    id="budgetSetup"
+  >
+
+    <h2 id="budgetSetupTitle">
+      Prepare Your Next Budget
+    </h2>
+
+    <p
+      class="subtext"
+      id="budgetSetupInstructions"
+    ></p>
+
+    <p class="subtext">
+      This budget is for the upcoming month.
+      Your previous month's actual income and
+      bills are used to calculate how much money
+      can be allocated each week.
+    </p>
+
+
+    <!-- HELP -->
+
+    <button
+      class="secondary-button"
+      id="budgetHelpButton"
+      style="margin-top:12px;"
+    >
+      What if I don't pay a bill on the 1st?
+    </button>
+
+
+    <!-- INCOME -->
+
+    <h3 class="section-title">
+      Income
+    </h3>
+
+    <p
+      class="subtext"
+      id="incomePeriodLabel"
+    ></p>
+
+    <div id="incomeList"></div>
+
+    <button
+      class="secondary-button"
+      id="addIncomeButton"
+      style="margin-top:12px;"
+    >
+      + Add Income
+    </button>
+
+
+    <!-- BILLS -->
+
+    <h3 class="section-title">
+      Bills
+    </h3>
+
+    <p
+      class="subtext"
+      id="billPeriodLabel"
+    ></p>
+
+    <div id="billList"></div>
+
+    <button
+      class="secondary-button"
+      id="addBillButton"
+      style="margin-top:12px;"
+    >
+      + Add Bill
+    </button>
+
+
+    <!-- WEEKLY ALLOCATIONS -->
+
+    <h3 class="section-title">
+      Weekly Allocations
+    </h3>
+
+    <label>
+      Needs
+    </label>
+
+    <input
+      type="number"
+      id="weeklyNeeds"
+      placeholder="0.00"
+      step="0.01"
+      min="0"
+    >
+
+    <label>
+      Savings
+    </label>
+
+    <input
+      type="number"
+      id="weeklySavings"
+      placeholder="0.00"
+      step="0.01"
+      min="0"
+    >
+
+
+    <!-- CALCULATION -->
+
+    <div class="calculation">
+
+      <h3>Monthly Calculation</h3>
+
+      <div class="calculation-row">
+        <span>Monthly Income</span>
+        <strong id="calcIncome">$0.00</strong>
+      </div>
+
+      <div class="calculation-row">
+        <span>Monthly Bills</span>
+        <strong id="calcBills">-$0.00</strong>
+      </div>
+
+      <div class="calculation-row">
+        <span>Monthly Needs</span>
+        <strong id="calcNeeds">-$0.00</strong>
+      </div>
+
+      <div class="calculation-row">
+        <span>Monthly Savings</span>
+        <strong id="calcSavings">-$0.00</strong>
+      </div>
+
+      <div class="calculation-row total">
+        <span>Monthly Fun Money</span>
+        <strong id="calcFun">$0.00</strong>
+      </div>
+
+    </div>
+
+
+    <!-- WEEKLY CALCULATION -->
+
+    <div class="calculation">
+
+      <h3>Weekly Budget</h3>
+
+      <div class="calculation-row">
+        <span>Weekly Needs</span>
+        <strong id="calcWeeklyNeeds">$0.00</strong>
+      </div>
+
+      <div class="calculation-row">
+        <span>Weekly Savings</span>
+        <strong id="calcWeeklySavings">$0.00</strong>
+      </div>
+
+      <div class="calculation-row total">
+        <span>Weekly Fun Money</span>
+        <strong id="calcWeeklyFun">$0.00</strong>
+      </div>
+
+    </div>
+
+
+    <!-- SAVE -->
+
+    <button
+      class="primary-button"
+      id="saveBudgetButton"
+      style="margin-top:20px;"
+    >
+      Save Budget
+    </button>
+
+    <button
+      class="secondary-button"
+      id="closeBudgetButton"
+      style="margin-top:10px;"
+    >
+      Close
+    </button>
+
+    <div
+      id="budgetMessage"
+      class="success hidden"
+    ></div>
+
+  </div>
+
+
+  <!-- SETTINGS -->
+
+  <button
+    class="secondary-button"
+    id="settingsButton"
+    style="margin-top:16px;"
+  >
+    Settings
+  </button>
+
+  <button
+    class="secondary-button"
+    id="switchProfileButton"
+    style="margin-top:16px;"
+  >
+    Switch Profile
+  </button>
+
+  <button
+    class="secondary-button"
+    id="logoutButton"
+    style="margin-top:16px;"
+  >
+    Log Out
+  </button>
+
 </div>
 
-<div
-  class="balance"
-  id="needsBalance"
->
-$0.00
-</div>
 
-<div class="subtext">
-Available
-</div>
+<!-- SETTINGS SCREEN -->
 
-</div>
-
-
-<div class="card">
-
-<div class="subtext">
-Fun Money
-</div>
-
-<div
-  class="balance"
-  id="funBalance"
->
-$0.00
-</div>
-
-<div class="subtext">
-Available
-</div>
-
-</div>
-
-
-<div class="card">
-
-<div class="subtext">
-Weekly Budget
-</div>
-
-<div
-  class="balance"
-  id="weeklyBudget"
->
-$0.00
-</div>
-
-<div class="subtext">
-Weekly Fun Money
-</div>
-
-</div>
-
-
-<button
-  class="primary-button"
-  id="addExpenseButton"
->
-+ Add Expense
-</button>
-
-
-<!-- EXPENSE FORM -->
-
-<div
-  class="card hidden"
-  id="expenseForm"
->
-
-<h2 id="expenseFormTitle">
-Add Expense
-</h2>
-
-<label>Amount</label>
-
-<input
-  type="number"
-  id="expenseAmount"
-  placeholder="0.00"
-  step="0.01"
-  min="0"
->
-
-<label>Use money from</label>
-
-<select id="expenseFund">
-
-<option value="needs">
-Needs
-</option>
-
-<option value="fun">
-Fun Money
-</option>
-
-</select>
-
-<label>Description</label>
-
-<input
-  type="text"
-  id="expenseDescription"
-  placeholder="Example: Walmart"
->
-
-<button
-  class="primary-button"
-  id="saveExpenseButton"
-  style="margin-top:20px;"
->
-Save Expense
-</button>
-
-<button
-  class="secondary-button"
-  id="cancelExpenseButton"
-  style="margin-top:10px;"
->
-Cancel
-</button>
-
-</div>
-
-
-<!-- THIS WEEK -->
-
-<div class="card">
-
-<h2>This Week</h2>
-
-<div id="transactions">
-
-<p class="subtext">
-No expenses yet.
-</p>
-
-</div>
-
-</div>
-
-
-<!-- BUDGET SETUP BUTTON -->
-
-<button
-  class="secondary-button"
-  id="budgetSetupButton"
->
-Budget Setup
-</button>
-
-
-<!-- BUDGET SETUP -->
-
-<div
-  class="card hidden"
-  id="budgetSetup"
->
-
-<h2>Budget Setup</h2>
-
-<p class="subtext">
-Set up your household budget.
-</p>
-
-
-<!-- INCOME -->
-
-<h3 class="section-title">
-Income
-</h3>
-
-<p class="subtext">
-Add each income source separately.
-</p>
-
-<div id="incomeList"></div>
-
-<button
-  class="secondary-button"
-  id="addIncomeButton"
-  style="margin-top:12px;"
->
-+ Add Income
-</button>
-
-
-<!-- BILLS -->
-
-<h3 class="section-title">
-Bills
-</h3>
-
-<p class="subtext">
-Add each monthly bill separately.
-</p>
-
-<div id="billList"></div>
-
-<button
-  class="secondary-button"
-  id="addBillButton"
-  style="margin-top:12px;"
->
-+ Add Bill
-</button>
-
-
-<!-- WEEKLY AMOUNTS -->
-
-<h3 class="section-title">
-Weekly Budget
-</h3>
-
-<label>
-Weekly Needs
-</label>
-
-<input
-  type="number"
-  id="weeklyNeeds"
-  placeholder="0.00"
-  step="0.01"
-  min="0"
->
-
-
-<label>
-Weekly Savings
-</label>
-
-<input
-  type="number"
-  id="weeklySavings"
-  placeholder="0.00"
-  step="0.01"
-  min="0"
->
-
-
-<!-- CALCULATION -->
-
-<div class="calculation">
-
-<h3>
-Budget Calculation
-</h3>
-
-<div class="calculation-row">
-
-<span>Total Monthly Income</span>
-
-<strong id="calcIncome">
-$0.00
-</strong>
-
-</div>
-
-<div class="calculation-row">
-
-<span>Total Monthly Bills</span>
-
-<strong id="calcBills">
--$0.00
-</strong>
-
-</div>
-
-<div class="calculation-row">
-
-<span>Weekly Needs</span>
-
-<strong id="calcNeeds">
--$0.00
-</strong>
-
-</div>
-
-<div class="calculation-row">
-
-<span>Weekly Savings</span>
-
-<strong id="calcSavings">
--$0.00
-</strong>
-
-</div>
-
-<div class="calculation-row total">
-
-<span>Weekly Fun Money</span>
-
-<strong id="calcFun">
-$0.00
-</strong>
-
-</div>
-
-</div>
-
-
-<button
-  class="primary-button"
-  id="saveBudgetButton"
-  style="margin-top:20px;"
->
-Save Budget
-</button>
-
-
-<button
-  class="secondary-button"
-  id="closeBudgetButton"
-  style="margin-top:10px;"
->
-Close
-</button>
-
-
-<div
-  id="budgetMessage"
-  class="success hidden"
-></div>
-
-</div>
-
-<button
-  class="secondary-button"
-  id="settingsButton"
-  style="margin-top:16px;"
->
-Settings
-</button>
-
-<button
-  class="secondary-button"
-  id="switchProfileButton"
-  style="margin-top:16px;"
->
-Switch Profile
-</button>
-<button
-  class="secondary-button"
-  id="logoutButton"
-  style="margin-top:16px;"
->
-Log Out
-</button>
-
-</div>
 <div
   class="app hidden"
   id="settingsScreen"
 >
 
-<header>
+  <header>
 
-<h1>Settings</h1>
+    <h1>Settings</h1>
 
-<p
-  class="subtext"
-  id="settingsProfileName"
-></p>
+    <p
+      class="subtext"
+      id="settingsProfileName"
+    ></p>
 
-<p
-  class="subtext"
-  id="settingsProfileType"
-></p>
+    <p
+      class="subtext"
+      id="settingsProfileType"
+    ></p>
 
-</header>
+  </header>
 
+  <div class="card">
+
+    <h2>Profile</h2>
+
+    <button
+      class="primary-button"
+      id="profileSettingsButton"
+      style="margin-top:12px;"
+    >
+      Profile
+    </button>
+
+  </div>
+
+  <button
+    class="secondary-button"
+    id="settingsBackButton"
+    style="margin-top:16px;"
+  >
+    Back
+  </button>
+
+</div>
+
+
+<!-- BILL HELP MODAL -->
 
 <div
-  class="card"
-  style="margin-top:16px;"
+  class="modal-overlay hidden"
+  id="billHelpModal"
 >
 
-<h2>
-Profile
-</h2>
+  <div class="card modal-card">
 
-<button
-  class="primary-button"
-  id="profileSettingsButton"
-  style="margin-top:12px;"
->
-Profile
-</button>
+    <h2>
+      What if I don't pay a bill on the 1st?
+    </h2>
+
+    <p>
+      When preparing your next month's budget,
+      include all income that actually reached
+      your bank account during the previous month.
+    </p>
+
+    <p>
+      Include all bills paid during the previous
+      month and any bill that was paid on the
+      first day of the current month.
+    </p>
+
+    <p>
+      For example, if you used $100 of electricity
+      during August and paid the bill on September
+      1st, include that $100 when preparing the
+      October budget.
+    </p>
+
+    <p>
+      Bills paid later in September belong to the
+      October budgeting period according to the
+      actual month in which they are paid.
+    </p>
+
+    <button
+      class="secondary-button"
+      id="closeBillHelpButton"
+      style="margin-top:12px;"
+    >
+      Close
+    </button>
+
+  </div>
 
 </div>
-
-
-<button
-  class="secondary-button"
-  id="settingsBackButton"
-  style="margin-top:16px;"
->
-Back
-</button>
-
-</div>
-</div>
-
-
 
 
 <script>
 
-
-/* ================================= */
+/* ========================================= */
 /* SUPABASE */
-/* ================================= */
+/* ========================================= */
 
 const SUPABASE_URL =
   "https://jivygwszzlaxnhhvxxsg.supabase.co";
@@ -903,28 +954,25 @@ const supabaseClient =
   );
 
 
-/* ================================= */
-/* GLOBAL VARIABLES */
-/* ================================= */
+/* ========================================= */
+/* GLOBAL STATE */
+/* ========================================= */
 
 let currentUser = null;
-
 let householdId = null;
-
 let currentProfile = null;
-
 let profileSessionToken = null;
-
 let editingExpenseId = null;
+let currentBudgetPlan = null;
 
 
-/* ================================= */
+/* ========================================= */
 /* MONEY */
-/* ================================= */
+/* ========================================= */
 
 function money(amount) {
 
-  return Number(amount).toLocaleString(
+  return Number(amount || 0).toLocaleString(
     "en-US",
     {
       style: "currency",
@@ -935,9 +983,129 @@ function money(amount) {
 }
 
 
-/* ================================= */
+/* ========================================= */
+/* DATES */
+/* ========================================= */
+
+function dateOnly(date) {
+
+  const year =
+    date.getFullYear();
+
+  const month =
+    String(
+      date.getMonth() + 1
+    ).padStart(2, "0");
+
+  const day =
+    String(
+      date.getDate()
+    ).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+
+}
+
+
+function firstOfMonth(date) {
+
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    1
+  );
+
+}
+
+
+function addMonths(date, amount) {
+
+  return new Date(
+    date.getFullYear(),
+    date.getMonth() + amount,
+    1
+  );
+
+}
+
+
+function getPreviousMonth() {
+
+  return addMonths(
+    firstOfMonth(new Date()),
+    -1
+  );
+
+}
+
+
+function getUpcomingBudgetMonth() {
+
+  return addMonths(
+    firstOfMonth(new Date()),
+    1
+  );
+
+}
+
+
+/*
+  Weeks begin on Sunday.
+*/
+
+function getWeekStart(date = new Date()) {
+
+  const result =
+    new Date(date);
+
+  result.setHours(
+    0,
+    0,
+    0,
+    0
+  );
+
+  result.setDate(
+    result.getDate() -
+    result.getDay()
+  );
+
+  return result;
+
+}
+
+
+/* ========================================= */
+/* ESCAPING */
+/* ========================================= */
+
+function escapeHtml(value) {
+
+  const div =
+    document.createElement("div");
+
+  div.textContent =
+    value ?? "";
+
+  return div.innerHTML;
+
+}
+
+
+function escapeAttribute(value) {
+
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+}
+
+
+/* ========================================= */
 /* LOGIN */
-/* ================================= */
+/* ========================================= */
 
 document
   .getElementById("loginButton")
@@ -949,12 +1117,12 @@ document
 
 async function login() {
 
-  const loginError =
+  const errorElement =
     document.getElementById(
       "loginError"
     );
 
-  loginError.classList.add(
+  errorElement.classList.add(
     "hidden"
   );
 
@@ -971,15 +1139,14 @@ async function login() {
 
   if (!email || !password) {
 
-    loginError.textContent =
+    errorElement.textContent =
       "Enter your email and password.";
 
-    loginError.classList.remove(
+    errorElement.classList.remove(
       "hidden"
     );
 
     return;
-
   }
 
   const {
@@ -987,24 +1154,20 @@ async function login() {
     error
   } =
     await supabaseClient.auth.signInWithPassword({
-
-      email: email,
-
-      password: password
-
+      email,
+      password
     });
 
   if (error) {
 
-    loginError.textContent =
+    errorElement.textContent =
       error.message;
 
-    loginError.classList.remove(
+    errorElement.classList.remove(
       "hidden"
     );
 
     return;
-
   }
 
   currentUser =
@@ -1015,129 +1178,77 @@ async function login() {
 }
 
 
-/* ================================= */
+/* ========================================= */
 /* START APP */
-/* ================================= */
+/* ========================================= */
 
 async function startApp() {
 
-  document
-    .getElementById(
-      "loginScreen"
-    )
-    .classList
-    .add(
-      "hidden"
-    );
-
+  hideAllScreens();
 
   document
-    .getElementById(
-      "appScreen"
-    )
+    .getElementById("profileScreen")
     .classList
-    .add(
-      "hidden"
-    );
-
-
-  document
-    .getElementById(
-      "profileScreen"
-    )
-    .classList
-    .remove(
-      "hidden"
-    );
-
+    .remove("hidden");
 
   document.getElementById(
-  "currentDate"
-).textContent =
-  new Date().toLocaleDateString(
-    "en-US",
-    {
-      month: "long",
-      day: "numeric",
-      year: "numeric"
-    }
-  );
-
+    "currentDate"
+  ).textContent =
+    new Date().toLocaleDateString(
+      "en-US",
+      {
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+      }
+    );
 
   await loadHousehold();
 
+  if (!householdId) {
+    return;
+  }
 
   const restored =
     await restoreProfileSession();
 
-
   if (restored) {
+    return;
+  }
 
-  document.getElementById(
-    "currentProfileName"
-  ).textContent =
-    currentProfile.display_name;
-
-  return;
+  await renderProfiles();
 
 }
 
 
-  const profiles =
-    await loadProfiles();
+/* ========================================= */
+/* SCREEN CONTROL */
+/* ========================================= */
 
+function hideAllScreens() {
 
-  const profileList =
-    document.getElementById(
-      "profileList"
-    );
+  document
+    .getElementById("loginScreen")
+    .classList.add("hidden");
 
+  document
+    .getElementById("profileScreen")
+    .classList.add("hidden");
 
-  profileList.innerHTML = "";
+  document
+    .getElementById("appScreen")
+    .classList.add("hidden");
 
-
-  profiles.forEach(
-    profile => {
-
-      const button =
-        document.createElement(
-          "button"
-        );
-
-
-      button.className =
-        "primary-button";
-
-
-      button.textContent =
-        profile.display_name;
-
-
-      button.style.marginTop =
-        "12px";
-
-
-      button.addEventListener(
-        "click",
-        () => {
-          selectProfile(profile);
-        }
-      );
-
-
-      profileList.appendChild(
-        button
-      );
-
-    }
-  );
+  document
+    .getElementById("settingsScreen")
+    .classList.add("hidden");
 
 }
 
 
-/* ================================= */
+/* ========================================= */
 /* HOUSEHOLD */
-/* ================================= */
+/* ========================================= */
 
 async function loadHousehold() {
 
@@ -1155,18 +1266,15 @@ async function loadHousehold() {
       .limit(1)
       .maybeSingle();
 
-
   if (error) {
 
     alert(
-      "Could not load household: "
-      + error.message
+      "Could not load household: " +
+      error.message
     );
 
     return;
-
   }
-
 
   if (!data) {
 
@@ -1175,60 +1283,713 @@ async function loadHousehold() {
     );
 
     return;
-
   }
-
 
   householdId =
     data.household_id;
 
 }
 
-/* ================================= */
-/* LOAD BUDGET SETTINGS */
-/* ================================= */
 
-async function loadBudgetSettings() {
+/* ========================================= */
+/* PROFILES */
+/* ========================================= */
+
+async function loadProfiles() {
 
   const {
     data,
     error
   } =
     await supabaseClient
-      .from("budget_settings")
+      .from("profiles")
+      .select(
+        "id, display_name, access_level"
+      )
+      .eq(
+        "household_id",
+        householdId
+      )
+      .order(
+        "display_name"
+      );
+
+  if (error) {
+
+    alert(
+      "Could not load profiles: " +
+      error.message
+    );
+
+    return [];
+  }
+
+  return data || [];
+
+}
+
+
+async function renderProfiles() {
+
+  const profiles =
+    await loadProfiles();
+
+  const list =
+    document.getElementById(
+      "profileList"
+    );
+
+  list.innerHTML =
+    "";
+
+  list.classList.remove(
+    "hidden"
+  );
+
+  document
+    .getElementById("addProfileButton")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("addProfileForm")
+    .classList.add("hidden");
+
+  document
+    .getElementById("pinScreen")
+    .classList.add("hidden");
+
+  profiles.forEach(
+    profile => {
+
+      const button =
+        document.createElement("button");
+
+      button.className =
+        "primary-button profile-button";
+
+      button.textContent =
+        profile.display_name;
+
+      button.addEventListener(
+        "click",
+        () => selectProfile(profile)
+      );
+
+      list.appendChild(button);
+
+    }
+  );
+
+}
+
+
+/* ========================================= */
+/* SELECT PROFILE */
+/* ========================================= */
+
+function selectProfile(profile) {
+
+  currentProfile =
+    profile;
+
+  document
+    .getElementById("profileList")
+    .classList.add("hidden");
+
+  document
+    .getElementById("addProfileButton")
+    .classList.add("hidden");
+
+  document
+    .getElementById("pinScreen")
+    .classList.remove("hidden");
+
+  document.getElementById(
+    "pinProfileName"
+  ).textContent =
+    profile.display_name;
+
+  document.getElementById(
+    "profilePin"
+  ).value =
+    "";
+
+  document.getElementById(
+    "pinError"
+  ).classList.add("hidden");
+
+  document.getElementById(
+    "profilePin"
+  ).focus();
+
+}
+
+
+/* ========================================= */
+/* ADD PROFILE */
+/* ========================================= */
+
+document
+  .getElementById("addProfileButton")
+  .addEventListener(
+    "click",
+    function() {
+
+      document
+        .getElementById("profileList")
+        .classList.add("hidden");
+
+      document
+        .getElementById("addProfileButton")
+        .classList.add("hidden");
+
+      document
+        .getElementById("addProfileForm")
+        .classList.remove("hidden");
+
+    }
+  );
+
+
+document
+  .getElementById("cancelProfileButton")
+  .addEventListener(
+    "click",
+    renderProfiles
+  );
+
+
+document
+  .getElementById("saveProfileButton")
+  .addEventListener(
+    "click",
+    saveProfile
+  );
+
+
+async function saveProfile() {
+
+  const name =
+    document
+      .getElementById("newProfileName")
+      .value
+      .trim();
+
+  const pin =
+    document
+      .getElementById("newProfilePin")
+      .value;
+
+  const errorElement =
+    document.getElementById(
+      "profileError"
+    );
+
+  errorElement.classList.add(
+    "hidden"
+  );
+
+  if (!name) {
+
+    errorElement.textContent =
+      "Profile name is required.";
+
+    errorElement.classList.remove(
+      "hidden"
+    );
+
+    return;
+  }
+
+  if (!/^\d{4}$/.test(pin)) {
+
+    errorElement.textContent =
+      "PIN must be exactly 4 digits.";
+
+    errorElement.classList.remove(
+      "hidden"
+    );
+
+    return;
+  }
+
+  const {
+    error
+  } =
+    await supabaseClient.rpc(
+      "create_profile",
+      {
+        p_household_id:
+          householdId,
+
+        p_display_name:
+          name,
+
+        p_pin:
+          pin
+      }
+    );
+
+  if (error) {
+
+    errorElement.textContent =
+      error.message;
+
+    errorElement.classList.remove(
+      "hidden"
+    );
+
+    return;
+  }
+
+  document.getElementById(
+    "newProfileName"
+  ).value = "";
+
+  document.getElementById(
+    "newProfilePin"
+  ).value = "";
+
+  await renderProfiles();
+
+}
+
+
+/* ========================================= */
+/* PROFILE PIN */
+/* ========================================= */
+
+document
+  .getElementById("unlockProfileButton")
+  .addEventListener(
+    "click",
+    unlockProfile
+  );
+
+
+document
+  .getElementById("cancelPinButton")
+  .addEventListener(
+    "click",
+    function() {
+
+      currentProfile =
+        null;
+
+      document
+        .getElementById("pinScreen")
+        .classList.add("hidden");
+
+      document
+        .getElementById("profileList")
+        .classList.remove("hidden");
+
+      document
+        .getElementById("addProfileButton")
+        .classList.remove("hidden");
+
+    }
+  );
+
+
+async function unlockProfile() {
+
+  const pin =
+    document.getElementById(
+      "profilePin"
+    ).value;
+
+  if (!pin) {
+    return;
+  }
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.rpc(
+      "create_profile_session",
+      {
+        p_profile_id:
+          currentProfile.id,
+
+        p_pin:
+          pin,
+
+        p_session_minutes:
+          1440
+      }
+    );
+
+  if (error) {
+
+    document.getElementById(
+      "pinError"
+    ).textContent =
+      error.message ||
+      "Incorrect PIN.";
+
+    document.getElementById(
+      "pinError"
+    ).classList.remove("hidden");
+
+    return;
+  }
+
+  profileSessionToken =
+    data;
+
+  localStorage.setItem(
+    "profileSessionToken",
+    data
+  );
+
+  localStorage.setItem(
+    "profileId",
+    currentProfile.id
+  );
+
+  await showMainApp();
+
+}
+
+
+/* ========================================= */
+/* RESTORE PROFILE SESSION */
+/* ========================================= */
+
+async function restoreProfileSession() {
+
+  const savedToken =
+    localStorage.getItem(
+      "profileSessionToken"
+    );
+
+  const savedProfileId =
+    localStorage.getItem(
+      "profileId"
+    );
+
+  if (!savedToken || !savedProfileId) {
+    return false;
+  }
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.rpc(
+        "validate_profile_session",
+        {
+          p_session_token:
+            savedToken
+        }
+      );
+
+    if (error) {
+      throw error;
+    }
+
+    if (data !== savedProfileId) {
+      throw new Error(
+        "Profile session mismatch"
+      );
+    }
+
+    const {
+      data: profile,
+      error: profileError
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select(
+          "id, display_name, access_level"
+        )
+        .eq(
+          "id",
+          savedProfileId
+        )
+        .single();
+
+    if (profileError) {
+      throw profileError;
+    }
+
+    currentProfile =
+      profile;
+
+    profileSessionToken =
+      savedToken;
+
+    await showMainApp();
+
+    return true;
+
+  }
+  catch (error) {
+
+    console.error(
+      "Could not restore profile session:",
+      error
+    );
+
+    localStorage.removeItem(
+      "profileSessionToken"
+    );
+
+    localStorage.removeItem(
+      "profileId"
+    );
+
+    return false;
+  }
+
+}
+
+
+/* ========================================= */
+/* SHOW MAIN APP */
+/* ========================================= */
+
+async function showMainApp() {
+
+  hideAllScreens();
+
+  document
+    .getElementById("appScreen")
+    .classList
+    .remove("hidden");
+
+  document.getElementById(
+    "currentProfileName"
+  ).textContent =
+    currentProfile.display_name;
+
+  document.getElementById(
+    "currentDate"
+  ).textContent =
+    new Date().toLocaleDateString(
+      "en-US",
+      {
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+      }
+    );
+
+  await loadCurrentBudget();
+
+  await loadExpenses();
+
+  await calculateBalances();
+
+}
+
+
+/* ========================================= */
+/* BUDGET MONTH / PLAN */
+/* ========================================= */
+
+async function loadCurrentBudget() {
+
+  const budgetMonth =
+    getUpcomingBudgetMonth();
+
+  const budgetMonthString =
+    dateOnly(budgetMonth);
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("budget_plans")
       .select("*")
       .eq(
         "household_id",
         householdId
       )
+      .eq(
+        "budget_month",
+        budgetMonthString
+      )
       .maybeSingle();
-
 
   if (error) {
 
     console.error(
+      "Could not load current budget:",
       error
     );
 
+    currentBudgetPlan =
+      null;
+
+    updateWeeklyBudgetDisplay();
+
     return;
+  }
+
+  currentBudgetPlan =
+    data || null;
+
+  updateWeeklyBudgetDisplay();
+
+}
+
+
+/* ========================================= */
+/* BUDGET SETUP OPEN */
+/* ========================================= */
+
+document
+  .getElementById("budgetSetupButton")
+  .addEventListener(
+    "click",
+    openBudgetSetup
+  );
+
+
+async function openBudgetSetup() {
+
+  const today =
+    new Date();
+
+  const budgetMonth =
+    getUpcomingBudgetMonth();
+
+  const previousMonth =
+    getPreviousMonth();
+
+  const currentMonthStart =
+    firstOfMonth(today);
+
+  const monthName =
+    budgetMonth.toLocaleDateString(
+      "en-US",
+      {
+        month: "long",
+        year: "numeric"
+      }
+    );
+
+  const previousMonthName =
+    previousMonth.toLocaleDateString(
+      "en-US",
+      {
+        month: "long"
+      }
+    );
+
+  const firstDay =
+    currentMonthStart.toLocaleDateString(
+      "en-US",
+      {
+        month: "long",
+        day: "numeric"
+      }
+    );
+
+  document.getElementById(
+    "budgetSetupTitle"
+  ).textContent =
+    "Prepare your " +
+    monthName +
+    " budget";
+
+  document.getElementById(
+    "budgetSetupInstructions"
+  ).textContent =
+    "Use all income received during " +
+    previousMonthName +
+    ", and all bills paid during " +
+    previousMonthName +
+    " plus bills paid on " +
+    firstDay +
+    ".";
+
+  document.getElementById(
+    "incomePeriodLabel"
+  ).textContent =
+    "Income received during " +
+    previousMonthName;
+
+  document.getElementById(
+    "billPeriodLabel"
+  ).textContent =
+    "Bills paid during " +
+    previousMonthName +
+    " and on " +
+    firstDay;
+
+  document
+    .getElementById("budgetSetup")
+    .classList
+    .remove("hidden");
+
+  document
+    .getElementById("budgetSetup")
+    .scrollIntoView({
+      behavior: "smooth"
+    });
+
+  await loadBudgetSetupData();
+
+}
+
+
+/* ========================================= */
+/* LOAD BUDGET SETUP DATA */
+/* ========================================= */
+
+async function loadBudgetSetupData() {
+
+  const budgetMonth =
+    dateOnly(
+      getUpcomingBudgetMonth()
+    );
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("budget_plans")
+      .select("*")
+      .eq(
+        "household_id",
+        householdId
+      )
+      .eq(
+        "budget_month",
+        budgetMonth
+      )
+      .maybeSingle();
+
+  if (error) {
+
+    console.error(error);
 
   }
 
+  currentBudgetPlan =
+    data || null;
 
-  if (data) {
+  document.getElementById(
+    "weeklyNeeds"
+  ).value =
+    currentBudgetPlan
+      ? currentBudgetPlan.weekly_needs
+      : "";
 
-    document.getElementById(
-      "weeklyNeeds"
-    ).value =
-      data.weekly_needs || "";
-
-    document.getElementById(
-      "weeklySavings"
-    ).value =
-      data.weekly_savings || "";
-
-  }
-
+  document.getElementById(
+    "weeklySavings"
+  ).value =
+    currentBudgetPlan
+      ? currentBudgetPlan.weekly_savings
+      : "";
 
   await loadIncomeSources();
 
@@ -1239,9 +2000,9 @@ async function loadBudgetSettings() {
 }
 
 
-/* ================================= */
-/* INCOME SOURCES */
-/* ================================= */
+/* ========================================= */
+/* INCOME */
+/* ========================================= */
 
 async function loadIncomeSources() {
 
@@ -1263,17 +2024,11 @@ async function loadIncomeSources() {
         }
       );
 
-
   if (error) {
 
-    console.error(
-      error
-    );
-
+    console.error(error);
     return;
-
   }
-
 
   const list =
     document.getElementById(
@@ -1283,26 +2038,12 @@ async function loadIncomeSources() {
   list.innerHTML =
     "";
 
-
-  data.forEach(
-    function(income) {
-
-      addIncomeRow(
-        income
-      );
-
-    }
+  (data || []).forEach(
+    income => addIncomeRow(income)
   );
-
-
-  updateBudgetCalculation();
 
 }
 
-
-/* ================================= */
-/* ADD INCOME ROW */
-/* ================================= */
 
 function addIncomeRow(income = null) {
 
@@ -1311,15 +2052,11 @@ function addIncomeRow(income = null) {
       "incomeList"
     );
 
-
   const row =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
   row.className =
     "setup-item";
-
 
   row.innerHTML = `
 
@@ -1333,9 +2070,7 @@ function addIncomeRow(income = null) {
           placeholder="Income source name"
           value="${
             income
-              ? escapeAttribute(
-                  income.name
-                )
+              ? escapeAttribute(income.name)
               : ""
           }"
         >
@@ -1398,63 +2133,36 @@ function addIncomeRow(income = null) {
       }
 
     </div>
-
   `;
 
-
-  list.appendChild(
-    row
-  );
+  list.appendChild(row);
 
 }
 
 
-/* ================================= */
-/* ADD INCOME BUTTON */
-/* ================================= */
-
 document
-  .getElementById(
-    "addIncomeButton"
-  )
+  .getElementById("addIncomeButton")
   .addEventListener(
     "click",
-    function() {
-
-      addIncomeRow();
-
-    }
+    () => addIncomeRow()
   );
 
-
-/* ================================= */
-/* SAVE NEW INCOME */
-/* ================================= */
 
 async function saveNewIncome(button) {
 
   const row =
-    button.closest(
-      ".setup-item"
-    );
+    button.closest(".setup-item");
 
   const name =
     row
-      .querySelector(
-        ".income-name"
-      )
+      .querySelector(".income-name")
       .value
       .trim();
 
   const amount =
     Number(
-      row
-        .querySelector(
-          ".income-amount"
-        )
-        .value
+      row.querySelector(".income-amount").value
     );
-
 
   if (!name) {
 
@@ -1463,13 +2171,11 @@ async function saveNewIncome(button) {
     );
 
     return;
-
   }
 
-
   if (
-    amount < 0 ||
-    !Number.isFinite(amount)
+    !Number.isFinite(amount) ||
+    amount < 0
   ) {
 
     alert(
@@ -1477,9 +2183,7 @@ async function saveNewIncome(button) {
     );
 
     return;
-
   }
-
 
   const {
     error
@@ -1487,64 +2191,46 @@ async function saveNewIncome(button) {
     await supabaseClient
       .from("income_sources")
       .insert({
-
         household_id:
           householdId,
 
-        name:
-          name,
+        name,
 
-        amount:
-          amount
-
+        amount
       });
-
 
   if (error) {
 
     alert(
-      "Could not add income: "
-      + error.message
+      "Could not add income: " +
+      error.message
     );
 
     return;
-
   }
 
-
   await loadIncomeSources();
+
+  updateBudgetCalculation();
 
 }
 
 
-/* ================================= */
-/* EDIT INCOME */
-/* ================================= */
-
 async function editIncome(id, button) {
 
   const row =
-    button.closest(
-      ".setup-item"
-    );
+    button.closest(".setup-item");
 
   const name =
     row
-      .querySelector(
-        ".income-name"
-      )
+      .querySelector(".income-name")
       .value
       .trim();
 
   const amount =
     Number(
-      row
-        .querySelector(
-          ".income-amount"
-        )
-        .value
+      row.querySelector(".income-amount").value
     );
-
 
   if (!name) {
 
@@ -1553,13 +2239,11 @@ async function editIncome(id, button) {
     );
 
     return;
-
   }
 
-
   if (
-    amount < 0 ||
-    !Number.isFinite(amount)
+    !Number.isFinite(amount) ||
+    amount < 0
   ) {
 
     alert(
@@ -1567,9 +2251,7 @@ async function editIncome(id, button) {
     );
 
     return;
-
   }
-
 
   const {
     error
@@ -1577,40 +2259,30 @@ async function editIncome(id, button) {
     await supabaseClient
       .from("income_sources")
       .update({
-
-        name:
-          name,
-
-        amount:
-          amount
-
+        name,
+        amount
       })
       .eq(
         "id",
         id
       );
 
-
   if (error) {
 
     alert(
-      "Could not update income: "
-      + error.message
+      "Could not update income: " +
+      error.message
     );
 
     return;
-
   }
-
 
   await loadIncomeSources();
 
+  updateBudgetCalculation();
+
 }
 
-
-/* ================================= */
-/* DELETE INCOME */
-/* ================================= */
 
 async function deleteIncome(id) {
 
@@ -1619,11 +2291,8 @@ async function deleteIncome(id) {
       "Delete this income source?"
     )
   ) {
-
     return;
-
   }
-
 
   const {
     error
@@ -1636,27 +2305,26 @@ async function deleteIncome(id) {
         id
       );
 
-
   if (error) {
 
     alert(
-      "Could not delete income: "
-      + error.message
+      "Could not delete income: " +
+      error.message
     );
 
     return;
-
   }
 
-
   await loadIncomeSources();
+
+  updateBudgetCalculation();
 
 }
 
 
-/* ================================= */
+/* ========================================= */
 /* BILLS */
-/* ================================= */
+/* ========================================= */
 
 async function loadBills() {
 
@@ -1678,17 +2346,11 @@ async function loadBills() {
         }
       );
 
-
   if (error) {
 
-    console.error(
-      error
-    );
-
+    console.error(error);
     return;
-
   }
-
 
   const list =
     document.getElementById(
@@ -1698,26 +2360,12 @@ async function loadBills() {
   list.innerHTML =
     "";
 
-
-  data.forEach(
-    function(bill) {
-
-      addBillRow(
-        bill
-      );
-
-    }
+  (data || []).forEach(
+    bill => addBillRow(bill)
   );
-
-
-  updateBudgetCalculation();
 
 }
 
-
-/* ================================= */
-/* ADD BILL ROW */
-/* ================================= */
 
 function addBillRow(bill = null) {
 
@@ -1726,15 +2374,11 @@ function addBillRow(bill = null) {
       "billList"
     );
 
-
   const row =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
   row.className =
     "setup-item";
-
 
   row.innerHTML = `
 
@@ -1748,9 +2392,7 @@ function addBillRow(bill = null) {
           placeholder="Bill name"
           value="${
             bill
-              ? escapeAttribute(
-                  bill.name
-                )
+              ? escapeAttribute(bill.name)
               : ""
           }"
         >
@@ -1813,63 +2455,36 @@ function addBillRow(bill = null) {
       }
 
     </div>
-
   `;
 
-
-  list.appendChild(
-    row
-  );
+  list.appendChild(row);
 
 }
 
 
-/* ================================= */
-/* ADD BILL BUTTON */
-/* ================================= */
-
 document
-  .getElementById(
-    "addBillButton"
-  )
+  .getElementById("addBillButton")
   .addEventListener(
     "click",
-    function() {
-
-      addBillRow();
-
-    }
+    () => addBillRow()
   );
 
-
-/* ================================= */
-/* SAVE NEW BILL */
-/* ================================= */
 
 async function saveNewBill(button) {
 
   const row =
-    button.closest(
-      ".setup-item"
-    );
+    button.closest(".setup-item");
 
   const name =
     row
-      .querySelector(
-        ".bill-name"
-      )
+      .querySelector(".bill-name")
       .value
       .trim();
 
   const amount =
     Number(
-      row
-        .querySelector(
-          ".bill-amount"
-        )
-        .value
+      row.querySelector(".bill-amount").value
     );
-
 
   if (!name) {
 
@@ -1878,13 +2493,11 @@ async function saveNewBill(button) {
     );
 
     return;
-
   }
 
-
   if (
-    amount < 0 ||
-    !Number.isFinite(amount)
+    !Number.isFinite(amount) ||
+    amount < 0
   ) {
 
     alert(
@@ -1892,9 +2505,7 @@ async function saveNewBill(button) {
     );
 
     return;
-
   }
-
 
   const {
     error
@@ -1902,64 +2513,46 @@ async function saveNewBill(button) {
     await supabaseClient
       .from("bills")
       .insert({
-
         household_id:
           householdId,
 
-        name:
-          name,
+        name,
 
-        amount:
-          amount
-
+        amount
       });
-
 
   if (error) {
 
     alert(
-      "Could not add bill: "
-      + error.message
+      "Could not add bill: " +
+      error.message
     );
 
     return;
-
   }
 
-
   await loadBills();
+
+  updateBudgetCalculation();
 
 }
 
 
-/* ================================= */
-/* EDIT BILL */
-/* ================================= */
-
 async function editBill(id, button) {
 
   const row =
-    button.closest(
-      ".setup-item"
-    );
+    button.closest(".setup-item");
 
   const name =
     row
-      .querySelector(
-        ".bill-name"
-      )
+      .querySelector(".bill-name")
       .value
       .trim();
 
   const amount =
     Number(
-      row
-        .querySelector(
-          ".bill-amount"
-        )
-        .value
+      row.querySelector(".bill-amount").value
     );
-
 
   if (!name) {
 
@@ -1968,13 +2561,11 @@ async function editBill(id, button) {
     );
 
     return;
-
   }
 
-
   if (
-    amount < 0 ||
-    !Number.isFinite(amount)
+    !Number.isFinite(amount) ||
+    amount < 0
   ) {
 
     alert(
@@ -1982,9 +2573,7 @@ async function editBill(id, button) {
     );
 
     return;
-
   }
-
 
   const {
     error
@@ -1992,40 +2581,30 @@ async function editBill(id, button) {
     await supabaseClient
       .from("bills")
       .update({
-
-        name:
-          name,
-
-        amount:
-          amount
-
+        name,
+        amount
       })
       .eq(
         "id",
         id
       );
 
-
   if (error) {
 
     alert(
-      "Could not update bill: "
-      + error.message
+      "Could not update bill: " +
+      error.message
     );
 
     return;
-
   }
-
 
   await loadBills();
 
+  updateBudgetCalculation();
+
 }
 
-
-/* ================================= */
-/* DELETE BILL */
-/* ================================= */
 
 async function deleteBill(id) {
 
@@ -2034,11 +2613,8 @@ async function deleteBill(id) {
       "Delete this bill?"
     )
   ) {
-
     return;
-
   }
-
 
   const {
     error
@@ -2051,29 +2627,28 @@ async function deleteBill(id) {
         id
       );
 
-
   if (error) {
 
     alert(
-      "Could not delete bill: "
-      + error.message
+      "Could not delete bill: " +
+      error.message
     );
 
     return;
-
   }
 
-
   await loadBills();
+
+  updateBudgetCalculation();
 
 }
 
 
-/* ================================= */
+/* ========================================= */
 /* BUDGET CALCULATION */
-/* ================================= */
+/* ========================================= */
 
-async function updateBudgetCalculation() {
+function updateBudgetCalculation() {
 
   const incomeInputs =
     document.querySelectorAll(
@@ -2085,37 +2660,22 @@ async function updateBudgetCalculation() {
       ".bill-amount"
     );
 
-
-  let income =
-    0;
-
-  let bills =
-    0;
-
+  let income = 0;
+  let bills = 0;
 
   incomeInputs.forEach(
-    function(input) {
-
+    input => {
       income +=
-        Number(
-          input.value
-        ) || 0;
-
+        Number(input.value) || 0;
     }
   );
-
 
   billInputs.forEach(
-    function(input) {
-
+    input => {
       bills +=
-        Number(
-          input.value
-        ) || 0;
-
+        Number(input.value) || 0;
     }
   );
-
 
   const weeklyNeeds =
     Number(
@@ -2124,7 +2684,6 @@ async function updateBudgetCalculation() {
       ).value
     ) || 0;
 
-
   const weeklySavings =
     Number(
       document.getElementById(
@@ -2132,20 +2691,11 @@ async function updateBudgetCalculation() {
       ).value
     ) || 0;
 
-
-  /*
-    We use 52 weeks / 12 months
-    to determine the average
-    monthly equivalent of weekly
-    allocations.
-  */
-
   const monthlyNeeds =
     weeklyNeeds * 52 / 12;
 
   const monthlySavings =
     weeklySavings * 52 / 12;
-
 
   const monthlyFun =
     income
@@ -2153,160 +2703,106 @@ async function updateBudgetCalculation() {
     - monthlyNeeds
     - monthlySavings;
 
-
   const weeklyFun =
     monthlyFun * 12 / 52;
-
 
   document.getElementById(
     "calcIncome"
   ).textContent =
     money(income);
 
-
   document.getElementById(
     "calcBills"
   ).textContent =
     "-" + money(bills);
 
-
   document.getElementById(
     "calcNeeds"
   ).textContent =
-    "-" + money(weeklyNeeds);
-
+    "-" + money(monthlyNeeds);
 
   document.getElementById(
     "calcSavings"
   ).textContent =
-    "-" + money(weeklySavings);
-
+    "-" + money(monthlySavings);
 
   document.getElementById(
-  "calcFun"
-).textContent =
-  money(weeklyFun);
+    "calcFun"
+  ).textContent =
+    money(monthlyFun);
 
-document.getElementById(
-  "weeklyBudget"
-).textContent =
-  money(weeklyFun);
+  document.getElementById(
+    "calcWeeklyNeeds"
+  ).textContent =
+    money(weeklyNeeds);
 
+  document.getElementById(
+    "calcWeeklySavings"
+  ).textContent =
+    money(weeklySavings);
+
+  document.getElementById(
+    "calcWeeklyFun"
+  ).textContent =
+    money(weeklyFun);
 
   return {
     income,
     bills,
     weeklyNeeds,
     weeklySavings,
+    monthlyNeeds,
+    monthlySavings,
+    monthlyFun,
     weeklyFun
   };
 
 }
 
 
-/* ================================= */
+/* ========================================= */
 /* LIVE CALCULATION */
-/* ================================= */
+/* ========================================= */
 
-document
-  .getElementById(
-    "weeklyNeeds"
-  )
-  .addEventListener(
-    "input",
-    updateBudgetCalculation
-  );
+document.addEventListener(
+  "input",
+  function(event) {
 
+    if (
+      event.target.classList.contains(
+        "income-amount"
+      ) ||
+      event.target.classList.contains(
+        "bill-amount"
+      ) ||
+      event.target.id === "weeklyNeeds" ||
+      event.target.id === "weeklySavings"
+    ) {
 
-document
-  .getElementById(
-    "weeklySavings"
-  )
-  .addEventListener(
-    "input",
-    updateBudgetCalculation
-  );
-
-
-/* ================================= */
-/* OPEN BUDGET SETUP */
-/* ================================= */
-
-document
-  .getElementById(
-    "budgetSetupButton"
-  )
-  .addEventListener(
-    "click",
-    async function() {
-
-      await loadBudgetSettings();
-
-      document
-        .getElementById(
-          "budgetSetup"
-        )
-        .classList
-        .remove(
-          "hidden"
-        );
-
-      document
-        .getElementById(
-          "budgetSetup"
-        )
-        .scrollIntoView({
-          behavior: "smooth"
-        });
+      updateBudgetCalculation();
 
     }
-  );
+
+  }
+);
 
 
-/* ================================= */
-/* CLOSE BUDGET SETUP */
-/* ================================= */
-
-document
-  .getElementById(
-    "closeBudgetButton"
-  )
-  .addEventListener(
-    "click",
-    function() {
-
-      document
-        .getElementById(
-          "budgetSetup"
-        )
-        .classList
-        .add(
-          "hidden"
-        );
-
-    }
-  );
-
-
-/* ================================= */
-/* SAVE BUDGET SETTINGS */
-/* ================================= */
+/* ========================================= */
+/* SAVE MONTHLY BUDGET PLAN */
+/* ========================================= */
 
 document
-  .getElementById(
-    "saveBudgetButton"
-  )
+  .getElementById("saveBudgetButton")
   .addEventListener(
     "click",
-    saveBudgetSettings
+    saveBudgetPlan
   );
 
 
-async function saveBudgetSettings() {
+async function saveBudgetPlan() {
 
   const calculation =
-    await updateBudgetCalculation();
-
+    updateBudgetCalculation();
 
   if (
     calculation.weeklyNeeds < 0 ||
@@ -2318,9 +2814,7 @@ async function saveBudgetSettings() {
     );
 
     return;
-
   }
-
 
   if (
     calculation.weeklyFun < 0
@@ -2331,56 +2825,76 @@ async function saveBudgetSettings() {
     );
 
     return;
-
   }
 
+  const budgetMonth =
+    dateOnly(
+      getUpcomingBudgetMonth()
+    );
+
+  /*
+    We update the monthly plan itself.
+    Existing allowance deposits are NOT
+    changed by this operation.
+  */
 
   const {
+    data,
     error
   } =
     await supabaseClient
-      .from("budget_settings")
-      .upsert({
+      .from("budget_plans")
+      .upsert(
+        {
+          household_id:
+            householdId,
 
-        household_id:
-          householdId,
+          budget_month:
+            budgetMonth,
 
-        weekly_needs:
-          calculation.weeklyNeeds,
+          weekly_needs:
+            calculation.weeklyNeeds,
 
-        weekly_savings:
-          calculation.weeklySavings,
+          weekly_savings:
+            calculation.weeklySavings,
 
-        updated_at:
-          new Date().toISOString()
+          updated_at:
+            new Date().toISOString(),
 
-      }, {
-
-        onConflict:
-          "household_id"
-
-      });
-
+          preparation_completed:
+            true
+        },
+        {
+          onConflict:
+            "household_id,budget_month"
+        }
+      )
+      .select()
+      .single();
 
   if (error) {
 
     alert(
-      "Could not save budget settings: "
-      + error.message
+      "Could not save budget: " +
+      error.message
     );
 
     return;
-
   }
 
+  currentBudgetPlan =
+    data;
 
-  document.getElementById(
-    "weeklyBudget"
-  ).textContent =
-    money(
-      calculation.weeklyFun
-    );
+  /*
+    Create the current week's deposit
+    using this budget plan.
+  */
 
+  await createCurrentWeekDeposits();
+
+  updateWeeklyBudgetDisplay();
+
+  await calculateBalances();
 
   const message =
     document.getElementById(
@@ -2394,54 +2908,185 @@ async function saveBudgetSettings() {
     "hidden"
   );
 
-
   setTimeout(
-    function() {
-
+    () => {
       message.classList.add(
         "hidden"
       );
-
     },
     3000
   );
 
-
-  await createAllowanceDeposits();
-
 }
 
 
-/* ================================= */
-/* ALLOWANCE DEPOSITS */
-/* ================================= */
+/* ========================================= */
+/* WEEKLY ALLOWANCE DEPOSITS */
+/* ========================================= */
 
-async function createAllowanceDeposits() {
+async function createCurrentWeekDeposits() {
+
+  if (!currentBudgetPlan) {
+    return;
+  }
+
+  const weekStart =
+    dateOnly(
+      getWeekStart()
+    );
+
+  const needsAmount =
+    Number(
+      currentBudgetPlan.weekly_needs
+    ) || 0;
+
+  const funAmount =
+    Number(
+      currentBudgetPlan.weekly_fun ||
+      calculateWeeklyFunFromPlan(
+        currentBudgetPlan
+      )
+    );
 
   /*
-    This function will eventually
-    create the actual weekly Needs
-    and Fun Money deposits.
-
-    For now it only prepares the
-    budget calculation. Rollover will
-    be connected after the setup is
-    confirmed working.
+    Use the unique index created in Supabase
+    so the same household/week/fund cannot
+    receive duplicate deposits.
   */
 
-  await calculateBalances();
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("allowance_deposits")
+      .upsert(
+        [
+          {
+            household_id:
+              householdId,
+
+            week_start:
+              weekStart,
+
+            fund:
+              "needs",
+
+            amount:
+              needsAmount
+          },
+
+          {
+            household_id:
+              householdId,
+
+            week_start:
+              weekStart,
+
+            fund:
+              "fun",
+
+            amount:
+              funAmount
+          }
+        ],
+        {
+          onConflict:
+            "household_id,week_start,fund",
+          ignoreDuplicates:
+            true
+        }
+      );
+
+  if (error) {
+
+    console.error(
+      "Could not create weekly deposits:",
+      error
+    );
+
+  }
 
 }
 
 
-/* ================================= */
+/* ========================================= */
+/* CALCULATE WEEKLY FUN FROM SAVED PLAN */
+/* ========================================= */
+
+function calculateWeeklyFunFromPlan(plan) {
+
+  /*
+    A saved budget plan contains the weekly
+    Needs and Savings amounts.
+
+    Income and bills are loaded separately,
+    so this function uses the currently loaded
+    setup values when available.
+  */
+
+  const calculation =
+    updateBudgetCalculation();
+
+  return calculation.weeklyFun;
+
+}
+
+
+/* ========================================= */
+/* WEEKLY BUDGET DISPLAY */
+/* ========================================= */
+
+function updateWeeklyBudgetDisplay() {
+
+  if (!currentBudgetPlan) {
+
+    document.getElementById(
+      "weeklyBudget"
+    ).textContent =
+      "$0.00";
+
+    document.getElementById(
+      "weeklyBudgetDescription"
+    ).textContent =
+      "No budget prepared yet.";
+
+    return;
+  }
+
+  const weeklyNeeds =
+    Number(
+      currentBudgetPlan.weekly_needs
+    ) || 0;
+
+  const weeklySavings =
+    Number(
+      currentBudgetPlan.weekly_savings
+    ) || 0;
+
+  const weeklyFun =
+    calculateWeeklyFunFromPlan(
+      currentBudgetPlan
+    );
+
+  document.getElementById(
+    "weeklyBudget"
+  ).textContent =
+    money(weeklyFun);
+
+  document.getElementById(
+    "weeklyBudgetDescription"
+  ).textContent =
+    "Weekly Fun Money";
+
+}
+
+
+/* ========================================= */
 /* EXPENSE FORM */
-/* ================================= */
+/* ========================================= */
 
 document
-  .getElementById(
-    "addExpenseButton"
-  )
+  .getElementById("addExpenseButton")
   .addEventListener(
     "click",
     function() {
@@ -2460,22 +3105,16 @@ document
         "Save Expense";
 
       document
-        .getElementById(
-          "expenseForm"
-        )
+        .getElementById("expenseForm")
         .classList
-        .remove(
-          "hidden"
-        );
+        .remove("hidden");
 
     }
   );
 
 
 document
-  .getElementById(
-    "cancelExpenseButton"
-  )
+  .getElementById("cancelExpenseButton")
   .addEventListener(
     "click",
     closeExpenseForm
@@ -2489,11 +3128,13 @@ function closeExpenseForm() {
 
   document.getElementById(
     "expenseAmount"
-  ).value = "";
+  ).value =
+    "";
 
   document.getElementById(
     "expenseDescription"
-  ).value = "";
+  ).value =
+    "";
 
   document.getElementById(
     "expenseFund"
@@ -2501,25 +3142,19 @@ function closeExpenseForm() {
     "needs";
 
   document
-    .getElementById(
-      "expenseForm"
-    )
+    .getElementById("expenseForm")
     .classList
-    .add(
-      "hidden"
-    );
+    .add("hidden");
 
 }
 
 
-/* ================================= */
+/* ========================================= */
 /* SAVE EXPENSE */
-/* ================================= */
+/* ========================================= */
 
 document
-  .getElementById(
-    "saveExpenseButton"
-  )
+  .getElementById("saveExpenseButton")
   .addEventListener(
     "click",
     saveExpense
@@ -2530,19 +3165,15 @@ async function saveExpense() {
 
   const amount =
     Number(
-      document
-        .getElementById(
-          "expenseAmount"
-        )
-        .value
+      document.getElementById(
+        "expenseAmount"
+      ).value
     );
 
   const fund =
-    document
-      .getElementById(
-        "expenseFund"
-      )
-      .value;
+    document.getElementById(
+      "expenseFund"
+    ).value;
 
   const description =
     document
@@ -2552,20 +3183,17 @@ async function saveExpense() {
       .value
       .trim();
 
-
   if (
-    !amount ||
+    !Number.isFinite(amount) ||
     amount <= 0
   ) {
 
     alert(
-      "Enter an amount."
+      "Enter an amount greater than zero."
     );
 
     return;
-
   }
-
 
   if (!description) {
 
@@ -2574,9 +3202,19 @@ async function saveExpense() {
     );
 
     return;
-
   }
 
+  if (
+    fund !== "needs" &&
+    fund !== "fun"
+  ) {
+
+    alert(
+      "Select a valid fund."
+    );
+
+    return;
+  }
 
   if (editingExpenseId) {
 
@@ -2585,89 +3223,76 @@ async function saveExpense() {
     } =
       await supabaseClient
         .from("expenses")
-        .update({
-
-          amount:
+        .update(
+          {
             amount,
-
-          fund:
             fund,
-
-          description:
             description,
-
-          updated_at:
-            new Date().toISOString()
-
-        })
+            updated_at:
+              new Date().toISOString()
+          }
+        )
         .eq(
           "id",
           editingExpenseId
         );
 
-
     if (error) {
 
       alert(
-        "Could not update expense: "
-        + error.message
+        "Could not update expense: " +
+        error.message
       );
 
       return;
-
     }
 
-  } else {
+  }
+  else {
 
     const {
       error
     } =
       await supabaseClient
         .from("expenses")
-        .insert({
+        .insert(
+          {
+            household_id:
+              householdId,
 
-          household_id:
-            householdId,
+            user_id:
+              currentUser.id,
 
-          user_id:
-            currentUser.id,
-
-          amount:
             amount,
-
-          fund:
             fund,
-
-          description:
             description
-
-        });
-
+          }
+        );
 
     if (error) {
 
       alert(
-        "Could not save expense: "
-        + error.message
+        "Could not save expense: " +
+        error.message
       );
 
       return;
-
     }
 
   }
-
 
   closeExpenseForm();
 
   await loadExpenses();
 
+  await calculateBalances();
+
 }
 
 
-/* ================================= */
+/* ========================================= */
 /* EDIT EXPENSE */
-/* ================================= */
+/* ========================================= */
 
 async function editExpense(id) {
 
@@ -2684,67 +3309,51 @@ async function editExpense(id) {
       )
       .single();
 
-
   if (error) {
 
     alert(
-      "Could not load expense: "
-      + error.message
+      "Could not load expense: " +
+      error.message
     );
 
     return;
-
   }
-
 
   editingExpenseId =
     id;
-
 
   document.getElementById(
     "expenseFormTitle"
   ).textContent =
     "Edit Expense";
 
-
   document.getElementById(
     "saveExpenseButton"
   ).textContent =
     "Save Changes";
-
 
   document.getElementById(
     "expenseAmount"
   ).value =
     data.amount;
 
-
   document.getElementById(
     "expenseFund"
   ).value =
     data.fund;
-
 
   document.getElementById(
     "expenseDescription"
   ).value =
     data.description;
 
-
   document
-    .getElementById(
-      "expenseForm"
-    )
+    .getElementById("expenseForm")
     .classList
-    .remove(
-      "hidden"
-    );
-
+    .remove("hidden");
 
   document
-    .getElementById(
-      "expenseForm"
-    )
+    .getElementById("expenseForm")
     .scrollIntoView({
       behavior: "smooth"
     });
@@ -2752,9 +3361,9 @@ async function editExpense(id) {
 }
 
 
-/* ================================= */
+/* ========================================= */
 /* DELETE EXPENSE */
-/* ================================= */
+/* ========================================= */
 
 async function deleteExpense(id) {
 
@@ -2763,11 +3372,8 @@ async function deleteExpense(id) {
       "Delete this expense?"
     )
   ) {
-
     return;
-
   }
-
 
   const {
     error
@@ -2780,27 +3386,26 @@ async function deleteExpense(id) {
         id
       );
 
-
   if (error) {
 
     alert(
-      "Could not delete expense: "
-      + error.message
+      "Could not delete expense: " +
+      error.message
     );
 
     return;
-
   }
 
-
   await loadExpenses();
+
+  await calculateBalances();
 
 }
 
 
-/* ================================= */
+/* ========================================= */
 /* LOAD EXPENSES */
-/* ================================= */
+/* ========================================= */
 
 async function loadExpenses() {
 
@@ -2823,23 +3428,20 @@ async function loadExpenses() {
       )
       .limit(50);
 
-
   if (error) {
 
     console.error(
+      "Could not load expenses:",
       error
     );
 
     return;
-
   }
-
 
   const container =
     document.getElementById(
       "transactions"
     );
-
 
   if (
     !data ||
@@ -2849,28 +3451,20 @@ async function loadExpenses() {
     container.innerHTML =
       '<p class="subtext">No expenses yet.</p>';
 
-    await calculateBalances();
-
     return;
-
   }
-
 
   container.innerHTML =
     "";
 
-
   data.forEach(
-    function(expense) {
+    expense => {
 
       const row =
-        document.createElement(
-          "div"
-        );
+        document.createElement("div");
 
       row.className =
         "transaction";
-
 
       row.innerHTML = `
 
@@ -2879,35 +3473,26 @@ async function loadExpenses() {
           <div>
 
             <div class="transaction-name">
-
               ${escapeHtml(
                 expense.description
               )}
-
             </div>
 
             <div class="transaction-category">
-
               ${
                 expense.fund === "needs"
                   ? "Needs"
                   : "Fun Money"
               }
-
             </div>
 
           </div>
 
           <div class="transaction-amount">
-
-            -${money(
-              expense.amount
-            )}
-
+            -${money(expense.amount)}
           </div>
 
         </div>
-
 
         <div class="transaction-actions">
 
@@ -2926,28 +3511,28 @@ async function loadExpenses() {
           </button>
 
         </div>
-
       `;
 
-
-      container.appendChild(
-        row
-      );
+      container.appendChild(row);
 
     }
   );
 
-
-  await calculateBalances();
-
 }
 
 
-/* ================================= */
+/* ========================================= */
 /* BALANCES */
-/* ================================= */
+/* ========================================= */
 
 async function calculateBalances() {
+
+  /*
+    Make sure the current week's allowance
+    exists before calculating balances.
+  */
+
+  await ensureCurrentWeekDeposits();
 
   const {
     data: deposits,
@@ -2963,17 +3548,15 @@ async function calculateBalances() {
         householdId
       );
 
-
   if (depositError) {
 
     console.error(
+      "Could not load deposits:",
       depositError
     );
 
     return;
-
   }
-
 
   const {
     data: expenses,
@@ -2989,17 +3572,15 @@ async function calculateBalances() {
         householdId
       );
 
-
   if (expenseError) {
 
     console.error(
+      "Could not load expenses:",
       expenseError
     );
 
     return;
-
   }
-
 
   let needs =
     0;
@@ -3007,18 +3588,15 @@ async function calculateBalances() {
   let fun =
     0;
 
-
-  deposits.forEach(
-    function(deposit) {
+  (deposits || []).forEach(
+    deposit => {
 
       if (
         deposit.fund === "needs"
       ) {
 
         needs +=
-          Number(
-            deposit.amount
-          );
+          Number(deposit.amount) || 0;
 
       }
 
@@ -3027,27 +3605,22 @@ async function calculateBalances() {
       ) {
 
         fun +=
-          Number(
-            deposit.amount
-          );
+          Number(deposit.amount) || 0;
 
       }
 
     }
   );
 
-
-  expenses.forEach(
-    function(expense) {
+  (expenses || []).forEach(
+    expense => {
 
       if (
         expense.fund === "needs"
       ) {
 
         needs -=
-          Number(
-            expense.amount
-          );
+          Number(expense.amount) || 0;
 
       }
 
@@ -3056,673 +3629,387 @@ async function calculateBalances() {
       ) {
 
         fun -=
-          Number(
-            expense.amount
-          );
+          Number(expense.amount) || 0;
 
       }
 
     }
   );
 
+  const needsElement =
+    document.getElementById(
+      "needsBalance"
+    );
 
-  document.getElementById(
-    "needsBalance"
-  ).textContent =
+  const funElement =
+    document.getElementById(
+      "funBalance"
+    );
+
+  needsElement.textContent =
     money(needs);
 
-
-  document.getElementById(
-    "funBalance"
-  ).textContent =
+  funElement.textContent =
     money(fun);
 
+  needsElement.classList.toggle(
+    "negative",
+    needs < 0
+  );
+
+  funElement.classList.toggle(
+    "negative",
+    fun < 0
+  );
+
 }
 
 
-/* ================================= */
-/* LOGOUT */
-/* ================================= */
+/* ========================================= */
+/* ENSURE CURRENT WEEK'S DEPOSITS */
+/* ========================================= */
 
-document
-  .getElementById(
-    "logoutButton"
-  )
-  .addEventListener(
-    "click",
-    async function() {
+async function ensureCurrentWeekDeposits() {
 
-      localStorage.removeItem(
-        "profileSessionToken"
+  if (!currentBudgetPlan) {
+
+    await loadCurrentBudget();
+
+  }
+
+  if (!currentBudgetPlan) {
+    return;
+  }
+
+  const weekStart =
+    dateOnly(
+      getWeekStart()
+    );
+
+  /*
+    Determine this week's amounts from the
+    current saved budget plan.
+
+    The weekly Fun amount is calculated from
+    the budget setup currently stored in the
+    form when possible.
+  */
+
+  const weeklyNeeds =
+    Number(
+      currentBudgetPlan.weekly_needs
+    ) || 0;
+
+  const weeklySavings =
+    Number(
+      currentBudgetPlan.weekly_savings
+    ) || 0;
+
+  /*
+    Load income and bills to determine the
+    weekly Fun amount associated with the
+    saved plan.
+  */
+
+  const {
+    data: incomes
+  } =
+    await supabaseClient
+      .from("income_sources")
+      .select("amount")
+      .eq(
+        "household_id",
+        householdId
       );
 
-      localStorage.removeItem(
-        "profileId"
+  const {
+    data: bills
+  } =
+    await supabaseClient
+      .from("bills")
+      .select("amount")
+      .eq(
+        "household_id",
+        householdId
       );
 
-
-      currentProfile =
-        null;
-
-      profileSessionToken =
-        null;
-
-
-      await supabaseClient.auth.signOut();
-
-
-      document
-        .getElementById(
-          "appScreen"
-        )
-        .classList
-        .add(
-          "hidden"
-        );
-
-
-      document
-        .getElementById(
-          "profileScreen"
-        )
-        .classList
-        .add(
-          "hidden"
-        );
-
-
-      document
-        .getElementById(
-          "loginScreen"
-        )
-        .classList
-        .remove(
-          "hidden"
-        );
-
-    }
-  );
-document
-  .getElementById(
-    "profileLogoutButton"
-  )
-  .addEventListener(
-    "click",
-    async function() {
-
-      localStorage.removeItem(
-        "profileSessionToken"
-      );
-
-      localStorage.removeItem(
-        "profileId"
-      );
-
-
-      currentProfile =
-        null;
-
-      profileSessionToken =
-        null;
-
-
-      await supabaseClient.auth.signOut();
-
-
-      document
-        .getElementById(
-          "profileScreen"
-        )
-        .classList
-        .add(
-          "hidden"
-        );
-
-
-      document
-        .getElementById(
-          "loginScreen"
-        )
-        .classList
-        .remove(
-          "hidden"
-        );
-
-    }
-  );
-
-document
-  .getElementById(
-    "switchProfileButton"
-  )
-  .addEventListener(
-    "click",
-    async function() {
-
-      currentProfile =
-        null;
-
-      profileSessionToken =
-        null;
-
-      localStorage.removeItem(
-        "profileSessionToken"
-      );
-
-      localStorage.removeItem(
-        "profileId"
-      );
-
-
-      document
-        .getElementById(
-          "appScreen"
-        )
-        .classList
-        .add(
-          "hidden"
-        );
-
-
-      document
-        .getElementById(
-          "profileScreen"
-        )
-        .classList
-        .remove(
-          "hidden"
-        );
-
-
-      document
-        .getElementById(
-          "profileList"
-        )
-        .classList
-        .remove(
-          "hidden"
-        );
-
-
-      document
-        .getElementById(
-          "addProfileButton"
-        )
-        .classList
-        .remove(
-          "hidden"
-        );
-
-
-      document
-        .getElementById(
-          "addProfileForm"
-        )
-        .classList
-        .add(
-          "hidden"
-        );
-
-
-      const profiles =
-        await loadProfiles();
-
-
-      const profileList =
-        document.getElementById(
-          "profileList"
-        );
-
-
-      profileList.innerHTML = "";
-
-
-      profiles.forEach(
-        profile => {
-
-          const button =
-            document.createElement(
-              "button"
-            );
-
-
-          button.className =
-            "primary-button";
-
-
-          button.textContent =
-            profile.display_name;
-
-
-          button.style.marginTop =
-            "12px";
-
-
-          button.addEventListener(
-            "click",
-            () => {
-              selectProfile(profile);
-            }
-          );
-
-
-          profileList.appendChild(
-            button
-          );
-
-        }
-      );
-
-    }
-  );
-
-  document
-  .getElementById(
-    "addProfileButton"
-  )
-  .addEventListener(
-    "click",
-    function() {
-
-      document
-        .getElementById(
-          "profileList"
-        )
-        .classList
-        .add(
-          "hidden"
-        );
-
-
-      document
-        .getElementById(
-          "addProfileButton"
-        )
-        .classList
-        .add(
-          "hidden"
-        );
-
-
-      document
-        .getElementById(
-          "addProfileForm"
-        )
-        .classList
-        .remove(
-          "hidden"
-        );
-
-    }
-  );
-
-
-document
-  .getElementById(
-    "cancelProfileButton"
-  )
-  .addEventListener(
-    "click",
-    function() {
-
-      document
-        .getElementById(
-          "addProfileForm"
-        )
-        .classList
-        .add(
-          "hidden"
-        );
-
-
-      document
-        .getElementById(
-          "profileList"
-        )
-        .classList
-        .remove(
-          "hidden"
-        );
-
-
-      document
-        .getElementById(
-          "addProfileButton"
-        )
-        .classList
-        .remove(
-          "hidden"
-        );
-
-    }
-  );
-
-  document
-  .getElementById(
-    "saveProfileButton"
-  )
-  .addEventListener(
-    "click",
-    async function() {
-
-      const name =
-        document
-          .getElementById(
-            "newProfileName"
-          )
-          .value
-          .trim();
-
-
-      const pin =
-        document
-          .getElementById(
-            "newProfilePin"
-          )
-          .value;
-
-
-      const errorMessage =
-        document.getElementById(
-          "profileError"
-        );
-
-
-      errorMessage.classList.add(
-        "hidden"
-      );
-
-
-      if (!name) {
-
-        errorMessage.textContent =
-          "Profile name is required.";
-
-        errorMessage.classList.remove(
-          "hidden"
-        );
-
-        return;
-
-      }
-
-
-      if (!/^\d{4}$/.test(pin)) {
-
-        errorMessage.textContent =
-          "PIN must be exactly 4 digits.";
-
-        errorMessage.classList.remove(
-          "hidden"
-        );
-
-        return;
-
-      }
-
-
-      try {
-
-        const {
-          error
-        } =
-          await supabaseClient.rpc(
-            "create_profile",
-            {
-              p_household_id:
-                householdId,
-
-              p_display_name:
-                name,
-
-              p_pin:
-                pin
-            }
-          );
-
-
-        if (error) {
-
-          throw error;
-
-        }
-
-
-        document
-          .getElementById(
-            "newProfileName"
-          )
-          .value = "";
-
-        document
-          .getElementById(
-            "newProfilePin"
-          )
-          .value = "";
-
-
-        document
-          .getElementById(
-            "addProfileForm"
-          )
-          .classList
-          .add(
-            "hidden"
-          );
-
-
-        document
-          .getElementById(
-            "addProfileButton"
-          )
-          .classList
-          .remove(
-            "hidden"
-          );
-
-
-        document
-          .getElementById(
-            "profileList"
-          )
-          .classList
-          .remove(
-            "hidden"
-          );
-
-
-        const profiles =
-          await loadProfiles();
-
-
-        const profileList =
-          document.getElementById(
-            "profileList"
-          );
-
-
-        profileList.innerHTML = "";
-
-
-        profiles.forEach(
-          profile => {
-
-            const button =
-              document.createElement(
-                "button"
-              );
-
-
-            button.className =
-              "primary-button";
-
-
-            button.textContent =
-              profile.display_name;
-
-
-            button.style.marginTop =
-              "12px";
-
-
-            button.addEventListener(
-              "click",
-              () => {
-                selectProfile(profile);
-              }
-            );
-
-
-            profileList.appendChild(
-              button
-            );
-
+  const totalIncome =
+    (incomes || []).reduce(
+      (sum, item) =>
+        sum +
+        (Number(item.amount) || 0),
+      0
+    );
+
+  const totalBills =
+    (bills || []).reduce(
+      (sum, item) =>
+        sum +
+        (Number(item.amount) || 0),
+      0
+    );
+
+  const monthlyNeeds =
+    weeklyNeeds * 52 / 12;
+
+  const monthlySavings =
+    weeklySavings * 52 / 12;
+
+  const monthlyFun =
+    totalIncome
+    - totalBills
+    - monthlyNeeds
+    - monthlySavings;
+
+  const weeklyFun =
+    monthlyFun * 12 / 52;
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("allowance_deposits")
+      .upsert(
+        [
+          {
+            household_id:
+              householdId,
+
+            week_start:
+              weekStart,
+
+            fund:
+              "needs",
+
+            amount:
+              weeklyNeeds
+          },
+
+          {
+            household_id:
+              householdId,
+
+            week_start:
+              weekStart,
+
+            fund:
+              "fun",
+
+            amount:
+              weeklyFun
           }
-        );
+        ],
+        {
+          onConflict:
+            "household_id,week_start,fund",
+          ignoreDuplicates:
+            true
+        }
+      );
 
-      }
-      catch (error) {
+  if (error) {
 
-        errorMessage.textContent =
-          error.message;
+    console.error(
+      "Could not create weekly deposits:",
+      error
+    );
 
-        errorMessage.classList.remove(
-          "hidden"
-        );
+  }
 
-      }
+}
 
-    }
-  );
-  
+
+/* ========================================= */
+/* SETTINGS */
+/* ========================================= */
+
 document
-  .getElementById(
-    "settingsButton"
-  )
+  .getElementById("settingsButton")
   .addEventListener(
     "click",
     function() {
 
+      hideAllScreens();
+
       document
-        .getElementById(
-          "appScreen"
-        )
+        .getElementById("settingsScreen")
         .classList
-        .add(
-          "hidden"
-        );
+        .remove("hidden");
 
-
-      document
-        .getElementById(
-          "settingsScreen"
-        )
-        .classList
-        .remove(
-          "hidden"
-        );
-
-
-      document
-        .getElementById(
-          "settingsProfileName"
-        )
-        .textContent =
+      document.getElementById(
+        "settingsProfileName"
+      ).textContent =
         currentProfile.display_name;
 
+      const access =
+        currentProfile.access_level || "";
 
-      document
-        .getElementById(
-          "settingsProfileType"
-        )
-        .textContent =
-        currentProfile.access_level
-          .charAt(0)
-          .toUpperCase() +
-        currentProfile.access_level
-          .slice(1) +
-        " Profile";
+      document.getElementById(
+        "settingsProfileType"
+      ).textContent =
+        access
+          ? access.charAt(0).toUpperCase() +
+            access.slice(1) +
+            " Profile"
+          : "";
 
     }
   );
+
+
+document
+  .getElementById("settingsBackButton")
+  .addEventListener(
+    "click",
+    showMainApp
+  );
+
+
+document
+  .getElementById("profileSettingsButton")
+  .addEventListener(
+    "click",
+    function() {
+
+      alert(
+        "Profile settings will be added here."
+      );
+
+    }
+  );
+
+
+/* ========================================= */
+/* SWITCH PROFILE */
+/* ========================================= */
+
+document
+  .getElementById("switchProfileButton")
+  .addEventListener(
+    "click",
+    async function() {
+
+      currentProfile =
+        null;
+
+      profileSessionToken =
+        null;
+
+      localStorage.removeItem(
+        "profileSessionToken"
+      );
+
+      localStorage.removeItem(
+        "profileId"
+      );
+
+      hideAllScreens();
+
+      document
+        .getElementById("profileScreen")
+        .classList
+        .remove("hidden");
+
+      await renderProfiles();
+
+    }
+  );
+
+
+/* ========================================= */
+/* LOGOUT */
+/* ========================================= */
+
+async function logout() {
+
+  localStorage.removeItem(
+    "profileSessionToken"
+  );
+
+  localStorage.removeItem(
+    "profileId"
+  );
+
+  currentProfile =
+    null;
+
+  profileSessionToken =
+    null;
+
+  currentUser =
+    null;
+
+  householdId =
+    null;
+
+  currentBudgetPlan =
+    null;
+
+  await supabaseClient.auth.signOut();
+
+  hideAllScreens();
+
   document
-  .getElementById(
-    "settingsBackButton"
-  )
+    .getElementById("loginScreen")
+    .classList
+    .remove("hidden");
+
+}
+
+
+document
+  .getElementById("logoutButton")
+  .addEventListener(
+    "click",
+    logout
+  );
+
+
+document
+  .getElementById("profileLogoutButton")
+  .addEventListener(
+    "click",
+    logout
+  );
+
+
+/* ========================================= */
+/* BILL HELP */
+/* ========================================= */
+
+document
+  .getElementById("budgetHelpButton")
   .addEventListener(
     "click",
     function() {
 
       document
-        .getElementById(
-          "settingsScreen"
-        )
+        .getElementById("billHelpModal")
         .classList
-        .add(
-          "hidden"
-        );
-
-
-      document
-        .getElementById(
-          "appScreen"
-        )
-        .classList
-        .remove(
-          "hidden"
-        );
+        .remove("hidden");
 
     }
   );
 
 
+document
+  .getElementById("closeBillHelpButton")
+  .addEventListener(
+    "click",
+    function() {
 
-  
-/* ================================= */
-/* SAFETY */
-/* ================================= */
+      document
+        .getElementById("billHelpModal")
+        .classList
+        .add("hidden");
 
-function escapeHtml(value) {
-
-  const div =
-    document.createElement(
-      "div"
-    );
-
-  div.textContent =
-    value;
-
-  return div.innerHTML;
-
-}
+    }
+  );
 
 
-function escapeAttribute(value) {
-
-  return String(value)
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-    .replace(
-      /</g,
-      "&lt;"
-    )
-    .replace(
-      />/g,
-      "&gt;"
-    );
-
-}
-
-
-/* ================================= */
-/* SESSION */
-/* ================================= */
+/* ========================================= */
+/* INITIAL SESSION CHECK */
+/* ========================================= */
 
 async function checkSession() {
 
@@ -3730,7 +4017,6 @@ async function checkSession() {
     data
   } =
     await supabaseClient.auth.getSession();
-
 
   if (
     data &&
@@ -3747,351 +4033,46 @@ async function checkSession() {
 
 }
 
-async function loadProfiles() {
 
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("profiles")
-      .select(
-        "id, display_name, access_level"
-      )
-      .eq(
-        "household_id",
-        householdId
-      )
-      .order(
-        "display_name"
-      );
+window.login =
+  login;
 
+window.supabaseClient =
+  supabaseClient;
 
-  if (error) {
+window.editIncome =
+  editIncome;
 
-    alert(
-      "Could not load profiles: "
-      + error.message
-    );
+window.deleteIncome =
+  deleteIncome;
 
-    return [];
+window.saveNewIncome =
+  saveNewIncome;
 
-  }
+window.editBill =
+  editBill;
 
+window.deleteBill =
+  deleteBill;
 
-  return data || [];
+window.saveNewBill =
+  saveNewBill;
 
-}
-  function selectProfile(profile) {
+window.editExpense =
+  editExpense;
 
-  currentProfile =
-    profile;
+window.deleteExpense =
+  deleteExpense;
 
 
-  document.getElementById(
-    "profileList"
-  ).classList.add(
-    "hidden"
-  );
+/* ========================================= */
+/* START */
+/* ========================================= */
 
+checkSession();
 
-  document.getElementById(
-    "pinScreen"
-  ).classList.remove(
-    "hidden"
-  );
+</script>
 
-
-  document.getElementById(
-    "pinProfileName"
-  ).textContent =
-    profile.display_name;
-
-
-  document.getElementById(
-    "profilePin"
-  ).value =
-    "";
-
-
-  document.getElementById(
-    "profilePin"
-  ).focus();
-
-
-  document.getElementById(
-    "pinError"
-  ).classList.add(
-    "hidden"
-  );
-
-}
-  document
-  .getElementById("unlockProfileButton")
-  .addEventListener(
-    "click",
-    unlockProfile
-  );
-
-document
-  .getElementById("cancelPinButton")
-  .addEventListener(
-    "click",
-    cancelPin
-  );
-  
-  async function unlockProfile() {
-
-  const pin =
-    document.getElementById(
-      "profilePin"
-    ).value;
-
-
-  if (!pin) {
-
-    return;
-
-  }
-
-
-  try {
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient.rpc(
-        "create_profile_session",
-        {
-          p_profile_id:
-            currentProfile.id,
-
-          p_pin:
-            pin,
-
-          p_session_minutes:
-            1440
-        }
-      );
-
-
-    if (error) {
-
-      throw error;
-
-    }
-
-
-    profileSessionToken =
-  data;
-
-localStorage.setItem(
-  "profileSessionToken",
-  data
-);
-
-localStorage.setItem(
-  "profileId",
-  currentProfile.id
-);
-
-
-    document.getElementById(
-      "pinScreen"
-    ).classList.add(
-      "hidden"
-    );
-
-
-    document.getElementById(
-  "profileScreen"
-).classList.add(
-  "hidden"
-);
-
-
-document.getElementById(
-  "currentProfileName"
-).textContent =
-  currentProfile.display_name;
-
-
-    document.getElementById(
-      "appScreen"
-    ).classList.remove(
-      "hidden"
-    );
-
-
-    await loadBudgetSettings();
-
-    await loadExpenses();
-
-  }
-  catch (error) {
-
-  console.error(
-    "Profile unlock error:",
-    error
-  );
-
-  document.getElementById(
-    "pinError"
-  ).textContent =
-    error.message ||
-    "Incorrect PIN.";
-
-  document.getElementById(
-    "pinError"
-  ).classList.remove(
-    "hidden"
-  );
-
-}
-
-}
-async function restoreProfileSession() {
-
-  const savedToken =
-    localStorage.getItem(
-      "profileSessionToken"
-    );
-
-  const savedProfileId =
-    localStorage.getItem(
-      "profileId"
-    );
-
-  if (
-    !savedToken ||
-    !savedProfileId
-  ) {
-
-    return false;
-
-  }
-
-  try {
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient.rpc(
-        "validate_profile_session",
-        {
-          p_session_token:
-            savedToken
-        }
-      );
-
-    if (error) {
-
-      throw error;
-
-    }
-
-    if (
-      data !== savedProfileId
-    ) {
-
-      throw new Error(
-        "Profile session mismatch"
-      );
-
-    }
-
-    const {
-      data: profile,
-      error: profileError
-    } =
-      await supabaseClient
-        .from("profiles")
-        .select(
-          "id, display_name, access_level"
-        )
-        .eq(
-          "id",
-          savedProfileId
-        )
-        .single();
-
-    if (profileError) {
-
-      throw profileError;
-
-    }
-
-    currentProfile =
-      profile;
-
-    profileSessionToken =
-      savedToken;
-
-    document.getElementById(
-      "profileScreen"
-    ).classList.add(
-      "hidden"
-    );
-
-    document.getElementById(
-      "appScreen"
-    ).classList.remove(
-      "hidden"
-    );
-
-    await loadBudgetSettings();
-
-    await loadExpenses();
-
-    return true;
-
-  }
-  catch (error) {
-
-    console.error(
-      "Could not restore profile session:",
-      error
-    );
-
-    localStorage.removeItem(
-      "profileSessionToken"
-    );
-
-    localStorage.removeItem(
-      "profileId"
-    );
-
-    return false;
-
-  }
-
-}
-
-function cancelPin() {
-
-  currentProfile =
-    null;
-
-
-  document.getElementById(
-    "pinScreen"
-  ).classList.add(
-    "hidden"
-  );
-
-
-  document.getElementById(
-    "profileList"
-  ).classList.remove(
-    "hidden"
-  );
-  
-}
-  window.login = login;
-window.supabaseClient = supabaseClient;
-
-  checkSession();
-  
-  </script>
+</body>
+</html>
+```
