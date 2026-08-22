@@ -9,8 +9,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 /* =========================================================
-   RESET / BASE
+   RESET
    ========================================================= */
 
 * {
@@ -55,9 +56,10 @@ body {
   --accent: #ccd5ae;
 
   --panel-edge: #d9cfae;
+
   --panel-shadow:
-    0 18px 35px rgba(70, 55, 30, .18),
-    0 5px 12px rgba(70, 55, 30, .12);
+    0 18px 35px rgba(70,55,30,.18),
+    0 5px 12px rgba(70,55,30,.12);
 
   --input-border: #d8cda9;
   --muted: #a98963;
@@ -69,6 +71,13 @@ body {
   --success-bg: #dfe7ca;
 
   --info: #8d7455;
+
+  --chart-1: #ccd5ae;
+  --chart-2: #d4a373;
+  --chart-3: #a7c4a0;
+  --chart-4: #b8a4c9;
+  --chart-5: #8fb8c7;
+  --chart-6: #d99b8f;
 }
 
 body.theme-petals {
@@ -78,9 +87,10 @@ body.theme-petals {
   --accent: #f2aebb;
 
   --panel-edge: #d9a6a8;
+
   --panel-shadow:
-    0 18px 35px rgba(70, 55, 80, .18),
-    0 5px 12px rgba(70, 55, 80, .12);
+    0 18px 35px rgba(70,55,80,.18),
+    0 5px 12px rgba(70,55,80,.12);
 
   --input-border: #d5aeb0;
   --muted: #7777b6;
@@ -92,6 +102,124 @@ body.theme-petals {
   --success-bg: #dbe5cf;
 
   --info: #6864a9;
+
+  --chart-1: #f2aebb;
+  --chart-2: #696fc7;
+  --chart-3: #d99b8f;
+  --chart-4: #a7aae1;
+  --chart-5: #c5b5d9;
+  --chart-6: #a1c2b0;
+}
+
+body.theme-ocean {
+  --background: #d6edf2;
+  --text: #467c8c;
+  --panel: #eef9fa;
+  --accent: #9dcfd9;
+
+  --panel-edge: #8fbcc5;
+
+  --panel-shadow:
+    0 18px 35px rgba(40,70,80,.18),
+    0 5px 12px rgba(40,70,80,.12);
+
+  --input-border: #a9ccd3;
+  --muted: #658f9b;
+
+  --danger: #a85f66;
+  --danger-bg: #efd8db;
+
+  --success: #587d64;
+  --success-bg: #dcecdf;
+
+  --info: #4d8290;
+
+  --chart-1: #9dcfd9;
+  --chart-2: #467c8c;
+  --chart-3: #7eabb4;
+  --chart-4: #b0c9d0;
+  --chart-5: #c2a8bc;
+  --chart-6: #d2a98d;
+}
+
+body.theme-night {
+  --background: #202535;
+  --text: #d7b6f5;
+  --panel: #30364a;
+  --accent: #65558d;
+
+  --panel-edge: #494f68;
+
+  --panel-shadow:
+    0 18px 35px rgba(0,0,0,.35),
+    0 5px 12px rgba(0,0,0,.25);
+
+  --input-border: #555d76;
+  --muted: #a5a9bd;
+
+  --danger: #e59a9f;
+  --danger-bg: #53373d;
+
+  --success: #9fc79e;
+  --success-bg: #354b3d;
+
+  --info: #b6a7d8;
+
+  --chart-1: #65558d;
+  --chart-2: #d7b6f5;
+  --chart-3: #7895aa;
+  --chart-4: #8c7b9f;
+  --chart-5: #6d8e7a;
+  --chart-6: #a66d76;
+}
+
+
+/* =========================================================
+   FONTS
+   ========================================================= */
+
+@import url(
+  "https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:wght@400;700&display=swap"
+);
+
+body.font-mono {
+  font-family:
+    "Space Mono",
+    monospace;
+}
+
+body.font-retro {
+  font-family:
+    "Press Start 2P",
+    monospace;
+}
+
+body.font-retro input,
+body.font-retro select,
+body.font-retro button {
+  font-family:
+    "Press Start 2P",
+    monospace;
+}
+
+body.font-retro {
+  font-size: 11px;
+}
+
+body.font-retro h1 {
+  font-size: 24px;
+}
+
+body.font-retro h2 {
+  font-size: 18px;
+}
+
+body.font-retro h3 {
+  font-size: 13px;
+}
+
+body.font-retro button {
+  font-size: 10px;
 }
 
 
@@ -106,18 +234,16 @@ body.theme-petals {
 
 
 /* =========================================================
-   LOGIN
+   HIDDEN
    ========================================================= */
 
-#loginScreen {
-  max-width: 500px;
-  margin: auto;
-  padding: 40px 20px;
+.hidden {
+  display: none !important;
 }
 
 
 /* =========================================================
-   HEADER
+   HEADERS
    ========================================================= */
 
 header {
@@ -127,8 +253,10 @@ header {
 
 header h1 {
   margin: 0;
+
   font-size: 32px;
   font-weight: 800;
+
   letter-spacing: -.5px;
 }
 
@@ -138,8 +266,36 @@ header p {
 
 .subtext {
   color: var(--muted);
+
   font-size: 14px;
   font-weight: 600;
+}
+
+
+/* =========================================================
+   LOGIN / PROFILE
+   ========================================================= */
+
+#loginScreen {
+  max-width: 500px;
+
+  margin: auto;
+
+  padding: 40px 20px;
+}
+
+.centered-screen {
+  max-width: 500px;
+
+  margin: auto;
+
+  padding: 50px 20px;
+}
+
+.profile-button {
+  width: 100%;
+
+  margin-top: 12px;
 }
 
 
@@ -152,10 +308,6 @@ header p {
 
   border-radius: 24px;
 
-  /*
-    The darker side creates the hard-turn bevel.
-    The panel surface itself remains flat.
-  */
   border: 0;
 
   box-shadow:
@@ -171,15 +323,12 @@ header p {
   overflow: hidden;
 
   isolation: isolate;
-
-  transition:
-    box-shadow .25s ease,
-    transform .25s ease;
 }
 
 .panel-inner {
   min-width: 0;
   max-width: 100%;
+
   padding: 24px;
 
   overflow-y: auto;
@@ -208,18 +357,19 @@ header p {
   box-shadow:
     0 0 0 1px var(--panel-edge),
     0 6px 0 var(--panel-edge),
-    0 12px 25px rgba(60, 50, 30, .12);
+    0 12px 25px rgba(60,50,30,.12);
 
   overflow: hidden;
 }
 
 
 /* =========================================================
-   DESKTOP MAIN LAYOUT
+   DESKTOP GRID
    ========================================================= */
 
 #mainWorkspace {
   width: 100%;
+
   min-height: calc(100vh - 100px);
 
   padding: 0 24px 30px;
@@ -227,30 +377,26 @@ header p {
   display: grid;
 
   grid-template-columns:
-    minmax(0, 1fr)
-    minmax(0, 1fr)
-    minmax(0, 1.15fr)
-    minmax(0, 1fr);
+    minmax(0,1fr)
+    minmax(0,1fr)
+    minmax(0,1.15fr)
+    minmax(0,1fr);
 
   gap: 20px;
 
   align-items: stretch;
 }
 
-
-/*
-  This is important.
-
-  min-width: 0 prevents a loaded value such as $657.69
-  from expanding the grid column beyond its allotted width.
-*/
 .workspace-panel {
   min-width: 0;
+
   width: 100%;
   max-width: 100%;
+
   overflow: hidden;
 
   height: calc(100vh - 130px);
+
   min-height: 600px;
 }
 
@@ -259,24 +405,22 @@ header p {
    HOME
    ========================================================= */
 
-.home-panel {
-  min-width: 0;
-}
-
 .home-panel .panel-inner {
   padding: 20px;
 }
 
 .home-title {
   text-align: center;
+
   font-size: 28px;
   font-weight: 800;
+
   margin: 0 0 4px;
 }
 
 
 /* =========================================================
-   DATE STRIP
+   HOME DATE STRIP
    ========================================================= */
 
 .date-strip {
@@ -286,6 +430,31 @@ header p {
   max-width: 390px;
 
   text-align: center;
+
+  /*
+    Smooth recessed area.
+
+    This is intentionally a concave depression rather
+    than a cut-out.
+  */
+
+  padding:
+    14px
+    16px
+    16px;
+
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(0,0,0,.025),
+      rgba(255,255,255,.08)
+    );
+
+  box-shadow:
+    inset 5px 5px 11px rgba(70,55,30,.14),
+    inset -5px -5px 11px rgba(255,255,255,.42);
 }
 
 .date-month {
@@ -299,7 +468,7 @@ header p {
   display: grid;
 
   grid-template-columns:
-    repeat(7, minmax(0, 1fr));
+    repeat(7,minmax(0,1fr));
 
   gap: 3px;
 
@@ -308,6 +477,7 @@ header p {
 
 .date-day {
   display: flex;
+
   align-items: center;
   justify-content: center;
 
@@ -340,16 +510,65 @@ header p {
 
 .date-day span {
   position: relative;
+
   z-index: 1;
 }
 
 
 /* =========================================================
-   FUND CARDS
+   SETTINGS GEAR
+   ========================================================= */
+
+.settings-gear {
+  position: fixed;
+
+  top: 18px;
+  right: 20px;
+
+  z-index: 500;
+
+  width: 46px;
+  height: 46px;
+
+  padding: 0;
+
+  border-radius: 50%;
+
+  background: var(--panel);
+
+  color: var(--text);
+
+  /*
+    Same smooth recessed treatment as the date strip.
+  */
+
+  box-shadow:
+    inset 4px 4px 8px rgba(70,55,30,.15),
+    inset -4px -4px 8px rgba(255,255,255,.40),
+    0 0 0 1px var(--panel-edge);
+
+  font-size: 22px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-gear:active {
+  box-shadow:
+    inset 5px 5px 10px rgba(70,55,30,.18),
+    inset -3px -3px 7px rgba(255,255,255,.30);
+}
+
+
+/* =========================================================
+   HOME FUNDS
    ========================================================= */
 
 .home-funds {
   display: flex;
+
   flex-direction: column;
 
   gap: 18px;
@@ -360,13 +579,16 @@ header p {
 
 .fund-card {
   width: 100%;
+
   min-width: 0;
   max-width: 100%;
 
   min-height: 220px;
 
   display: flex;
+
   flex-direction: column;
+
   justify-content: center;
   align-items: center;
 
@@ -378,20 +600,18 @@ header p {
 .fund-label {
   font-size: 18px;
   font-weight: 800;
+
   margin-bottom: 12px;
 }
 
 .balance {
-  /*
-    Prevent the numeric value from becoming a reason
-    for the panel/grid to expand.
-  */
   width: 100%;
   max-width: 100%;
 
   min-width: 0;
 
-  font-size: clamp(28px, 4vw, 42px);
+  font-size:
+    clamp(28px,4vw,42px);
 
   font-weight: 850;
 
@@ -400,6 +620,7 @@ header p {
   white-space: nowrap;
 
   overflow: hidden;
+
   text-overflow: ellipsis;
 
   margin: 0;
@@ -407,11 +628,12 @@ header p {
 
 
 /* =========================================================
-   EXPENSE HISTORY
+   PANEL HEADER
    ========================================================= */
 
 .panel-header {
   display: flex;
+
   justify-content: space-between;
   align-items: center;
 
@@ -424,16 +646,148 @@ header p {
 
 .panel-header h2 {
   margin: 0;
+
   font-size: 24px;
   font-weight: 800;
 
   min-width: 0;
 }
 
+
+/* =========================================================
+   FORMS
+   ========================================================= */
+
+label {
+  display: block;
+
+  margin-top: 16px;
+  margin-bottom: 6px;
+
+  font-weight: 750;
+}
+
+input,
+select {
+  width: 100%;
+  max-width: 100%;
+
+  padding: 13px;
+
+  border:
+    1px solid
+    var(--input-border);
+
+  border-radius: 12px;
+
+  font-family: inherit;
+
+  font-size: 17px;
+
+  color: var(--text);
+
+  background: var(--panel);
+
+  outline: none;
+}
+
+input:focus,
+select:focus {
+  box-shadow:
+    0 0 0 3px var(--accent);
+}
+
+input:focus-visible,
+select:focus-visible,
+button:focus-visible {
+  outline:
+    3px solid
+    var(--accent);
+
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+button {
+  border: none;
+
+  border-radius: 14px;
+
+  padding: 14px;
+
+  font-family: inherit;
+
+  font-size: 16px;
+
+  font-weight: 750;
+
+  cursor: pointer;
+
+  transition:
+    transform .12s ease,
+    filter .12s ease,
+    box-shadow .12s ease;
+}
+
+button:active {
+  transform:
+    translateY(1px);
+}
+
+.primary-button {
+  background: var(--accent);
+
+  color: var(--text);
+
+  box-shadow:
+    0 4px 0
+    var(--panel-edge);
+}
+
+.secondary-button {
+  background: var(--panel);
+
+  color: var(--text);
+
+  box-shadow:
+    0 0 0 1px var(--panel-edge),
+    0 4px 0 var(--panel-edge);
+}
+
+.danger-button {
+  background:
+    var(--danger-bg);
+
+  color:
+    var(--danger);
+}
+
+.small-button {
+  width: auto;
+
+  padding:
+    7px 11px;
+
+  font-size: 13px;
+
+  border-radius: 9px;
+}
+
+
+/* =========================================================
+   TRANSACTIONS
+   ========================================================= */
+
 .transaction {
   padding: 15px 0;
 
-  border-bottom: 1px solid var(--panel-edge);
+  border-bottom:
+    1px solid
+    var(--panel-edge);
 
   min-width: 0;
 }
@@ -444,6 +798,7 @@ header p {
 
 .transaction-top {
   display: flex;
+
   justify-content: space-between;
 
   align-items: flex-start;
@@ -485,208 +840,13 @@ header p {
 
 
 /* =========================================================
-   BUTTONS
-   ========================================================= */
-
-button {
-  border: none;
-
-  border-radius: 14px;
-
-  padding: 14px;
-
-  font-family: inherit;
-
-  font-size: 16px;
-
-  font-weight: 750;
-
-  cursor: pointer;
-
-  transition:
-    transform .12s ease,
-    filter .12s ease,
-    box-shadow .12s ease;
-}
-
-button:active {
-  transform: translateY(1px);
-}
-
-.primary-button {
-  background: var(--accent);
-  color: var(--text);
-
-  box-shadow:
-    0 4px 0 var(--panel-edge);
-}
-
-.secondary-button {
-  background: var(--panel);
-  color: var(--text);
-
-  box-shadow:
-    0 0 0 1px var(--panel-edge),
-    0 4px 0 var(--panel-edge);
-}
-
-.danger-button {
-  background: var(--danger-bg);
-  color: var(--danger);
-}
-
-.small-button {
-  width: auto;
-
-  padding: 7px 11px;
-
-  font-size: 13px;
-
-  border-radius: 9px;
-}
-
-
-/* =========================================================
-   GEAR
-   ========================================================= */
-
-.settings-gear {
-  position: fixed;
-
-  top: 18px;
-  right: 20px;
-
-  z-index: 500;
-
-  width: 46px;
-  height: 46px;
-
-  padding: 0;
-
-  border-radius: 50%;
-
-  background: var(--panel);
-
-  color: var(--text);
-
-  box-shadow:
-    0 0 0 1px var(--panel-edge),
-    0 5px 0 var(--panel-edge),
-    0 9px 18px rgba(60, 50, 30, .12);
-
-  font-size: 22px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-
-/* =========================================================
-   MOBILE NAV
-   ========================================================= */
-
-.mobile-nav {
-  display: none;
-}
-
-
-/* =========================================================
-   INFO LINK
-   ========================================================= */
-
-.info-link {
-  width: 100%;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 12px;
-
-  margin: 18px 0;
-
-  color: var(--text);
-
-  font-weight: 800;
-
-  cursor: pointer;
-
-  text-align: left;
-}
-
-.info-link-label {
-  flex: 1;
-}
-
-.info-icon {
-  flex: 0 0 auto;
-
-  width: 25px;
-  height: 25px;
-
-  border: 2px solid currentColor;
-
-  border-radius: 50%;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 15px;
-  font-weight: 850;
-  line-height: 1;
-}
-
-
-/* =========================================================
-   FORM ELEMENTS
-   ========================================================= */
-
-label {
-  display: block;
-
-  margin-top: 16px;
-  margin-bottom: 6px;
-
-  font-weight: 750;
-}
-
-input,
-select {
-  width: 100%;
-  max-width: 100%;
-
-  padding: 13px;
-
-  border: 1px solid var(--input-border);
-
-  border-radius: 12px;
-
-  font-family: inherit;
-
-  font-size: 17px;
-
-  color: var(--text);
-
-  background: var(--panel);
-
-  outline: none;
-}
-
-input:focus,
-select:focus {
-  box-shadow:
-    0 0 0 3px var(--accent);
-}
-
-
-/* =========================================================
-   BUDGET SETUP
+   BUDGET ITEMS
    ========================================================= */
 
 .setup-item {
-  border: 1px solid var(--input-border);
+  border:
+    1px solid
+    var(--input-border);
 
   border-radius: 14px;
 
@@ -696,7 +856,29 @@ select:focus {
 
   min-width: 0;
 
-  background: rgba(255,255,255,.12);
+  background:
+    rgba(255,255,255,.12);
+}
+
+.setup-item.saved-item {
+  border: 0;
+
+  border-bottom:
+    1px solid
+    var(--panel-edge);
+
+  border-radius: 0;
+
+  padding:
+    13px 2px;
+
+  margin-top: 0;
+
+  background: transparent;
+}
+
+.setup-item.saved-item:last-child {
+  border-bottom: 0;
 }
 
 .setup-item-row {
@@ -722,13 +904,51 @@ select:focus {
   margin-top: 8px;
 }
 
+.setup-item.saved-item
+.setup-item-actions {
+  margin-top: 0;
+}
+
 .setup-item-actions button {
   flex: 1;
+
   min-width: 0;
 }
 
+.setup-item.saved-item
+.setup-item-actions button {
+  flex:
+    0 0 auto;
+}
+
+.item-display {
+  min-width: 0;
+
+  flex: 1;
+}
+
+.item-display-name {
+  font-weight: 800;
+
+  overflow-wrap: anywhere;
+}
+
+.item-display-amount {
+  color: var(--muted);
+
+  font-size: 13px;
+
+  margin-top: 3px;
+}
+
+
+/* =========================================================
+   CALCULATIONS
+   ========================================================= */
+
 .calculation {
-  background: rgba(0,0,0,.035);
+  background:
+    rgba(0,0,0,.035);
 
   border-radius: 15px;
 
@@ -761,7 +981,9 @@ select:focus {
 }
 
 .calculation-row.total {
-  border-top: 1px solid var(--input-border);
+  border-top:
+    1px solid
+    var(--input-border);
 
   margin-top: 7px;
 
@@ -772,7 +994,147 @@ select:focus {
 
 .section-title {
   margin-top: 25px;
+
   margin-bottom: 5px;
+}
+
+
+/* =========================================================
+   BUDGET WEEK BADGE
+   ========================================================= */
+
+.budget-week-count {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin-top: 10px;
+
+  padding:
+    7px 11px;
+
+  border-radius: 999px;
+
+  background: var(--accent);
+
+  color: var(--text);
+
+  font-size: 12px;
+
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   ANALYTICS
+   ========================================================= */
+
+.analytics-chart-card {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+}
+
+.analytics-period-select {
+  margin-bottom: 16px;
+}
+
+.analytics-chart {
+  width: 190px;
+  height: 190px;
+
+  border-radius: 50%;
+
+  position: relative;
+
+  background:
+    conic-gradient(
+      var(--accent) 0deg 360deg
+    );
+
+  box-shadow:
+    0 0 0 1px
+    var(--panel-edge),
+    0 8px 18px
+    rgba(50,40,30,.12);
+}
+
+.analytics-chart::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 48px;
+
+  border-radius: 50%;
+
+  background: var(--panel);
+
+  box-shadow:
+    inset 2px 2px 5px
+    rgba(60,50,30,.10);
+}
+
+.analytics-legend {
+  width: 100%;
+
+  margin-top: 20px;
+}
+
+.analytics-category-row {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 10px;
+
+  padding: 8px 0;
+
+  border-bottom:
+    1px solid
+    var(--panel-edge);
+}
+
+.analytics-category-row:last-child {
+  border-bottom: 0;
+}
+
+.analytics-category-left {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  min-width: 0;
+}
+
+.analytics-dot {
+  width: 12px;
+  height: 12px;
+
+  border-radius: 50%;
+
+  flex:
+    0 0 auto;
+}
+
+.analytics-category-name {
+  overflow-wrap: anywhere;
+}
+
+.analytics-category-amount {
+  white-space: nowrap;
+
+  font-weight: 800;
+
+  font-size: 13px;
 }
 
 
@@ -783,7 +1145,8 @@ select:focus {
 .error {
   color: var(--danger);
 
-  background: var(--danger-bg);
+  background:
+    var(--danger-bg);
 
   padding: 12px;
 
@@ -795,7 +1158,8 @@ select:focus {
 .success {
   color: var(--success);
 
-  background: var(--success-bg);
+  background:
+    var(--success-bg);
 
   padding: 12px;
 
@@ -805,15 +1169,13 @@ select:focus {
 }
 
 .negative {
-  color: var(--danger);
+  color:
+    var(--danger);
 }
 
 .positive {
-  color: var(--success);
-}
-
-.hidden {
-  display: none !important;
+  color:
+    var(--success);
 }
 
 
@@ -826,9 +1188,11 @@ select:focus {
 
   inset: 0;
 
-  background: rgba(30, 25, 20, .48);
+  background:
+    rgba(30,25,20,.48);
 
-  backdrop-filter: blur(4px);
+  backdrop-filter:
+    blur(4px);
 
   z-index: 1000;
 
@@ -842,6 +1206,7 @@ select:focus {
 
 .modal-card {
   width: 100%;
+
   max-width: 560px;
 
   max-height: 82vh;
@@ -861,7 +1226,7 @@ select:focus {
 
 
 /* =========================================================
-   SETTINGS SCREEN
+   SETTINGS
    ========================================================= */
 
 .settings-screen {
@@ -869,32 +1234,130 @@ select:focus {
 
   margin: auto;
 
-  padding: 80px 20px 30px;
+  padding:
+    80px 20px 30px;
 }
 
+.settings-option-grid {
+  display: grid;
 
-/* =========================================================
-   PROFILE / LOGIN
-   ========================================================= */
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
 
-.centered-screen {
-  max-width: 500px;
-
-  margin: auto;
-
-  padding: 50px 20px;
-}
-
-.profile-button {
-  width: 100%;
+  gap: 10px;
 
   margin-top: 12px;
 }
 
+.settings-option {
+  width: 100%;
+}
+
+.settings-option.active {
+  box-shadow:
+    0 0 0 3px
+    var(--accent),
+    0 4px 0
+    var(--panel-edge);
+}
+
+.theme-preview {
+  width: 100%;
+
+  height: 55px;
+
+  border-radius: 12px;
+
+  margin-bottom: 8px;
+
+  border:
+    1px solid
+    var(--panel-edge);
+}
+
+.preview-sandy {
+  background:
+    linear-gradient(
+      135deg,
+      #faedcd 0 50%,
+      #fefae0 50% 100%
+    );
+}
+
+.preview-petals {
+  background:
+    linear-gradient(
+      135deg,
+      #a7aae1 0 50%,
+      #f5d3c4 50% 100%
+    );
+}
+
+.preview-ocean {
+  background:
+    linear-gradient(
+      135deg,
+      #d6edf2 0 50%,
+      #eef9fa 50% 100%
+    );
+}
+
+.preview-night {
+  background:
+    linear-gradient(
+      135deg,
+      #202535 0 50%,
+      #30364a 50% 100%
+    );
+}
+
 
 /* =========================================================
-   DESKTOP
+   SCROLLBARS
    ========================================================= */
+
+* {
+  scrollbar-width:
+    thin;
+
+  scrollbar-color:
+    var(--accent)
+    transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background:
+    var(--accent);
+
+  border:
+    2px solid
+    var(--panel);
+
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background:
+    var(--panel-edge);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+.mobile-nav {
+  display: none;
+}
 
 @media (min-width: 901px) {
 
@@ -902,21 +1365,12 @@ select:focus {
     display: grid;
   }
 
-  /*
-    Home is the third column:
-    Analytics | Expense History | HOME | Monthly Budget
-  */
-
   .workspace-panel {
     display: block;
   }
 
 }
 
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
 
 @media (max-width: 900px) {
 
@@ -948,7 +1402,8 @@ select:focus {
 
     min-width: 0;
 
-    height: calc(100vh - 86px);
+    height:
+      calc(100vh - 86px);
 
     min-height: 0;
 
@@ -963,15 +1418,18 @@ select:focus {
     display: block;
   }
 
-  .workspace-panel .panel-inner {
-    padding: 76px 18px 110px;
+  .workspace-panel
+  .panel-inner {
+    padding:
+      76px 18px 110px;
 
     height: 100%;
 
     overflow-y: auto;
     overflow-x: hidden;
 
-    -webkit-overflow-scrolling: touch;
+    -webkit-overflow-scrolling:
+      touch;
   }
 
   .home-panel .panel-inner {
@@ -1006,14 +1464,18 @@ select:focus {
 
     padding: 7px;
 
-    background: var(--panel);
+    background:
+      var(--panel);
 
     border-radius: 20px;
 
     box-shadow:
-      0 0 0 1px var(--panel-edge),
-      0 6px 0 var(--panel-edge),
-      0 12px 28px rgba(50,40,30,.18);
+      0 0 0 1px
+      var(--panel-edge),
+      0 6px 0
+      var(--panel-edge),
+      0 12px 28px
+      rgba(50,40,30,.18);
   }
 
   .mobile-nav button {
@@ -1023,11 +1485,14 @@ select:focus {
 
     height: 48px;
 
-    padding: 5px 3px;
+    padding:
+      5px 3px;
 
-    background: transparent;
+    background:
+      transparent;
 
-    color: var(--muted);
+    color:
+      var(--muted);
 
     box-shadow: none;
 
@@ -1037,9 +1502,11 @@ select:focus {
   }
 
   .mobile-nav button.active {
-    background: var(--accent);
+    background:
+      var(--accent);
 
-    color: var(--text);
+    color:
+      var(--text);
 
     border-radius: 14px;
   }
@@ -1062,12 +1529,22 @@ select:focus {
     height: 36px;
   }
 
+  .analytics-chart {
+    width: 165px;
+    height: 165px;
+  }
+
+  .analytics-chart::after {
+    inset: 42px;
+  }
+
+  .settings-option-grid {
+    grid-template-columns:
+      1fr;
+  }
+
 }
 
-
-/* =========================================================
-   VERY SMALL PHONES
-   ========================================================= */
 
 @media (max-width: 380px) {
 
@@ -1089,10 +1566,12 @@ select:focus {
   }
 
 }
+
 </style>
 </head>
 
 <body>
+
 
 <!-- =======================================================
      GLOBAL SETTINGS GEAR
@@ -1118,13 +1597,22 @@ select:focus {
 >
 
   <header>
-    <h1>My Budget</h1>
-    <p class="subtext">Sign in to continue</p>
+
+    <h1>
+      My Budget
+    </h1>
+
+    <p class="subtext">
+      Sign in to continue
+    </p>
+
   </header>
 
   <div class="card">
 
-    <label>Email</label>
+    <label>
+      Email
+    </label>
 
     <input
       type="email"
@@ -1133,7 +1621,9 @@ select:focus {
       autocomplete="email"
     >
 
-    <label>Password</label>
+    <label>
+      Password
+    </label>
 
     <input
       type="password"
@@ -1170,10 +1660,15 @@ select:focus {
 >
 
   <header>
-    <h1>Who's using My Budget?</h1>
+
+    <h1>
+      Who's using My Budget?
+    </h1>
+
     <p class="subtext">
       Select your profile to continue.
     </p>
+
   </header>
 
   <div id="profileList"></div>
@@ -1192,9 +1687,13 @@ select:focus {
     style="margin-top:16px;"
   >
 
-    <h2>Add Profile</h2>
+    <h2>
+      Add Profile
+    </h2>
 
-    <label>Name</label>
+    <label>
+      Name
+    </label>
 
     <input
       type="text"
@@ -1202,7 +1701,9 @@ select:focus {
       placeholder="Profile name"
     >
 
-    <label>4-Digit PIN</label>
+    <label>
+      4-Digit PIN
+    </label>
 
     <input
       type="password"
@@ -1240,7 +1741,9 @@ select:focus {
     id="pinScreen"
   >
 
-    <h2>Enter PIN</h2>
+    <h2>
+      Enter PIN
+    </h2>
 
     <p
       class="subtext"
@@ -1302,11 +1805,16 @@ select:focus {
 >
 
   <header>
-    <h1>My Budget</h1>
+
+    <h1>
+      My Budget
+    </h1>
+
     <p
       class="subtext"
       id="currentProfileName"
     ></p>
+
   </header>
 
 
@@ -1325,56 +1833,72 @@ select:focus {
       <div class="panel-inner">
 
         <div class="panel-header">
-          <h2>Analytics</h2>
+
+          <h2>
+            Analytics
+          </h2>
+
         </div>
 
         <div class="card">
 
+          <label
+            for="analyticsPeriod"
+          >
+            Spending Period
+          </label>
+
+          <select
+            id="analyticsPeriod"
+          >
+
+            <option value="month">
+              This Month
+            </option>
+
+            <option value="week">
+              This Week
+            </option>
+
+            <option value="all">
+              All Time
+            </option>
+
+          </select>
+
+        </div>
+
+        <div
+          class="card analytics-chart-card"
+        >
+
           <div class="subtext">
-            Spending Overview
+            Spending Breakdown
           </div>
 
           <div
             class="balance"
             id="analyticsTotal"
+            style="margin:12px 0 18px;"
           >
             $0.00
           </div>
 
-        </div>
-
-        <div class="card">
-
-          <h3>Needs Spending</h3>
+          <div
+            class="analytics-chart"
+            id="analyticsChart"
+            aria-label="Spending breakdown chart"
+          ></div>
 
           <div
-            class="calculation-row"
+            class="analytics-legend"
+            id="analyticsLegend"
           >
-            <span>This period</span>
 
-            <strong
-              id="analyticsNeeds"
-            >
-              $0.00
-            </strong>
-          </div>
+            <p class="subtext">
+              No spending recorded yet.
+            </p>
 
-        </div>
-
-        <div class="card">
-
-          <h3>Fun Money Spending</h3>
-
-          <div
-            class="calculation-row"
-          >
-            <span>This period</span>
-
-            <strong
-              id="analyticsFun"
-            >
-              $0.00
-            </strong>
           </div>
 
         </div>
@@ -1397,7 +1921,9 @@ select:focus {
 
         <div class="panel-header">
 
-          <h2>Expense History</h2>
+          <h2>
+            Expense History
+          </h2>
 
           <button
             class="primary-button small-button"
@@ -1453,7 +1979,6 @@ select:focus {
 
         </div>
 
-
         <div class="home-funds">
 
           <div class="card fund-card">
@@ -1474,7 +1999,6 @@ select:focus {
             </div>
 
           </div>
-
 
           <div class="card fund-card">
 
@@ -1516,9 +2040,26 @@ select:focus {
         <div class="panel-header">
 
           <h2 id="budgetSetupTitle">
-            Prepare Your Next Budget
+            Prepare Your Budget
           </h2>
 
+        </div>
+
+        <label
+          for="budgetMonthSelect"
+        >
+          Budget Month
+        </label>
+
+        <select
+          id="budgetMonthSelect"
+        ></select>
+
+        <div
+          class="budget-week-count"
+          id="budgetWeekCount"
+        >
+          0 budget weeks
         </div>
 
         <p
@@ -1527,29 +2068,52 @@ select:focus {
         ></p>
 
         <p class="subtext">
-          This budget is for the upcoming month.
-          Your previous month's actual income and
-          bills are used to calculate how much money
-          can be allocated each week.
+          Your previous month's actual income
+          and bills are used to calculate the
+          selected month's budget.
         </p>
-
-
-        <!-- INFORMATION -->
 
         <div
           class="info-link"
           id="budgetHelpButton"
           role="button"
           tabindex="0"
+          style="
+            width:100%;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+            margin:18px 0;
+            color:var(--text);
+            font-weight:800;
+            cursor:pointer;
+            text-align:left;
+          "
         >
 
-          <span class="info-link-label">
+          <span
+            class="info-link-label"
+          >
             What if I pay a bill in the middle of the month?
           </span>
 
           <span
             class="info-icon"
             aria-hidden="true"
+            style="
+              flex:0 0 auto;
+              width:25px;
+              height:25px;
+              border:2px solid currentColor;
+              border-radius:50%;
+              display:flex;
+              align-items:center;
+              justify-content:center;
+              font-size:15px;
+              font-weight:850;
+              line-height:1;
+            "
           >
             i
           </span>
@@ -1632,35 +2196,62 @@ select:focus {
         >
 
 
-        <!-- CALCULATION -->
+        <!-- MONTHLY CALCULATION -->
 
         <div class="calculation">
 
-          <h3>Monthly Calculation</h3>
+          <h3>
+            Monthly Calculation
+          </h3>
 
           <div class="calculation-row">
-            <span>Monthly Income</span>
-            <strong id="calcIncome">$0.00</strong>
+            <span>
+              Monthly Income
+            </span>
+
+            <strong id="calcIncome">
+              $0.00
+            </strong>
           </div>
 
           <div class="calculation-row">
-            <span>Monthly Bills</span>
-            <strong id="calcBills">-$0.00</strong>
+            <span>
+              Monthly Bills
+            </span>
+
+            <strong id="calcBills">
+              -$0.00
+            </strong>
           </div>
 
           <div class="calculation-row">
-            <span>Monthly Needs</span>
-            <strong id="calcNeeds">-$0.00</strong>
+            <span>
+              Monthly Needs
+            </span>
+
+            <strong id="calcNeeds">
+              -$0.00
+            </strong>
           </div>
 
           <div class="calculation-row">
-            <span>Monthly Savings</span>
-            <strong id="calcSavings">-$0.00</strong>
+            <span>
+              Monthly Savings
+            </span>
+
+            <strong id="calcSavings">
+              -$0.00
+            </strong>
           </div>
 
           <div class="calculation-row total">
-            <span>Monthly Fun Money</span>
-            <strong id="calcFun">$0.00</strong>
+            <span>
+              Monthly Fun Money
+            </span>
+
+            <strong id="calcFun">
+              $0.00
+            </strong>
           </div>
 
         </div>
@@ -1670,21 +2261,44 @@ select:focus {
 
         <div class="calculation">
 
-          <h3>Weekly Budget</h3>
+          <h3 id="weeklyBudgetHeading">
+            Weekly Budget
+          </h3>
 
           <div class="calculation-row">
-            <span>Weekly Needs</span>
-            <strong id="calcWeeklyNeeds">$0.00</strong>
+
+            <span>
+              Weekly Needs
+            </span>
+
+            <strong id="calcWeeklyNeeds">
+              $0.00
+            </strong>
+
           </div>
 
           <div class="calculation-row">
-            <span>Weekly Savings</span>
-            <strong id="calcWeeklySavings">$0.00</strong>
+
+            <span>
+              Weekly Savings
+            </span>
+
+            <strong id="calcWeeklySavings">
+              $0.00
+            </strong>
+
           </div>
 
           <div class="calculation-row total">
-            <span>Weekly Fun Money</span>
-            <strong id="calcWeeklyFun">$0.00</strong>
+
+            <span>
+              Weekly Fun Money
+            </span>
+
+            <strong id="calcWeeklyFun">
+              $0.00
+            </strong>
+
           </div>
 
         </div>
@@ -1762,7 +2376,9 @@ select:focus {
 
     <header>
 
-      <h1>Settings</h1>
+      <h1>
+        Settings
+      </h1>
 
       <p
         class="subtext"
@@ -1776,9 +2392,12 @@ select:focus {
 
     </header>
 
+
     <div class="card">
 
-      <h2>Profile</h2>
+      <h2>
+        Profile
+      </h2>
 
       <button
         class="primary-button"
@@ -1790,27 +2409,85 @@ select:focus {
 
     </div>
 
+
     <div class="card">
 
-      <h2>Theme</h2>
+      <h2>
+        Color Palette
+      </h2>
 
-      <button
-        class="primary-button"
-        id="sandyThemeButton"
-        style="width:100%;margin-top:12px;"
-      >
-        Sandy
-      </button>
+      <div class="settings-option-grid">
 
-      <button
-        class="secondary-button"
-        id="petalsThemeButton"
-        style="width:100%;margin-top:12px;"
-      >
-        Petals
-      </button>
+        <button
+          class="secondary-button settings-option"
+          data-theme="sandy"
+        >
+          <div class="theme-preview preview-sandy"></div>
+          Sandy
+        </button>
+
+        <button
+          class="secondary-button settings-option"
+          data-theme="petals"
+        >
+          <div class="theme-preview preview-petals"></div>
+          Petals
+        </button>
+
+        <button
+          class="secondary-button settings-option"
+          data-theme="ocean"
+        >
+          <div class="theme-preview preview-ocean"></div>
+          Ocean
+        </button>
+
+        <button
+          class="secondary-button settings-option"
+          data-theme="night"
+        >
+          <div class="theme-preview preview-night"></div>
+          Night
+        </button>
+
+      </div>
 
     </div>
+
+
+    <div class="card">
+
+      <h2>
+        Font
+      </h2>
+
+      <div class="settings-option-grid">
+
+        <button
+          class="secondary-button settings-option"
+          data-font="modern"
+        >
+          Modern
+        </button>
+
+        <button
+          class="secondary-button settings-option"
+          data-font="mono"
+        >
+          Monospace
+        </button>
+
+        <button
+          class="secondary-button settings-option"
+          data-font="retro"
+        >
+          Retro 8-Bit
+        </button>
+
+      </div>
+
+    </div>
+
 
     <button
       class="secondary-button"
@@ -1864,9 +2541,9 @@ select:focus {
 
     <p>
       Also input all your monthly bills. If you
-      have a bill that isn’t paid on the 1st of the
+      have a bill that isn't paid on the 1st of the
       month, include it as if you paid it on the
-      next ‘1st of the Month’ that occurs.
+      next 1st of the month that occurs.
     </p>
 
     <p>
@@ -1880,9 +2557,8 @@ select:focus {
       This is so that all income and bills paid
       throughout the previous month, in addition
       to the bills paid on the 1st of this month,
-      are used to calculate your budget for next
-      month. This gives you the foresight to plan
-      a month in advance.
+      are used to calculate your budget for the
+      selected month.
     </p>
 
     <button
@@ -1896,6 +2572,8 @@ select:focus {
   </div>
 
 </div>
+
+
 <script>
 
 /* =========================================================
@@ -1920,20 +2598,35 @@ const supabaseClient =
    ========================================================= */
 
 let currentUser = null;
+
 let householdId = null;
+
 let currentProfile = null;
+
 let profileSessionToken = null;
 
 let editingExpenseId = null;
+
 let currentBudgetPlan = null;
 
 let activePanelIndex = 2;
+
+let selectedBudgetMonth = null;
 
 const panelOrder = [
   "analyticsPanel",
   "expenseHistoryPanel",
   "homePanel",
   "monthlyBudgetPanel"
+];
+
+const chartColors = [
+  "var(--chart-1)",
+  "var(--chart-2)",
+  "var(--chart-3)",
+  "var(--chart-4)",
+  "var(--chart-5)",
+  "var(--chart-6)"
 ];
 
 
@@ -1966,14 +2659,20 @@ function dateOnly(date) {
   const month =
     String(
       date.getMonth() + 1
-    ).padStart(2, "0");
+    ).padStart(2,"0");
 
   const day =
     String(
       date.getDate()
-    ).padStart(2, "0");
+    ).padStart(2,"0");
 
-  return `${year}-${month}-${day}`;
+  return (
+    year +
+    "-" +
+    month +
+    "-" +
+    day
+  );
 
 }
 
@@ -2020,7 +2719,9 @@ function getUpcomingBudgetMonth() {
 }
 
 
-function getWeekStart(date = new Date()) {
+function getWeekStart(
+  date = new Date()
+) {
 
   const result =
     new Date(date);
@@ -2038,6 +2739,137 @@ function getWeekStart(date = new Date()) {
   );
 
   return result;
+
+}
+
+
+/* =========================================================
+   BUDGET WEEK CALCULATION
+   ========================================================= */
+
+/*
+  Budget weeks are Sunday through Saturday.
+
+  A week belongs to the month that contains at least
+  four of its seven days.
+
+  Therefore a split week is NOT counted twice and is
+  NOT assigned simply because its Sunday falls in a
+  particular month.
+
+  This is the calculation used everywhere in the app.
+*/
+
+function getBudgetWeeksForMonth(
+  monthDate
+) {
+
+  const monthStart =
+    firstOfMonth(monthDate);
+
+  const year =
+    monthStart.getFullYear();
+
+  const month =
+    monthStart.getMonth();
+
+  const daysInMonth =
+    new Date(
+      year,
+      month + 1,
+      0
+    ).getDate();
+
+  const ownedWeeks =
+    new Set();
+
+  for (
+    let dayNumber = 1;
+    dayNumber <= daysInMonth;
+    dayNumber++
+  ) {
+
+    const day =
+      new Date(
+        year,
+        month,
+        dayNumber
+      );
+
+    const weekStart =
+      getWeekStart(day);
+
+    let daysOwnedByMonth = 0;
+
+    for (
+      let offset = 0;
+      offset < 7;
+      offset++
+    ) {
+
+      const weekDay =
+        new Date(weekStart);
+
+      weekDay.setDate(
+        weekStart.getDate() +
+        offset
+      );
+
+      if (
+        weekDay.getFullYear() === year &&
+        weekDay.getMonth() === month
+      ) {
+
+        daysOwnedByMonth++;
+
+      }
+
+    }
+
+    if (
+      daysOwnedByMonth >= 4
+    ) {
+
+      ownedWeeks.add(
+        dateOnly(weekStart)
+      );
+
+    }
+
+  }
+
+  return ownedWeeks.size;
+
+}
+
+
+/* =========================================================
+   SELECTED BUDGET MONTH
+   ========================================================= */
+
+function getSelectedBudgetMonth() {
+
+  if (
+    selectedBudgetMonth
+  ) {
+
+    return new Date(
+      selectedBudgetMonth +
+      "T00:00:00"
+    );
+
+  }
+
+  return getUpcomingBudgetMonth();
+
+}
+
+
+function getSelectedBudgetMonthString() {
+
+  return dateOnly(
+    getSelectedBudgetMonth()
+  );
 
 }
 
@@ -2064,7 +2896,10 @@ function renderDateStrip() {
       "dateDays"
     );
 
-  if (!monthElement || !daysElement) {
+  if (
+    !monthElement ||
+    !daysElement
+  ) {
     return;
   }
 
@@ -2088,11 +2923,14 @@ function renderDateStrip() {
       new Date(weekStart);
 
     day.setDate(
-      weekStart.getDate() + index
+      weekStart.getDate() +
+      index
     );
 
     const dayElement =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
     dayElement.className =
       "date-day";
@@ -2109,7 +2947,9 @@ function renderDateStrip() {
     }
 
     const numberElement =
-      document.createElement("span");
+      document.createElement(
+        "span"
+      );
 
     numberElement.textContent =
       day.getDate();
@@ -2144,7 +2984,9 @@ function renderDateStrip() {
 function escapeHtml(value) {
 
   const div =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   div.textContent =
     value ?? "";
@@ -2157,10 +2999,22 @@ function escapeHtml(value) {
 function escapeAttribute(value) {
 
   return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/"/g, "&quot;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    );
 
 }
 
@@ -2171,15 +3025,28 @@ function escapeAttribute(value) {
 
 function applyTheme(theme) {
 
-  document.body.classList.toggle(
+  document.body.classList.remove(
     "theme-petals",
-    theme === "petals"
+    "theme-ocean",
+    "theme-night"
   );
+
+  if (
+    theme !== "sandy"
+  ) {
+
+    document.body.classList.add(
+      "theme-" + theme
+    );
+
+  }
 
   localStorage.setItem(
     "budgetTheme",
     theme
   );
+
+  updateSettingsSelection();
 
 }
 
@@ -2191,11 +3058,127 @@ function loadTheme() {
       "budgetTheme"
     );
 
+  const validThemes = [
+    "sandy",
+    "petals",
+    "ocean",
+    "night"
+  ];
+
   applyTheme(
-    savedTheme === "petals"
-      ? "petals"
+    validThemes.includes(
+      savedTheme
+    )
+      ? savedTheme
       : "sandy"
   );
+
+}
+
+
+/* =========================================================
+   FONT
+   ========================================================= */
+
+function applyFont(font) {
+
+  document.body.classList.remove(
+    "font-mono",
+    "font-retro"
+  );
+
+  if (
+    font === "mono" ||
+    font === "retro"
+  ) {
+
+    document.body.classList.add(
+      "font-" + font
+    );
+
+  }
+
+  localStorage.setItem(
+    "budgetFont",
+    font
+  );
+
+  updateSettingsSelection();
+
+}
+
+
+function loadFont() {
+
+  const savedFont =
+    localStorage.getItem(
+      "budgetFont"
+    );
+
+  const validFonts = [
+    "modern",
+    "mono",
+    "retro"
+  ];
+
+  applyFont(
+    validFonts.includes(
+      savedFont
+    )
+      ? savedFont
+      : "modern"
+  );
+
+}
+
+
+/* =========================================================
+   SETTINGS SELECTION
+   ========================================================= */
+
+function updateSettingsSelection() {
+
+  const theme =
+    localStorage.getItem(
+      "budgetTheme"
+    ) || "sandy";
+
+  const font =
+    localStorage.getItem(
+      "budgetFont"
+    ) || "modern";
+
+  document
+    .querySelectorAll(
+      "[data-theme]"
+    )
+    .forEach(
+      button => {
+
+        button.classList.toggle(
+          "active",
+          button.dataset.theme ===
+          theme
+        );
+
+      }
+    );
+
+  document
+    .querySelectorAll(
+      "[data-font]"
+    )
+    .forEach(
+      button => {
+
+        button.classList.toggle(
+          "active",
+          button.dataset.font ===
+          font
+        );
+
+      }
+    );
 
 }
 
@@ -2206,21 +3189,23 @@ function loadTheme() {
 
 function hideAllScreens() {
 
-  document
-    .getElementById("loginScreen")
-    .classList.add("hidden");
+  [
+    "loginScreen",
+    "profileScreen",
+    "appScreen",
+    "settingsScreen"
+  ]
+  .forEach(
+    id => {
 
-  document
-    .getElementById("profileScreen")
-    .classList.add("hidden");
+      document
+        .getElementById(id)
+        .classList.add(
+          "hidden"
+        );
 
-  document
-    .getElementById("appScreen")
-    .classList.add("hidden");
-
-  document
-    .getElementById("settingsScreen")
-    .classList.add("hidden");
+    }
+  );
 
 }
 
@@ -2235,14 +3220,19 @@ function showPanel(index) {
     index < 0 ||
     index >= panelOrder.length
   ) {
+
     return;
+
   }
 
   activePanelIndex =
     index;
 
   panelOrder.forEach(
-    (panelId, indexValue) => {
+    (
+      panelId,
+      indexValue
+    ) => {
 
       const panel =
         document.getElementById(
@@ -2255,7 +3245,8 @@ function showPanel(index) {
 
       panel.classList.toggle(
         "active",
-        indexValue === index
+        indexValue ===
+        index
       );
 
     }
@@ -2277,6 +3268,16 @@ function showPanel(index) {
       }
     );
 
+  if (
+    index === 3 &&
+    currentUser &&
+    currentProfile
+  ) {
+
+    openBudgetSetup();
+
+  }
+
 }
 
 
@@ -2288,11 +3289,13 @@ function showHomePanel() {
 
 
 /* =========================================================
-   TOUCH SWIPE NAVIGATION
+   TOUCH SWIPE
    ========================================================= */
 
 let touchStartX = 0;
+
 let touchStartY = 0;
+
 let touchStartTime = 0;
 
 const workspace =
@@ -2308,7 +3311,9 @@ workspace.addEventListener(
       window.innerWidth > 900 ||
       event.touches.length !== 1
     ) {
+
       return;
+
     }
 
     touchStartX =
@@ -2326,7 +3331,6 @@ workspace.addEventListener(
   }
 );
 
-
 workspace.addEventListener(
   "touchend",
   function(event) {
@@ -2335,60 +3339,60 @@ workspace.addEventListener(
       window.innerWidth > 900 ||
       !touchStartX
     ) {
+
       return;
+
     }
 
     const touch =
       event.changedTouches[0];
 
-    const endX =
-      touch.clientX;
-
-    const endY =
-      touch.clientY;
-
     const deltaX =
-      endX - touchStartX;
+      touch.clientX -
+      touchStartX;
 
     const deltaY =
-      endY - touchStartY;
+      touch.clientY -
+      touchStartY;
 
     const elapsed =
       Date.now() -
       touchStartTime;
 
     touchStartX = 0;
+
     touchStartY = 0;
+
     touchStartTime = 0;
 
-    /*
-      Ignore vertical scrolling.
-    */
     if (
       Math.abs(deltaY) >
       Math.abs(deltaX)
     ) {
+
       return;
+
     }
 
-    /*
-      Require a meaningful horizontal gesture.
-    */
     if (
       Math.abs(deltaX) < 55
     ) {
+
       return;
+
     }
 
-    /*
-      Don't require an extremely fast swipe,
-      but ignore very slow accidental drags.
-    */
-    if (elapsed > 1400) {
+    if (
+      elapsed > 1400
+    ) {
+
       return;
+
     }
 
-    if (deltaX < 0) {
+    if (
+      deltaX < 0
+    ) {
 
       showPanel(
         activePanelIndex + 1
@@ -2411,7 +3415,7 @@ workspace.addEventListener(
 
 
 /* =========================================================
-   MOBILE NAV BUTTONS
+   MOBILE NAV
    ========================================================= */
 
 document
@@ -2430,8 +3434,12 @@ document
               button.dataset.panel
             );
 
-          if (index !== -1) {
+          if (
+            index !== -1
+          ) {
+
             showPanel(index);
+
           }
 
         }
@@ -2446,7 +3454,9 @@ document
    ========================================================= */
 
 document
-  .getElementById("loginButton")
+  .getElementById(
+    "loginButton"
+  )
   .addEventListener(
     "click",
     login
@@ -2466,16 +3476,23 @@ async function login() {
 
   const email =
     document
-      .getElementById("loginEmail")
+      .getElementById(
+        "loginEmail"
+      )
       .value
       .trim();
 
   const password =
     document
-      .getElementById("loginPassword")
+      .getElementById(
+        "loginPassword"
+      )
       .value;
 
-  if (!email || !password) {
+  if (
+    !email ||
+    !password
+  ) {
 
     errorElement.textContent =
       "Enter your email and password.";
@@ -2485,16 +3502,18 @@ async function login() {
     );
 
     return;
+
   }
 
   const {
     data,
     error
   } =
-    await supabaseClient.auth.signInWithPassword({
-      email,
-      password
-    });
+    await supabaseClient.auth
+      .signInWithPassword({
+        email,
+        password
+      });
 
   if (error) {
 
@@ -2506,6 +3525,7 @@ async function login() {
     );
 
     return;
+
   }
 
   currentUser =
@@ -2525,8 +3545,12 @@ async function startApp() {
   hideAllScreens();
 
   document
-    .getElementById("profileScreen")
-    .classList.remove("hidden");
+    .getElementById(
+      "profileScreen"
+    )
+    .classList.remove(
+      "hidden"
+    );
 
   renderDateStrip();
 
@@ -2559,8 +3583,12 @@ async function loadHousehold() {
     error
   } =
     await supabaseClient
-      .from("household_members")
-      .select("household_id")
+      .from(
+        "household_members"
+      )
+      .select(
+        "household_id"
+      )
       .eq(
         "user_id",
         currentUser.id
@@ -2576,6 +3604,7 @@ async function loadHousehold() {
     );
 
     return;
+
   }
 
   if (!data) {
@@ -2585,6 +3614,7 @@ async function loadHousehold() {
     );
 
     return;
+
   }
 
   householdId =
@@ -2604,7 +3634,9 @@ async function loadProfiles() {
     error
   } =
     await supabaseClient
-      .from("profiles")
+      .from(
+        "profiles"
+      )
       .select(
         "id, display_name, access_level"
       )
@@ -2624,6 +3656,7 @@ async function loadProfiles() {
     );
 
     return [];
+
   }
 
   return data || [];
@@ -2648,22 +3681,36 @@ async function renderProfiles() {
   );
 
   document
-    .getElementById("addProfileButton")
-    .classList.remove("hidden");
+    .getElementById(
+      "addProfileButton"
+    )
+    .classList.remove(
+      "hidden"
+    );
 
   document
-    .getElementById("addProfileForm")
-    .classList.add("hidden");
+    .getElementById(
+      "addProfileForm"
+    )
+    .classList.add(
+      "hidden"
+    );
 
   document
-    .getElementById("pinScreen")
-    .classList.add("hidden");
+    .getElementById(
+      "pinScreen"
+    )
+    .classList.add(
+      "hidden"
+    );
 
   profiles.forEach(
     profile => {
 
       const button =
-        document.createElement("button");
+        document.createElement(
+          "button"
+        );
 
       button.className =
         "primary-button profile-button";
@@ -2673,10 +3720,13 @@ async function renderProfiles() {
 
       button.addEventListener(
         "click",
-        () => selectProfile(profile)
+        () =>
+          selectProfile(profile)
       );
 
-      list.appendChild(button);
+      list.appendChild(
+        button
+      );
 
     }
   );
@@ -2684,26 +3734,34 @@ async function renderProfiles() {
 }
 
 
-/* =========================================================
-   SELECT PROFILE
-   ========================================================= */
-
 function selectProfile(profile) {
 
   currentProfile =
     profile;
 
   document
-    .getElementById("profileList")
-    .classList.add("hidden");
+    .getElementById(
+      "profileList"
+    )
+    .classList.add(
+      "hidden"
+    );
 
   document
-    .getElementById("addProfileButton")
-    .classList.add("hidden");
+    .getElementById(
+      "addProfileButton"
+    )
+    .classList.add(
+      "hidden"
+    );
 
   document
-    .getElementById("pinScreen")
-    .classList.remove("hidden");
+    .getElementById(
+      "pinScreen"
+    )
+    .classList.remove(
+      "hidden"
+    );
 
   document.getElementById(
     "pinProfileName"
@@ -2716,7 +3774,9 @@ function selectProfile(profile) {
 
   document.getElementById(
     "pinError"
-  ).classList.add("hidden");
+  ).classList.add(
+    "hidden"
+  );
 
   document.getElementById(
     "profilePin"
@@ -2726,33 +3786,49 @@ function selectProfile(profile) {
 
 
 /* =========================================================
-   ADD PROFILE
+   PROFILE CREATION
    ========================================================= */
 
 document
-  .getElementById("addProfileButton")
+  .getElementById(
+    "addProfileButton"
+  )
   .addEventListener(
     "click",
     function() {
 
       document
-        .getElementById("profileList")
-        .classList.add("hidden");
+        .getElementById(
+          "profileList"
+        )
+        .classList.add(
+          "hidden"
+        );
 
       document
-        .getElementById("addProfileButton")
-        .classList.add("hidden");
+        .getElementById(
+          "addProfileButton"
+        )
+        .classList.add(
+          "hidden"
+        );
 
       document
-        .getElementById("addProfileForm")
-        .classList.remove("hidden");
+        .getElementById(
+          "addProfileForm"
+        )
+        .classList.remove(
+          "hidden"
+        );
 
     }
   );
 
 
 document
-  .getElementById("cancelProfileButton")
+  .getElementById(
+    "cancelProfileButton"
+  )
   .addEventListener(
     "click",
     renderProfiles
@@ -2760,7 +3836,9 @@ document
 
 
 document
-  .getElementById("saveProfileButton")
+  .getElementById(
+    "saveProfileButton"
+  )
   .addEventListener(
     "click",
     saveProfile
@@ -2771,13 +3849,17 @@ async function saveProfile() {
 
   const name =
     document
-      .getElementById("newProfileName")
+      .getElementById(
+        "newProfileName"
+      )
       .value
       .trim();
 
   const pin =
     document
-      .getElementById("newProfilePin")
+      .getElementById(
+        "newProfilePin"
+      )
       .value;
 
   const errorElement =
@@ -2799,9 +3881,12 @@ async function saveProfile() {
     );
 
     return;
+
   }
 
-  if (!/^\d{4}$/.test(pin)) {
+  if (
+    !/^\d{4}$/.test(pin)
+  ) {
 
     errorElement.textContent =
       "PIN must be exactly 4 digits.";
@@ -2811,6 +3896,7 @@ async function saveProfile() {
     );
 
     return;
+
   }
 
   const {
@@ -2840,6 +3926,7 @@ async function saveProfile() {
     );
 
     return;
+
   }
 
   document.getElementById(
@@ -2860,7 +3947,9 @@ async function saveProfile() {
    ========================================================= */
 
 document
-  .getElementById("unlockProfileButton")
+  .getElementById(
+    "unlockProfileButton"
+  )
   .addEventListener(
     "click",
     unlockProfile
@@ -2868,24 +3957,39 @@ document
 
 
 document
-  .getElementById("cancelPinButton")
+  .getElementById(
+    "cancelPinButton"
+  )
   .addEventListener(
     "click",
     function() {
 
-      currentProfile = null;
+      currentProfile =
+        null;
 
       document
-        .getElementById("pinScreen")
-        .classList.add("hidden");
+        .getElementById(
+          "pinScreen"
+        )
+        .classList.add(
+          "hidden"
+        );
 
       document
-        .getElementById("profileList")
-        .classList.remove("hidden");
+        .getElementById(
+          "profileList"
+        )
+        .classList.remove(
+          "hidden"
+        );
 
       document
-        .getElementById("addProfileButton")
-        .classList.remove("hidden");
+        .getElementById(
+          "addProfileButton"
+        )
+        .classList.remove(
+          "hidden"
+        );
 
     }
   );
@@ -2935,6 +4039,7 @@ async function unlockProfile() {
     );
 
     return;
+
   }
 
   profileSessionToken =
@@ -2975,7 +4080,9 @@ async function restoreProfileSession() {
     !savedToken ||
     !savedProfileId
   ) {
+
     return false;
+
   }
 
   try {
@@ -2996,10 +4103,15 @@ async function restoreProfileSession() {
       throw error;
     }
 
-    if (data !== savedProfileId) {
+    if (
+      data !==
+      savedProfileId
+    ) {
+
       throw new Error(
         "Profile session mismatch"
       );
+
     }
 
     const {
@@ -3048,6 +4160,7 @@ async function restoreProfileSession() {
     );
 
     return false;
+
   }
 
 }
@@ -3062,8 +4175,12 @@ async function showMainApp() {
   hideAllScreens();
 
   document
-    .getElementById("appScreen")
-    .classList.remove("hidden");
+    .getElementById(
+      "appScreen"
+    )
+    .classList.remove(
+      "hidden"
+    );
 
   document.getElementById(
     "currentProfileName"
@@ -3074,6 +4191,13 @@ async function showMainApp() {
 
   showHomePanel();
 
+  selectedBudgetMonth =
+    dateOnly(
+      getUpcomingBudgetMonth()
+    );
+
+  initializeBudgetMonthSelector();
+
   await loadCurrentBudget();
 
   await loadExpenses();
@@ -3082,27 +4206,156 @@ async function showMainApp() {
 
   await updateAnalytics();
 
+  await openBudgetSetup();
+
 }
 
 
 /* =========================================================
-   BUDGET MONTH / PLAN
+   BUDGET MONTH SELECTOR
+   ========================================================= */
+
+function initializeBudgetMonthSelector() {
+
+  const selector =
+    document.getElementById(
+      "budgetMonthSelect"
+    );
+
+  if (!selector) {
+    return;
+  }
+
+  const existing =
+    selectedBudgetMonth;
+
+  selector.innerHTML = "";
+
+  const base =
+    firstOfMonth(
+      new Date()
+    );
+
+  /*
+    Current month plus eleven future months.
+  */
+
+  for (
+    let offset = 0;
+    offset < 12;
+    offset++
+  ) {
+
+    const month =
+      addMonths(
+        base,
+        offset
+      );
+
+    const option =
+      document.createElement(
+        "option"
+      );
+
+    option.value =
+      dateOnly(month);
+
+    option.textContent =
+      month.toLocaleDateString(
+        "en-US",
+        {
+          month: "long",
+          year: "numeric"
+        }
+      );
+
+    selector.appendChild(
+      option
+    );
+
+  }
+
+  selectedBudgetMonth =
+    existing ||
+    dateOnly(
+      getUpcomingBudgetMonth()
+    );
+
+  selector.value =
+    selectedBudgetMonth;
+
+  updateBudgetWeekDisplay();
+
+}
+
+
+function updateBudgetWeekDisplay() {
+
+  const month =
+    getSelectedBudgetMonth();
+
+  const count =
+    getBudgetWeeksForMonth(
+      month
+    );
+
+  const badge =
+    document.getElementById(
+      "budgetWeekCount"
+    );
+
+  const heading =
+    document.getElementById(
+      "weeklyBudgetHeading"
+    );
+
+  if (badge) {
+
+    badge.textContent =
+      count +
+      (
+        count === 1
+          ? " budget week"
+          : " budget weeks"
+      );
+
+  }
+
+  if (heading) {
+
+    heading.textContent =
+      "Weekly Budget • " +
+      count +
+      (
+        count === 1
+          ? " week"
+          : " weeks"
+      );
+
+  }
+
+}
+
+
+/* =========================================================
+   LOAD CURRENT ACTIVE BUDGET
    ========================================================= */
 
 async function loadCurrentBudget() {
 
   const budgetMonth =
-    getUpcomingBudgetMonth();
-
-  const budgetMonthString =
-    dateOnly(budgetMonth);
+    dateOnly(
+      getUpcomingBudgetMonth()
+    );
 
   const {
     data,
     error
   } =
     await supabaseClient
-      .from("budget_plans")
+      .from(
+        "budget_plans"
+      )
       .select("*")
       .eq(
         "household_id",
@@ -3110,7 +4363,7 @@ async function loadCurrentBudget() {
       )
       .eq(
         "budget_month",
-        budgetMonthString
+        budgetMonth
       )
       .maybeSingle();
 
@@ -3121,9 +4374,11 @@ async function loadCurrentBudget() {
       error
     );
 
-    currentBudgetPlan = null;
+    currentBudgetPlan =
+      null;
 
     return;
+
   }
 
   currentBudgetPlan =
@@ -3138,17 +4393,14 @@ async function loadCurrentBudget() {
 
 async function openBudgetSetup() {
 
-  const today =
-    new Date();
-
   const budgetMonth =
-    getUpcomingBudgetMonth();
+    getSelectedBudgetMonth();
 
   const previousMonth =
-    getPreviousMonth();
-
-  const currentMonthStart =
-    firstOfMonth(today);
+    addMonths(
+      budgetMonth,
+      -1
+    );
 
   const monthName =
     budgetMonth.toLocaleDateString(
@@ -3163,16 +4415,8 @@ async function openBudgetSetup() {
     previousMonth.toLocaleDateString(
       "en-US",
       {
-        month: "long"
-      }
-    );
-
-  const firstDay =
-    currentMonthStart.toLocaleDateString(
-      "en-US",
-      {
         month: "long",
-        day: "numeric"
+        year: "numeric"
       }
     );
 
@@ -3188,11 +4432,7 @@ async function openBudgetSetup() {
   ).textContent =
     "Use all income received during " +
     previousMonthName +
-    ", and all bills paid during " +
-    previousMonthName +
-    " plus bills paid on " +
-    firstDay +
-    ".";
+    " to prepare this budget.";
 
   document.getElementById(
     "incomePeriodLabel"
@@ -3203,7 +4443,10 @@ async function openBudgetSetup() {
   document.getElementById(
     "billPeriodLabel"
   ).textContent =
-    "Monthly bills for your upcoming budget";
+    "Monthly bills used for " +
+    monthName;
+
+  updateBudgetWeekDisplay();
 
   await loadBudgetSetupData();
 
@@ -3211,22 +4454,22 @@ async function openBudgetSetup() {
 
 
 /* =========================================================
-   LOAD BUDGET SETUP DATA
+   LOAD SELECTED BUDGET DATA
    ========================================================= */
 
 async function loadBudgetSetupData() {
 
   const budgetMonth =
-    dateOnly(
-      getUpcomingBudgetMonth()
-    );
+    getSelectedBudgetMonthString();
 
   const {
     data,
     error
   } =
     await supabaseClient
-      .from("budget_plans")
+      .from(
+        "budget_plans"
+      )
       .select("*")
       .eq(
         "household_id",
@@ -3239,7 +4482,12 @@ async function loadBudgetSetupData() {
       .maybeSingle();
 
   if (error) {
-    console.error(error);
+
+    console.error(
+      "Could not load selected budget:",
+      error
+    );
+
   }
 
   currentBudgetPlan =
@@ -3279,7 +4527,9 @@ async function loadIncomeSources() {
     error
   } =
     await supabaseClient
-      .from("income_sources")
+      .from(
+        "income_sources"
+      )
       .select("*")
       .eq(
         "household_id",
@@ -3294,8 +4544,12 @@ async function loadIncomeSources() {
 
   if (error) {
 
-    console.error(error);
+    console.error(
+      error
+    );
+
     return;
+
   }
 
   const list =
@@ -3305,15 +4559,21 @@ async function loadIncomeSources() {
 
   list.innerHTML = "";
 
-  (data || []).forEach(
+  (
+    data || []
+  ).forEach(
     income =>
-      addIncomeRow(income)
+      addIncomeRow(
+        income
+      )
   );
 
 }
 
 
-function addIncomeRow(income = null) {
+function addIncomeRow(
+  income = null
+) {
 
   const list =
     document.getElementById(
@@ -3321,115 +4581,191 @@ function addIncomeRow(income = null) {
     );
 
   const row =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
-  row.className =
-    "setup-item";
+  if (income) {
 
-  row.innerHTML = `
+    row.className =
+      "setup-item saved-item";
 
-    <div class="setup-item-row">
+    row.innerHTML = `
 
-      <div style="flex:1;">
+      <div class="setup-item-row">
 
-        <input
-          type="text"
-          class="income-name"
-          placeholder="Income source name"
-          value="${
-            income
-              ? escapeAttribute(income.name)
-              : ""
-          }"
-        >
+        <div class="item-display">
+
+          <div class="item-display-name">
+            ${escapeHtml(
+              income.name
+            )}
+          </div>
+
+          <div class="item-display-amount">
+            Income source
+          </div>
+
+        </div>
+
+        <strong>
+          ${money(
+            income.amount
+          )}
+        </strong>
+
+        <div class="setup-item-actions">
+
+          <button
+            class="secondary-button small-button"
+            onclick="editIncome('${income.id}')"
+          >
+            Edit
+          </button>
+
+          <button
+            class="danger-button small-button"
+            onclick="deleteIncome('${income.id}')"
+          >
+            Delete
+          </button>
+
+        </div>
 
       </div>
 
-      <div style="width:130px;max-width:35%;">
+    `;
 
-        <input
-          type="number"
-          class="income-amount"
-          placeholder="Amount"
-          step="0.01"
-          min="0"
-          value="${
-            income
-              ? income.amount
-              : ""
-          }"
+  }
+  else {
+
+    row.className =
+      "setup-item";
+
+    row.innerHTML = `
+
+      <div class="setup-item-row">
+
+        <div style="flex:1;min-width:0;">
+
+          <input
+            type="text"
+            class="income-name"
+            placeholder="Income source name"
+          >
+
+        </div>
+
+        <div
+          style="
+            width:130px;
+            max-width:35%;
+          "
         >
+
+          <input
+            type="number"
+            class="income-amount"
+            placeholder="Amount"
+            step="0.01"
+            min="0"
+          >
+
+        </div>
 
       </div>
 
-    </div>
+      <div class="setup-item-actions">
 
-    <div class="setup-item-actions">
+        <button
+          class="primary-button"
+          data-action="add-income"
+          onclick="saveNewIncome(this)"
+        >
+          Add
+        </button>
 
-      ${
-        income
-          ? `
-            <button
-              class="secondary-button"
-              onclick="editIncome('${income.id}', this)"
-            >
-              Save
-            </button>
+        <button
+          class="secondary-button"
+          onclick="
+            this.closest(
+              '.setup-item'
+            ).remove()
+          "
+        >
+          Cancel
+        </button>
 
-            <button
-              class="danger-button"
-              onclick="deleteIncome('${income.id}')"
-            >
-              Delete
-            </button>
-          `
-          : `
-            <button
-              class="primary-button"
-              onclick="saveNewIncome(this)"
-            >
-              Add
-            </button>
+      </div>
 
-            <button
-              class="secondary-button"
-              onclick="this.closest('.setup-item').remove()"
-            >
-              Cancel
-            </button>
-          `
-      }
+    `;
 
-    </div>
-  `;
+  }
 
-  list.appendChild(row);
+  list.appendChild(
+    row
+  );
 
 }
 
 
 document
-  .getElementById("addIncomeButton")
+  .getElementById(
+    "addIncomeButton"
+  )
   .addEventListener(
     "click",
-    () => addIncomeRow()
+    function() {
+
+      addIncomeRow();
+
+      const rows =
+        document.querySelectorAll(
+          "#incomeList .setup-item"
+        );
+
+      const last =
+        rows[rows.length - 1];
+
+      if (last) {
+
+        const input =
+          last.querySelector(
+            ".income-name"
+          );
+
+        if (input) {
+          input.focus();
+        }
+
+      }
+
+    }
   );
 
 
-async function saveNewIncome(button) {
+async function saveNewIncome(
+  button
+) {
 
   const row =
-    button.closest(".setup-item");
+    button.closest(
+      ".setup-item"
+    );
 
   const name =
     row
-      .querySelector(".income-name")
+      .querySelector(
+        ".income-name"
+      )
       .value
       .trim();
 
   const amount =
     Number(
-      row.querySelector(".income-amount").value
+      row.querySelector(
+        ".income-amount"
+      ).value
     );
 
   if (!name) {
@@ -3439,6 +4775,7 @@ async function saveNewIncome(button) {
     );
 
     return;
+
   }
 
   if (
@@ -3451,13 +4788,16 @@ async function saveNewIncome(button) {
     );
 
     return;
+
   }
 
   const {
     error
   } =
     await supabaseClient
-      .from("income_sources")
+      .from(
+        "income_sources"
+      )
       .insert({
         household_id:
           householdId,
@@ -3475,6 +4815,7 @@ async function saveNewIncome(button) {
     );
 
     return;
+
   }
 
   await loadIncomeSources();
@@ -3484,50 +4825,95 @@ async function saveNewIncome(button) {
 }
 
 
-async function editIncome(id, button) {
+/*
+  Edit uses a simple prompt so saved rows remain
+  compact and never turn into permanent input boxes.
+*/
 
-  const row =
-    button.closest(".setup-item");
+async function editIncome(
+  id
+) {
 
-  const name =
-    row
-      .querySelector(".income-name")
-      .value
-      .trim();
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from(
+        "income_sources"
+      )
+      .select("*")
+      .eq(
+        "id",
+        id
+      )
+      .single();
 
-  const amount =
-    Number(
-      row.querySelector(".income-amount").value
-    );
-
-  if (!name) {
+  if (error) {
 
     alert(
-      "Enter an income source name."
+      "Could not load income: " +
+      error.message
     );
 
     return;
+
   }
 
+  const name =
+    prompt(
+      "Income source name:",
+      data.name
+    );
+
   if (
+    name === null
+  ) {
+    return;
+  }
+
+  const amountText =
+    prompt(
+      "Income amount:",
+      data.amount
+    );
+
+  if (
+    amountText === null
+  ) {
+    return;
+  }
+
+  const amount =
+    Number(
+      amountText
+    );
+
+  if (
+    !name.trim() ||
     !Number.isFinite(amount) ||
     amount < 0
   ) {
 
     alert(
-      "Enter a valid income amount."
+      "Enter a valid name and amount."
     );
 
     return;
+
   }
 
   const {
-    error
+    error: updateError
   } =
     await supabaseClient
-      .from("income_sources")
+      .from(
+        "income_sources"
+      )
       .update({
-        name,
+        name:
+          name.trim(),
+
         amount
       })
       .eq(
@@ -3535,14 +4921,15 @@ async function editIncome(id, button) {
         id
       );
 
-  if (error) {
+  if (updateError) {
 
     alert(
       "Could not update income: " +
-      error.message
+      updateError.message
     );
 
     return;
+
   }
 
   await loadIncomeSources();
@@ -3552,21 +4939,27 @@ async function editIncome(id, button) {
 }
 
 
-async function deleteIncome(id) {
+async function deleteIncome(
+  id
+) {
 
   if (
     !confirm(
       "Delete this income source?"
     )
   ) {
+
     return;
+
   }
 
   const {
     error
   } =
     await supabaseClient
-      .from("income_sources")
+      .from(
+        "income_sources"
+      )
       .delete()
       .eq(
         "id",
@@ -3581,6 +4974,7 @@ async function deleteIncome(id) {
     );
 
     return;
+
   }
 
   await loadIncomeSources();
@@ -3601,7 +4995,9 @@ async function loadBills() {
     error
   } =
     await supabaseClient
-      .from("bills")
+      .from(
+        "bills"
+      )
       .select("*")
       .eq(
         "household_id",
@@ -3616,8 +5012,12 @@ async function loadBills() {
 
   if (error) {
 
-    console.error(error);
+    console.error(
+      error
+    );
+
     return;
+
   }
 
   const list =
@@ -3627,15 +5027,21 @@ async function loadBills() {
 
   list.innerHTML = "";
 
-  (data || []).forEach(
+  (
+    data || []
+  ).forEach(
     bill =>
-      addBillRow(bill)
+      addBillRow(
+        bill
+      )
   );
 
 }
 
 
-function addBillRow(bill = null) {
+function addBillRow(
+  bill = null
+) {
 
   const list =
     document.getElementById(
@@ -3643,115 +5049,191 @@ function addBillRow(bill = null) {
     );
 
   const row =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
-  row.className =
-    "setup-item";
+  if (bill) {
 
-  row.innerHTML = `
+    row.className =
+      "setup-item saved-item";
 
-    <div class="setup-item-row">
+    row.innerHTML = `
 
-      <div style="flex:1;">
+      <div class="setup-item-row">
 
-        <input
-          type="text"
-          class="bill-name"
-          placeholder="Bill name"
-          value="${
-            bill
-              ? escapeAttribute(bill.name)
-              : ""
-          }"
-        >
+        <div class="item-display">
+
+          <div class="item-display-name">
+            ${escapeHtml(
+              bill.name
+            )}
+          </div>
+
+          <div class="item-display-amount">
+            Monthly bill
+          </div>
+
+        </div>
+
+        <strong>
+          ${money(
+            bill.amount
+          )}
+        </strong>
+
+        <div class="setup-item-actions">
+
+          <button
+            class="secondary-button small-button"
+            onclick="editBill('${bill.id}')"
+          >
+            Edit
+          </button>
+
+          <button
+            class="danger-button small-button"
+            onclick="deleteBill('${bill.id}')"
+          >
+            Delete
+          </button>
+
+        </div>
 
       </div>
 
-      <div style="width:130px;max-width:35%;">
+    `;
 
-        <input
-          type="number"
-          class="bill-amount"
-          placeholder="Amount"
-          step="0.01"
-          min="0"
-          value="${
-            bill
-              ? bill.amount
-              : ""
-          }"
+  }
+  else {
+
+    row.className =
+      "setup-item";
+
+    row.innerHTML = `
+
+      <div class="setup-item-row">
+
+        <div style="flex:1;min-width:0;">
+
+          <input
+            type="text"
+            class="bill-name"
+            placeholder="Bill name"
+          >
+
+        </div>
+
+        <div
+          style="
+            width:130px;
+            max-width:35%;
+          "
         >
+
+          <input
+            type="number"
+            class="bill-amount"
+            placeholder="Amount"
+            step="0.01"
+            min="0"
+          >
+
+        </div>
 
       </div>
 
-    </div>
+      <div class="setup-item-actions">
 
-    <div class="setup-item-actions">
+        <button
+          class="primary-button"
+          data-action="add-bill"
+          onclick="saveNewBill(this)"
+        >
+          Add
+        </button>
 
-      ${
-        bill
-          ? `
-            <button
-              class="secondary-button"
-              onclick="editBill('${bill.id}', this)"
-            >
-              Save
-            </button>
+        <button
+          class="secondary-button"
+          onclick="
+            this.closest(
+              '.setup-item'
+            ).remove()
+          "
+        >
+          Cancel
+        </button>
 
-            <button
-              class="danger-button"
-              onclick="deleteBill('${bill.id}')"
-            >
-              Delete
-            </button>
-          `
-          : `
-            <button
-              class="primary-button"
-              onclick="saveNewBill(this)"
-            >
-              Add
-            </button>
+      </div>
 
-            <button
-              class="secondary-button"
-              onclick="this.closest('.setup-item').remove()"
-            >
-              Cancel
-            </button>
-          `
-      }
+    `;
 
-    </div>
-  `;
+  }
 
-  list.appendChild(row);
+  list.appendChild(
+    row
+  );
 
 }
 
 
 document
-  .getElementById("addBillButton")
+  .getElementById(
+    "addBillButton"
+  )
   .addEventListener(
     "click",
-    () => addBillRow()
+    function() {
+
+      addBillRow();
+
+      const rows =
+        document.querySelectorAll(
+          "#billList .setup-item"
+        );
+
+      const last =
+        rows[rows.length - 1];
+
+      if (last) {
+
+        const input =
+          last.querySelector(
+            ".bill-name"
+          );
+
+        if (input) {
+          input.focus();
+        }
+
+      }
+
+    }
   );
 
 
-async function saveNewBill(button) {
+async function saveNewBill(
+  button
+) {
 
   const row =
-    button.closest(".setup-item");
+    button.closest(
+      ".setup-item"
+    );
 
   const name =
     row
-      .querySelector(".bill-name")
+      .querySelector(
+        ".bill-name"
+      )
       .value
       .trim();
 
   const amount =
     Number(
-      row.querySelector(".bill-amount").value
+      row.querySelector(
+        ".bill-amount"
+      ).value
     );
 
   if (!name) {
@@ -3761,6 +5243,7 @@ async function saveNewBill(button) {
     );
 
     return;
+
   }
 
   if (
@@ -3773,13 +5256,16 @@ async function saveNewBill(button) {
     );
 
     return;
+
   }
 
   const {
     error
   } =
     await supabaseClient
-      .from("bills")
+      .from(
+        "bills"
+      )
       .insert({
         household_id:
           householdId,
@@ -3797,6 +5283,7 @@ async function saveNewBill(button) {
     );
 
     return;
+
   }
 
   await loadBills();
@@ -3806,50 +5293,90 @@ async function saveNewBill(button) {
 }
 
 
-async function editBill(id, button) {
+async function editBill(
+  id
+) {
 
-  const row =
-    button.closest(".setup-item");
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from(
+        "bills"
+      )
+      .select("*")
+      .eq(
+        "id",
+        id
+      )
+      .single();
 
-  const name =
-    row
-      .querySelector(".bill-name")
-      .value
-      .trim();
-
-  const amount =
-    Number(
-      row.querySelector(".bill-amount").value
-    );
-
-  if (!name) {
+  if (error) {
 
     alert(
-      "Enter a bill name."
+      "Could not load bill: " +
+      error.message
     );
 
     return;
+
   }
 
+  const name =
+    prompt(
+      "Bill name:",
+      data.name
+    );
+
   if (
+    name === null
+  ) {
+    return;
+  }
+
+  const amountText =
+    prompt(
+      "Bill amount:",
+      data.amount
+    );
+
+  if (
+    amountText === null
+  ) {
+    return;
+  }
+
+  const amount =
+    Number(
+      amountText
+    );
+
+  if (
+    !name.trim() ||
     !Number.isFinite(amount) ||
     amount < 0
   ) {
 
     alert(
-      "Enter a valid bill amount."
+      "Enter a valid name and amount."
     );
 
     return;
+
   }
 
   const {
-    error
+    error: updateError
   } =
     await supabaseClient
-      .from("bills")
+      .from(
+        "bills"
+      )
       .update({
-        name,
+        name:
+          name.trim(),
+
         amount
       })
       .eq(
@@ -3857,14 +5384,15 @@ async function editBill(id, button) {
         id
       );
 
-  if (error) {
+  if (updateError) {
 
     alert(
       "Could not update bill: " +
-      error.message
+      updateError.message
     );
 
     return;
+
   }
 
   await loadBills();
@@ -3874,21 +5402,27 @@ async function editBill(id, button) {
 }
 
 
-async function deleteBill(id) {
+async function deleteBill(
+  id
+) {
 
   if (
     !confirm(
       "Delete this bill?"
     )
   ) {
+
     return;
+
   }
 
   const {
     error
   } =
     await supabaseClient
-      .from("bills")
+      .from(
+        "bills"
+      )
       .delete()
       .eq(
         "id",
@@ -3903,6 +5437,7 @@ async function deleteBill(id) {
     );
 
     return;
+
   }
 
   await loadBills();
@@ -3910,9 +5445,24 @@ async function deleteBill(id) {
   updateBudgetCalculation();
 
 }
-   /* =========================================================
+
+
+/* =========================================================
    BUDGET CALCULATION
    ========================================================= */
+
+/*
+  IMPORTANT:
+
+  There is deliberately NO:
+
+      52 / 12
+
+  anywhere in this calculation.
+
+  The selected calendar month determines exactly how
+  many Sunday-Saturday budget weeks belong to it.
+*/
 
 function updateBudgetCalculation() {
 
@@ -3927,13 +5477,16 @@ function updateBudgetCalculation() {
     );
 
   let income = 0;
+
   let bills = 0;
 
   incomeInputs.forEach(
     input => {
 
       income +=
-        Number(input.value) || 0;
+        Number(
+          input.value
+        ) || 0;
 
     }
   );
@@ -3942,7 +5495,9 @@ function updateBudgetCalculation() {
     input => {
 
       bills +=
-        Number(input.value) || 0;
+        Number(
+          input.value
+        ) || 0;
 
     }
   );
@@ -3961,11 +5516,18 @@ function updateBudgetCalculation() {
       ).value
     ) || 0;
 
+  const budgetWeeks =
+    getBudgetWeeksForMonth(
+      getSelectedBudgetMonth()
+    );
+
   const monthlyNeeds =
-    weeklyNeeds * 52 / 12;
+    weeklyNeeds *
+    budgetWeeks;
 
   const monthlySavings =
-    weeklySavings * 52 / 12;
+    weeklySavings *
+    budgetWeeks;
 
   const monthlyFun =
     income -
@@ -3974,7 +5536,10 @@ function updateBudgetCalculation() {
     monthlySavings;
 
   const weeklyFun =
-    monthlyFun * 12 / 52;
+    budgetWeeks > 0
+      ? monthlyFun /
+        budgetWeeks
+      : 0;
 
   document.getElementById(
     "calcIncome"
@@ -3984,17 +5549,20 @@ function updateBudgetCalculation() {
   document.getElementById(
     "calcBills"
   ).textContent =
-    "-" + money(bills);
+    "-" +
+    money(bills);
 
   document.getElementById(
     "calcNeeds"
   ).textContent =
-    "-" + money(monthlyNeeds);
+    "-" +
+    money(monthlyNeeds);
 
   document.getElementById(
     "calcSavings"
   ).textContent =
-    "-" + money(monthlySavings);
+    "-" +
+    money(monthlySavings);
 
   document.getElementById(
     "calcFun"
@@ -4016,9 +5584,12 @@ function updateBudgetCalculation() {
   ).textContent =
     money(weeklyFun);
 
+  updateBudgetWeekDisplay();
+
   return {
     income,
     bills,
+    budgetWeeks,
     weeklyNeeds,
     weeklySavings,
     monthlyNeeds,
@@ -4031,7 +5602,7 @@ function updateBudgetCalculation() {
 
 
 /* =========================================================
-   LIVE CALCULATION
+   LIVE BUDGET CALCULATION
    ========================================================= */
 
 document.addEventListener(
@@ -4045,8 +5616,10 @@ document.addEventListener(
       event.target.classList.contains(
         "bill-amount"
       ) ||
-      event.target.id === "weeklyNeeds" ||
-      event.target.id === "weeklySavings"
+      event.target.id ===
+        "weeklyNeeds" ||
+      event.target.id ===
+        "weeklySavings"
     ) {
 
       updateBudgetCalculation();
@@ -4058,11 +5631,34 @@ document.addEventListener(
 
 
 /* =========================================================
-   SAVE MONTHLY BUDGET PLAN
+   BUDGET MONTH CHANGE
    ========================================================= */
 
 document
-  .getElementById("saveBudgetButton")
+  .getElementById(
+    "budgetMonthSelect"
+  )
+  .addEventListener(
+    "change",
+    async function() {
+
+      selectedBudgetMonth =
+        this.value;
+
+      await openBudgetSetup();
+
+    }
+  );
+
+
+/* =========================================================
+   SAVE BUDGET
+   ========================================================= */
+
+document
+  .getElementById(
+    "saveBudgetButton"
+  )
   .addEventListener(
     "click",
     saveBudgetPlan
@@ -4084,6 +5680,7 @@ async function saveBudgetPlan() {
     );
 
     return;
+
   }
 
   if (
@@ -4095,19 +5692,20 @@ async function saveBudgetPlan() {
     );
 
     return;
+
   }
 
   const budgetMonth =
-    dateOnly(
-      getUpcomingBudgetMonth()
-    );
+    getSelectedBudgetMonthString();
 
   const {
     data,
     error
   } =
     await supabaseClient
-      .from("budget_plans")
+      .from(
+        "budget_plans"
+      )
       .upsert(
         {
           household_id:
@@ -4147,14 +5745,32 @@ async function saveBudgetPlan() {
     );
 
     return;
+
   }
 
-  currentBudgetPlan =
-    data;
+  /*
+    Keep the selected plan visible in the budget panel.
 
-  await createCurrentWeekDeposits();
+    Only the upcoming month's plan is allowed to create
+    the current week's deposits. Saving a future month's
+    plan must NOT suddenly change today's balances.
+  */
 
-  await calculateBalances();
+  if (
+    budgetMonth ===
+    dateOnly(
+      getUpcomingBudgetMonth()
+    )
+  ) {
+
+    currentBudgetPlan =
+      data;
+
+    await createCurrentWeekDeposits();
+
+    await calculateBalances();
+
+  }
 
   await updateAnalytics();
 
@@ -4171,7 +5787,7 @@ async function saveBudgetPlan() {
   );
 
   setTimeout(
-    () => {
+    function() {
 
       message.classList.add(
         "hidden"
@@ -4185,13 +5801,17 @@ async function saveBudgetPlan() {
 
 
 /* =========================================================
-   WEEKLY ALLOWANCE DEPOSITS
+   WEEKLY DEPOSITS
    ========================================================= */
 
 async function createCurrentWeekDeposits() {
 
-  if (!currentBudgetPlan) {
+  if (
+    !currentBudgetPlan
+  ) {
+
     return;
+
   }
 
   const weekStart =
@@ -4207,16 +5827,15 @@ async function createCurrentWeekDeposits() {
   const funAmount =
     Number(
       currentBudgetPlan.weekly_fun
-    ) ||
-    calculateWeeklyFunFromPlan(
-      currentBudgetPlan
-    );
+    ) || 0;
 
   const {
     error
   } =
     await supabaseClient
-      .from("allowance_deposits")
+      .from(
+        "allowance_deposits"
+      )
       .upsert(
         [
           {
@@ -4269,15 +5888,19 @@ async function createCurrentWeekDeposits() {
 
 
 /* =========================================================
-   CALCULATE WEEKLY FUN
+   WEEKLY FUN FROM PLAN
    ========================================================= */
 
-function calculateWeeklyFunFromPlan(plan) {
+function calculateWeeklyFunFromPlan(
+  plan
+) {
 
   if (
     plan &&
     Number.isFinite(
-      Number(plan.weekly_fun)
+      Number(
+        plan.weekly_fun
+      )
     )
   ) {
 
@@ -4287,10 +5910,7 @@ function calculateWeeklyFunFromPlan(plan) {
 
   }
 
-  const calculation =
-    updateBudgetCalculation();
-
-  return calculation.weeklyFun;
+  return 0;
 
 }
 
@@ -4308,7 +5928,9 @@ async function calculateBalances() {
     error: depositError
   } =
     await supabaseClient
-      .from("allowance_deposits")
+      .from(
+        "allowance_deposits"
+      )
       .select(
         "fund, amount"
       )
@@ -4325,6 +5947,7 @@ async function calculateBalances() {
     );
 
     return;
+
   }
 
   const {
@@ -4332,7 +5955,9 @@ async function calculateBalances() {
     error: expenseError
   } =
     await supabaseClient
-      .from("expenses")
+      .from(
+        "expenses"
+      )
       .select(
         "fund, amount"
       )
@@ -4349,53 +5974,71 @@ async function calculateBalances() {
     );
 
     return;
+
   }
 
   let needs = 0;
+
   let fun = 0;
 
-  (deposits || []).forEach(
+  (
+    deposits || []
+  ).forEach(
     deposit => {
 
       if (
-        deposit.fund === "needs"
+        deposit.fund ===
+        "needs"
       ) {
 
         needs +=
-          Number(deposit.amount) || 0;
+          Number(
+            deposit.amount
+          ) || 0;
 
       }
 
       if (
-        deposit.fund === "fun"
+        deposit.fund ===
+        "fun"
       ) {
 
         fun +=
-          Number(deposit.amount) || 0;
+          Number(
+            deposit.amount
+          ) || 0;
 
       }
 
     }
   );
 
-  (expenses || []).forEach(
+  (
+    expenses || []
+  ).forEach(
     expense => {
 
       if (
-        expense.fund === "needs"
+        expense.fund ===
+        "needs"
       ) {
 
         needs -=
-          Number(expense.amount) || 0;
+          Number(
+            expense.amount
+          ) || 0;
 
       }
 
       if (
-        expense.fund === "fun"
+        expense.fund ===
+        "fun"
       ) {
 
         fun -=
-          Number(expense.amount) || 0;
+          Number(
+            expense.amount
+          ) || 0;
 
       }
 
@@ -4431,20 +6074,22 @@ async function calculateBalances() {
 }
 
 
-/* =========================================================
-   ENSURE CURRENT WEEK DEPOSITS
-   ========================================================= */
-
 async function ensureCurrentWeekDeposits() {
 
-  if (!currentBudgetPlan) {
+  if (
+    !currentBudgetPlan
+  ) {
 
     await loadCurrentBudget();
 
   }
 
-  if (!currentBudgetPlan) {
+  if (
+    !currentBudgetPlan
+  ) {
+
     return;
+
   }
 
   const weekStart =
@@ -4457,27 +6102,18 @@ async function ensureCurrentWeekDeposits() {
       currentBudgetPlan.weekly_needs
     ) || 0;
 
-  let weeklyFun =
+  const weeklyFun =
     Number(
       currentBudgetPlan.weekly_fun
-    );
-
-  if (
-    !Number.isFinite(weeklyFun)
-  ) {
-
-    weeklyFun =
-      calculateWeeklyFunFromPlan(
-        currentBudgetPlan
-      );
-
-  }
+    ) || 0;
 
   const {
     error
   } =
     await supabaseClient
-      .from("allowance_deposits")
+      .from(
+        "allowance_deposits"
+      )
       .upsert(
         [
           {
@@ -4520,7 +6156,7 @@ async function ensureCurrentWeekDeposits() {
   if (error) {
 
     console.error(
-      "Could not create weekly deposits:",
+      "Could not create current week deposits:",
       error
     );
 
@@ -4534,12 +6170,15 @@ async function ensureCurrentWeekDeposits() {
    ========================================================= */
 
 document
-  .getElementById("addExpenseButton")
+  .getElementById(
+    "addExpenseButton"
+  )
   .addEventListener(
     "click",
     function() {
 
-      editingExpenseId = null;
+      editingExpenseId =
+        null;
 
       openExpenseForm();
 
@@ -4549,13 +6188,6 @@ document
 
 function openExpenseForm() {
 
-  /*
-    Expense entry uses a simple browser dialog-style
-    form built dynamically so it can be used from
-    Expense History without creating another navigation
-    panel.
-  */
-
   let form =
     document.getElementById(
       "expenseForm"
@@ -4564,7 +6196,9 @@ function openExpenseForm() {
   if (!form) {
 
     form =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
     form.id =
       "expenseForm";
@@ -4596,7 +6230,9 @@ function openExpenseForm() {
           Use money from
         </label>
 
-        <select id="expenseFund">
+        <select
+          id="expenseFund"
+        >
 
           <option value="needs">
             Needs
@@ -4604,6 +6240,48 @@ function openExpenseForm() {
 
           <option value="fun">
             Fun Money
+          </option>
+
+        </select>
+
+        <label>
+          Category
+        </label>
+
+        <select
+          id="expenseCategory"
+        >
+
+          <option value="Grocery">
+            Grocery
+          </option>
+
+          <option value="Entertainment">
+            Entertainment
+          </option>
+
+          <option value="Dining">
+            Dining
+          </option>
+
+          <option value="Transportation">
+            Transportation
+          </option>
+
+          <option value="Shopping">
+            Shopping
+          </option>
+
+          <option value="Bills">
+            Bills
+          </option>
+
+          <option value="Health">
+            Health
+          </option>
+
+          <option value="Other">
+            Other
           </option>
 
         </select>
@@ -4635,6 +6313,7 @@ function openExpenseForm() {
         </button>
 
       </div>
+
     `;
 
     document.body.appendChild(
@@ -4679,6 +6358,10 @@ function openExpenseForm() {
     "hidden"
   );
 
+  document.getElementById(
+    "expenseAmount"
+  ).focus();
+
 }
 
 
@@ -4693,7 +6376,8 @@ function closeExpenseForm() {
     return;
   }
 
-  editingExpenseId = null;
+  editingExpenseId =
+    null;
 
   document.getElementById(
     "expenseAmount"
@@ -4705,10 +6389,163 @@ function closeExpenseForm() {
 
   document.getElementById(
     "expenseFund"
-  ).value = "needs";
+  ).value =
+    "needs";
+
+  document.getElementById(
+    "expenseCategory"
+  ).value =
+    "Grocery";
 
   form.classList.add(
     "hidden"
+  );
+
+}
+
+
+/* =========================================================
+   EXPENSE CATEGORIES
+   ========================================================= */
+
+/*
+  The existing expenses table does not need a database
+  migration for this.
+
+  Categories are kept in localStorage by expense ID.
+
+  Existing expenses that do not have a saved category
+  receive a reasonable automatic category based on their
+  description.
+*/
+
+function categoryStorageKey() {
+
+  return (
+    "budgetCategories_" +
+    String(
+      householdId || ""
+    )
+  );
+
+}
+
+
+function getCategoryMap() {
+
+  try {
+
+    return JSON.parse(
+      localStorage.getItem(
+        categoryStorageKey()
+      ) || "{}"
+    );
+
+  }
+  catch {
+
+    return {};
+
+  }
+
+}
+
+
+function saveExpenseCategory(
+  expenseId,
+  category
+) {
+
+  const map =
+    getCategoryMap();
+
+  map[expenseId] =
+    category;
+
+  localStorage.setItem(
+    categoryStorageKey(),
+    JSON.stringify(map)
+  );
+
+}
+
+
+function getAutomaticCategory(
+  description
+) {
+
+  const text =
+    String(
+      description || ""
+    ).toLowerCase();
+
+  if (
+    /walmart|target|kroger|food|grocery|market|heb|aldi|publix|safeway/.test(
+      text
+    )
+  ) {
+
+    return "Grocery";
+
+  }
+
+  if (
+    /netflix|hulu|spotify|movie|cinema|game|steam|xbox|playstation|disney|concert/.test(
+      text
+    )
+  ) {
+
+    return "Entertainment";
+
+  }
+
+  if (
+    /restaurant|mcdonald|burger|pizza|taco|doordash|ubereats|grubhub|coffee|starbucks/.test(
+      text
+    )
+  ) {
+
+    return "Dining";
+
+  }
+
+  if (
+    /gas|fuel|shell|exxon|chevron|car|uber|lyft|tire|oil change/.test(
+      text
+    )
+  ) {
+
+    return "Transportation";
+
+  }
+
+  if (
+    /electric|water|internet|phone|rent|mortgage|insurance|utility/.test(
+      text
+    )
+  ) {
+
+    return "Bills";
+
+  }
+
+  return "Other";
+
+}
+
+
+function getExpenseCategory(
+  expense
+) {
+
+  const map =
+    getCategoryMap();
+
+  return (
+    map[expense.id] ||
+    getAutomaticCategory(
+      expense.description
+    )
   );
 
 }
@@ -4732,6 +6569,11 @@ async function saveExpense() {
       "expenseFund"
     ).value;
 
+  const category =
+    document.getElementById(
+      "expenseCategory"
+    ).value;
+
   const description =
     document
       .getElementById(
@@ -4750,6 +6592,7 @@ async function saveExpense() {
     );
 
     return;
+
   }
 
   if (!description) {
@@ -4759,6 +6602,7 @@ async function saveExpense() {
     );
 
     return;
+
   }
 
   if (
@@ -4771,6 +6615,7 @@ async function saveExpense() {
     );
 
     return;
+
   }
 
   if (editingExpenseId) {
@@ -4779,7 +6624,9 @@ async function saveExpense() {
       error
     } =
       await supabaseClient
-        .from("expenses")
+        .from(
+          "expenses"
+        )
         .update({
           amount,
           fund,
@@ -4800,16 +6647,25 @@ async function saveExpense() {
       );
 
       return;
+
     }
+
+    saveExpenseCategory(
+      editingExpenseId,
+      category
+    );
 
   }
   else {
 
     const {
+      data,
       error
     } =
       await supabaseClient
-        .from("expenses")
+        .from(
+          "expenses"
+        )
         .insert({
           household_id:
             householdId,
@@ -4820,7 +6676,9 @@ async function saveExpense() {
           amount,
           fund,
           description
-        });
+        })
+        .select()
+        .single();
 
     if (error) {
 
@@ -4830,6 +6688,16 @@ async function saveExpense() {
       );
 
       return;
+
+    }
+
+    if (data) {
+
+      saveExpenseCategory(
+        data.id,
+        category
+      );
+
     }
 
   }
@@ -4849,14 +6717,18 @@ async function saveExpense() {
    EDIT EXPENSE
    ========================================================= */
 
-async function editExpense(id) {
+async function editExpense(
+  id
+) {
 
   const {
     data,
     error
   } =
     await supabaseClient
-      .from("expenses")
+      .from(
+        "expenses"
+      )
       .select("*")
       .eq(
         "id",
@@ -4872,6 +6744,7 @@ async function editExpense(id) {
     );
 
     return;
+
   }
 
   editingExpenseId =
@@ -4894,6 +6767,13 @@ async function editExpense(id) {
   ).value =
     data.description;
 
+  document.getElementById(
+    "expenseCategory"
+  ).value =
+    getExpenseCategory(
+      data
+    );
+
 }
 
 
@@ -4901,21 +6781,27 @@ async function editExpense(id) {
    DELETE EXPENSE
    ========================================================= */
 
-async function deleteExpense(id) {
+async function deleteExpense(
+  id
+) {
 
   if (
     !confirm(
       "Delete this expense?"
     )
   ) {
+
     return;
+
   }
 
   const {
     error
   } =
     await supabaseClient
-      .from("expenses")
+      .from(
+        "expenses"
+      )
       .delete()
       .eq(
         "id",
@@ -4930,7 +6816,18 @@ async function deleteExpense(id) {
     );
 
     return;
+
   }
+
+  const map =
+    getCategoryMap();
+
+  delete map[id];
+
+  localStorage.setItem(
+    categoryStorageKey(),
+    JSON.stringify(map)
+  );
 
   await loadExpenses();
 
@@ -4952,7 +6849,9 @@ async function loadExpenses() {
     error
   } =
     await supabaseClient
-      .from("expenses")
+      .from(
+        "expenses"
+      )
       .select("*")
       .eq(
         "household_id",
@@ -4974,6 +6873,7 @@ async function loadExpenses() {
     );
 
     return;
+
   }
 
   const container =
@@ -4990,6 +6890,7 @@ async function loadExpenses() {
       '<p class="subtext">No expenses yet.</p>';
 
     return;
+
   }
 
   container.innerHTML = "";
@@ -4998,16 +6899,25 @@ async function loadExpenses() {
     expense => {
 
       const row =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
       row.className =
         "transaction";
+
+      const category =
+        getExpenseCategory(
+          expense
+        );
 
       row.innerHTML = `
 
         <div class="transaction-top">
 
-          <div style="min-width:0;">
+          <div
+            style="min-width:0;"
+          >
 
             <div class="transaction-name">
               ${escapeHtml(
@@ -5016,17 +6926,28 @@ async function loadExpenses() {
             </div>
 
             <div class="transaction-category">
+
+              ${escapeHtml(
+                category
+              )}
+
+              •
+
               ${
-                expense.fund === "needs"
+                expense.fund ===
+                "needs"
                   ? "Needs"
                   : "Fun Money"
               }
+
             </div>
 
           </div>
 
           <div class="transaction-amount">
-            -${money(expense.amount)}
+            -${money(
+              expense.amount
+            )}
           </div>
 
         </div>
@@ -5035,22 +6956,33 @@ async function loadExpenses() {
 
           <button
             class="secondary-button small-button"
-            onclick="editExpense('${expense.id}')"
+            onclick="
+              editExpense(
+                '${expense.id}'
+              )
+            "
           >
             Edit
           </button>
 
           <button
             class="danger-button small-button"
-            onclick="deleteExpense('${expense.id}')"
+            onclick="
+              deleteExpense(
+                '${expense.id}'
+              )
+            "
           >
             Delete
           </button>
 
         </div>
+
       `;
 
-      container.appendChild(row);
+      container.appendChild(
+        row
+      );
 
     }
   );
@@ -5069,10 +7001,10 @@ async function updateAnalytics() {
     error
   } =
     await supabaseClient
-      .from("expenses")
-      .select(
-        "fund, amount"
+      .from(
+        "expenses"
       )
+      .select("*")
       .eq(
         "household_id",
         householdId
@@ -5086,59 +7018,314 @@ async function updateAnalytics() {
     );
 
     return;
+
   }
 
-  let needs = 0;
-  let fun = 0;
+  const period =
+    document.getElementById(
+      "analyticsPeriod"
+    ).value;
 
-  (data || []).forEach(
+  const now =
+    new Date();
+
+  let filtered =
+    data || [];
+
+  if (
+    period === "month"
+  ) {
+
+    const start =
+      firstOfMonth(now);
+
+    const end =
+      addMonths(
+        start,
+        1
+      );
+
+    filtered =
+      filtered.filter(
+        expense => {
+
+          const date =
+            new Date(
+              expense.spent_at
+            );
+
+          return (
+            date >= start &&
+            date < end
+          );
+
+        }
+      );
+
+  }
+
+  if (
+    period === "week"
+  ) {
+
+    const start =
+      getWeekStart(now);
+
+    const end =
+      new Date(start);
+
+    end.setDate(
+      end.getDate() + 7
+    );
+
+    filtered =
+      filtered.filter(
+        expense => {
+
+          const date =
+            new Date(
+              expense.spent_at
+            );
+
+          return (
+            date >= start &&
+            date < end
+          );
+
+        }
+      );
+
+  }
+
+  const categories = {};
+
+  filtered.forEach(
     expense => {
+
+      const category =
+        getExpenseCategory(
+          expense
+        );
 
       const amount =
         Number(
           expense.amount
         ) || 0;
 
-      if (
-        expense.fund === "needs"
-      ) {
-        needs += amount;
-      }
-
-      if (
-        expense.fund === "fun"
-      ) {
-        fun += amount;
-      }
+      categories[category] =
+        (
+          categories[category] ||
+          0
+        ) + amount;
 
     }
   );
 
+  const entries =
+    Object.entries(
+      categories
+    )
+    .sort(
+      (a,b) =>
+        b[1] - a[1]
+    );
+
   const total =
-    needs + fun;
+    entries.reduce(
+      (
+        sum,
+        entry
+      ) =>
+        sum + entry[1],
+      0
+    );
 
   document.getElementById(
     "analyticsTotal"
   ).textContent =
     money(total);
 
-  document.getElementById(
-    "analyticsNeeds"
-  ).textContent =
-    money(needs);
+  const chart =
+    document.getElementById(
+      "analyticsChart"
+    );
 
-  document.getElementById(
-    "analyticsFun"
-  ).textContent =
-    money(fun);
+  const legend =
+    document.getElementById(
+      "analyticsLegend"
+    );
+
+  if (
+    entries.length === 0 ||
+    total <= 0
+  ) {
+
+    chart.style.background =
+      "conic-gradient(var(--accent) 0deg 360deg)";
+
+    legend.innerHTML =
+      `
+        <p class="subtext">
+          No spending recorded for this period.
+        </p>
+      `;
+
+    return;
+
+  }
+
+  let currentDegree =
+    0;
+
+  const gradientParts = [];
+
+  entries.forEach(
+    (
+      entry,
+      index
+    ) => {
+
+      const percentage =
+        entry[1] /
+        total;
+
+      const degrees =
+        percentage * 360;
+
+      const start =
+        currentDegree;
+
+      const end =
+        currentDegree +
+        degrees;
+
+      const color =
+        chartColors[
+          index %
+          chartColors.length
+        ];
+
+      gradientParts.push(
+        color +
+        " " +
+        start +
+        "deg " +
+        end +
+        "deg"
+      );
+
+      currentDegree =
+        end;
+
+    }
+  );
+
+  chart.style.background =
+    "conic-gradient(" +
+    gradientParts.join(",") +
+    ")";
+
+  legend.innerHTML = "";
+
+  entries.forEach(
+    (
+      entry,
+      index
+    ) => {
+
+      const category =
+        entry[0];
+
+      const amount =
+        entry[1];
+
+      const percentage =
+        total > 0
+          ? (
+              amount /
+              total *
+              100
+            )
+          : 0;
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+      row.className =
+        "analytics-category-row";
+
+      row.innerHTML = `
+
+        <div
+          class="analytics-category-left"
+        >
+
+          <span
+            class="analytics-dot"
+            style="
+              background:
+                ${
+                  chartColors[
+                    index %
+                    chartColors.length
+                  ]
+                };
+            "
+          ></span>
+
+          <span
+            class="analytics-category-name"
+          >
+            ${escapeHtml(
+              category
+            )}
+          </span>
+
+        </div>
+
+        <span
+          class="analytics-category-amount"
+        >
+          ${money(amount)}
+          (${percentage.toFixed(1)}%)
+        </span>
+
+      `;
+
+      legend.appendChild(
+        row
+      );
+
+    }
+  );
 
 }
-   /* =========================================================
+
+
+/* =========================================================
+   ANALYTICS PERIOD
+   ========================================================= */
+
+document
+  .getElementById(
+    "analyticsPeriod"
+  )
+  .addEventListener(
+    "change",
+    updateAnalytics
+  );
+
+
+/* =========================================================
    SETTINGS
    ========================================================= */
 
 document
-  .getElementById("settingsGear")
+  .getElementById(
+    "settingsGear"
+  )
   .addEventListener(
     "click",
     openSettings
@@ -5150,8 +7337,12 @@ function openSettings() {
   hideAllScreens();
 
   document
-    .getElementById("settingsScreen")
-    .classList.remove("hidden");
+    .getElementById(
+      "settingsScreen"
+    )
+    .classList.remove(
+      "hidden"
+    );
 
   document.getElementById(
     "settingsProfileName"
@@ -5174,15 +7365,15 @@ function openSettings() {
         " Profile"
       : "";
 
+  updateSettingsSelection();
+
 }
 
 
-/* =========================================================
-   SETTINGS BACK
-   ========================================================= */
-
 document
-  .getElementById("settingsBackButton")
+  .getElementById(
+    "settingsBackButton"
+  )
   .addEventListener(
     "click",
     async function() {
@@ -5193,12 +7384,10 @@ document
   );
 
 
-/* =========================================================
-   PROFILE SETTINGS
-   ========================================================= */
-
 document
-  .getElementById("profileSettingsButton")
+  .getElementById(
+    "profileSettingsButton"
+  )
   .addEventListener(
     "click",
     function() {
@@ -5212,31 +7401,51 @@ document
 
 
 /* =========================================================
-   THEMES
+   THEME BUTTONS
    ========================================================= */
 
 document
-  .getElementById("sandyThemeButton")
-  .addEventListener(
-    "click",
-    function() {
+  .querySelectorAll(
+    "[data-theme]"
+  )
+  .forEach(
+    button => {
 
-      applyTheme(
-        "sandy"
+      button.addEventListener(
+        "click",
+        function() {
+
+          applyTheme(
+            this.dataset.theme
+          );
+
+        }
       );
 
     }
   );
 
 
-document
-  .getElementById("petalsThemeButton")
-  .addEventListener(
-    "click",
-    function() {
+/* =========================================================
+   FONT BUTTONS
+   ========================================================= */
 
-      applyTheme(
-        "petals"
+document
+  .querySelectorAll(
+    "[data-font]"
+  )
+  .forEach(
+    button => {
+
+      button.addEventListener(
+        "click",
+        function() {
+
+          applyFont(
+            this.dataset.font
+          );
+
+        }
       );
 
     }
@@ -5272,9 +7481,12 @@ document
       hideAllScreens();
 
       document
-        .getElementById("profileScreen")
-        .classList
-        .remove("hidden");
+        .getElementById(
+          "profileScreen"
+        )
+        .classList.remove(
+          "hidden"
+        );
 
       await renderProfiles();
 
@@ -5296,20 +7508,33 @@ async function logout() {
     "profileId"
   );
 
-  currentProfile = null;
-  profileSessionToken = null;
-  currentUser = null;
-  householdId = null;
-  currentBudgetPlan = null;
+  currentProfile =
+    null;
 
-  await supabaseClient.auth.signOut();
+  profileSessionToken =
+    null;
+
+  currentUser =
+    null;
+
+  householdId =
+    null;
+
+  currentBudgetPlan =
+    null;
+
+  await supabaseClient.auth
+    .signOut();
 
   hideAllScreens();
 
   document
-    .getElementById("loginScreen")
-    .classList
-    .remove("hidden");
+    .getElementById(
+      "loginScreen"
+    )
+    .classList.remove(
+      "hidden"
+    );
 
 }
 
@@ -5335,7 +7560,7 @@ document
 
 
 /* =========================================================
-   BUDGET INFORMATION
+   BUDGET INFORMATION MODAL
    ========================================================= */
 
 document
@@ -5347,9 +7572,12 @@ document
     function() {
 
       document
-        .getElementById("billHelpModal")
-        .classList
-        .remove("hidden");
+        .getElementById(
+          "billHelpModal"
+        )
+        .classList.remove(
+          "hidden"
+        );
 
     }
   );
@@ -5371,9 +7599,12 @@ document
         event.preventDefault();
 
         document
-          .getElementById("billHelpModal")
-          .classList
-          .remove("hidden");
+          .getElementById(
+            "billHelpModal"
+          )
+          .classList.remove(
+            "hidden"
+          );
 
       }
 
@@ -5390,9 +7621,12 @@ document
     function() {
 
       document
-        .getElementById("billHelpModal")
-        .classList
-        .add("hidden");
+        .getElementById(
+          "billHelpModal"
+        )
+        .classList.add(
+          "hidden"
+        );
 
     }
   );
@@ -5422,7 +7656,7 @@ document
 
 
 /* =========================================================
-   KEYBOARD ESCAPE
+   KEYBOARD / ENTER SUPPORT
    ========================================================= */
 
 document.addEventListener(
@@ -5430,44 +7664,232 @@ document.addEventListener(
   function(event) {
 
     if (
-      event.key !== "Escape"
+      event.key === "Escape"
     ) {
+
+      const billModal =
+        document.getElementById(
+          "billHelpModal"
+        );
+
+      if (
+        billModal &&
+        !billModal.classList.contains(
+          "hidden"
+        )
+      ) {
+
+        billModal.classList.add(
+          "hidden"
+        );
+
+        return;
+
+      }
+
+      const expenseForm =
+        document.getElementById(
+          "expenseForm"
+        );
+
+      if (
+        expenseForm &&
+        !expenseForm.classList.contains(
+          "hidden"
+        )
+      ) {
+
+        closeExpenseForm();
+
+      }
+
       return;
+
     }
 
-    const billModal =
-      document.getElementById(
-        "billHelpModal"
-      );
+    if (
+      event.key !== "Enter"
+    ) {
+
+      return;
+
+    }
 
     if (
-      billModal &&
-      !billModal.classList.contains(
-        "hidden"
+      event.target.tagName ===
+      "TEXTAREA"
+    ) {
+
+      return;
+
+    }
+
+    /*
+      Login
+    */
+
+    if (
+      event.target.id ===
+        "loginEmail" ||
+      event.target.id ===
+        "loginPassword"
+    ) {
+
+      event.preventDefault();
+
+      login();
+
+      return;
+
+    }
+
+    /*
+      PIN
+    */
+
+    if (
+      event.target.id ===
+      "profilePin"
+    ) {
+
+      event.preventDefault();
+
+      unlockProfile();
+
+      return;
+
+    }
+
+    /*
+      Add Profile
+    */
+
+    if (
+      event.target.id ===
+        "newProfileName" ||
+      event.target.id ===
+        "newProfilePin"
+    ) {
+
+      event.preventDefault();
+
+      saveProfile();
+
+      return;
+
+    }
+
+    /*
+      Expense form
+    */
+
+    if (
+      event.target.id ===
+        "expenseAmount" ||
+      event.target.id ===
+        "expenseDescription"
+    ) {
+
+      event.preventDefault();
+
+      saveExpense();
+
+      return;
+
+    }
+
+    /*
+      Income
+    */
+
+    if (
+      event.target.classList.contains(
+        "income-name"
+      ) ||
+      event.target.classList.contains(
+        "income-amount"
       )
     ) {
 
-      billModal.classList.add(
-        "hidden"
-      );
+      const row =
+        event.target.closest(
+          ".setup-item"
+        );
 
-      return;
+      const addButton =
+        row
+          ? row.querySelector(
+              "[data-action='add-income']"
+            )
+          : null;
+
+      if (addButton) {
+
+        event.preventDefault();
+
+        addButton.click();
+
+        return;
+
+      }
 
     }
 
-    const expenseForm =
-      document.getElementById(
-        "expenseForm"
-      );
+    /*
+      Bills
+    */
 
     if (
-      expenseForm &&
-      !expenseForm.classList.contains(
-        "hidden"
+      event.target.classList.contains(
+        "bill-name"
+      ) ||
+      event.target.classList.contains(
+        "bill-amount"
       )
     ) {
 
-      closeExpenseForm();
+      const row =
+        event.target.closest(
+          ".setup-item"
+        );
+
+      const addButton =
+        row
+          ? row.querySelector(
+              "[data-action='add-bill']"
+            )
+          : null;
+
+      if (addButton) {
+
+        event.preventDefault();
+
+        addButton.click();
+
+        return;
+
+      }
+
+    }
+
+    /*
+      Weekly budget inputs.
+
+      Enter saves the budget instead of doing nothing.
+    */
+
+    if (
+      event.target.id ===
+        "weeklyNeeds" ||
+      event.target.id ===
+        "weeklySavings"
+    ) {
+
+      event.preventDefault();
+
+      saveBudgetPlan();
+
+      return;
 
     }
 
@@ -5476,81 +7898,12 @@ document.addEventListener(
 
 
 /* =========================================================
-   BUDGET PANEL PREPARATION
-   ========================================================= */
-
-/*
-  Monthly Budget is prepared when the user opens it.
-  On desktop it is already visible.
-  On mobile it is opened by the swipe/navigation.
-*/
-
-const monthlyBudgetPanel =
-  document.getElementById(
-    "monthlyBudgetPanel"
-  );
-
-
-let budgetLoadedForCurrentSession =
-  false;
-
-
-async function prepareBudgetPanelIfNeeded() {
-
-  if (
-    budgetLoadedForCurrentSession
-  ) {
-    return;
-  }
-
-  budgetLoadedForCurrentSession =
-    true;
-
-  await openBudgetSetup();
-
-}
-
-
-/*
-  Desktop:
-  Load the budget setup after the app is shown.
-
-  Mobile:
-  Load it when the panel is first selected.
-*/
-
-const originalShowPanel =
-  showPanel;
-
-showPanel = function(index) {
-
-  originalShowPanel(index);
-
-  if (
-    index === 3 &&
-    currentUser &&
-    currentProfile
-  ) {
-
-    prepareBudgetPanelIfNeeded();
-
-  }
-
-};
-
-
-/* =========================================================
-   RESIZE BEHAVIOR
+   RESIZE
    ========================================================= */
 
 window.addEventListener(
   "resize",
   function() {
-
-    /*
-      Home must remain the default panel on mobile.
-      Desktop displays all panels.
-    */
 
     if (
       window.innerWidth <= 900
@@ -5572,9 +7925,11 @@ window.addEventListener(
             );
 
           if (panel) {
+
             panel.classList.add(
               "active"
             );
+
           }
 
         }
@@ -5587,7 +7942,7 @@ window.addEventListener(
 
 
 /* =========================================================
-   INITIAL SESSION CHECK
+   SESSION CHECK
    ========================================================= */
 
 async function checkSession() {
@@ -5595,7 +7950,8 @@ async function checkSession() {
   const {
     data
   } =
-    await supabaseClient.auth.getSession();
+    await supabaseClient.auth
+      .getSession();
 
   if (
     data &&
@@ -5654,80 +8010,12 @@ window.deleteExpense =
 
 loadTheme();
 
+loadFont();
+
 checkSession();
 
 </script>
 
 </body>
 </html>
-<!--
-============================================================
-IMPORTANT IMPLEMENTATION NOTES
-============================================================
 
-1. The desktop order is:
-
-   Analytics | Expense History | HOME | Monthly Budget
-
-2. Home is the default panel on mobile.
-
-3. Mobile swipe directions:
-
-   Swipe LEFT:
-   Home -> Monthly Budget
-
-   Swipe RIGHT:
-   Home -> Expense History
-
-   Swipe RIGHT again:
-   Expense History -> Analytics
-
-4. The desktop grid uses minmax(0, 1fr) and min-width:0
-   specifically to prevent values such as $657.69 from
-   expanding a panel's column.
-
-5. The "This Week's Fun Money" panel has been removed.
-
-6. Needs and Fun Money are the only two fund cards on Home.
-
-7. Settings is accessed through the gear in the upper-right.
-
-8. The date strip is dynamically generated from the current
-   Sunday through Saturday week.
-
-9. The current date receives the accent-colored circle.
-
-10. Sandy:
-
-      Background = #FAEDCD
-      Text       = #D4A373
-      Panels     = #FEFAE0
-      Accents    = #CCD5AE
-
-11. Petals:
-
-      Background = #A7AAE1
-      Text       = #696FC7
-      Panels     = #F5D3C4
-      Accents    = #F2AEBB
-
-12. Panel bevel:
-
-      Flat surface
-      Hard approximately-90-degree side
-      Darker edge
-      Rounded/sanded corners
-      Blurred floating shadow
-
-13. Budget information:
-
-      "What if I pay a bill in the middle of the month?"
-
-   is intentionally NOT a button. It is text with a
-   circled lowercase i.
-
-============================================================
-END OF FILE
-============================================================
--->
-   
