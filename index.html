@@ -2,218 +2,5451 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#eadfbd">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#e8d9ad">
 <title>Budget</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Nunito:wght@500;700;800;900&family=Press+Start+2P&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text);font-size:var(--font-size);font-weight:500}button,input,select{font:inherit}button{border:0;cursor:pointer;color:inherit}button:active{transform:translateY(1px)}
-:root{--bg:#eadfbd;--text:#76552f;--panel:#fffaf0;--accent:#b9c59a;--edge:#c8b98d;--muted:#9b805d;--input:#d5c69f;--danger:#a44f45;--danger-bg:#f2d5cf;--success:#61734e;--success-bg:#dce7cc;--font-size:16px}
-body.theme-sandy{--bg:#eadfbd;--text:#5d4023;--panel:#fffaf0;--accent:#b8c493;--edge:#b9a979;--muted:#846c4c;--input:#cbbd98}
-body.theme-moss{--bg:#dfe2d3;--text:#4f5b48;--panel:#f4f3eb;--accent:#aeb99a;--edge:#aeb7a0;--muted:#6f7969;--input:#bdc5b4}
-body.theme-slate{--bg:#dfe1df;--text:#4e5957;--panel:#f4f4f1;--accent:#aab5b0;--edge:#aeb8b4;--muted:#707b78;--input:#bcc5c1}
-body.theme-dusk{--bg:#ddd8d0;--text:#5f5750;--panel:#f5f1eb;--accent:#b9aaa0;--edge:#c0b5ad;--muted:#7d746d;--input:#c5bbb2}
-body.theme-petals{--bg:#a7aae1;--text:#494f9f;--panel:#f8d8ca;--accent:#efa8b8;--edge:#ce9ea5;--muted:#6f70ad;--input:#d2aeb2}
-.hidden{display:none!important}.subtext{color:var(--muted);font-size:.88em;font-weight:600}.card,.panel{background:var(--panel);border-radius:22px;box-shadow:0 0 0 1px var(--edge),0 8px 0 var(--edge),0 18px 35px rgba(60,45,25,.14)}
-.panel{min-width:0;overflow:hidden}.panel-inner{height:100%;min-width:0;padding:22px;overflow:auto}.panel h2{margin:0 0 16px}.panel h3{margin:18px 0 7px}.app{width:100%;height:100%}
-.settings-gear{position:fixed;z-index:500;top:16px;right:18px;width:48px;height:48px;border-radius:50%;background:var(--panel);box-shadow:inset 0 4px 8px rgba(40,30,15,.18),0 0 0 1px var(--edge),0 6px 0 var(--edge),0 12px 22px rgba(40,30,15,.12);font-size:25px;font-weight:950;display:flex;align-items:center;justify-content:center}
-.settings-gear span{display:block;line-height:1}
-#mainWorkspace{width:100%;height:100%;padding:0 24px 24px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.15fr) minmax(0,1fr);gap:20px}.workspace-panel{height:calc(100vh - 24px);min-height:0;width:100%;max-width:100%}
-.home-title{display:none}.date-strip{max-width:390px;margin:5px auto 24px;text-align:center}.date-month{font-size:1.3em;font-weight:850;margin-bottom:10px}.date-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.date-day{height:44px;display:flex;align-items:center;justify-content:center;position:relative;font-weight:800}.date-day::before{content:"";position:absolute;width:38px;height:38px;border-radius:50%;background:color-mix(in srgb,var(--panel) 70%,var(--edge));box-shadow:inset 0 3px 7px rgba(50,40,20,.13),inset 0 -2px 3px rgba(255,255,255,.5);z-index:0}.date-day.today::before{background:var(--accent);box-shadow:inset 0 4px 8px rgba(50,40,20,.15),0 0 0 1px var(--edge)}.date-day span{position:relative;z-index:1}
-.home-funds{display:flex;flex-direction:column;gap:16px}.fund-card{min-height:235px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;cursor:pointer;user-select:none}.fund-label{font-size:1.1em;font-weight:850;margin-bottom:12px}.balance{font-size:clamp(30px,4vw,44px);font-weight:900;line-height:1.05;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.fund-hint{margin-top:10px}.negative{color:var(--danger)}
-.panel-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.panel-header h2{margin:0}.transaction{padding:14px 0;border-bottom:1px solid var(--edge)}.transaction-top{display:flex;justify-content:space-between;gap:12px}.transaction-name{font-weight:850}.transaction-meta{color:var(--muted);font-size:.82em;margin-top:4px}.transaction-amount{font-weight:850;white-space:nowrap}.transaction-actions{display:flex;gap:8px;margin-top:9px}
-button.primary,.primary-button{background:var(--accent);color:var(--text);box-shadow:0 4px 0 var(--edge);border-radius:14px;padding:13px 15px;font-weight:800}.secondary-button{background:var(--panel);box-shadow:0 0 0 1px var(--edge),0 4px 0 var(--edge);border-radius:14px;padding:13px 15px;font-weight:800}.danger-button{background:var(--danger-bg);color:var(--danger);border-radius:14px;padding:13px 15px;font-weight:800}.small-button{padding:7px 10px;border-radius:10px;font-size:.82em}
-input,select{width:100%;padding:12px 13px;border:1px solid var(--input);border-radius:14px;background:var(--panel);color:var(--text);outline:0}input:focus,select:focus{box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 70%,transparent)}input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}input[type=number]{-moz-appearance:textfield}label{display:block;font-weight:800;margin:14px 0 6px}
-.setup-item{border:1px solid var(--input);border-radius:15px;padding:12px;margin-top:10px;background:color-mix(in srgb,var(--panel) 94%,var(--edge))}.setup-row{display:grid;grid-template-columns:1fr 130px;gap:10px}.setup-actions{display:flex;gap:8px;margin-top:9px}.setup-actions>*{flex:1}.calculation{margin-top:18px;padding:15px;border-radius:17px;background:rgba(0,0,0,.035)}.calc-row{display:flex;justify-content:space-between;gap:14px;padding:7px 0}.calc-row strong{white-space:nowrap}.calc-total{border-top:1px solid var(--input);margin-top:7px;padding-top:12px;font-weight:850}.mode-note{padding:12px;border-radius:14px;background:color-mix(in srgb,var(--accent) 25%,var(--panel));margin:12px 0}.info-link{display:flex;align-items:center;gap:10px;margin:18px 0;font-weight:850;cursor:pointer}.info-icon{width:25px;height:25px;border:2px solid currentColor;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;flex:0 0 auto}
-.modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(25,20,15,.48);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px}.modal-card{width:min(560px,100%);max-height:90vh;overflow:auto;padding:24px}.modal-card h2{margin-top:0}.modal-card p{line-height:1.55}.sheet-overlay{position:fixed;inset:0;z-index:1200;background:rgba(25,20,15,.48);display:flex;align-items:flex-end;justify-content:center}.expense-sheet{width:min(620px,100%);max-height:90vh;overflow:auto;padding:24px;border-radius:28px 28px 0 0;animation:sheetIn .45s cubic-bezier(.2,.85,.25,1.12)}@keyframes sheetIn{0%{transform:translateY(110%)}82%{transform:translateY(-5px)}100%{transform:translateY(0)}}.sheet-handle{width:44px;height:5px;border-radius:99px;background:var(--edge);margin:-6px auto 18px}
-.avatar-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}.avatar-choice{padding:12px 6px;border-radius:15px;background:var(--panel);box-shadow:0 0 0 1px var(--edge);font-size:.86em}.avatar-choice.selected{background:var(--accent);box-shadow:0 0 0 3px var(--accent)}.avatar-face{font-size:28px;display:block;margin-bottom:4px}.profile-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}.profile-avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--accent);font-size:24px;box-shadow:inset 0 3px 6px rgba(40,30,15,.14)}.profile-button{flex:1;text-align:left}
-.login{width:min(500px,100%);height:100%;margin:auto;padding:40px 20px;overflow:auto}.login .card{padding:24px}.onboard-list li{margin:8px 0}.choice-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.choice{padding:16px;border-radius:16px;background:var(--panel);box-shadow:0 0 0 1px var(--edge);text-align:left}.choice.selected{background:var(--accent);box-shadow:0 0 0 3px var(--accent)}
-.settings{height:100%;overflow:auto;padding:70px 20px 30px;max-width:720px;margin:auto}.settings .card{padding:20px;margin-bottom:16px}.settings h1{margin-top:0}.settings-section{margin-top:22px}.error{color:var(--danger);background:var(--danger-bg);padding:11px;border-radius:12px;margin-top:12px}.success{color:var(--success);background:var(--success-bg);padding:11px;border-radius:12px;margin-top:12px}
-.mobile-track{display:contents}.mobile-nav{display:none}
-@media(max-width:900px){html,body{height:100dvh}body{overflow:hidden}#mainWorkspace{height:100dvh;padding:0;display:block;overflow:hidden;position:relative}.mobile-track{display:flex;height:100%;gap:12px;will-change:transform;transition:transform .38s cubic-bezier(.22,.75,.2,1)}.workspace-panel{display:block;flex:0 0 88vw;width:88vw;height:100dvh;min-height:0;border-radius:22px;box-shadow:0 0 0 1px var(--edge),0 8px 0 var(--edge),0 18px 35px rgba(60,45,25,.14);overflow:hidden}.workspace-panel .panel-inner{padding:70px 16px 28px;overflow-y:auto;overscroll-behavior:contain}.home-panel .panel-inner{padding-top:70px;overflow:hidden}.date-strip{max-width:100%;margin-top:2px}.date-month{font-size:1.2em}.date-day{height:42px}.date-day::before{width:35px;height:35px}.fund-card{min-height:calc((100dvh - 235px)/2);max-height:270px}.mobile-nav{display:none}.settings-gear{top:13px;right:13px;width:46px;height:46px}.panel-header h2{font-size:1.35em}.setup-row{grid-template-columns:1fr 110px}.modal-overlay{padding:12px}.modal-card{max-height:92dvh}.expense-sheet{max-height:92dvh}.settings{padding-top:72px}.login{padding-top:28px}.avatar-grid{grid-template-columns:repeat(4,1fr)}}
-@media(max-width:380px){.workspace-panel{flex-basis:90vw;width:90vw}.workspace-panel .panel-inner{padding-left:13px;padding-right:13px}.fund-card{min-height:190px}.balance{font-size:30px}.setup-row{grid-template-columns:1fr 100px}}
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  touch-action:manipulation;
+}
+
+:root{
+  --bg:#e8d9ad;
+  --panel:#fff9e9;
+  --text:#4e351d;
+  --muted:#796245;
+  --accent:#a9b982;
+  --edge:#bca975;
+  --input:#cdbd91;
+  --danger:#9b4e45;
+  --danger-bg:#f1d6cf;
+  --success:#536f49;
+  --success-bg:#dce8cf;
+  --font-size:16px;
+  --font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-family);
+  font-size:var(--font-size);
+  font-weight:600;
+}
+
+body.theme-sandy{
+  --bg:#e8d9ad;
+  --panel:#fff9e9;
+  --text:#4e351d;
+  --muted:#796245;
+  --accent:#a9b982;
+  --edge:#bca975;
+  --input:#cdbd91;
+}
+
+body.theme-petals{
+  --bg:#aaaee0;
+  --panel:#f7d7c8;
+  --text:#494e96;
+  --muted:#686ca2;
+  --accent:#eda5b5;
+  --edge:#c99ba4;
+  --input:#d0a8ad;
+}
+
+body.theme-harbor{
+  --bg:#9fb7be;
+  --panel:#f3eadb;
+  --text:#263e4b;
+  --muted:#56717a;
+  --accent:#d58f79;
+  --edge:#8ea0a0;
+  --input:#b3b7ad;
+}
+
+body.theme-cedar{
+  --bg:#aebca5;
+  --panel:#eee1c8;
+  --text:#304638;
+  --muted:#5f705e;
+  --accent:#c77f63;
+  --edge:#9eaa8f;
+  --input:#b9b49d;
+}
+
+body.theme-plum{
+  --bg:#b9a5b5;
+  --panel:#f2e5cf;
+  --text:#51374e;
+  --muted:#756173;
+  --accent:#c7a24c;
+  --edge:#a9969e;
+  --input:#c4b5ad;
+}
+
+body.font-system{
+  --font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+}
+
+body.font-rounded{
+  --font-family:"Nunito",sans-serif;
+}
+
+body.font-serif{
+  --font-family:"Merriweather",serif;
+}
+
+body.font-mono{
+  --font-family:"Space Mono",monospace;
+}
+
+body.font-pixel{
+  --font-family:"Press Start 2P",monospace;
+  letter-spacing:-.03em;
+}
+
+body.font-pixel button,
+body.font-pixel input,
+body.font-pixel select{
+  font-size:.82em;
+}
+
+button,input,select{
+  font:inherit;
+  color:inherit;
+}
+
+button{
+  border:0;
+  cursor:pointer;
+}
+
+button:active{
+  transform:translateY(1px);
+}
+
+.hidden{
+  display:none!important;
+}
+
+.subtext{
+  color:var(--muted);
+  font-size:.86em;
+  font-weight:700;
+}
+
+.error{
+  color:var(--danger);
+  background:var(--danger-bg);
+  padding:11px;
+  border-radius:12px;
+  margin-top:12px;
+}
+
+.success{
+  color:var(--success);
+  background:var(--success-bg);
+  padding:11px;
+  border-radius:12px;
+  margin-top:12px;
+}
+
+.negative{
+  color:var(--danger);
+}
+
+.card,
+.panel{
+  background:var(--panel);
+  border-radius:18px;
+  box-shadow:
+    0 0 0 1px var(--edge),
+    0 9px 0 var(--edge),
+    0 18px 36px rgba(52,39,21,.15);
+}
+
+.panel{
+  min-width:0;
+  overflow:hidden;
+}
+
+.panel-inner{
+  height:100%;
+  min-width:0;
+  padding:22px;
+  overflow:auto;
+}
+
+.panel h2{
+  margin:0 0 16px;
+}
+
+.panel h3{
+  margin:20px 0 8px;
+}
+
+.app{
+  width:100%;
+  height:100%;
+}
+
+.icon-button{
+  display:grid;
+  place-items:center;
+  width:48px;
+  height:48px;
+  padding:0;
+  border-radius:50%;
+  background:var(--panel);
+  color:var(--text);
+  box-shadow:
+    inset 5px 5px 9px rgba(68,50,25,.16),
+    inset -4px -4px 7px rgba(255,255,255,.55),
+    0 0 0 1px color-mix(in srgb,var(--edge) 85%,transparent);
+}
+
+.icon-button svg{
+  width:25px;
+  height:25px;
+  stroke:currentColor;
+  stroke-width:2.7;
+  fill:none;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.settings-gear{
+  position:fixed;
+  z-index:500;
+  top:15px;
+  right:17px;
+}
+
+.settings-back{
+  position:fixed;
+  z-index:1510;
+  top:15px;
+  left:17px;
+}
+
+.settings-back svg{
+  width:24px;
+  height:24px;
+}
+
+#mainWorkspace{
+  width:100%;
+  height:100%;
+  padding:0 24px 24px;
+  display:grid;
+  grid-template-columns:
+    minmax(0,1fr)
+    minmax(0,1fr)
+    minmax(0,1.15fr)
+    minmax(0,1fr);
+  gap:20px;
+}
+
+.mobile-track{
+  display:contents;
+}
+
+.workspace-panel{
+  height:calc(100vh - 24px);
+  min-height:0;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+}
+
+.date-strip{
+  max-width:390px;
+  margin:6px auto 23px;
+  text-align:center;
+}
+
+.date-month{
+  font-size:1.3em;
+  font-weight:900;
+  margin-bottom:9px;
+}
+
+.date-days{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:5px;
+}
+
+.date-day{
+  height:45px;
+  display:grid;
+  place-items:center;
+  position:relative;
+  font-weight:900;
+}
+
+.date-day::before{
+  content:"";
+  position:absolute;
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  background:var(--panel);
+  box-shadow:
+    inset 5px 5px 8px rgba(56,43,25,.22),
+    inset -4px -4px 7px rgba(255,255,255,.66),
+    0 1px 0 rgba(255,255,255,.45);
+}
+
+.date-day.today::before{
+  background:color-mix(in srgb,var(--accent) 74%,var(--panel));
+  box-shadow:
+    inset 5px 5px 8px rgba(56,43,25,.23),
+    inset -4px -4px 7px rgba(255,255,255,.38),
+    0 0 0 1px var(--edge);
+}
+
+.date-day span{
+  position:relative;
+  z-index:1;
+}
+
+.home-funds{
+  display:flex;
+  flex-direction:column;
+  gap:17px;
+}
+
+.fund-card{
+  min-height:235px;
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  text-align:center;
+  cursor:pointer;
+  user-select:none;
+}
+
+.fund-label{
+  font-size:1.1em;
+  font-weight:900;
+  margin-top:5px;
+}
+
+.balance{
+  font-size:clamp(30px,4vw,44px);
+  font-weight:900;
+  line-height:1.05;
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  margin:10px 0 4px;
+}
+
+.home-expenses{
+  width:100%;
+  margin-top:12px;
+  text-align:left;
+  pointer-events:none;
+}
+
+.home-expense{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:7px 2px;
+  border-top:1px solid color-mix(in srgb,var(--edge) 55%,transparent);
+  font-size:.83em;
+}
+
+.home-expense-name{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.home-expense-amount{
+  white-space:nowrap;
+  font-weight:900;
+}
+
+.empty-home-expenses{
+  text-align:center;
+  color:var(--muted);
+  font-size:.8em;
+  padding-top:8px;
+}
+
+.panel-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:16px;
+}
+
+.panel-header h2{
+  margin:0;
+}
+
+.transaction{
+  padding:14px 0;
+  border-bottom:1px solid color-mix(in srgb,var(--edge) 68%,transparent);
+}
+
+.transaction-top{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.transaction-name{
+  font-weight:900;
+  overflow-wrap:anywhere;
+}
+
+.transaction-meta{
+  color:var(--muted);
+  font-size:.8em;
+  margin-top:4px;
+}
+
+.transaction-amount{
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.transaction-actions{
+  display:flex;
+  gap:8px;
+  margin-top:9px;
+}
+
+.primary-button,
+.secondary-button,
+.danger-button,
+.folder-button,
+.choice-button,
+.theme-button{
+  border-radius:14px;
+  padding:13px 15px;
+  font-weight:900;
+}
+
+.primary-button{
+  background:var(--accent);
+  color:var(--text);
+  box-shadow:0 4px 0 var(--edge);
+}
+
+.secondary-button{
+  background:var(--panel);
+  box-shadow:
+    0 0 0 1px var(--edge),
+    0 4px 0 var(--edge);
+}
+
+.danger-button{
+  background:var(--danger-bg);
+  color:var(--danger);
+}
+
+.small-button{
+  padding:7px 10px;
+  border-radius:10px;
+  font-size:.8em;
+}
+
+.folder-button{
+  width:100%;
+  background:var(--panel);
+  box-shadow:
+    0 0 0 1px var(--edge),
+    0 6px 0 var(--edge);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  text-align:left;
+  margin:0 0 14px;
+}
+
+.folder-button span:last-child{
+  font-size:1.35em;
+}
+
+.choice-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:11px;
+}
+
+.choice-button{
+  background:var(--panel);
+  box-shadow:0 0 0 1px var(--edge);
+  text-align:left;
+}
+
+.choice-button.selected{
+  box-shadow:
+    0 0 0 3px var(--accent),
+    0 4px 0 var(--edge);
+}
+
+label{
+  display:block;
+  font-weight:900;
+  margin:14px 0 6px;
+}
+
+.field,
+input,
+select{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  padding:12px 13px;
+  border:1px solid var(--input);
+  border-radius:14px;
+  background:var(--panel);
+  color:var(--text);
+  outline:0;
+}
+
+input:focus,
+select:focus{
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 72%,transparent);
+}
+
+select{
+  appearance:none;
+  -webkit-appearance:none;
+  background-repeat:no-repeat;
+  background-position:right 12px center;
+  padding-right:40px;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{
+  -webkit-appearance:none;
+  margin:0;
+}
+
+input[type=number]{
+  -moz-appearance:textfield;
+}
+
+.money-input{
+  font-variant-numeric:tabular-nums;
+}
+
+.saved-list{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+
+.saved-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:11px 12px;
+  border:1px solid color-mix(in srgb,var(--edge) 70%,transparent);
+  border-radius:13px;
+  background:color-mix(in srgb,var(--panel) 94%,var(--edge));
+}
+
+.saved-row-main{
+  min-width:0;
+}
+
+.saved-row-name{
+  font-weight:900;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.saved-row-amount{
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.saved-row-actions{
+  display:flex;
+  gap:7px;
+  margin-left:8px;
+}
+
+.edit-box{
+  padding:12px;
+  border:1px solid var(--input);
+  border-radius:15px;
+  margin-top:9px;
+}
+
+.edit-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 130px;
+  gap:10px;
+}
+
+.edit-actions{
+  display:flex;
+  gap:8px;
+  margin-top:9px;
+}
+
+.edit-actions>*{
+  flex:1;
+}
+
+.calculation{
+  margin-top:18px;
+  padding:15px;
+  border-radius:17px;
+  background:rgba(0,0,0,.035);
+}
+
+.calc-row{
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  padding:7px 0;
+}
+
+.calc-row strong{
+  white-space:nowrap;
+}
+
+.calc-total{
+  border-top:1px solid var(--input);
+  margin-top:7px;
+  padding-top:12px;
+  font-weight:900;
+}
+
+.mode-note{
+  padding:12px;
+  border-radius:14px;
+  background:color-mix(in srgb,var(--accent) 25%,var(--panel));
+  margin:12px 0;
+  line-height:1.42;
+}
+
+.info-link{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin:18px 0;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.info-icon{
+  width:25px;
+  height:25px;
+  border:2px solid currentColor;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-weight:900;
+  flex:0 0 auto;
+}
+
+.allocation-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 135px;
+  gap:10px;
+  align-items:center;
+  margin-top:9px;
+}
+
+.allocation-name{
+  font-weight:900;
+}
+
+.allocation-summary{
+  margin-top:10px;
+}
+
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  z-index:1400;
+  background:rgba(25,20,15,.48);
+  backdrop-filter:blur(4px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.modal-card{
+  width:min(580px,100%);
+  max-height:90vh;
+  overflow:auto;
+  padding:24px;
+}
+
+.modal-card h2{
+  margin-top:0;
+}
+
+.modal-card p{
+  line-height:1.55;
+}
+
+.sheet-overlay{
+  position:fixed;
+  inset:0;
+  z-index:1300;
+  display:flex;
+  align-items:flex-end;
+  background:rgba(25,20,15,.5);
+  backdrop-filter:blur(3px);
+}
+
+.expense-sheet{
+  width:min(600px,100%);
+  max-height:88vh;
+  overflow:auto;
+  margin:0 auto;
+  padding:14px 20px calc(22px + env(safe-area-inset-bottom));
+  background:var(--panel);
+  border-radius:25px 25px 0 0;
+  box-shadow:0 -10px 40px rgba(0,0,0,.2);
+  animation:sheetIn .34s cubic-bezier(.2,.9,.25,1.12);
+  touch-action:pan-y;
+}
+
+.expense-sheet.dragging{
+  animation:none;
+  transition:none;
+}
+
+.expense-sheet.settling{
+  transition:transform .2s ease;
+}
+
+.sheet-handle{
+  width:48px;
+  height:5px;
+  border-radius:99px;
+  background:var(--input);
+  margin:0 auto 16px;
+}
+
+@keyframes sheetIn{
+  0%{transform:translateY(105%)}
+  80%{transform:translateY(-9px)}
+  100%{transform:translateY(0)}
+}
+
+.avatar-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-top:12px;
+}
+
+.avatar-choice{
+  aspect-ratio:1;
+  padding:8px;
+  border-radius:18px;
+  background:var(--panel);
+  box-shadow:0 0 0 1px var(--edge);
+}
+
+.avatar-choice.selected{
+  box-shadow:0 0 0 4px var(--accent);
+}
+
+.avatar-choice svg{
+  width:100%;
+  height:100%;
+}
+
+.theme-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.theme-button{
+  background:var(--panel);
+  box-shadow:0 0 0 1px var(--edge);
+}
+
+.theme-button.selected{
+  box-shadow:0 0 0 4px var(--text);
+}
+
+.palette{
+  display:flex;
+  height:22px;
+  overflow:hidden;
+  border-radius:8px;
+  margin-bottom:8px;
+}
+
+.palette span{
+  flex:1;
+}
+
+.settings-screen{
+  position:fixed;
+  inset:0;
+  z-index:1200;
+  background:var(--bg);
+  overflow:auto;
+  padding:76px 20px 35px;
+}
+
+.settings-content{
+  width:min(620px,100%);
+  margin:0 auto;
+}
+
+.settings-title{
+  margin:0 0 6px;
+}
+
+.settings-profile{
+  margin-bottom:30px;
+}
+
+.settings-section{
+  padding-bottom:35px;
+}
+
+.settings-card{
+  padding:20px;
+  margin-bottom:18px;
+}
+
+.range-row{
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
+
+.range-row input{
+  flex:1;
+}
+
+.font-preview{
+  margin-top:14px;
+  padding:16px;
+  border-radius:14px;
+  background:var(--panel);
+  border:1px solid var(--edge);
+}
+
+.analytics-stat{
+  padding:14px 0;
+  border-bottom:1px solid var(--input);
+}
+
+.analytics-stat strong{
+  display:block;
+  font-size:1.7em;
+  margin-top:5px;
+}
+
+.login-wrap,
+.profile-wrap{
+  min-height:100%;
+  overflow:auto;
+  padding:35px 20px;
+}
+
+.login-box,
+.profile-box{
+  width:min(500px,100%);
+  margin:40px auto;
+  padding:24px;
+}
+
+.profile-button{
+  width:100%;
+  margin-top:12px;
+}
+
+@media(max-width:800px){
+  #mainWorkspace{
+    display:block;
+    padding:0;
+    height:100%;
+    overflow:hidden;
+  }
+
+  .mobile-viewport{
+    width:100%;
+    height:100%;
+    overflow:visible;
+    touch-action:pan-y;
+  }
+
+  .mobile-track{
+    height:100%;
+    display:flex;
+    gap:14px;
+    will-change:transform;
+    transform:translate3d(0,0,0);
+  }
+
+  .workspace-panel{
+    flex:0 0 calc(100vw - 42px);
+    height:calc(100dvh - 18px);
+    margin-top:0;
+  }
+
+  .workspace-panel:first-child{
+    margin-left:21px;
+  }
+
+  .workspace-panel:last-child{
+    margin-right:21px;
+  }
+
+  .panel-inner{
+    padding:20px 17px 24px;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+  }
+
+  #homePanel .panel-inner{
+    overflow:hidden;
+  }
+
+  .date-strip{
+    margin-top:0;
+    margin-bottom:13px;
+  }
+
+  .date-day{
+    height:39px;
+  }
+
+  .date-day::before{
+    width:34px;
+    height:34px;
+  }
+
+  .fund-card{
+    min-height:0;
+    flex:1;
+    padding:13px;
+  }
+
+  .home-funds{
+    height:calc(100% - 80px);
+    gap:14px;
+  }
+
+  .balance{
+    font-size:clamp(27px,10vw,39px);
+  }
+
+  .home-expenses{
+    margin-top:7px;
+  }
+
+  .home-expense{
+    padding:5px 1px;
+  }
+
+  .settings-gear{
+    top:12px;
+    right:13px;
+  }
+
+  .edit-grid{
+    grid-template-columns:1fr;
+  }
+
+  .allocation-row{
+    grid-template-columns:1fr;
+  }
+
+  .avatar-grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
 </style>
 </head>
-<body class="theme-sandy">
-<button class="settings-gear hidden" id="settingsGear" aria-label="Settings" title="Settings"><span>⚙</span></button>
 
-<section class="login" id="loginScreen">
-  <div class="card">
-    <h1>Budget</h1><p class="subtext">Sign in to continue.</p>
-    <label>Email</label><input id="loginEmail" type="email" autocomplete="email">
-    <label>Password</label><input id="loginPassword" type="password" autocomplete="current-password">
-    <button class="primary-button" id="loginButton" style="width:100%;margin-top:18px">Sign In</button>
-    <button class="secondary-button" id="forgotPasswordButton" style="width:100%;margin-top:12px">Forgot Password?</button>
-    <div id="loginError" class="error hidden"></div>
+<body class="theme-sandy font-system">
+
+<div id="loginScreen" class="app">
+  <div class="login-wrap">
+    <div class="card login-box">
+      <h1>My Budget</h1>
+      <p class="subtext">Sign in to continue.</p>
+
+      <label>Email</label>
+      <input type="email" id="loginEmail" autocomplete="email">
+
+      <label>Password</label>
+      <input type="password" id="loginPassword" autocomplete="current-password">
+
+      <button class="primary-button" id="loginButton" style="width:100%;margin-top:20px">
+        Sign In
+      </button>
+
+      <button class="secondary-button" id="forgotPasswordButton" style="width:100%;margin-top:12px">
+        Forgot Password
+      </button>
+
+      <div id="loginError" class="error hidden"></div>
+      <div id="loginMessage" class="success hidden"></div>
+    </div>
   </div>
-</section>
+</div>
 
-<section class="login hidden" id="profileScreen">
-  <div class="card">
-    <h1>Choose a profile</h1><p class="subtext">Select your profile or create a new one.</p>
-    <div id="profileList"></div>
-    <button class="secondary-button" id="addProfileButton" style="width:100%;margin-top:14px">+ Add Profile</button>
-  </div>
-  <div class="card hidden" id="addProfileForm" style="margin-top:14px">
-    <h2>New Profile</h2>
-    <label>Name</label><input id="newProfileName" autocomplete="name">
-    <label>4-Digit PIN</label><input id="newProfilePin" type="password" inputmode="numeric" maxlength="4">
+<div id="profileScreen" class="app hidden">
+  <div class="profile-wrap">
+    <div class="profile-box">
+      <h1>Who's using My Budget?</h1>
+      <p class="subtext">Select a profile.</p>
 
-         <label>Phone Number</label><input id="newProfilePhone" type="tel" autocomplete="tel" placeholder="555-555-5555">
-    <label>Profile Picture</label><div id="avatarGrid" class="avatar-grid"></div>
-    <button class="primary-button" id="saveProfileButton" style="width:100%;margin-top:18px">Create Profile</button>
-    <button class="secondary-button" id="cancelProfileButton" style="width:100%;margin-top:10px">Cancel</button>
-    <div id="profileError" class="error hidden"></div>
-  </div>
-  <div class="card hidden" id="pinScreen" style="margin-top:14px">
-    <h2>Enter PIN</h2><p id="pinProfileName" class="subtext"></p>
-    <input id="profilePin" type="password" inputmode="numeric" maxlength="4">
-    <button class="primary-button" id="unlockProfileButton" style="width:100%;margin-top:12px">Unlock</button>
-    <button class="secondary-button" id="cancelPinButton" style="width:100%;margin-top:10px">Back</button>
-    <div id="pinError" class="error hidden"></div>
-  </div>
-  <button class="danger-button" id="profileLogoutButton" style="width:100%;margin-top:14px">Log Out</button>
-</section>
+      <div id="profileList"></div>
 
-<section class="app hidden" id="appScreen">
-  <main id="mainWorkspace"><div class="mobile-track" id="mobileTrack">
-    <section class="panel workspace-panel" id="analyticsPanel"><div class="panel-inner">
-      <div class="panel-header"><h2>Analytics</h2></div>
-      <div class="card" style="padding:18px;margin-bottom:16px"><div class="subtext">Spending Overview</div><div class="balance" id="analyticsTotal">$0.00</div></div>
-      <div class="card" style="padding:18px;margin-bottom:16px"><h3>Needs Spending</h3><div class="calc-row"><span>This year</span><strong id="analyticsNeeds">$0.00</strong></div></div>
-      <div class="card" style="padding:18px;margin-bottom:16px"><h3>Fun Money Spending</h3><div class="calc-row"><span>This year</span><strong id="analyticsFun">$0.00</strong></div></div>
-      <div class="card" style="padding:18px"><h3>Amount You've Saved This Year</h3><div class="balance" id="analyticsSavedThisYear">$0.00</div><div class="subtext" style="margin-top:8px">Based on the Savings amount in saved budgets.</div><div class="calc-row" style="margin-top:12px"><span id="analyticsPriorYearLabel">Last year</span><strong id="analyticsSavedPriorYear">$0.00</strong></div></div>
-    </div></section>
+      <button class="secondary-button" id="addProfileButton" style="width:100%;margin-top:16px">
+        Add Profile
+      </button>
 
-    <section class="panel workspace-panel" id="expenseHistoryPanel"><div class="panel-inner">
-      <div class="panel-header"><h2>Expense History</h2><button class="primary-button small-button" id="addExpenseButton">+ Expense</button></div>
-      <div id="transactions"><p class="subtext">No expenses yet.</p></div>
-    </div></section>
+      <div class="card hidden" id="addProfileForm" style="padding:20px;margin-top:18px">
+        <h2>Add Profile</h2>
 
-    <section class="panel workspace-panel home-panel" id="homePanel"><div class="panel-inner">
-      <div class="date-strip"><div class="date-month" id="dateMonth"></div><div class="date-days" id="dateDays"></div></div>
-      <div class="home-funds">
-        <div class="card fund-card" id="needsFundCard"><div class="fund-label">Needs</div><div class="balance" id="needsBalance">$0.00</div><div class="subtext fund-hint">Tap to add an expense</div></div>
-        <div class="card fund-card" id="funFundCard"><div class="fund-label">Fun Money</div><div class="balance" id="funBalance">$0.00</div><div class="subtext fund-hint">Tap to add an expense</div></div>
+        <label>Name</label>
+        <input type="text" id="newProfileName">
+
+        <label>4-Digit PIN</label>
+        <input type="password" id="newProfilePin" inputmode="numeric" maxlength="4">
+
+        <label>Profile Picture</label>
+        <div id="avatarGrid" class="avatar-grid"></div>
+
+        <button class="primary-button" id="saveProfileButton" style="width:100%;margin-top:20px">
+          Save Profile
+        </button>
+
+        <button class="secondary-button" id="cancelProfileButton" style="width:100%;margin-top:10px">
+          Cancel
+        </button>
+
+        <div id="profileError" class="error hidden"></div>
       </div>
-    </div></section>
 
-    <section class="panel workspace-panel" id="monthlyBudgetPanel"><div class="panel-inner">
-      <div class="panel-header"><h2 id="budgetSetupTitle">Prepare Your Next Budget</h2></div>
-      <p class="subtext" id="budgetSetupInstructions"></p>
-      <div class="mode-note" id="calculationModeNote"></div>
-      <div class="info-link" id="budgetHelpButton"><span>What if I pay a bill in the middle of the month?</span><span class="info-icon">i</span></div>
-      <h3>Income</h3><p class="subtext" id="incomePeriodLabel"></p><div id="incomeList"></div><button class="secondary-button" id="addIncomeButton" style="width:100%;margin-top:10px">+ Add Income</button>
-      <h3>Bills</h3><p class="subtext" id="billPeriodLabel"></p><div id="billList"></div><button class="secondary-button" id="addBillButton" style="width:100%;margin-top:10px">+ Add Bill</button>
-      <h3>Weekly Allocations</h3><label>Needs</label><input id="weeklyNeeds" class="money-input" inputmode="decimal" placeholder="$0.00"><label>Savings</label><input id="weeklySavings" class="money-input" inputmode="decimal" placeholder="$0.00">
-      <div class="calculation"><h3>Monthly Calculation</h3><div class="calc-row"><span>Monthly Income</span><strong id="calcIncome">$0.00</strong></div><div class="calc-row"><span>Monthly Bills</span><strong id="calcBills">-$0.00</strong></div><div class="calc-row"><span>Monthly Needs</span><strong id="calcNeeds">-$0.00</strong></div><div class="calc-row"><span>Monthly Savings</span><strong id="calcSavings">-$0.00</strong></div><div class="calc-row calc-total"><span>Monthly Fun Money</span><strong id="calcFun">$0.00</strong></div></div>
-      <div class="calculation"><h3>Weekly Budget</h3><div class="calc-row"><span>Weekly Needs</span><strong id="calcWeeklyNeeds">$0.00</strong></div><div class="calc-row"><span>Weekly Savings</span><strong id="calcWeeklySavings">$0.00</strong></div><div class="calc-row calc-total"><span>Weekly Fun Money</span><strong id="calcWeeklyFun">$0.00</strong></div></div>
-      <button class="primary-button" id="saveBudgetButton" style="width:100%;margin-top:18px">Save Budget</button><div id="budgetMessage" class="success hidden"></div>
-    </div></section>
-  </div></main>
-</section>
+      <div class="card hidden" id="pinScreen" style="padding:20px;margin-top:18px">
+        <h2>Enter PIN</h2>
+        <p id="pinProfileName" class="subtext"></p>
 
-<section class="app hidden" id="settingsScreen"><div class="settings">
-  <h1>Settings</h1><div class="subtext" id="settingsProfileName"></div>
-  <div class="card"><h2>Profile</h2><div id="settingsAvatarPreview" class="profile-row"></div><div class="subtext" id="settingsPhoneLabel" style="margin-top:8px"></div><label>Profile Picture</label><div id="settingsAvatarGrid" class="avatar-grid"></div><label>Font Size</label><input id="fontSizeRange" type="range" min="14" max="22" step="1"><div class="subtext" id="fontSizeLabel"></div><button class="primary-button" id="saveProfileSettingsButton" style="width:100%;margin-top:16px">Save Profile Settings</button></div>
-  <div class="card"><h2>Security</h2><p class="subtext">Your saved phone number is used as a second factor for sensitive profile actions.</p><button class="secondary-button" id="changePinButton" style="width:100%;margin-top:10px">Change PIN</button></div>
-  <div class="card"><h2>Budget Calculation</h2><p class="subtext">Choose how the app spreads your money across the year.</p><div class="choice-row"><button class="choice" id="hardModeButton"><strong>Hard</strong><br><span class="subtext">Uses the actual budget-week count for the month.</span></button><button class="choice" id="softModeButton"><strong>Soft</strong><br><span class="subtext">Always uses 4.345 weeks per month.</span></button></div><div id="settingsModeNote" class="mode-note"></div></div>
-  <div class="card"><h2>Theme</h2><button class="primary-button" data-theme="sandy" style="width:100%;margin-top:8px">Sandy</button><button class="secondary-button" data-theme="moss" style="width:100%;margin-top:10px">Moss</button><button class="secondary-button" data-theme="slate" style="width:100%;margin-top:10px">Slate</button><button class="secondary-button" data-theme="dusk" style="width:100%;margin-top:10px">Dusk</button><button class="secondary-button" data-theme="petals" style="width:100%;margin-top:10px">Petals</button></div>
-  <button class="secondary-button" id="settingsBackButton" style="width:100%;margin-top:12px">Back</button><button class="secondary-button" id="settingsSwitchProfileButton" style="width:100%;margin-top:10px">Switch Profile</button><button class="danger-button" id="settingsLogoutButton" style="width:100%;margin-top:10px">Log Out</button>
-</div></section>
+        <input type="password" id="profilePin" inputmode="numeric" maxlength="4">
 
-<div class="modal-overlay hidden" id="budgetHelpModal"><div class="card modal-card"><h2>What if I pay a bill in the middle of the month?</h2><p>Assuming today is the first of the month, input all income that was deposited into your bank account during the previous month.</p><p>Also input all your monthly bills. If you have a bill that isn’t paid on the 1st of the month, include it as if you paid it on the next ‘1st of the Month’ that occurs.</p><p>For example: If you pay your Water Bill on the 16th of every month, you will wait until the 1st of the next month to include it in this budget.</p><p>This is so that all income and bills paid throughout the previous month, in addition to the bills paid on the 1st of this month, are used to calculate your budget for next month. This gives you the foresight to plan a month in advance.</p><button class="secondary-button" id="closeBudgetHelp" style="width:100%;margin-top:10px">Close</button></div></div>
+        <button class="primary-button" id="unlockProfileButton" style="width:100%;margin-top:14px">
+          Unlock
+        </button>
 
-<div class="modal-overlay hidden" id="onboardingModal"><div class="card modal-card"><h2>Please read this before you accidentally spend more than you have!</h2><p>This app can use an average number of weeks in a month instead of the actual number of budget weeks. There are several 5-week budget months each year. The Soft calculation spreads your funds across the year so you do not have to pinch pennies during those months.</p><p>Some months can therefore show more money available than you actually have in the bank. If you are consistently near the bottom of your bank account, save money before relying on the Soft calculation.</p><p>We suggest using the Hard calculation until you have saved some funds.</p><h3>Choose your calculation</h3><div class="choice-row"><button class="choice" id="onboardHard"><strong>Hard</strong><br><span class="subtext">Actual budget weeks.</span></button><button class="choice" id="onboardSoft"><strong>Soft</strong><br><span class="subtext">Always 4.345 weeks.</span></button></div></div></div>
+        <button class="secondary-button" id="cancelPinButton" style="width:100%;margin-top:10px">
+          Back
+        </button>
 
-<div class="modal-overlay hidden" id="changePinModal"><div class="card modal-card"><h2>Change PIN</h2><p>We will verify the phone number saved on this profile before changing the PIN.</p><button class="primary-button" id="sendPinOtpButton" style="width:100%;margin-top:12px">Send Code</button><label>Verification Code</label><input id="pinOtpCode" inputmode="numeric" maxlength="6"><label>New 4-Digit PIN</label><input id="newPinValue" type="password" inputmode="numeric" maxlength="4"><button class="primary-button" id="saveNewPinButton" style="width:100%;margin-top:12px">Change PIN</button><button class="secondary-button" id="closePinModal" style="width:100%;margin-top:10px">Cancel</button><div id="pinChangeError" class="error hidden"></div></div></div>
+        <div id="pinError" class="error hidden"></div>
+      </div>
 
-<div class="modal-overlay hidden" id="forgotModal"><div class="card modal-card"><h2>Reset Password</h2><p>Enter your account email. Supabase will send a secure password-reset link.</p><label>Email</label><input id="resetEmail" type="email"><button class="primary-button" id="sendResetButton" style="width:100%;margin-top:14px">Send Reset Link</button><button class="secondary-button" id="closeResetButton" style="width:100%;margin-top:10px">Cancel</button><div id="resetMessage" class="success hidden"></div><div id="resetError" class="error hidden"></div></div></div>
+      <button class="secondary-button" id="profileLogoutButton" style="width:100%;margin-top:20px">
+        Log Out
+      </button>
+    </div>
+  </div>
+</div>
 
-   <div class="sheet-overlay hidden" id="expenseSheetOverlay"><div class="card expense-sheet"><div class="sheet-handle"></div><h2 id="expenseFormTitle">Add Expense</h2><label>Name of the Expense</label><input id="expenseName" placeholder="Example: Groceries"><label>Amount</label><input id="expenseAmount" class="money-input" inputmode="decimal" placeholder="$0.00"><label>Use Money From</label><select id="expenseFund"><option value="needs">Needs</option><option value="fun">Fun Money</option></select><label>Category</label><select id="expenseCategory"><option>Groceries</option><option>Bill</option><option>Gas</option><option>Dining</option><option>Entertainment</option><option>Shopping</option><option>Transportation</option><option>Medical</option><option>Other</option></select><label>Date</label><input id="expenseDate" type="date"><button class="primary-button" id="saveExpenseButton" style="width:100%;margin-top:18px">Save Expense</button><button class="secondary-button" id="cancelExpenseButton" style="width:100%;margin-top:10px">Cancel</button></div></div>
+<div id="appScreen" class="app hidden">
+
+  <button class="icon-button settings-gear" id="settingsGear" aria-label="Settings">
+    <svg viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="3"></circle>
+      <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21h-4v-.09A1.7 1.7 0 0 0 8.6 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3v-4h.09A1.7 1.7 0 0 0 4.6 8.6a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3h4v.09A1.7 1.7 0 0 0 15.4 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.4 9c.14.36.35.7.6 1 .28.3.66.46 1.1.4H21v4h-.09a1.7 1.7 0 0 0-1.51.6z"></path>
+    </svg>
+  </button>
+
+  <div class="mobile-viewport" id="mobileViewport">
+    <div id="mainWorkspace">
+      <div class="mobile-track" id="mobileTrack">
+
+        <section class="panel workspace-panel" id="analyticsPanel">
+          <div class="panel-inner">
+            <div class="panel-header">
+              <h2>Analytics</h2>
+            </div>
+
+            <div class="analytics-stat">
+              <span class="subtext">Saved This Year</span>
+              <strong id="savedThisYear">$0.00</strong>
+            </div>
+
+            <div class="analytics-stat">
+              <span class="subtext">Needs Spending This Month</span>
+              <strong id="analyticsNeeds">$0.00</strong>
+            </div>
+
+            <div class="analytics-stat">
+              <span class="subtext">Fun Money Spending This Month</span>
+              <strong id="analyticsFun">$0.00</strong>
+            </div>
+
+            <div id="previousSavingsYears"></div>
+          </div>
+        </section>
+
+        <section class="panel workspace-panel" id="historyPanel">
+          <div class="panel-inner">
+            <div class="panel-header">
+              <h2>Expense History</h2>
+              <button class="primary-button small-button" id="addExpenseButton">
+                Add Expense
+              </button>
+            </div>
+
+            <div id="expenseHistory"></div>
+          </div>
+        </section>
+
+        <section class="panel workspace-panel" id="homePanel">
+          <div class="panel-inner">
+            <div class="date-strip">
+              <div class="date-month" id="dateMonth"></div>
+              <div class="date-days" id="dateDays"></div>
+            </div>
+
+            <div class="home-funds">
+              <div class="card fund-card" id="needsFundCard">
+                <div class="fund-label">Needs</div>
+                <div class="balance" id="needsBalance">$0.00</div>
+                <div class="subtext">Available</div>
+                <div class="home-expenses" id="needsHomeExpenses"></div>
+              </div>
+
+              <div class="card fund-card" id="funFundCard">
+                <div class="fund-label">Fun Money</div>
+                <div class="balance" id="funBalance">$0.00</div>
+                <div class="subtext">Available</div>
+                <div class="home-expenses" id="funHomeExpenses"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel workspace-panel" id="budgetPanel">
+          <div class="panel-inner">
+            <h2 id="budgetTitle">Prepare Your Next Budget</h2>
+            <p class="subtext" id="budgetInstructions"></p>
+
+            <div class="mode-note" id="budgetModeNote"></div>
+
+            <div class="info-link" id="budgetHelpButton">
+              <span>What if I pay a bill in the middle of the month?</span>
+              <span class="info-icon">i</span>
+            </div>
+
+            <h3>Income</h3>
+            <div id="incomeList" class="saved-list"></div>
+            <button class="secondary-button" id="addIncomeButton" style="width:100%;margin-top:10px">
+              Add Income
+            </button>
+
+            <h3>Monthly Bills</h3>
+            <div id="monthlyBillList" class="saved-list"></div>
+            <button class="secondary-button" id="addMonthlyBillButton" style="width:100%;margin-top:10px">
+              Add Monthly Bill
+            </button>
+
+            <h3>Weekly Bills</h3>
+            <p class="subtext">
+              Optional recurring weekly expenses such as childcare.
+            </p>
+            <div id="weeklyBillList" class="saved-list"></div>
+            <button class="secondary-button" id="addWeeklyBillButton" style="width:100%;margin-top:10px">
+              Add Weekly Bill
+            </button>
+
+            <h3>Weekly Allocations</h3>
+
+            <label>Needs</label>
+            <input class="money-input" id="weeklyNeeds" inputmode="decimal" placeholder="$0.00">
+
+            <label>Savings</label>
+            <input class="money-input" id="weeklySavings" inputmode="decimal" placeholder="$0.00">
+
+            <div class="calculation">
+              <h3 style="margin-top:0">Calculation</h3>
+
+              <div class="calc-row">
+                <span>Monthly Income</span>
+                <strong id="calcIncome">$0.00</strong>
+              </div>
+
+              <div class="calc-row">
+                <span>Monthly Bills</span>
+                <strong id="calcBills">-$0.00</strong>
+              </div>
+
+              <div class="calc-row">
+                <span>Monthly Net</span>
+                <strong id="calcNet">$0.00</strong>
+              </div>
+
+              <div class="calc-row">
+                <span id="weeklyTotalLabel">Weekly Total</span>
+                <strong id="calcWeeklyTotal">$0.00</strong>
+              </div>
+
+              <div class="calc-row">
+                <span>Weekly Bills</span>
+                <strong id="calcWeeklyBills">-$0.00</strong>
+              </div>
+
+              <div class="calc-row">
+                <span>Needs</span>
+                <strong id="calcNeeds">-$0.00</strong>
+              </div>
+
+              <div class="calc-row">
+                <span>Savings</span>
+                <strong id="calcSavings">-$0.00</strong>
+              </div>
+
+              <div class="calc-row calc-total">
+                <span>Fun Money Pool</span>
+                <strong id="calcFunPool">$0.00</strong>
+              </div>
+            </div>
+
+            <h3>Fun Money Allocation</h3>
+            <p class="subtext">
+              Divide the weekly Fun Money pool among profiles.
+            </p>
+
+            <div id="profileAllocationList"></div>
+
+            <div class="allocation-summary">
+              <div class="calc-row">
+                <span>Assigned</span>
+                <strong id="allocatedFun">$0.00</strong>
+              </div>
+              <div class="calc-row">
+                <span>Unassigned</span>
+                <strong id="unallocatedFun">$0.00</strong>
+              </div>
+            </div>
+
+            <button class="primary-button" id="saveBudgetButton" style="width:100%;margin-top:20px">
+              Save Budget
+            </button>
+
+            <div id="budgetMessage" class="success hidden"></div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="settingsScreen" class="settings-screen hidden">
+
+  <button class="icon-button settings-back" id="settingsBackButton" aria-label="Back">
+    <svg viewBox="0 0 24 24">
+      <path d="M15 18l-6-6 6-6"></path>
+    </svg>
+  </button>
+
+  <div class="settings-content">
+    <h1 class="settings-title">Settings</h1>
+    <div class="settings-profile">
+      <strong id="settingsProfileName"></strong>
+      <div class="subtext" id="settingsProfileType"></div>
+    </div>
+
+    <div id="settingsMenu" class="settings-section">
+      <button class="folder-button" data-settings-section="appearance">
+        <span>Appearance</span><span>›</span>
+      </button>
+
+      <button class="folder-button" data-settings-section="profile">
+        <span>Profile</span><span>›</span>
+      </button>
+
+      <button class="folder-button" data-settings-section="budget">
+        <span>Budget Settings</span><span>›</span>
+      </button>
+
+      <button class="secondary-button" id="settingsSwitchProfileButton" style="width:100%;margin-top:12px">
+        Switch Profile
+      </button>
+
+      <button class="secondary-button" id="settingsLogoutButton" style="width:100%;margin-top:12px">
+        Log Out
+      </button>
+    </div>
+
+    <div id="appearanceSettings" class="settings-section hidden">
+      <div class="card settings-card">
+        <h2>Appearance</h2>
+
+        <h3>Color Palette</h3>
+        <div class="theme-grid" id="themeGrid"></div>
+
+        <h3>Font</h3>
+        <select id="fontFamilySelect">
+          <option value="system">Clean</option>
+          <option value="rounded">Rounded</option>
+          <option value="serif">Book</option>
+          <option value="mono">Monospace</option>
+          <option value="pixel">Pixel</option>
+        </select>
+
+        <h3>Font Size</h3>
+        <div class="range-row">
+          <input type="range" id="fontSizeRange" min="13" max="24" step="1">
+          <strong id="fontSizeLabel">16px</strong>
+        </div>
+
+        <div class="font-preview" id="fontPreview">
+          This is what your selected font will look like.
+        </div>
+
+        <button class="primary-button" id="saveAppearanceButton" style="width:100%;margin-top:20px">
+          Save Appearance
+        </button>
+      </div>
+    </div>
+
+    <div id="profileSettings" class="settings-section hidden">
+      <div class="card settings-card">
+        <h2>Profile</h2>
+
+        <h3>Profile Picture</h3>
+        <div class="avatar-grid" id="settingsAvatarGrid"></div>
+
+        <button class="primary-button" id="saveAvatarButton" style="width:100%;margin-top:16px">
+          Save Profile Picture
+        </button>
+      </div>
+
+      <div class="card settings-card">
+        <h2>Security</h2>
+
+        <p class="subtext">
+          Security emails are sent only to the email address already attached to this account.
+        </p>
+
+        <button class="secondary-button" id="resetPasswordSettingsButton" style="width:100%;margin-top:12px">
+          Reset Password
+        </button>
+
+        <button class="secondary-button" id="resetPinEmailButton" style="width:100%;margin-top:12px">
+          Reset Profile PIN
+        </button>
+
+        <div id="securityMessage" class="success hidden"></div>
+      </div>
+    </div>
+
+    <div id="budgetSettings" class="settings-section hidden">
+      <div class="card settings-card">
+        <h2>Budget Calculation</h2>
+
+        <button class="choice-button" id="hardModeButton" style="width:100%;margin-top:10px">
+          <strong>Hard Budget</strong>
+          <div class="subtext">
+            Divide the monthly net by the actual number of budget weeks owned by that month.
+          </div>
+        </button>
+
+        <button class="choice-button" id="softModeButton" style="width:100%;margin-top:12px">
+          <strong>Soft Budget</strong>
+          <div class="subtext">
+            Divide the monthly net by 4.345 to spread money more evenly across the year.
+          </div>
+        </button>
+
+        <div class="mode-note">
+          Soft Budget can show more weekly spending money than is physically available during some five-week months. Hard Budget is safer when you do not maintain a cash buffer.
+        </div>
+
+        <button class="primary-button" id="saveBudgetSettingsButton" style="width:100%;margin-top:18px">
+          Save Budget Setting
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sheet-overlay hidden" id="expenseSheetOverlay">
+  <div class="expense-sheet" id="expenseSheet">
+    <div class="sheet-handle"></div>
+
+    <h2 id="expenseSheetTitle">Add Expense</h2>
+
+    <label>Name of the Expense</label>
+    <input type="text" id="expenseDescription">
+
+    <label>Amount</label>
+    <input class="money-input" id="expenseAmount" inputmode="decimal" placeholder="$0.00">
+
+    <div id="expenseFundField">
+      <label>Use Money From</label>
+      <select id="expenseFund">
+        <option value="needs">Needs</option>
+        <option value="fun">Fun Money</option>
+      </select>
+    </div>
+
+    <label>Category</label>
+    <select id="expenseCategory">
+      <option value="Groceries">Groceries</option>
+      <option value="Gas">Gas</option>
+      <option value="Bill">Bill</option>
+      <option value="Dining">Dining</option>
+      <option value="Shopping">Shopping</option>
+      <option value="Entertainment">Entertainment</option>
+      <option value="Household">Household</option>
+      <option value="Transportation">Transportation</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label>Date</label>
+    <input type="date" id="expenseDate">
+
+    <button class="primary-button" id="saveExpenseButton" style="width:100%;margin-top:20px">
+      Save Expense
+    </button>
+
+    <button class="secondary-button" id="cancelExpenseButton" style="width:100%;margin-top:10px">
+      Cancel
+    </button>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="budgetHelpModal">
+  <div class="card modal-card">
+    <h2>What if I pay a bill in the middle of the month?</h2>
+
+    <p>
+      Assuming today is the first of the month, input all income that was deposited into your bank account during the previous month.
+    </p>
+
+    <p>
+      Also input all your monthly bills. If you have a bill that isn't paid on the 1st of the month, include it as if you paid it on the next "1st of the Month" that occurs.
+    </p>
+
+    <p>
+      For example: If you pay your Water Bill on the 16th of every month, you will wait until the 1st of the next month to include it in this budget.
+    </p>
+
+    <p>
+      This is so that all income and bills paid throughout the previous month, in addition to the bills paid on the 1st of this month, are used to calculate your budget for next month. This gives you the foresight to plan a month in advance.
+    </p>
+
+    <button class="secondary-button" id="closeBudgetHelp" style="width:100%">
+      Close
+    </button>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="onboardingModal">
+  <div class="card modal-card">
+    <h2>Please read this before you accidentally spend more than you have.</h2>
+
+    <p>
+      Budget months do not all contain the same number of Sunday-through-Saturday budget weeks. Some months effectively own five weeks instead of four.
+    </p>
+
+    <p>
+      Hard Budget divides your available monthly money by the actual number of budget weeks in that month. This is the safer choice if you are frequently near the bottom of your bank account.
+    </p>
+
+    <p>
+      Soft Budget divides by 4.345, the average number of weeks per month. This spreads your spending allowance more evenly across the year, but it assumes you have enough money saved to absorb the difference during some five-week months.
+    </p>
+
+    <button class="primary-button" id="onboardHard" style="width:100%;margin-top:12px">
+      Use Hard Budget
+    </button>
+
+    <button class="secondary-button" id="onboardSoft" style="width:100%;margin-top:12px">
+      Use Soft Budget
+    </button>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="newPasswordModal">
+  <div class="card modal-card">
+    <h2>Choose a New Password</h2>
+
+    <label>New Password</label>
+    <input type="password" id="newAccountPassword">
+
+    <button class="primary-button" id="saveNewPasswordButton" style="width:100%;margin-top:18px">
+      Save Password
+    </button>
+
+    <div id="passwordResetError" class="error hidden"></div>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="newPinModal">
+  <div class="card modal-card">
+    <h2>Choose a New PIN</h2>
+    <p class="subtext" id="pinResetProfileName"></p>
+
+    <label>New 4-Digit PIN</label>
+    <input type="password" id="newProfilePinReset" inputmode="numeric" maxlength="4">
+
+    <button class="primary-button" id="saveResetPinButton" style="width:100%;margin-top:18px">
+      Save PIN
+    </button>
+
+    <div id="pinResetError" class="error hidden"></div>
+  </div>
+</div>
 
 <script>
 const SUPABASE_URL="https://jivygwszzlaxnhhvxxsg.supabase.co";
 const SUPABASE_KEY="sb_publishable_cZM-7AaU0xD6L_fMa_foOw_-Cjk2edj";
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let currentUser=null,householdId=null,currentProfile=null,currentBudgetPlan=null,editingExpenseId=null,activePanelIndex=2,selectedAvatar="knight",selectedSettingsAvatar="knight",profileMode="hard";
-const panels=["analyticsPanel","expenseHistoryPanel","homePanel","monthlyBudgetPanel"];
-const avatars={knight:"⚔️",princess:"👸",dragon:"🐉",fish:"🐟",lion:"🦁",turtle:"🐢",bird:"🐦"};
-const money=n=>Number(n||0).toLocaleString("en-US",{style:"currency",currency:"USD"});
-const dateOnly=d=>{const x=new Date(d);return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,"0")}-${String(x.getDate()).padStart(2,"0")}`};
-const firstOfMonth=d=>new Date(d.getFullYear(),d.getMonth(),1);const addMonths=(d,n)=>new Date(d.getFullYear(),d.getMonth()+n,1);const prevMonth=()=>addMonths(firstOfMonth(new Date()),-1);const nextMonth=()=>addMonths(firstOfMonth(new Date()),1);
-const weekStart=d=>{const x=new Date(d);x.setHours(0,0,0,0);x.setDate(x.getDate()-x.getDay());return x};
-const escapeHtml=v=>{const d=document.createElement("div");d.textContent=v??"";return d.innerHTML};
-function getBudgetWeekCount(monthDate){const y=monthDate.getFullYear(),m=monthDate.getMonth(),first=new Date(y,m,1),last=new Date(y,m+1,0);let ws=weekStart(first),end=weekStart(last),count=0;while(ws<=end){let inMonth=0;for(let i=0;i<7;i++){const d=new Date(ws);d.setDate(ws.getDate()+i);if(d.getMonth()===m)inMonth++;}if(inMonth>=4)count++;ws=new Date(ws);ws.setDate(ws.getDate()+7)}return count}
-function formatBudgetWeeks(month){const n=getBudgetWeekCount(month);return `${n} budget week${n===1?"":"s"}`}
-function applyTheme(t){document.body.className=`theme-${t}`;localStorage.setItem("budgetTheme",t)}function loadTheme(){applyTheme(localStorage.getItem("budgetTheme")||"sandy")}
-function hideScreens(){["loginScreen","profileScreen","appScreen","settingsScreen"].forEach(id=>document.getElementById(id).classList.add("hidden"));document.getElementById("settingsGear").classList.add("hidden")}
-function showMain(){hideScreens();document.getElementById("appScreen").classList.remove("hidden");document.getElementById("settingsGear").classList.remove("hidden");showPanel(2);renderDateStrip();}
-function showPanel(i,animate=true){i=Math.max(0,Math.min(panels.length-1,i));activePanelIndex=i;document.querySelectorAll(".workspace-panel").forEach((p,n)=>p.classList.toggle("active",n===i));if(window.innerWidth<=900){const track=document.getElementById("mobileTrack"),panel=document.querySelector(".workspace-panel"),gap=12,offset=(i*(panel.getBoundingClientRect().width+gap));track.style.transition=animate?"transform .38s cubic-bezier(.22,.75,.2,1)":"none";track.style.transform=`translateX(calc((100vw - ${panel.getBoundingClientRect().width}px)/2 - ${offset}px))`;}}
-function renderDateStrip(){const now=new Date(),ws=weekStart(now);document.getElementById("dateMonth").textContent=now.toLocaleDateString("en-US",{month:"long"});const box=document.getElementById("dateDays");box.innerHTML="";for(let i=0;i<7;i++){const d=new Date(ws);d.setDate(ws.getDate()+i);const el=document.createElement("div");el.className="date-day";if(dateOnly(d)===dateOnly(now))el.classList.add("today");const s=document.createElement("span");s.textContent=d.getDate();s.title=d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});el.appendChild(s);box.appendChild(el)}}
 
-async function login(){const err=document.getElementById("loginError");err.classList.add("hidden");const email=document.getElementById("loginEmail").value.trim(),password=document.getElementById("loginPassword").value;if(!email||!password){err.textContent="Enter your email and password.";err.classList.remove("hidden");return}const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});if(error){err.textContent=error.message;err.classList.remove("hidden");return}currentUser=data.user;await startApp()}
-async function startApp(){hideScreens();document.getElementById("profileScreen").classList.remove("hidden");await loadHousehold();if(householdId){await renderProfiles()}}
-async function loadHousehold(){const {data,error}=await supabaseClient.from("household_members").select("household_id").eq("user_id",currentUser.id).limit(1).maybeSingle();if(error){alert(error.message);return}householdId=data?.household_id||null;if(!householdId)alert("This account is not connected to a household.")}
-async function loadProfiles(){const {data,error}=await supabaseClient.from("profiles").select("*").eq("household_id",householdId).order("display_name");if(error){alert("Could not load profiles: "+error.message);return[]}return data||[]}
-function renderAvatarGrid(id,selected,clickFn){const box=document.getElementById(id);box.innerHTML="";Object.entries(avatars).forEach(([key,face])=>{const b=document.createElement("button");b.type="button";b.className="avatar-choice"+(key===selected?" selected":"");b.innerHTML=`<span class="avatar-face">${face}</span>${key[0].toUpperCase()+key.slice(1)}`;b.onclick=()=>clickFn(key);box.appendChild(b)})}
-async function renderProfiles(){const list=document.getElementById("profileList");list.innerHTML="";(await loadProfiles()).forEach(p=>{const row=document.createElement("div");row.className="profile-row";const av=document.createElement("div");av.className="profile-avatar";av.textContent=avatars[p.avatar||"knight"]||"⚔️";const b=document.createElement("button");b.className="primary-button profile-button";b.textContent=p.display_name;b.onclick=()=>selectProfile(p);row.append(av,b);list.appendChild(row)});document.getElementById("addProfileButton").classList.remove("hidden");document.getElementById("addProfileForm").classList.add("hidden");document.getElementById("pinScreen").classList.add("hidden");renderAvatarGrid("avatarGrid",selectedAvatar,k=>{selectedAvatar=k;renderAvatarGrid("avatarGrid",selectedAvatar,k2=>{selectedAvatar=k2})})}
-function selectProfile(p){currentProfile=p;document.getElementById("profileList").classList.add("hidden");document.getElementById("addProfileButton").classList.add("hidden");document.getElementById("pinScreen").classList.remove("hidden");document.getElementById("pinProfileName").textContent=p.display_name;document.getElementById("profilePin").value="";document.getElementById("profilePin").focus()}
+const supabaseClient=window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
-document.getElementById("addProfileButton").onclick=()=>{document.getElementById("profileList").classList.add("hidden");document.getElementById("addProfileButton").classList.add("hidden");document.getElementById("addProfileForm").classList.remove("hidden");selectedAvatar="knight";renderAvatarGrid("avatarGrid",selectedAvatar,k=>{selectedAvatar=k;renderAvatarGrid("avatarGrid",selectedAvatar,k2=>selectedAvatar=k2)})};
-document.getElementById("cancelProfileButton").onclick=renderProfiles;
-document.getElementById("profileLogoutButton").onclick=logout;
-document.getElementById("unlockProfileButton").onclick=unlockProfile;document.getElementById("cancelPinButton").onclick=renderProfiles;
-async function saveProfile(){const name=document.getElementById("newProfileName").value.trim(),pin=document.getElementById("newProfilePin").value,phone=document.getElementById("newProfilePhone").value.trim(),err=document.getElementById("profileError");err.classList.add("hidden");if(!name||!/^[0-9]{4}$/.test(pin)||!phone){err.textContent="Enter a name, a 4-digit PIN, and a phone number.";err.classList.remove("hidden");return}const {error}=await supabaseClient.rpc("create_profile",{p_household_id:householdId,p_display_name:name,p_pin:pin});if(error){err.textContent=error.message;err.classList.remove("hidden");return}await renderProfiles();const profiles=await loadProfiles();const created=profiles.find(p=>p.display_name===name);if(created){const {error:settingsError}=await supabaseClient.rpc("set_profile_settings",{p_profile_id:created.id,p_phone:phone,p_avatar:selectedAvatar,p_calculation_mode:"hard",p_font_size:16});if(settingsError)return alert("Profile created, but settings could not be saved: "+settingsError.message);currentProfile={...created,phone_number:phone,avatar:selectedAvatar,calculation_mode:"hard",font_size:16};profileMode="hard";document.getElementById("onboardingModal").classList.remove("hidden");}}
-async function unlockProfile(){const pin=document.getElementById("profilePin").value,err=document.getElementById("pinError");err.classList.add("hidden");const {data,error}=await supabaseClient.rpc("create_profile_session",{p_profile_id:currentProfile.id,p_pin:pin,p_session_minutes:1440});if(error){err.textContent=error.message||"Incorrect PIN.";err.classList.remove("hidden");return}localStorage.setItem("profileSessionToken",data);localStorage.setItem("profileId",currentProfile.id);await loadProfileSettings();showMain();await loadCurrentBudget();await loadExpenses();await calculateBalances();await updateAnalytics();await openBudgetSetup()}
-async function loadProfileSettings(){const {data,error}=await supabaseClient.from("profiles").select("*").eq("id",currentProfile.id).single();if(error)throw error;currentProfile=data;profileMode=currentProfile.calculation_mode||"hard";selectedSettingsAvatar=currentProfile.avatar||"knight";document.documentElement.style.setProperty("--font-size",`${Number(currentProfile.font_size||16)}px`)}
-async function restoreProfile(){const token=localStorage.getItem("profileSessionToken"),id=localStorage.getItem("profileId");if(!token||!id)return false;const {data,error}=await supabaseClient.rpc("validate_profile_session",{p_session_token:token});if(error||data!==id)return false;const {data:p,error:pe}=await supabaseClient.from("profiles").select("*").eq("id",id).single();if(pe)return false;currentProfile=p;await loadProfileSettings();showMain();await loadCurrentBudget();await loadExpenses();await calculateBalances();await updateAnalytics();await openBudgetSetup();return true}
+let currentUser=null;
+let householdId=null;
+let currentProfile=null;
+let profileSessionToken=null;
 
-   async function logout(){localStorage.removeItem("profileSessionToken");localStorage.removeItem("profileId");currentProfile=null;currentBudgetPlan=null;await supabaseClient.auth.signOut();hideScreens();document.getElementById("loginScreen").classList.remove("hidden")}
+let currentHomeBudget=null;
+let currentPrepareBudget=null;
 
-async function loadCurrentBudget(){const {data,error}=await supabaseClient.from("budget_plans").select("*").eq("household_id",householdId).eq("budget_month",dateOnly(nextMonth())).maybeSingle();if(error)console.error(error);currentBudgetPlan=data||null}
-async function openBudgetSetup(){const bm=nextMonth(),pm=prevMonth();document.getElementById("budgetSetupTitle").textContent=`Prepare Your ${bm.toLocaleDateString("en-US",{month:"long",year:"numeric"})} Budget`;document.getElementById("budgetSetupInstructions").textContent=`${formatBudgetWeeks(bm)}. The week-count rule assigns a Sunday–Saturday week to whichever month has more days in that week.`;document.getElementById("incomePeriodLabel").textContent=`Income received during ${pm.toLocaleDateString("en-US",{month:"long"})}`;document.getElementById("billPeriodLabel").textContent="Monthly bills for your upcoming budget";const note=profileMode==="soft"?"Soft calculation: monthly figures use the 4.345-week average. This smooths 4-week and 5-week months across the year.":`Hard calculation: monthly figures use ${getBudgetWeekCount(bm)} actual budget weeks for this month.`;document.getElementById("calculationModeNote").textContent=note;document.getElementById("weeklyNeeds").value=currentBudgetPlan?.weekly_needs?money(currentBudgetPlan.weekly_needs):"";document.getElementById("weeklySavings").value=currentBudgetPlan?.weekly_savings?money(currentBudgetPlan.weekly_savings):"";await loadIncomeSources();await loadBills();bindMoneyInputs();updateBudgetCalculation()}
-async function loadIncomeSources(){const {data,error}=await supabaseClient.from("income_sources").select("*").eq("household_id",householdId).order("created_at",{ascending:true});if(error){console.error(error);return}const box=document.getElementById("incomeList");box.innerHTML="";(data||[]).forEach(x=>addIncomeRow(x))}
-function addIncomeRow(x=null){const row=document.createElement("div");row.className="setup-item";row.innerHTML=`<div class="setup-row"><input class="income-name" value="${escapeHtml(x?.name||"")}" placeholder="Income source"><input class="income-amount money-input" inputmode="decimal" value="${x?.amount??""}" placeholder="$0.00"></div><div class="setup-actions">${x?`<button class="secondary-button" onclick="editIncome('${x.id}',this)">Save</button><button class="danger-button" onclick="deleteIncome('${x.id}')">Delete</button>`:`<button class="primary-button" onclick="saveNewIncome(this)">Add</button><button class="secondary-button" onclick="this.closest('.setup-item').remove()">Cancel</button>`}</div>`;document.getElementById("incomeList").appendChild(row);bindMoneyInputs()}
-async function saveNewIncome(b){const r=b.closest(".setup-item"),name=r.querySelector(".income-name").value.trim(),amount=parseMoney(r.querySelector(".income-amount").value);if(!name||!Number.isFinite(amount)||amount<0)return alert("Enter a valid income source and amount.");const {error}=await supabaseClient.from("income_sources").insert({household_id:householdId,name,amount});if(error)return alert(error.message);await loadIncomeSources();updateBudgetCalculation()}
-async function editIncome(id,b){const r=b.closest(".setup-item"),name=r.querySelector(".income-name").value.trim(),amount=parseMoney(r.querySelector(".income-amount").value);const {error}=await supabaseClient.from("income_sources").update({name,amount}).eq("id",id);if(error)return alert(error.message);await loadIncomeSources();updateBudgetCalculation()}
-async function deleteIncome(id){if(!confirm("Delete this income source?"))return;const {error}=await supabaseClient.from("income_sources").delete().eq("id",id);if(error)return alert(error.message);await loadIncomeSources();updateBudgetCalculation()}
-async function loadBills(){const {data,error}=await supabaseClient.from("bills").select("*").eq("household_id",householdId).order("created_at",{ascending:true});if(error){console.error(error);return}const box=document.getElementById("billList");box.innerHTML="";(data||[]).forEach(x=>addBillRow(x))}
-function addBillRow(x=null){const row=document.createElement("div");row.className="setup-item";row.innerHTML=`<div class="setup-row"><input class="bill-name" value="${escapeHtml(x?.name||"")}" placeholder="Bill name"><input class="bill-amount money-input" inputmode="decimal" value="${x?Math.abs(Number(x.amount)):""}" placeholder="$0.00"></div><div class="setup-actions">${x?`<button class="secondary-button" onclick="editBill('${x.id}',this)">Save</button><button class="danger-button" onclick="deleteBill('${x.id}')">Delete</button>`:`<button class="primary-button" onclick="saveNewBill(this)">Add</button><button class="secondary-button" onclick="this.closest('.setup-item').remove()">Cancel</button>`}</div>`;document.getElementById("billList").appendChild(row);bindMoneyInputs()}
-async function saveNewBill(b){const r=b.closest(".setup-item"),name=r.querySelector(".bill-name").value.trim(),amount=Math.abs(parseMoney(r.querySelector(".bill-amount").value));if(!name||!Number.isFinite(amount))return alert("Enter a valid bill and amount.");const {error}=await supabaseClient.from("bills").insert({household_id:householdId,name,amount:-amount});if(error)return alert(error.message);await loadBills();updateBudgetCalculation()}
-async function editBill(id,b){const r=b.closest(".setup-item"),name=r.querySelector(".bill-name").value.trim(),amount=Math.abs(parseMoney(r.querySelector(".bill-amount").value));const {error}=await supabaseClient.from("bills").update({name,amount:-amount}).eq("id",id);if(error)return alert(error.message);await loadBills();updateBudgetCalculation()}
-async function deleteBill(id){if(!confirm("Delete this bill?"))return;const {error}=await supabaseClient.from("bills").delete().eq("id",id);if(error)return alert(error.message);await loadBills();updateBudgetCalculation()}
-function parseMoney(v){return Number(String(v??"").replace(/[$,\s]/g,""))||0}function formatMoneyInput(el,negative=false){let n=Math.abs(parseMoney(el.value));if(!Number.isFinite(n))n=0;el.value=n?`${negative?"-":""}$${n.toFixed(2)}`:""}function bindMoneyInputs(){document.querySelectorAll(".money-input").forEach(el=>{el.addEventListener("focus",()=>{el.value=String(el.value).replace(/[$,]/g,"").replace(/^-/,"")});el.addEventListener("blur",()=>formatMoneyInput(el,el.classList.contains("bill-amount")))})}function inputTotal(sel){let n=0;document.querySelectorAll(sel).forEach(x=>n+=parseMoney(x.value));return n}
-function updateBudgetCalculation(){const income=inputTotal(".income-amount"),bills=inputTotal(".bill-amount"),needs=parseMoney(document.getElementById("weeklyNeeds").value),savings=parseMoney(document.getElementById("weeklySavings").value),weeks=getBudgetWeekCount(nextMonth()),divisor=profileMode==="soft"?4.345:weeks,monthlyNeeds=needs*divisor,monthlySavings=savings*divisor,monthlyFun=income-bills-monthlyNeeds-monthlySavings,weeklyFun=monthlyFun/divisor;document.getElementById("calcIncome").textContent=money(income);document.getElementById("calcBills").textContent=`-${money(bills)}`;document.getElementById("calcNeeds").textContent=`-${money(monthlyNeeds)}`;document.getElementById("calcSavings").textContent=`-${money(monthlySavings)}`;document.getElementById("calcFun").textContent=money(monthlyFun);document.getElementById("calcWeeklyNeeds").textContent=money(needs);document.getElementById("calcWeeklySavings").textContent=money(savings);document.getElementById("calcWeeklyFun").textContent=money(weeklyFun);return{income,bills,needs,savings,weeks,divisor,monthlyNeeds,monthlySavings,monthlyFun,weeklyFun}}
-async function saveBudget(){const c=updateBudgetCalculation();if(c.weeklyFun<0)return alert("Your income is not enough to cover bills, Needs, and Savings using the selected calculation.");const bm=dateOnly(nextMonth());const payload={household_id:householdId,budget_month:bm,weekly_needs:c.needs,weekly_savings:c.savings,weekly_fun:c.weeklyFun,updated_at:new Date().toISOString(),preparation_completed:true};const {data,error}=await supabaseClient.from("budget_plans").upsert(payload,{onConflict:"household_id,budget_month"}).select().single();if(error)return alert("Could not save budget: "+error.message);currentBudgetPlan=data;const {error:he}=await supabaseClient.from("budget_savings_history").upsert({household_id:householdId,budget_month:bm,weekly_savings:c.savings,budget_weeks:c.weeks,calculation_mode:profileMode,updated_at:new Date().toISOString()},{onConflict:"household_id,budget_month"});if(he)console.error(he);await calculateBalances();await updateAnalytics();const msg=document.getElementById("budgetMessage");msg.textContent="Budget saved.";msg.classList.remove("hidden");setTimeout(()=>msg.classList.add("hidden"),2500)}
+let editingExpenseId=null;
+let expenseOpenedFromFund=false;
 
-async function ensureCurrentWeekDeposits(){if(!currentBudgetPlan)return;const ws=dateOnly(weekStart(new Date()));const rows=[{household_id:householdId,week_start:ws,fund:"needs",amount:Number(currentBudgetPlan.weekly_needs)||0},{household_id:householdId,week_start:ws,fund:"fun",amount:Number(currentBudgetPlan.weekly_fun)||0}];const {error}=await supabaseClient.from("allowance_deposits").upsert(rows,{onConflict:"household_id,week_start,fund",ignoreDuplicates:true});if(error)console.error(error)}
-async function calculateBalances(){if(!currentBudgetPlan)await loadCurrentBudget();if(!currentBudgetPlan)return;await ensureCurrentWeekDeposits();const {data:dep,error:de}=await supabaseClient.from("allowance_deposits").select("fund,amount").eq("household_id",householdId);const {data:exp,error:ee}=await supabaseClient.from("expenses").select("fund,amount").eq("household_id",householdId);if(de||ee)return;let needs=0,fun=0;(dep||[]).forEach(x=>x.fund==="needs"?needs+=Number(x.amount)||0:fun+=Number(x.amount)||0);(exp||[]).forEach(x=>x.fund==="needs"?needs-=Number(x.amount)||0:fun-=Number(x.amount)||0);document.getElementById("needsBalance").textContent=money(needs);document.getElementById("funBalance").textContent=money(fun);document.getElementById("needsBalance").classList.toggle("negative",needs<0);document.getElementById("funBalance").classList.toggle("negative",fun<0)}
+let selectedAvatar="knight";
+let selectedSettingsAvatar="knight";
 
-function openExpenseForm(fund="needs",expense=null){editingExpenseId=expense?.id||null;document.getElementById("expenseFormTitle").textContent=expense?"Edit Expense":"Add Expense";document.getElementById("expenseName").value=expense?.description||"";document.getElementById("expenseAmount").value=expense?.amount?money(expense.amount):"";document.getElementById("expenseFund").value=fund||expense?.fund||"needs";document.getElementById("expenseCategory").value=expense?.category||"Other";document.getElementById("expenseDate").value=expense?.spent_at?String(expense.spent_at).slice(0,10):dateOnly(new Date());document.getElementById("expenseSheetOverlay").classList.remove("hidden")}
-function closeExpenseForm(){editingExpenseId=null;document.getElementById("expenseSheetOverlay").classList.add("hidden")}
+let selectedTheme="sandy";
+let selectedFont="system";
+let selectedFontSize=16;
 
-   async function saveExpense(){const name=document.getElementById("expenseName").value.trim(),amount=Math.abs(parseMoney(document.getElementById("expenseAmount").value)),fund=document.getElementById("expenseFund").value,category=document.getElementById("expenseCategory").value,date=document.getElementById("expenseDate").value;if(!name||!Number.isFinite(amount)||amount<=0||!date)return alert("Enter the expense name, amount, and date.");const payload={amount,fund,category,description:name,spent_at:`${date}T12:00:00`,updated_at:new Date().toISOString()};let result;if(editingExpenseId)result=await supabaseClient.from("expenses").update(payload).eq("id",editingExpenseId);else result=await supabaseClient.from("expenses").insert({...payload,household_id:householdId,user_id:currentUser.id});if(result.error)return alert("Could not save expense: "+result.error.message);closeExpenseForm();await loadExpenses();await calculateBalances();await updateAnalytics()}
-async function editExpense(id){const {data,error}=await supabaseClient.from("expenses").select("*").eq("id",id).single();if(error)return alert(error.message);openExpenseForm(data.fund,data)}
-async function deleteExpense(id){if(!confirm("Delete this expense?"))return;const {error}=await supabaseClient.from("expenses").delete().eq("id",id);if(error)return alert(error.message);await loadExpenses();await calculateBalances();await updateAnalytics()}
-async function loadExpenses(){const {data,error}=await supabaseClient.from("expenses").select("*").eq("household_id",householdId).order("spent_at",{ascending:false}).limit(200);if(error){console.error(error);return}const box=document.getElementById("transactions");box.innerHTML="";if(!data?.length){box.innerHTML='<p class="subtext">No expenses yet.</p>';return}data.forEach(x=>{const r=document.createElement("div");r.className="transaction";r.innerHTML=`<div class="transaction-top"><div><div class="transaction-name">${escapeHtml(x.description)}</div><div class="transaction-meta">${escapeHtml(x.category||"Other")} · ${x.fund==="needs"?"Needs":"Fun Money"} · ${new Date(x.spent_at).toLocaleDateString()}</div></div><div class="transaction-amount">-${money(x.amount)}</div></div><div class="transaction-actions"><button class="secondary-button small-button" onclick="editExpense('${x.id}')">Edit</button><button class="danger-button small-button" onclick="deleteExpense('${x.id}')">Delete</button></div>`;box.appendChild(r)})}
+let profileMode="hard";
+let settingsSection="menu";
 
-async function updateAnalytics(){const {data,error}=await supabaseClient.from("expenses").select("fund,amount,spent_at").eq("household_id",householdId);if(error)return;const y=new Date().getFullYear();let needs=0,fun=0;(data||[]).forEach(x=>{if(new Date(x.spent_at).getFullYear()!==y)return;if(x.fund==="needs")needs+=Number(x.amount)||0;else fun+=Number(x.amount)||0});document.getElementById("analyticsNeeds").textContent=money(needs);document.getElementById("analyticsFun").textContent=money(fun);document.getElementById("analyticsTotal").textContent=money(needs+fun);const {data:saved,error:se}=await supabaseClient.from("budget_savings_history").select("budget_month,weekly_savings,budget_weeks").eq("household_id",householdId);if(se)return;let thisYear=0,lastYear=0;(saved||[]).forEach(x=>{const yr=Number(String(x.budget_month).slice(0,4));const n=(Number(x.weekly_savings)||0)*(Number(x.budget_weeks)||0);if(yr===y)thisYear+=n;if(yr===y-1)lastYear+=n});document.getElementById("analyticsSavedThisYear").textContent=money(thisYear);document.getElementById("analyticsSavedPriorYear").textContent=money(lastYear);document.getElementById("analyticsPriorYearLabel").textContent=`Saved in ${y-1}`}
+let activePanelIndex=2;
+let weeklyBillCache=[];
+let incomeCache=[];
+let monthlyBillCache=[];
+let profileCache=[];
 
-function openSettings(){hideScreens();document.getElementById("settingsScreen").classList.remove("hidden");document.getElementById("settingsGear").classList.add("hidden");document.getElementById("settingsProfileName").textContent=currentProfile?.display_name||"";document.getElementById("settingsPhoneLabel").textContent=currentProfile?.phone_number?`Phone: ${currentProfile.phone_number}`:"No phone number saved";selectedSettingsAvatar=currentProfile?.avatar||"knight";document.getElementById("fontSizeRange").value=currentProfile?.font_size||16;document.getElementById("fontSizeLabel").textContent=`${currentProfile?.font_size||16}px`;renderAvatarGrid("settingsAvatarGrid",selectedSettingsAvatar,k=>{selectedSettingsAvatar=k;renderAvatarGrid("settingsAvatarGrid",selectedSettingsAvatar,k2=>selectedSettingsAvatar=k2)});document.getElementById("hardModeButton").classList.toggle("selected",profileMode==="hard");document.getElementById("softModeButton").classList.toggle("selected",profileMode==="soft");document.getElementById("settingsModeNote").textContent=profileMode==="hard"?"Hard uses the actual number of budget weeks in each month.":"Soft uses 4.345 weeks every month to smooth the year."}
-async function saveProfileSettings(){const font=Number(document.getElementById("fontSizeRange").value);const {error}=await supabaseClient.rpc("set_profile_settings",{p_profile_id:currentProfile.id,p_phone:currentProfile.phone_number||"",p_avatar:selectedSettingsAvatar,p_calculation_mode:profileMode,p_font_size:font});if(error)return alert("Could not save profile settings: "+error.message);currentProfile.avatar=selectedSettingsAvatar;currentProfile.font_size=font;currentProfile.calculation_mode=profileMode;document.documentElement.style.setProperty("--font-size",`${font}px`);alert("Profile settings saved.");await openBudgetSetup()}
-function setMode(m){profileMode=m;document.getElementById("hardModeButton").classList.toggle("selected",m==="hard");document.getElementById("softModeButton").classList.toggle("selected",m==="soft");document.getElementById("settingsModeNote").textContent=m==="hard"?"Hard uses the actual number of budget weeks in each month.":"Soft uses 4.345 weeks every month to smooth the year.";updateBudgetCalculation()}
+function money(value){
+  return Number(value||0).toLocaleString(
+    "en-US",
+    {
+      style:"currency",
+      currency:"USD"
+    }
+  );
+}
 
-function bindSwipe(){let sx=0,sy=0,dragging=false;const area=document.getElementById("mainWorkspace");area.addEventListener("touchstart",e=>{if(e.touches.length!==1)return;sx=e.touches[0].clientX;sy=e.touches[0].clientY;dragging=true},{passive:true});area.addEventListener("touchend",e=>{if(!dragging)return;dragging=false;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)<50||Math.abs(dx)<Math.abs(dy)*1.2)return;showPanel(activePanelIndex+(dx<0?1:-1),true)},{passive:true})}
+function numberValue(value){
+  const cleaned=String(value??"")
+    .replace(/[$,\s]/g,"")
+    .replace(/[^\d.-]/g,"");
 
-async function callOtp(action,purpose,code=""){const {data,error}=await supabaseClient.functions.invoke("profile-otp",{body:{action,purpose,profile_id:currentProfile?.id,code}});if(error)throw error;return data}async function sendOtp(purpose){try{await callOtp("send",purpose);alert("Verification code sent to the saved phone number.")}catch(e){alert("Could not send verification code: "+e.message)}}async function verifyOtp(purpose,code){try{return await callOtp("verify",purpose,code)}catch(e){throw e}}document.getElementById("loginButton").onclick=login;document.getElementById("forgotPasswordButton").onclick=()=>document.getElementById("forgotModal").classList.remove("hidden");document.getElementById("closeResetButton").onclick=()=>document.getElementById("forgotModal").classList.add("hidden");document.getElementById("sendResetButton").onclick=async()=>{const e=document.getElementById("resetEmail").value.trim(),m=document.getElementById("resetMessage"),er=document.getElementById("resetError");m.classList.add("hidden");er.classList.add("hidden");const {error}=await supabaseClient.auth.resetPasswordForEmail(e,{redirectTo:location.origin+location.pathname});if(error){er.textContent=error.message;er.classList.remove("hidden")}else{m.textContent="Reset link sent. Open the link to choose your new password.";m.classList.remove("hidden")}};
+  const number=Number(cleaned);
 
-document.getElementById("saveProfileButton").onclick=saveProfile;document.getElementById("addExpenseButton").onclick=()=>openExpenseForm("needs");document.getElementById("needsFundCard").onclick=()=>openExpenseForm("needs");document.getElementById("funFundCard").onclick=()=>openExpenseForm("fun");document.getElementById("saveExpenseButton").onclick=saveExpense;document.getElementById("cancelExpenseButton").onclick=closeExpenseForm;document.getElementById("addIncomeButton").onclick=()=>addIncomeRow();document.getElementById("addBillButton").onclick=()=>addBillRow();document.getElementById("weeklyNeeds").oninput=updateBudgetCalculation;document.getElementById("weeklySavings").oninput=updateBudgetCalculation;document.getElementById("saveBudgetButton").onclick=saveBudget;document.getElementById("budgetHelpButton").onclick=()=>document.getElementById("budgetHelpModal").classList.remove("hidden");document.getElementById("closeBudgetHelp").onclick=()=>document.getElementById("budgetHelpModal").classList.add("hidden");document.getElementById("settingsGear").onclick=openSettings;document.getElementById("settingsBackButton").onclick=()=>{showMain();openBudgetSetup()};document.getElementById("settingsSwitchProfileButton").onclick=async()=>{currentProfile=null;localStorage.removeItem("profileId");localStorage.removeItem("profileSessionToken");hideScreens();document.getElementById("profileScreen").classList.remove("hidden");await renderProfiles()};document.getElementById("settingsLogoutButton").onclick=logout;document.getElementById("saveProfileSettingsButton").onclick=saveProfileSettings;document.getElementById("hardModeButton").onclick=()=>setMode("hard");document.getElementById("softModeButton").onclick=()=>setMode("soft");document.getElementById("fontSizeRange").oninput=e=>document.getElementById("fontSizeLabel").textContent=`${e.target.value}px`;document.querySelectorAll("[data-theme]").forEach(b=>b.onclick=()=>applyTheme(b.dataset.theme));
+  return Number.isFinite(number)
+    ? number
+    : 0;
+}
 
-document.getElementById("onboardHard").onclick=async()=>{profileMode="hard";await supabaseClient.rpc("set_profile_settings",{p_profile_id:currentProfile.id,p_phone:currentProfile.phone_number||"",p_avatar:currentProfile.avatar||"knight",p_calculation_mode:"hard",p_font_size:Number(currentProfile.font_size||16)});document.getElementById("onboardingModal").classList.add("hidden");await loadProfileSettings();showMain();await loadCurrentBudget();await loadExpenses();await calculateBalances();await updateAnalytics();await openBudgetSetup()};document.getElementById("onboardSoft").onclick=async()=>{profileMode="soft";await supabaseClient.rpc("set_profile_settings",{p_profile_id:currentProfile.id,p_phone:currentProfile.phone_number||"",p_avatar:currentProfile.avatar||"knight",p_calculation_mode:"soft",p_font_size:Number(currentProfile.font_size||16)});document.getElementById("onboardingModal").classList.add("hidden");await loadProfileSettings();showMain();await loadCurrentBudget();await loadExpenses();await calculateBalances();await updateAnalytics();await openBudgetSetup()};
-document.getElementById("changePinButton").onclick=()=>document.getElementById("changePinModal").classList.remove("hidden");document.getElementById("closePinModal").onclick=()=>document.getElementById("changePinModal").classList.add("hidden");document.getElementById("sendPinOtpButton").onclick=()=>sendOtp("pin_change");document.getElementById("saveNewPinButton").onclick=async()=>{const code=document.getElementById("pinOtpCode").value.trim(),pin=document.getElementById("newPinValue").value,er=document.getElementById("pinChangeError");er.classList.add("hidden");if(!/^[0-9]{6}$/.test(code)||!/^[0-9]{4}$/.test(pin)){er.textContent="Enter the 6-digit verification code and a new 4-digit PIN.";er.classList.remove("hidden");return}try{await verifyOtp("pin_change",code);const {error}=await supabaseClient.rpc("set_profile_pin",{p_profile_id:currentProfile.id,p_new_pin:pin});if(error)throw error;document.getElementById("changePinModal").classList.add("hidden");alert("PIN changed.")}catch(e){er.textContent=e.message;er.classList.remove("hidden")}};
+function formatMoneyInput(input,negative=false){
+  const value=Math.abs(numberValue(input.value));
 
-window.editIncome=editIncome;window.deleteIncome=deleteIncome;window.saveNewIncome=saveNewIncome;window.editBill=editBill;window.deleteBill=deleteBill;window.saveNewBill=saveNewBill;window.editExpense=editExpense;window.deleteExpense=deleteExpense;
-bindMoneyInputs();window.addEventListener("resize",()=>{if(!document.getElementById("appScreen").classList.contains("hidden"))showPanel(activePanelIndex,false)});bindSwipe();loadTheme();supabaseClient.auth.getSession().then(async({data})=>{if(data.session){currentUser=data.session.user;await startApp();await restoreProfile()}});
+  if(!input.value.trim()){
+    input.value="";
+    return;
+  }
+
+  input.value=(negative?"-":"")+money(value);
+}
+
+function dateOnly(date){
+  const year=date.getFullYear();
+  const month=String(date.getMonth()+1).padStart(2,"0");
+  const day=String(date.getDate()).padStart(2,"0");
+
+  return `${year}-${month}-${day}`;
+}
+
+function firstOfMonth(date){
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    1
+  );
+}
+
+function addMonths(date,amount){
+  return new Date(
+    date.getFullYear(),
+    date.getMonth()+amount,
+    1
+  );
+}
+
+function getUpcomingBudgetMonth(){
+  return addMonths(
+    firstOfMonth(new Date()),
+    1
+  );
+}
+
+function getWeekStart(date=new Date()){
+  const result=new Date(date);
+
+  result.setHours(0,0,0,0);
+  result.setDate(
+    result.getDate()-result.getDay()
+  );
+
+  return result;
+}
+
+function getWeekOwnerMonth(date=new Date()){
+  const start=getWeekStart(date);
+
+  const counts={};
+
+  for(let i=0;i<7;i++){
+    const day=new Date(start);
+    day.setDate(start.getDate()+i);
+
+    const key=
+      `${day.getFullYear()}-${String(day.getMonth()+1).padStart(2,"0")}`;
+
+    counts[key]=(counts[key]||0)+1;
+  }
+
+  const owner=Object.entries(counts)
+    .sort((a,b)=>b[1]-a[1])[0][0];
+
+  const [year,month]=owner
+    .split("-")
+    .map(Number);
+
+  return new Date(year,month-1,1);
+}
+
+function budgetWeekCount(monthDate){
+  const year=monthDate.getFullYear();
+  const month=monthDate.getMonth();
+
+  const searchStart=new Date(year,month,1);
+  searchStart.setDate(
+    searchStart.getDate()-7
+  );
+
+  const searchEnd=new Date(year,month+1,1);
+  searchEnd.setDate(
+    searchEnd.getDate()+7
+  );
+
+  const starts=new Set();
+
+  for(
+    let d=new Date(searchStart);
+    d<=searchEnd;
+    d.setDate(d.getDate()+1)
+  ){
+    const start=getWeekStart(d);
+    const owner=getWeekOwnerMonth(start);
+
+    if(
+      owner.getFullYear()===year &&
+      owner.getMonth()===month
+    ){
+      starts.add(dateOnly(start));
+    }
+  }
+
+  return starts.size;
+}
+
+function escapeHtml(value){
+  const div=document.createElement("div");
+  div.textContent=value??"";
+  return div.innerHTML;
+}
+
+function escapeAttribute(value){
+  return String(value??"")
+    .replace(/&/g,"&amp;")
+    .replace(/"/g,"&quot;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;");
+}
+
+function hideScreens(){
+  document.getElementById("loginScreen").classList.add("hidden");
+  document.getElementById("profileScreen").classList.add("hidden");
+  document.getElementById("appScreen").classList.add("hidden");
+  document.getElementById("settingsScreen").classList.add("hidden");
+}
+
+async function login(){
+  const email=document
+    .getElementById("loginEmail")
+    .value
+    .trim();
+
+  const password=document
+    .getElementById("loginPassword")
+    .value;
+
+  const errorBox=document.getElementById("loginError");
+
+  errorBox.classList.add("hidden");
+
+  if(!email||!password){
+    errorBox.textContent="Enter your email and password.";
+    errorBox.classList.remove("hidden");
+    return;
+  }
+
+  const {data,error}=
+    await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
+
+  if(error){
+    errorBox.textContent=error.message;
+    errorBox.classList.remove("hidden");
+    return;
+  }
+
+  currentUser=data.user;
+
+  await startApp();
+}
+
+async function startApp(){
+  await loadHousehold();
+
+  if(!householdId){
+    return;
+  }
+
+  const restored=await restoreProfileSession();
+
+  if(restored){
+    return;
+  }
+
+  hideScreens();
+
+  document
+    .getElementById("profileScreen")
+    .classList
+    .remove("hidden");
+
+  await renderProfiles();
+}
+
+async function loadHousehold(){
+  const {data,error}=
+    await supabaseClient
+      .from("household_members")
+      .select("household_id")
+      .eq("user_id",currentUser.id)
+      .limit(1)
+      .maybeSingle();
+
+  if(error){
+    alert(
+      "Could not load household: "+
+      error.message
+    );
+    return;
+  }
+
+  if(!data){
+    alert(
+      "This account is not connected to a household."
+    );
+    return;
+  }
+
+  householdId=data.household_id;
+}
+
+async function loadProfiles(){
+  const {data,error}=
+    await supabaseClient
+      .from("profiles")
+      .select("*")
+      .eq("household_id",householdId)
+      .order("display_name");
+
+  if(error){
+    alert(
+      "Could not load profiles: "+
+      error.message
+    );
+    return [];
+  }
+
+  profileCache=data||[];
+
+  return profileCache;
+}
+
+function avatarSvg(name){
+  const common=
+    `viewBox="0 0 100 100" aria-hidden="true"`;
+
+  if(name==="princess"){
+    return `
+      <svg ${common}>
+        <circle cx="50" cy="50" r="45" fill="var(--accent)" opacity=".35"/>
+        <path d="M27 38l10-19 13 13 13-13 10 19-7 8H34z" fill="var(--text)"/>
+        <circle cx="50" cy="55" r="23" fill="var(--panel)" stroke="var(--text)" stroke-width="4"/>
+        <path d="M36 75c6-11 22-11 28 0" fill="none" stroke="var(--text)" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="42" cy="54" r="3" fill="var(--text)"/>
+        <circle cx="58" cy="54" r="3" fill="var(--text)"/>
+      </svg>
+    `;
+  }
+
+  if(name==="dragon"){
+    return `
+      <svg ${common}>
+        <circle cx="50" cy="50" r="45" fill="var(--accent)" opacity=".35"/>
+        <path d="M23 58c4-25 19-37 39-31l14-11-2 18 11 10-14 4c2 18-9 31-28 31-13 0-21-7-20-21z" fill="var(--text)"/>
+        <circle cx="59" cy="39" r="4" fill="var(--panel)"/>
+        <path d="M31 58l-15 10 17 1M67 58l17 9-17 3" fill="none" stroke="var(--text)" stroke-width="5" stroke-linecap="round"/>
+      </svg>
+    `;
+  }
+
+  if(name==="fish"){
+    return `
+      <svg ${common}>
+        <circle cx="50" cy="50" r="45" fill="var(--accent)" opacity=".35"/>
+        <path d="M25 50c14-21 38-21 52 0-14 21-38 21-52 0z" fill="var(--text)"/>
+        <path d="M75 50l17-14v28z" fill="var(--text)"/>
+        <circle cx="42" cy="44" r="4" fill="var(--panel)"/>
+      </svg>
+    `;
+  }
+
+  if(name==="lion"){
+    return `
+      <svg ${common}>
+        <circle cx="50" cy="50" r="45" fill="var(--accent)" opacity=".35"/>
+        <circle cx="50" cy="51" r="32" fill="var(--text)"/>
+        <circle cx="50" cy="53" r="21" fill="var(--panel)"/>
+        <circle cx="42" cy="49" r="3" fill="var(--text)"/>
+        <circle cx="58" cy="49" r="3" fill="var(--text)"/>
+        <path d="M45 61h10M50 56v7" stroke="var(--text)" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+    `;
+  }
+
+  if(name==="turtle"){
+    return `
+      <svg ${common}>
+        <circle cx="50" cy="50" r="45" fill="var(--accent)" opacity=".35"/>
+        <ellipse cx="48" cy="53" rx="28" ry="22" fill="var(--text)"/>
+        <circle cx="79" cy="51" r="10" fill="var(--text)"/>
+        <path d="M28 34l-10-9M28 70l-11 8M60 34l8-10M60 70l9 9" stroke="var(--text)" stroke-width="7" stroke-linecap="round"/>
+        <path d="M32 53h32M48 34v38" stroke="var(--panel)" stroke-width="3" opacity=".7"/>
+      </svg>
+    `;
+  }
+
+  if(name==="bird"){
+    return `
+      <svg ${common}>
+        <circle cx="50" cy="50" r="45" fill="var(--accent)" opacity=".35"/>
+        <path d="M25 62c6-27 27-38 47-24 6 4 9 10 10 17-14-6-23-3-29 10-9 18-25 12-28-3z" fill="var(--text)"/>
+        <path d="M76 42l17 8-17 7z" fill="var(--text)"/>
+        <circle cx="65" cy="42" r="4" fill="var(--panel)"/>
+      </svg>
+    `;
+  }
+
+  return `
+    <svg ${common}>
+      <circle cx="50" cy="50" r="45" fill="var(--accent)" opacity=".35"/>
+      <path d="M31 34h38l-5 42H36z" fill="var(--text)"/>
+      <path d="M38 35c0-15 24-15 24 0" fill="none" stroke="var(--text)" stroke-width="7"/>
+      <path d="M39 48h22" stroke="var(--panel)" stroke-width="5"/>
+      <path d="M43 58h14" stroke="var(--panel)" stroke-width="4"/>
+    </svg>
+  `;
+}
+
+function renderAvatarGrid(
+  elementId,
+  current,
+  callback
+){
+  const grid=document.getElementById(elementId);
+
+  const avatars=[
+    "knight",
+    "princess",
+    "dragon",
+    "fish",
+    "lion",
+    "turtle",
+    "bird"
+  ];
+
+  grid.innerHTML="";
+
+  avatars.forEach(name=>{
+    const button=document.createElement("button");
+
+    button.type="button";
+
+    button.className=
+      "avatar-choice"+
+      (name===current?" selected":"");
+
+    button.innerHTML=avatarSvg(name);
+
+    button.setAttribute(
+      "aria-label",
+      name
+    );
+
+    button.onclick=()=>{
+      callback(name);
+    };
+
+    grid.appendChild(button);
+  });
+}
+
+async function renderProfiles(){
+  const profiles=await loadProfiles();
+
+  const list=document.getElementById("profileList");
+
+  list.innerHTML="";
+
+  document
+    .getElementById("addProfileForm")
+    .classList
+    .add("hidden");
+
+  document
+    .getElementById("pinScreen")
+    .classList
+    .add("hidden");
+
+  document
+    .getElementById("addProfileButton")
+    .classList
+    .remove("hidden");
+
+  profiles.forEach(profile=>{
+    const button=document.createElement("button");
+
+    button.className=
+      "primary-button profile-button";
+
+    button.textContent=
+      profile.display_name;
+
+    button.onclick=()=>{
+      currentProfile=profile;
+
+      document
+        .getElementById("profileList")
+        .classList
+        .add("hidden");
+
+      document
+        .getElementById("addProfileButton")
+        .classList
+        .add("hidden");
+
+      document
+        .getElementById("pinScreen")
+        .classList
+        .remove("hidden");
+
+      document.getElementById(
+        "pinProfileName"
+      ).textContent=
+        profile.display_name;
+
+      document.getElementById(
+        "profilePin"
+      ).value="";
+
+      document
+        .getElementById("pinError")
+        .classList
+        .add("hidden");
+    };
+
+    list.appendChild(button);
+  });
+}
+
+async function saveProfile(){
+  const name=document
+    .getElementById("newProfileName")
+    .value
+    .trim();
+
+  const pin=document
+    .getElementById("newProfilePin")
+    .value;
+
+  const errorBox=
+    document.getElementById("profileError");
+
+  errorBox.classList.add("hidden");
+
+  if(!name){
+    errorBox.textContent=
+      "Profile name is required.";
+
+    errorBox.classList.remove("hidden");
+    return;
+  }
+
+  if(!/^\d{4}$/.test(pin)){
+    errorBox.textContent=
+      "PIN must be exactly 4 digits.";
+
+    errorBox.classList.remove("hidden");
+    return;
+  }
+
+  const {data,error}=
+    await supabaseClient.rpc(
+      "create_profile",
+      {
+        p_household_id:householdId,
+        p_display_name:name,
+        p_pin:pin
+      }
+    );
+
+  if(error){
+    errorBox.textContent=error.message;
+    errorBox.classList.remove("hidden");
+    return;
+  }
+
+  let newProfileId=null;
+
+  if(typeof data==="string"){
+    newProfileId=data;
+  }
+
+  if(!newProfileId){
+    const {data:created}=await supabaseClient
+      .from("profiles")
+      .select("*")
+      .eq("household_id",householdId)
+      .eq("display_name",name)
+      .order("created_at",{ascending:false})
+      .limit(1)
+      .maybeSingle();
+
+    newProfileId=created?.id||null;
+  }
+
+  if(newProfileId){
+    await supabaseClient
+      .from("profile_preferences")
+      .upsert(
+        {
+          profile_id:newProfileId,
+          household_id:householdId,
+          avatar:selectedAvatar,
+          theme:"sandy",
+          font_family:"system",
+          font_size:16,
+          calculation_mode:"hard"
+        },
+        {
+          onConflict:"profile_id"
+        }
+      );
+  }
+
+  document.getElementById(
+    "newProfileName"
+  ).value="";
+
+  document.getElementById(
+    "newProfilePin"
+  ).value="";
+
+  selectedAvatar="knight";
+
+  await renderProfiles();
+}
+
+async function unlockProfile(){
+  const pin=document
+    .getElementById("profilePin")
+    .value;
+
+  const errorBox=
+    document.getElementById("pinError");
+
+  errorBox.classList.add("hidden");
+
+  if(!pin){
+    return;
+  }
+
+  const {data,error}=
+    await supabaseClient.rpc(
+      "create_profile_session",
+      {
+        p_profile_id:currentProfile.id,
+        p_pin:pin,
+        p_session_minutes:1440
+      }
+    );
+
+  if(error){
+    errorBox.textContent=
+      error.message||"Incorrect PIN.";
+
+    errorBox.classList.remove("hidden");
+    return;
+  }
+
+  profileSessionToken=data;
+
+  localStorage.setItem(
+    "profileSessionToken",
+    data
+  );
+
+  localStorage.setItem(
+    "profileId",
+    currentProfile.id
+  );
+
+  await enterProfile();
+}
+
+async function restoreProfileSession(){
+  const token=
+    localStorage.getItem(
+      "profileSessionToken"
+    );
+
+  const profileId=
+    localStorage.getItem(
+      "profileId"
+    );
+
+  if(!token||!profileId){
+    return false;
+  }
+
+  try{
+    const {data,error}=
+      await supabaseClient.rpc(
+        "validate_profile_session",
+        {
+          p_session_token:token
+        }
+      );
+
+    if(error){
+      throw error;
+    }
+
+    if(data!==profileId){
+      throw new Error(
+        "Profile session mismatch"
+      );
+    }
+
+    const {data:profile,error:profileError}=
+      await supabaseClient
+        .from("profiles")
+        .select("*")
+        .eq("id",profileId)
+        .single();
+
+    if(profileError){
+      throw profileError;
+    }
+
+    currentProfile=profile;
+    profileSessionToken=token;
+
+    await enterProfile();
+
+    return true;
+  }
+  catch(error){
+    console.error(error);
+
+    localStorage.removeItem(
+      "profileSessionToken"
+    );
+
+    localStorage.removeItem(
+      "profileId"
+    );
+
+    return false;
+  }
+}
+
+async function loadProfilePreferences(){
+  const {data,error}=
+    await supabaseClient
+      .from("profile_preferences")
+      .select("*")
+      .eq("profile_id",currentProfile.id)
+      .maybeSingle();
+
+  if(error){
+    console.error(error);
+  }
+
+  if(!data){
+    return null;
+  }
+
+  selectedTheme=
+    data.theme||"sandy";
+
+  selectedFont=
+    data.font_family||"system";
+
+  selectedFontSize=
+    Number(data.font_size)||16;
+
+  selectedSettingsAvatar=
+    data.avatar||"knight";
+
+  profileMode=
+    data.calculation_mode||"hard";
+
+  applyAppearance();
+
+  return data;
+}
+
+async function enterProfile(){
+  const preferences=
+    await loadProfilePreferences();
+
+  if(!preferences){
+    selectedTheme="sandy";
+    selectedFont="system";
+    selectedFontSize=16;
+    selectedSettingsAvatar="knight";
+    profileMode="hard";
+
+    applyAppearance();
+
+    document
+      .getElementById("onboardingModal")
+      .classList
+      .remove("hidden");
+  }
+
+  await showMain();
+}
+
+function applyAppearance(){
+  const body=document.body;
+
+  [
+    "theme-sandy",
+    "theme-petals",
+    "theme-harbor",
+    "theme-cedar",
+    "theme-plum"
+  ].forEach(c=>body.classList.remove(c));
+
+  [
+    "font-system",
+    "font-rounded",
+    "font-serif",
+    "font-mono",
+    "font-pixel"
+  ].forEach(c=>body.classList.remove(c));
+
+  body.classList.add(
+    `theme-${selectedTheme}`
+  );
+
+  body.classList.add(
+    `font-${selectedFont}`
+  );
+
+  document.documentElement.style.setProperty(
+    "--font-size",
+    `${selectedFontSize}px`
+  );
+
+  localStorage.setItem(
+    "budgetTheme",
+    selectedTheme
+  );
+}
+
+async function saveProfileSettings(values){
+  const payload={
+    profile_id:currentProfile.id,
+    household_id:householdId,
+    ...values,
+    updated_at:new Date().toISOString()
+  };
+
+  const {error}=
+    await supabaseClient
+      .from("profile_preferences")
+      .upsert(
+        payload,
+        {
+          onConflict:"profile_id"
+        }
+      );
+
+  if(error){
+    throw error;
+  }
+
+  await loadProfilePreferences();
+}
+
+function renderDateStrip(){
+  const today=new Date();
+
+  document.getElementById(
+    "dateMonth"
+  ).textContent=
+    today.toLocaleDateString(
+      "en-US",
+      {
+        month:"long"
+      }
+    );
+
+  const weekStart=
+    getWeekStart(today);
+
+  const container=
+    document.getElementById(
+      "dateDays"
+    );
+
+  container.innerHTML="";
+
+  for(let i=0;i<7;i++){
+    const day=new Date(weekStart);
+
+    day.setDate(
+      weekStart.getDate()+i
+    );
+
+    const div=
+      document.createElement("div");
+
+    div.className=
+      "date-day"+
+      (
+        dateOnly(day)===dateOnly(today)
+          ?" today"
+          :""
+      );
+
+    div.innerHTML=
+      `<span>${day.getDate()}</span>`;
+
+    container.appendChild(div);
+  }
+}
+
+async function showMain(){
+  hideScreens();
+
+  document
+    .getElementById("appScreen")
+    .classList
+    .remove("hidden");
+
+  renderDateStrip();
+
+  await loadProfiles();
+  await loadHomeBudget();
+  await loadExpenses();
+  await calculateBalances();
+  await loadAnalytics();
+  await openBudgetSetup();
+
+  requestAnimationFrame(()=>{
+    showPanel(activePanelIndex,false);
+  });
+
+  scheduleWeekBoundaryRefresh();
+}
+
+async function getBudgetForMonth(monthDate){
+  const {data,error}=
+    await supabaseClient
+      .from("budget_plans")
+      .select("*")
+      .eq("household_id",householdId)
+      .eq("budget_month",dateOnly(monthDate))
+      .maybeSingle();
+
+  if(error){
+    console.error(error);
+    return null;
+  }
+
+  return data||null;
+}
+
+async function loadHomeBudget(){
+  const ownerMonth=
+    getWeekOwnerMonth(new Date());
+
+  currentHomeBudget=
+    await getBudgetForMonth(ownerMonth);
+
+  return currentHomeBudget;
+}
+
+async function openBudgetSetup(){
+  const month=
+    getUpcomingBudgetMonth();
+
+  currentPrepareBudget=
+    await getBudgetForMonth(month);
+
+  const monthName=
+    month.toLocaleDateString(
+      "en-US",
+      {
+        month:"long",
+        year:"numeric"
+      }
+    );
+
+  document.getElementById(
+    "budgetTitle"
+  ).textContent=
+    `Prepare Your ${monthName} Budget`;
+
+  document.getElementById(
+    "budgetInstructions"
+  ).textContent=
+    "Enter the income and bills used to prepare this budget, then choose your weekly allocations.";
+
+  const weeks=
+    budgetWeekCount(month);
+
+  document.getElementById(
+    "budgetModeNote"
+  ).textContent=
+    profileMode==="soft"
+      ? "Soft Budget is active. Monthly Net is divided by 4.345 before weekly bills, Needs, and Savings are subtracted."
+      : `Hard Budget is active. ${monthName} owns ${weeks} budget weeks, so Monthly Net is divided by ${weeks}.`;
+
+  document.getElementById(
+    "weeklyTotalLabel"
+  ).textContent=
+    profileMode==="soft"
+      ?"Weekly Total ÷ 4.345"
+      :`Weekly Total ÷ ${weeks}`;
+
+  document.getElementById(
+    "weeklyNeeds"
+  ).value=
+    currentPrepareBudget?.weekly_needs
+      ?money(currentPrepareBudget.weekly_needs)
+      :"";
+
+  document.getElementById(
+    "weeklySavings"
+  ).value=
+    currentPrepareBudget?.weekly_savings
+      ?money(currentPrepareBudget.weekly_savings)
+      :"";
+
+  await Promise.all([
+    loadIncomeSources(),
+    loadMonthlyBills(),
+    loadWeeklyBills(),
+    renderProfileAllocations()
+  ]);
+
+  updateBudgetCalculation();
+}
+
+async function loadIncomeSources(){
+  const {data,error}=
+    await supabaseClient
+      .from("income_sources")
+      .select("*")
+      .eq("household_id",householdId)
+      .order("created_at");
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  incomeCache=data||[];
+
+  renderMoneyRows(
+    "incomeList",
+    incomeCache,
+    "income"
+  );
+}
+
+async function loadMonthlyBills(){
+  const {data,error}=
+    await supabaseClient
+      .from("bills")
+      .select("*")
+      .eq("household_id",householdId)
+      .order("created_at");
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  monthlyBillCache=data||[];
+
+  renderMoneyRows(
+    "monthlyBillList",
+    monthlyBillCache,
+    "monthlyBill"
+  );
+}
+
+async function loadWeeklyBills(){
+  const {data,error}=
+    await supabaseClient
+      .from("weekly_bills")
+      .select("*")
+      .eq("household_id",householdId)
+      .order("created_at");
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  weeklyBillCache=data||[];
+
+  renderMoneyRows(
+    "weeklyBillList",
+    weeklyBillCache,
+    "weeklyBill"
+  );
+}
+
+function renderMoneyRows(
+  elementId,
+  items,
+  type
+){
+  const list=
+    document.getElementById(elementId);
+
+  list.innerHTML="";
+
+  if(!items.length){
+    const empty=
+      document.createElement("div");
+
+    empty.className="subtext";
+    empty.textContent="None added.";
+
+    list.appendChild(empty);
+    return;
+  }
+
+  items.forEach(item=>{
+    const row=
+      document.createElement("div");
+
+    row.className="saved-row";
+
+    const displayAmount=
+      type==="monthlyBill"
+        ?"-"+money(Math.abs(item.amount))
+        :money(Math.abs(item.amount));
+
+    row.innerHTML=`
+      <div class="saved-row-main">
+        <div class="saved-row-name">
+          ${escapeHtml(item.name)}
+        </div>
+      </div>
+
+      <div class="saved-row-amount">
+        ${displayAmount}
+      </div>
+
+      <div class="saved-row-actions">
+        <button class="secondary-button small-button">
+          Edit
+        </button>
+        <button class="danger-button small-button">
+          Delete
+        </button>
+      </div>
+    `;
+
+    const buttons=
+      row.querySelectorAll("button");
+
+    buttons[0].onclick=()=>{
+      editMoneyRow(
+        row,
+        item,
+        type
+      );
+    };
+
+    buttons[1].onclick=()=>{
+      deleteMoneyItem(
+        item.id,
+        type
+      );
+    };
+
+    list.appendChild(row);
+  });
+}
+
+function newMoneyEditor(type){
+  const map={
+    income:"incomeList",
+    monthlyBill:"monthlyBillList",
+    weeklyBill:"weeklyBillList"
+  };
+
+  const list=
+    document.getElementById(
+      map[type]
+    );
+
+  const existing=
+    list.querySelector(".edit-box.new-item");
+
+  if(existing){
+    existing.scrollIntoView({
+      behavior:"smooth",
+      block:"center"
+    });
+    return;
+  }
+
+  const box=
+    document.createElement("div");
+
+  box.className="edit-box new-item";
+
+  box.innerHTML=`
+    <div class="edit-grid">
+      <input class="editor-name" type="text" placeholder="Name">
+      <input class="editor-amount money-input" inputmode="decimal" placeholder="$0.00">
+    </div>
+
+    <div class="edit-actions">
+      <button class="primary-button">Save</button>
+      <button class="secondary-button">Cancel</button>
+    </div>
+  `;
+
+  const amount=
+    box.querySelector(".editor-amount");
+
+  amount.addEventListener(
+    "blur",
+    ()=>{
+      formatMoneyInput(
+        amount,
+        type==="monthlyBill"
+      );
+    }
+  );
+
+  const buttons=
+    box.querySelectorAll("button");
+
+  buttons[0].onclick=()=>{
+    saveMoneyItem(
+      box,
+      type,
+      null
+    );
+  };
+
+  buttons[1].onclick=()=>{
+    box.remove();
+  };
+
+  list.prepend(box);
+}
+
+function editMoneyRow(
+  row,
+  item,
+  type
+){
+  row.innerHTML=`
+    <div style="width:100%">
+      <div class="edit-grid">
+        <input class="editor-name" type="text" value="${escapeAttribute(item.name)}">
+        <input class="editor-amount money-input" inputmode="decimal" value="${type==="monthlyBill"?"-":""}${money(Math.abs(item.amount))}">
+      </div>
+
+      <div class="edit-actions">
+        <button class="primary-button">Save</button>
+        <button class="secondary-button">Cancel</button>
+      </div>
+    </div>
+  `;
+
+  const amount=
+    row.querySelector(".editor-amount");
+
+  amount.addEventListener(
+    "blur",
+    ()=>{
+      formatMoneyInput(
+        amount,
+        type==="monthlyBill"
+      );
+    }
+  );
+
+  const buttons=
+    row.querySelectorAll("button");
+
+  buttons[0].onclick=()=>{
+    saveMoneyItem(
+      row,
+      type,
+      item.id
+    );
+  };
+
+  buttons[1].onclick=async()=>{
+    await reloadMoneyType(type);
+  };
+}
+
+async function saveMoneyItem(
+  container,
+  type,
+  id
+){
+  const name=
+    container
+      .querySelector(".editor-name")
+      .value
+      .trim();
+
+  const rawAmount=
+    numberValue(
+      container
+        .querySelector(".editor-amount")
+        .value
+    );
+
+  const amount=
+    Math.abs(rawAmount);
+
+  if(!name){
+    alert("Enter a name.");
+    return;
+  }
+
+  if(!Number.isFinite(amount)){
+    alert("Enter a valid amount.");
+    return;
+  }
+
+  let table;
+
+  if(type==="income"){
+    table="income_sources";
+  }
+  else if(type==="monthlyBill"){
+    table="bills";
+  }
+  else{
+    table="weekly_bills";
+  }
+
+  const payload={
+    household_id:householdId,
+    name,
+    amount
+  };
+
+  let result;
+
+  if(id){
+    result=
+      await supabaseClient
+        .from(table)
+        .update(payload)
+        .eq("id",id);
+  }
+  else{
+    result=
+      await supabaseClient
+        .from(table)
+        .insert(payload);
+  }
+
+  if(result.error){
+    alert(result.error.message);
+    return;
+  }
+
+  await reloadMoneyType(type);
+
+  updateBudgetCalculation();
+}
+
+async function deleteMoneyItem(
+  id,
+  type
+){
+  if(!confirm("Delete this item?")){
+    return;
+  }
+
+  let table;
+
+  if(type==="income"){
+    table="income_sources";
+  }
+  else if(type==="monthlyBill"){
+    table="bills";
+  }
+  else{
+    table="weekly_bills";
+  }
+
+  const {error}=
+    await supabaseClient
+      .from(table)
+      .delete()
+      .eq("id",id);
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  await reloadMoneyType(type);
+
+  updateBudgetCalculation();
+}
+
+async function reloadMoneyType(type){
+  if(type==="income"){
+    await loadIncomeSources();
+  }
+  else if(type==="monthlyBill"){
+    await loadMonthlyBills();
+  }
+  else{
+    await loadWeeklyBills();
+  }
+}
+
+function getBudgetCalculation(){
+  const income=
+    incomeCache.reduce(
+      (sum,item)=>
+        sum+
+        Math.abs(Number(item.amount)||0),
+      0
+    );
+
+  const monthlyBills=
+    monthlyBillCache.reduce(
+      (sum,item)=>
+        sum+
+        Math.abs(Number(item.amount)||0),
+      0
+    );
+
+  const weeklyBills=
+    weeklyBillCache.reduce(
+      (sum,item)=>
+        sum+
+        Math.abs(Number(item.amount)||0),
+      0
+    );
+
+  const weeklyNeeds=
+    Math.abs(
+      numberValue(
+        document.getElementById(
+          "weeklyNeeds"
+        ).value
+      )
+    );
+
+  const weeklySavings=
+    Math.abs(
+      numberValue(
+        document.getElementById(
+          "weeklySavings"
+        ).value
+      )
+    );
+
+  const net=
+    income-monthlyBills;
+
+  const month=
+    getUpcomingBudgetMonth();
+
+  const divisor=
+    profileMode==="soft"
+      ?4.345
+      :budgetWeekCount(month);
+
+  const weeklyTotal=
+    divisor>0
+      ?net/divisor
+      :0;
+
+  const remaining=
+    weeklyTotal
+    -weeklyBills
+    -weeklyNeeds
+    -weeklySavings;
+
+  return {
+    income,
+    monthlyBills,
+    net,
+    divisor,
+    weeklyTotal,
+    weeklyBills,
+    weeklyNeeds,
+    weeklySavings,
+    remaining
+  };
+}
+
+function updateBudgetCalculation(){
+  const calc=
+    getBudgetCalculation();
+
+  document.getElementById(
+    "calcIncome"
+  ).textContent=
+    money(calc.income);
+
+  document.getElementById(
+    "calcBills"
+  ).textContent=
+    "-"+money(calc.monthlyBills);
+
+  document.getElementById(
+    "calcNet"
+  ).textContent=
+    money(calc.net);
+
+  document.getElementById(
+    "calcWeeklyTotal"
+  ).textContent=
+    money(calc.weeklyTotal);
+
+  document.getElementById(
+    "calcWeeklyBills"
+  ).textContent=
+    "-"+money(calc.weeklyBills);
+
+  document.getElementById(
+    "calcNeeds"
+  ).textContent=
+    "-"+money(calc.weeklyNeeds);
+
+  document.getElementById(
+    "calcSavings"
+  ).textContent=
+    "-"+money(calc.weeklySavings);
+
+  const fun=
+    document.getElementById(
+      "calcFunPool"
+    );
+
+  fun.textContent=
+    money(calc.remaining);
+
+  fun.classList.toggle(
+    "negative",
+    calc.remaining<0
+  );
+
+  updateAllocationSummary();
+
+  return calc;
+}
+
+async function renderProfileAllocations(){
+  const profiles=
+    profileCache.length
+      ?profileCache
+      :await loadProfiles();
+
+  const month=
+    dateOnly(
+      getUpcomingBudgetMonth()
+    );
+
+  const {data,error}=
+    await supabaseClient
+      .from("budget_profile_allocations")
+      .select("*")
+      .eq("household_id",householdId)
+      .eq("budget_month",month);
+
+  if(error){
+    console.error(error);
+  }
+
+  const saved=new Map(
+    (data||[]).map(
+      item=>[
+        item.profile_id,
+        Number(item.weekly_fun_amount)||0
+      ]
+    )
+  );
+
+  const list=
+    document.getElementById(
+      "profileAllocationList"
+    );
+
+  list.innerHTML="";
+
+  profiles.forEach(profile=>{
+    const row=
+      document.createElement("div");
+
+    row.className=
+      "allocation-row";
+
+    row.innerHTML=`
+      <div class="allocation-name">
+        ${escapeHtml(profile.display_name)}
+      </div>
+      <input
+        class="profile-allocation money-input"
+        data-profile-id="${profile.id}"
+        inputmode="decimal"
+        placeholder="$0.00"
+        value="${saved.has(profile.id)?money(saved.get(profile.id)):""}"
+      >
+    `;
+
+    const input=
+      row.querySelector("input");
+
+    input.addEventListener(
+      "input",
+      updateAllocationSummary
+    );
+
+    input.addEventListener(
+      "blur",
+      ()=>{
+        formatMoneyInput(input,false);
+        updateAllocationSummary();
+      }
+    );
+
+    list.appendChild(row);
+  });
+
+  updateAllocationSummary();
+}
+
+function updateAllocationSummary(){
+  const calc=
+    getBudgetCalculation();
+
+  let assigned=0;
+
+  document
+    .querySelectorAll(
+      ".profile-allocation"
+    )
+    .forEach(input=>{
+      assigned+=Math.abs(
+        numberValue(input.value)
+      );
+    });
+
+  const unassigned=
+    calc.remaining-assigned;
+
+  document.getElementById(
+    "allocatedFun"
+  ).textContent=
+    money(assigned);
+
+  const unallocated=
+    document.getElementById(
+      "unallocatedFun"
+    );
+
+  unallocated.textContent=
+    money(unassigned);
+
+  unallocated.classList.toggle(
+    "negative",
+    unassigned<-.005
+  );
+}
+
+async function saveBudget(){
+  const calc=
+    updateBudgetCalculation();
+
+  if(calc.remaining<0){
+    alert(
+      "Weekly Bills, Needs, and Savings are greater than the weekly amount available."
+    );
+    return;
+  }
+
+  let assigned=0;
+
+  const allocations=[];
+
+  document
+    .querySelectorAll(
+      ".profile-allocation"
+    )
+    .forEach(input=>{
+      const amount=
+        Math.abs(
+          numberValue(input.value)
+        );
+
+      assigned+=amount;
+
+      allocations.push({
+        household_id:householdId,
+        budget_month:
+          dateOnly(
+            getUpcomingBudgetMonth()
+          ),
+        profile_id:
+          input.dataset.profileId,
+        weekly_fun_amount:
+          amount,
+        updated_at:
+          new Date().toISOString()
+      });
+    });
+
+  if(assigned>calc.remaining+.01){
+    alert(
+      "You assigned more Fun Money than is available."
+    );
+    return;
+  }
+
+  const month=
+    dateOnly(
+      getUpcomingBudgetMonth()
+    );
+
+  const {data,error}=
+    await supabaseClient
+      .from("budget_plans")
+      .upsert(
+        {
+          household_id:householdId,
+          budget_month:month,
+          weekly_needs:calc.weeklyNeeds,
+          weekly_savings:calc.weeklySavings,
+          calculation_mode:profileMode,
+          budget_week_count:
+            budgetWeekCount(
+              getUpcomingBudgetMonth()
+            ),
+          monthly_income:calc.income,
+          monthly_bills:calc.monthlyBills,
+          weekly_bills_total:calc.weeklyBills,
+          weekly_total:calc.weeklyTotal,
+          weekly_fun_pool:calc.remaining,
+          preparation_completed:true,
+          updated_at:new Date().toISOString()
+        },
+        {
+          onConflict:
+            "household_id,budget_month"
+        }
+      )
+      .select()
+      .single();
+
+  if(error){
+    alert(
+      "Could not save budget: "+
+      error.message
+    );
+    return;
+  }
+
+  currentPrepareBudget=data;
+
+  if(allocations.length){
+    const {error:allocationError}=
+      await supabaseClient
+        .from("budget_profile_allocations")
+        .upsert(
+          allocations,
+          {
+            onConflict:
+              "household_id,budget_month,profile_id"
+          }
+        );
+
+    if(allocationError){
+      alert(
+        "Budget saved, but Fun Money allocations could not be saved: "+
+        allocationError.message
+      );
+      return;
+    }
+  }
+
+  const message=
+    document.getElementById(
+      "budgetMessage"
+    );
+
+  message.textContent=
+    "Budget saved.";
+
+  message.classList.remove(
+    "hidden"
+  );
+
+  setTimeout(()=>{
+    message.classList.add(
+      "hidden"
+    );
+  },2500);
+
+  await loadHomeBudget();
+  await calculateBalances();
+  await loadAnalytics();
+}
+
+function currentWeekRange(){
+  const start=
+    getWeekStart(new Date());
+
+  const end=
+    new Date(start);
+
+  end.setDate(
+    start.getDate()+6
+  );
+
+  end.setHours(
+    23,59,59,999
+  );
+
+  return {
+    start,
+    end
+  };
+}
+
+async function loadExpenses(){
+  const {data,error}=
+    await supabaseClient
+      .from("expenses")
+      .select("*")
+      .eq("household_id",householdId)
+      .order("spent_at",{
+        ascending:false
+      });
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  const expenses=data||[];
+
+  renderExpenseHistory(expenses);
+  renderHomeExpenses(expenses);
+}
+
+function renderExpenseHistory(expenses){
+  const container=
+    document.getElementById(
+      "expenseHistory"
+    );
+
+  if(!expenses.length){
+    container.innerHTML=
+      '<p class="subtext">No expenses yet.</p>';
+    return;
+  }
+
+  container.innerHTML="";
+
+  expenses.forEach(expense=>{
+    const row=
+      document.createElement("div");
+
+    row.className="transaction";
+
+    const date=
+      new Date(
+        expense.spent_at||
+        expense.created_at
+      );
+
+    row.innerHTML=`
+      <div class="transaction-top">
+        <div>
+          <div class="transaction-name">
+            ${escapeHtml(expense.description)}
+          </div>
+
+          <div class="transaction-meta">
+            ${escapeHtml(expense.category||"Other")} ·
+            ${expense.fund==="needs"?"Needs":"Fun Money"} ·
+            ${date.toLocaleDateString("en-US")}
+          </div>
+        </div>
+
+        <div class="transaction-amount">
+          -${money(expense.amount)}
+        </div>
+      </div>
+
+      <div class="transaction-actions">
+        <button
+          class="secondary-button small-button"
+          onclick="editExpense('${expense.id}')"
+        >
+          Edit
+        </button>
+
+        <button
+          class="danger-button small-button"
+          onclick="deleteExpense('${expense.id}')"
+        >
+          Delete
+        </button>
+      </div>
+    `;
+
+    container.appendChild(row);
+  });
+}
+
+function renderHomeExpenses(expenses){
+  const range=
+    currentWeekRange();
+
+  const weekly=
+    expenses.filter(expense=>{
+      const date=
+        new Date(
+          expense.spent_at||
+          expense.created_at
+        );
+
+      return (
+        date>=range.start &&
+        date<=range.end
+      );
+    });
+
+  renderHomeFundExpenses(
+    "needsHomeExpenses",
+    weekly.filter(
+      e=>e.fund==="needs"
+    )
+  );
+
+  renderHomeFundExpenses(
+    "funHomeExpenses",
+    weekly.filter(
+      e=>
+        e.fund==="fun" &&
+        (
+          !e.profile_id ||
+          e.profile_id===currentProfile.id
+        )
+    )
+  );
+}
+
+function renderHomeFundExpenses(
+  elementId,
+  expenses
+){
+  const container=
+    document.getElementById(elementId);
+
+  if(!expenses.length){
+    container.innerHTML=
+      '<div class="empty-home-expenses">No expenses this week.</div>';
+    return;
+  }
+
+  container.innerHTML="";
+
+  expenses
+    .slice(0,4)
+    .forEach(expense=>{
+      const row=
+        document.createElement("div");
+
+      row.className="home-expense";
+
+      row.innerHTML=`
+        <span class="home-expense-name">
+          ${escapeHtml(expense.description)}
+        </span>
+
+        <span class="home-expense-amount">
+          -${money(expense.amount)}
+        </span>
+      `;
+
+      container.appendChild(row);
+    });
+}
+
+async function calculateBalances(){
+  await loadHomeBudget();
+
+  const range=
+    currentWeekRange();
+
+  const ownerMonth=
+    getWeekOwnerMonth(new Date());
+
+  const ownerMonthString=
+    dateOnly(ownerMonth);
+
+  let weeklyNeeds=
+    Number(
+      currentHomeBudget?.weekly_needs
+    )||0;
+
+  let profileFun=0;
+
+  if(currentHomeBudget){
+    const {data:allocation,error}=
+      await supabaseClient
+        .from("budget_profile_allocations")
+        .select("weekly_fun_amount")
+        .eq("household_id",householdId)
+        .eq("budget_month",ownerMonthString)
+        .eq("profile_id",currentProfile.id)
+        .maybeSingle();
+
+    if(error){
+      console.error(error);
+    }
+
+    profileFun=
+      Number(
+        allocation?.weekly_fun_amount
+      )||0;
+  }
+
+  const {data:expenses,error}=
+    await supabaseClient
+      .from("expenses")
+      .select("*")
+      .eq("household_id",householdId)
+      .gte(
+        "spent_at",
+        range.start.toISOString()
+      )
+      .lte(
+        "spent_at",
+        range.end.toISOString()
+      );
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  let needsSpent=0;
+  let funSpent=0;
+
+  (expenses||[]).forEach(expense=>{
+    const amount=
+      Number(expense.amount)||0;
+
+    if(expense.fund==="needs"){
+      needsSpent+=amount;
+    }
+
+    if(
+      expense.fund==="fun" &&
+      (
+        !expense.profile_id ||
+        expense.profile_id===currentProfile.id
+      )
+    ){
+      funSpent+=amount;
+    }
+  });
+
+  const needs=
+    weeklyNeeds-needsSpent;
+
+  const fun=
+    profileFun-funSpent;
+
+  const needsElement=
+    document.getElementById(
+      "needsBalance"
+    );
+
+  const funElement=
+    document.getElementById(
+      "funBalance"
+    );
+
+  needsElement.textContent=
+    money(needs);
+
+  funElement.textContent=
+    money(fun);
+
+  needsElement.classList.toggle(
+    "negative",
+    needs<0
+  );
+
+  funElement.classList.toggle(
+    "negative",
+    fun<0
+  );
+}
+
+function openExpenseForm(
+  fund="needs",
+  expense=null,
+  fromFund=false
+){
+  editingExpenseId=
+    expense?.id||null;
+
+  expenseOpenedFromFund=
+    fromFund;
+
+  document.getElementById(
+    "expenseSheetTitle"
+  ).textContent=
+    editingExpenseId
+      ?"Edit Expense"
+      :"Add Expense";
+
+  document.getElementById(
+    "expenseDescription"
+  ).value=
+    expense?.description||"";
+
+  document.getElementById(
+    "expenseAmount"
+  ).value=
+    expense?.amount
+      ?money(expense.amount)
+      :"";
+
+  document.getElementById(
+    "expenseFund"
+  ).value=
+    expense?.fund||fund;
+
+  document.getElementById(
+    "expenseCategory"
+  ).value=
+    expense?.category||"Other";
+
+  const date=
+    expense?.spent_at
+      ?new Date(expense.spent_at)
+      :new Date();
+
+  document.getElementById(
+    "expenseDate"
+  ).value=
+    dateOnly(date);
+
+  document.getElementById(
+    "expenseFundField"
+  ).classList.toggle(
+    "hidden",
+    fromFund
+  );
+
+  document
+    .getElementById("expenseSheetOverlay")
+    .classList
+    .remove("hidden");
+
+  document.getElementById(
+    "expenseSheet"
+  ).style.transform=
+    "translateY(0)";
+}
+
+function closeExpenseForm(){
+  editingExpenseId=null;
+  expenseOpenedFromFund=false;
+
+  document
+    .getElementById("expenseSheetOverlay")
+    .classList
+    .add("hidden");
+
+  document.getElementById(
+    "expenseSheet"
+  ).style.transform=
+    "translateY(0)";
+}
+
+async function saveExpense(){
+  const description=
+    document
+      .getElementById(
+        "expenseDescription"
+      )
+      .value
+      .trim();
+
+  const amount=
+    Math.abs(
+      numberValue(
+        document.getElementById(
+          "expenseAmount"
+        ).value
+      )
+    );
+
+  const fund=
+    document.getElementById(
+      "expenseFund"
+    ).value;
+
+  const category=
+    document.getElementById(
+      "expenseCategory"
+    ).value;
+
+  const date=
+    document.getElementById(
+      "expenseDate"
+    ).value;
+
+  if(!description){
+    alert(
+      "Enter the name of the expense."
+    );
+    return;
+  }
+
+  if(amount<=0){
+    alert(
+      "Enter an amount greater than zero."
+    );
+    return;
+  }
+
+  const spentAt=
+    new Date(
+      `${date}T12:00:00`
+    ).toISOString();
+
+  const payload={
+    household_id:householdId,
+    user_id:currentUser.id,
+    profile_id:
+      fund==="fun"
+        ?currentProfile.id
+        :null,
+    amount,
+    fund,
+    category,
+    description,
+    spent_at:spentAt,
+    updated_at:new Date().toISOString()
+  };
+
+  let result;
+
+  if(editingExpenseId){
+    result=
+      await supabaseClient
+        .from("expenses")
+        .update(payload)
+        .eq(
+          "id",
+          editingExpenseId
+        );
+  }
+  else{
+    result=
+      await supabaseClient
+        .from("expenses")
+        .insert(payload);
+  }
+
+  if(result.error){
+    alert(
+      "Could not save expense: "+
+      result.error.message
+    );
+    return;
+  }
+
+  closeExpenseForm();
+
+  await loadExpenses();
+  await calculateBalances();
+  await loadAnalytics();
+}
+
+async function editExpense(id){
+  const {data,error}=
+    await supabaseClient
+      .from("expenses")
+      .select("*")
+      .eq("id",id)
+      .single();
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  openExpenseForm(
+    data.fund,
+    data,
+    false
+  );
+}
+
+async function deleteExpense(id){
+  if(!confirm("Delete this expense?")){
+    return;
+  }
+
+  const {error}=
+    await supabaseClient
+      .from("expenses")
+      .delete()
+      .eq("id",id);
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  await loadExpenses();
+  await calculateBalances();
+  await loadAnalytics();
+}
+
+async function loadAnalytics(){
+  const now=new Date();
+
+  const year=now.getFullYear();
+
+  const yearStart=
+    `${year}-01-01`;
+
+  const nextYear=
+    `${year+1}-01-01`;
+
+  const {data:plans,error:planError}=
+    await supabaseClient
+      .from("budget_plans")
+      .select(
+        "budget_month,weekly_savings,budget_week_count"
+      )
+      .eq("household_id",householdId)
+      .gte("budget_month",yearStart)
+      .lt("budget_month",nextYear);
+
+  if(planError){
+    console.error(planError);
+  }
+
+  let saved=0;
+
+  (plans||[]).forEach(plan=>{
+    const monthDate=
+      new Date(
+        `${plan.budget_month}T12:00:00`
+      );
+
+    const weeks=
+      Number(plan.budget_week_count)||
+      budgetWeekCount(monthDate);
+
+    saved+=
+      (Number(plan.weekly_savings)||0)
+      *weeks;
+  });
+
+  document.getElementById(
+    "savedThisYear"
+  ).textContent=
+    money(saved);
+
+  const monthStart=
+    firstOfMonth(now);
+
+  const nextMonth=
+    addMonths(monthStart,1);
+
+  const {data:expenses,error:expenseError}=
+    await supabaseClient
+      .from("expenses")
+      .select("fund,amount,profile_id")
+      .eq("household_id",householdId)
+      .gte(
+        "spent_at",
+        monthStart.toISOString()
+      )
+      .lt(
+        "spent_at",
+        nextMonth.toISOString()
+      );
+
+  if(expenseError){
+    console.error(expenseError);
+  }
+
+  let needs=0;
+  let fun=0;
+
+  (expenses||[]).forEach(expense=>{
+    if(expense.fund==="needs"){
+      needs+=Number(expense.amount)||0;
+    }
+
+    if(
+      expense.fund==="fun" &&
+      (
+        !expense.profile_id ||
+        expense.profile_id===currentProfile.id
+      )
+    ){
+      fun+=Number(expense.amount)||0;
+    }
+  });
+
+  document.getElementById(
+    "analyticsNeeds"
+  ).textContent=
+    money(needs);
+
+  document.getElementById(
+    "analyticsFun"
+  ).textContent=
+    money(fun);
+
+  await loadPreviousSavingsYears();
+}
+
+async function loadPreviousSavingsYears(){
+  const currentYear=
+    new Date().getFullYear();
+
+  const {data,error}=
+    await supabaseClient
+      .from("budget_plans")
+      .select(
+        "budget_month,weekly_savings,budget_week_count"
+      )
+      .eq("household_id",householdId)
+      .lt(
+        "budget_month",
+        `${currentYear}-01-01`
+      );
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  const totals={};
+
+  (data||[]).forEach(plan=>{
+    const date=
+      new Date(
+        `${plan.budget_month}T12:00:00`
+      );
+
+    const year=
+      date.getFullYear();
+
+    const weeks=
+      Number(plan.budget_week_count)||
+      budgetWeekCount(date);
+
+    totals[year]=
+      (totals[year]||0)+
+      (
+        Number(plan.weekly_savings)||0
+      )*weeks;
+  });
+
+  const container=
+    document.getElementById(
+      "previousSavingsYears"
+    );
+
+  container.innerHTML="";
+
+  Object.keys(totals)
+    .sort((a,b)=>b-a)
+    .forEach(year=>{
+      const row=
+        document.createElement("div");
+
+      row.className=
+        "analytics-stat";
+
+      row.innerHTML=`
+        <span class="subtext">
+          Total Saved in ${year}
+        </span>
+        <strong>
+          ${money(totals[year])}
+        </strong>
+      `;
+
+      container.appendChild(row);
+    });
+}
+
+function openSettings(){
+  hideScreens();
+
+  document
+    .getElementById("settingsScreen")
+    .classList
+    .remove("hidden");
+
+  document.getElementById(
+    "settingsProfileName"
+  ).textContent=
+    currentProfile.display_name;
+
+  const access=
+    currentProfile.access_level||"";
+
+  document.getElementById(
+    "settingsProfileType"
+  ).textContent=
+    access
+      ?`${access.charAt(0).toUpperCase()}${access.slice(1)} Profile`
+      :"";
+
+  settingsSection="menu";
+
+  renderSettingsSection();
+}
+
+function renderSettingsSection(){
+  [
+    "settingsMenu",
+    "appearanceSettings",
+    "profileSettings",
+    "budgetSettings"
+  ].forEach(id=>{
+    document
+      .getElementById(id)
+      .classList
+      .add("hidden");
+  });
+
+  if(settingsSection==="appearance"){
+    document
+      .getElementById(
+        "appearanceSettings"
+      )
+      .classList
+      .remove("hidden");
+
+    renderThemeGrid();
+
+    document.getElementById(
+      "fontFamilySelect"
+    ).value=
+      selectedFont;
+
+    document.getElementById(
+      "fontSizeRange"
+    ).value=
+      selectedFontSize;
+
+    document.getElementById(
+      "fontSizeLabel"
+    ).textContent=
+      `${selectedFontSize}px`;
+
+    updateFontPreview();
+  }
+  else if(settingsSection==="profile"){
+    document
+      .getElementById(
+        "profileSettings"
+      )
+      .classList
+      .remove("hidden");
+
+    renderSettingsAvatars();
+  }
+  else if(settingsSection==="budget"){
+    document
+      .getElementById(
+        "budgetSettings"
+      )
+      .classList
+      .remove("hidden");
+
+    document
+      .getElementById(
+        "hardModeButton"
+      )
+      .classList
+      .toggle(
+        "selected",
+        profileMode==="hard"
+      );
+
+    document
+      .getElementById(
+        "softModeButton"
+      )
+      .classList
+      .toggle(
+        "selected",
+        profileMode==="soft"
+      );
+  }
+  else{
+    document
+      .getElementById(
+        "settingsMenu"
+      )
+      .classList
+      .remove("hidden");
+  }
+
+  document
+    .getElementById("settingsScreen")
+    .scrollTo({
+      top:0,
+      behavior:"auto"
+    });
+}
+
+const themes={
+  sandy:{
+    name:"Sandy",
+    colors:[
+      "#e8d9ad",
+      "#fff9e9",
+      "#4e351d",
+      "#a9b982"
+    ]
+  },
+
+  petals:{
+    name:"Petals",
+    colors:[
+      "#aaaee0",
+      "#f7d7c8",
+      "#494e96",
+      "#eda5b5"
+    ]
+  },
+
+  harbor:{
+    name:"Harbor",
+    colors:[
+      "#9fb7be",
+      "#f3eadb",
+      "#263e4b",
+      "#d58f79"
+    ]
+  },
+
+  cedar:{
+    name:"Cedar",
+    colors:[
+      "#aebca5",
+      "#eee1c8",
+      "#304638",
+      "#c77f63"
+    ]
+  },
+
+  plum:{
+    name:"Plum & Gold",
+    colors:[
+      "#b9a5b5",
+      "#f2e5cf",
+      "#51374e",
+      "#c7a24c"
+    ]
+  }
+};
+
+function renderThemeGrid(){
+  const grid=
+    document.getElementById(
+      "themeGrid"
+    );
+
+  grid.innerHTML="";
+
+  Object.entries(themes)
+    .forEach(([key,theme])=>{
+      const button=
+        document.createElement("button");
+
+      button.className=
+        "theme-button"+
+        (
+          key===selectedTheme
+            ?" selected"
+            :""
+        );
+
+      button.innerHTML=`
+        <div class="palette">
+          ${theme.colors.map(
+            color=>
+              `<span style="background:${color}"></span>`
+          ).join("")}
+        </div>
+        ${theme.name}
+      `;
+
+      button.onclick=()=>{
+        selectedTheme=key;
+        applyAppearance();
+        renderThemeGrid();
+      };
+
+      grid.appendChild(button);
+    });
+}
+
+function updateFontPreview(){
+  const preview=
+    document.getElementById(
+      "fontPreview"
+    );
+
+  preview.textContent=
+    "This is what your selected font will look like.";
+}
+
+function renderSettingsAvatars(){
+  renderAvatarGrid(
+    "settingsAvatarGrid",
+    selectedSettingsAvatar,
+    name=>{
+      selectedSettingsAvatar=name;
+      renderSettingsAvatars();
+    }
+  );
+}
+
+async function logout(){
+  localStorage.removeItem(
+    "profileSessionToken"
+  );
+
+  localStorage.removeItem(
+    "profileId"
+  );
+
+  currentProfile=null;
+  profileSessionToken=null;
+  currentUser=null;
+  householdId=null;
+  currentHomeBudget=null;
+  currentPrepareBudget=null;
+
+  await supabaseClient.auth.signOut();
+
+  hideScreens();
+
+  document
+    .getElementById("loginScreen")
+    .classList
+    .remove("hidden");
+}
+
+function isMobile(){
+  return window.matchMedia(
+    "(max-width:800px)"
+  ).matches;
+}
+
+function panelOffset(index){
+  const panels=[
+    ...document.querySelectorAll(
+      ".workspace-panel"
+    )
+  ];
+
+  if(!panels[index]){
+    return 0;
+  }
+
+  return panels[index].offsetLeft;
+}
+
+function showPanel(
+  index,
+  animate=true
+){
+  activePanelIndex=
+    Math.max(
+      0,
+      Math.min(3,index)
+    );
+
+  if(!isMobile()){
+    return;
+  }
+
+  const track=
+    document.getElementById(
+      "mobileTrack"
+    );
+
+  track.style.transition=
+    animate
+      ?"transform .32s cubic-bezier(.22,.8,.25,1)"
+      :"none";
+
+  track.style.transform=
+    `translate3d(${-panelOffset(activePanelIndex)}px,0,0)`;
+}
+
+function bindFluidSwipe(){
+  const viewport=
+    document.getElementById(
+      "mobileViewport"
+    );
+
+  const track=
+    document.getElementById(
+      "mobileTrack"
+    );
+
+  let startX=0;
+  let startY=0;
+  let baseX=0;
+  let currentX=0;
+  let dragging=false;
+  let horizontal=false;
+  let startTime=0;
+
+  viewport.addEventListener(
+    "touchstart",
+    event=>{
+      if(
+        !isMobile() ||
+        event.touches.length!==1
+      ){
+        return;
+      }
+
+      startX=
+        event.touches[0].clientX;
+
+      startY=
+        event.touches[0].clientY;
+
+      baseX=
+        -panelOffset(activePanelIndex);
+
+      currentX=baseX;
+
+      dragging=true;
+      horizontal=false;
+      startTime=performance.now();
+
+      track.style.transition="none";
+    },
+    {
+      passive:true
+    }
+  );
+
+  viewport.addEventListener(
+    "touchmove",
+    event=>{
+      if(
+        !dragging ||
+        !isMobile()
+      ){
+        return;
+      }
+
+      const x=
+        event.touches[0].clientX;
+
+      const y=
+        event.touches[0].clientY;
+
+      const dx=x-startX;
+      const dy=y-startY;
+
+      if(!horizontal){
+        if(
+          Math.abs(dx)<6 &&
+          Math.abs(dy)<6
+        ){
+          return;
+        }
+
+        if(Math.abs(dy)>Math.abs(dx)){
+          dragging=false;
+          return;
+        }
+
+        horizontal=true;
+      }
+
+      event.preventDefault();
+
+      let next=
+        baseX+dx;
+
+      const min=
+        -panelOffset(3);
+
+      const max=
+        -panelOffset(0);
+
+      if(next>max){
+        next=
+          max+(next-max)*.25;
+      }
+
+      if(next<min){
+        next=
+          min+(next-min)*.25;
+      }
+
+      currentX=next;
+
+      track.style.transform=
+        `translate3d(${next}px,0,0)`;
+    },
+    {
+      passive:false
+    }
+  );
+
+  viewport.addEventListener(
+    "touchend",
+    event=>{
+      if(!horizontal){
+        dragging=false;
+        return;
+      }
+
+      const endX=
+        event.changedTouches[0].clientX;
+
+      const dx=
+        endX-startX;
+
+      const elapsed=
+        Math.max(
+          1,
+          performance.now()-startTime
+        );
+
+      const velocity=
+        dx/elapsed;
+
+      let target=
+        activePanelIndex;
+
+      if(
+        Math.abs(velocity)>.45 ||
+        Math.abs(dx)>
+          viewport.clientWidth*.22
+      ){
+        target+=
+          dx<0
+            ?1
+            :-1;
+      }
+      else{
+        const centers=[
+          0,1,2,3
+        ].map(
+          index=>
+            -panelOffset(index)
+        );
+
+        let closest=0;
+        let distance=Infinity;
+
+        centers.forEach(
+          (value,index)=>{
+            const d=
+              Math.abs(
+                currentX-value
+              );
+
+            if(d<distance){
+              distance=d;
+              closest=index;
+            }
+          }
+        );
+
+        target=closest;
+      }
+
+      dragging=false;
+      horizontal=false;
+
+      showPanel(target,true);
+    }
+  );
+
+  viewport.addEventListener(
+    "touchcancel",
+    ()=>{
+      dragging=false;
+      horizontal=false;
+      showPanel(
+        activePanelIndex,
+        true
+      );
+    }
+  );
+}
+
+async function sendPasswordReset(email){
+  const {error}=
+    await supabaseClient.auth.resetPasswordForEmail(
+      email,
+      {
+        redirectTo:
+          `${location.origin}${location.pathname}`
+      }
+    );
+
+  if(error){
+    throw error;
+  }
+}
+
+async function sendPinResetLink(){
+  const email=currentUser?.email;
+
+  if(!email){
+    return;
+  }
+
+  const url=
+    new URL(location.href);
+
+  url.search="";
+
+  url.searchParams.set(
+    "pin-reset",
+    "1"
+  );
+
+  url.searchParams.set(
+    "profile",
+    currentProfile.id
+  );
+
+  const {error}=
+    await supabaseClient.auth.signInWithOtp({
+      email,
+      options:{
+        shouldCreateUser:false,
+        emailRedirectTo:
+          url.toString()
+      }
+    });
+
+  if(error){
+    throw error;
+  }
+}
+
+async function handleAuthRedirect(){
+  const params=
+    new URLSearchParams(
+      location.search
+    );
+
+  if(
+    params.get("pin-reset")==="1"
+  ){
+    const profileId=
+      params.get("profile");
+
+    if(profileId){
+      localStorage.setItem(
+        "pendingPinResetProfile",
+        profileId
+      );
+    }
+
+    history.replaceState(
+      {},
+      document.title,
+      location.pathname
+    );
+  }
+
+  const {
+    data:{session}
+  }=
+    await supabaseClient.auth.getSession();
+
+  if(session?.user){
+    currentUser=session.user;
+  }
+
+  const pending=
+    localStorage.getItem(
+      "pendingPinResetProfile"
+    );
+
+  if(pending&&currentUser){
+    const {data:profile}=
+      await supabaseClient
+        .from("profiles")
+        .select("*")
+        .eq("id",pending)
+        .maybeSingle();
+
+    if(profile){
+      currentProfile=profile;
+
+      document.getElementById(
+        "pinResetProfileName"
+      ).textContent=
+        profile.display_name;
+
+      document
+        .getElementById("newPinModal")
+        .classList
+        .remove("hidden");
+    }
+  }
+}
+
+function bindExpenseSheetDismiss(){
+  const overlay=
+    document.getElementById(
+      "expenseSheetOverlay"
+    );
+
+  const sheet=
+    document.getElementById(
+      "expenseSheet"
+    );
+
+  overlay.addEventListener(
+    "click",
+    event=>{
+      if(event.target===overlay){
+        closeExpenseForm();
+      }
+    }
+  );
+
+  let startY=0;
+  let startScroll=0;
+  let dragging=false;
+
+  sheet.addEventListener(
+    "touchstart",
+    event=>{
+      if(event.touches.length!==1){
+        return;
+      }
+
+      startY=
+        event.touches[0].clientY;
+
+      startScroll=
+        sheet.scrollTop;
+
+      dragging=false;
+    },
+    {
+      passive:true
+    }
+  );
+
+  sheet.addEventListener(
+    "touchmove",
+    event=>{
+      const dy=
+        event.touches[0].clientY-
+        startY;
+
+      if(
+        startScroll<=0 &&
+        dy>0
+      ){
+        dragging=true;
+
+        event.preventDefault();
+
+        sheet.classList.add(
+          "dragging"
+        );
+
+        sheet.style.transform=
+          `translateY(${dy}px)`;
+      }
+    },
+    {
+      passive:false
+    }
+  );
+
+  sheet.addEventListener(
+    "touchend",
+    event=>{
+      if(!dragging){
+        return;
+      }
+
+      const dy=
+        event.changedTouches[0].clientY-
+        startY;
+
+      sheet.classList.remove(
+        "dragging"
+      );
+
+      sheet.classList.add(
+        "settling"
+      );
+
+      if(dy>85){
+        sheet.style.transform=
+          "translateY(110%)";
+
+        setTimeout(()=>{
+          sheet.classList.remove(
+            "settling"
+          );
+
+          closeExpenseForm();
+
+          sheet.style.transform=
+            "translateY(0)";
+        },190);
+      }
+      else{
+        sheet.style.transform=
+          "translateY(0)";
+
+        setTimeout(()=>{
+          sheet.classList.remove(
+            "settling"
+          );
+        },210);
+      }
+    }
+  );
+}
+
+let weekTimer=null;
+
+function scheduleWeekBoundaryRefresh(){
+  if(weekTimer){
+    clearTimeout(weekTimer);
+  }
+
+  const now=new Date();
+
+  const next=new Date(now);
+
+  next.setHours(0,0,0,0);
+
+  next.setDate(
+    next.getDate()+
+    (7-next.getDay())%7
+  );
+
+  if(next<=now){
+    next.setDate(
+      next.getDate()+7
+    );
+  }
+
+  weekTimer=setTimeout(
+    async()=>{
+      await calculateBalances();
+      await loadExpenses();
+      scheduleWeekBoundaryRefresh();
+    },
+    Math.min(
+      next-now,
+      2147483647
+    )
+  );
+}
+
+function disableDoubleTapZoom(){
+  let last=0;
+
+  document.addEventListener(
+    "touchend",
+    event=>{
+      const now=Date.now();
+
+      if(now-last<300){
+        event.preventDefault();
+      }
+
+      last=now;
+    },
+    {
+      passive:false
+    }
+  );
+}
+
+document
+  .querySelectorAll(
+    ".money-input"
+  )
+  .forEach(input=>{
+    input.addEventListener(
+      "blur",
+      ()=>{
+        formatMoneyInput(
+          input,
+          false
+        );
+      }
+    );
+  });
+
+document
+  .getElementById(
+    "weeklyNeeds"
+  )
+  .addEventListener(
+    "input",
+    updateBudgetCalculation
+  );
+
+document
+  .getElementById(
+    "weeklySavings"
+  )
+  .addEventListener(
+    "input",
+    updateBudgetCalculation
+  );
+
+document.getElementById(
+  "loginButton"
+).onclick=login;
+
+document.getElementById(
+  "loginPassword"
+).addEventListener(
+  "keydown",
+  event=>{
+    if(event.key==="Enter"){
+      login();
+    }
+  }
+);
+
+document.getElementById(
+  "forgotPasswordButton"
+).onclick=async()=>{
+  const email=
+    document
+      .getElementById(
+        "loginEmail"
+      )
+      .value
+      .trim();
+
+  const errorBox=
+    document.getElementById(
+      "loginError"
+    );
+
+  const message=
+    document.getElementById(
+      "loginMessage"
+    );
+
+  errorBox.classList.add(
+    "hidden"
+  );
+
+  message.classList.add(
+    "hidden"
+  );
+
+  if(!email){
+    errorBox.textContent=
+      "Enter your account email in the Email field first.";
+
+    errorBox.classList.remove(
+      "hidden"
+    );
+
+    return;
+  }
+
+  try{
+    await sendPasswordReset(
+      email
+    );
+
+    message.textContent=
+      "Password reset email sent to the account email.";
+
+    message.classList.remove(
+      "hidden"
+    );
+  }
+  catch(error){
+    errorBox.textContent=
+      error.message;
+
+    errorBox.classList.remove(
+      "hidden"
+    );
+  }
+};
+
+function renderNewProfileAvatars(){
+  renderAvatarGrid(
+    "avatarGrid",
+    selectedAvatar,
+    name=>{
+      selectedAvatar=name;
+      renderNewProfileAvatars();
+    }
+  );
+}
+
+document.getElementById(
+  "addProfileButton"
+).onclick=()=>{
+  document
+    .getElementById("profileList")
+    .classList
+    .add("hidden");
+
+  document
+    .getElementById("addProfileButton")
+    .classList
+    .add("hidden");
+
+  document
+    .getElementById("addProfileForm")
+    .classList
+    .remove("hidden");
+
+  selectedAvatar="knight";
+
+  renderNewProfileAvatars();
+};
+
+document.getElementById(
+  "cancelProfileButton"
+).onclick=renderProfiles;
+
+document.getElementById(
+  "saveProfileButton"
+).onclick=saveProfile;
+
+document.getElementById(
+  "unlockProfileButton"
+).onclick=unlockProfile;
+
+document.getElementById(
+  "cancelPinButton"
+).onclick=renderProfiles;
+
+document.getElementById(
+  "profileLogoutButton"
+).onclick=logout;
+
+document.getElementById(
+  "onboardHard"
+).onclick=async()=>{
+  profileMode="hard";
+
+  await saveProfileSettings({
+    calculation_mode:"hard",
+    avatar:selectedAvatar,
+    font_size:16,
+    font_family:"system",
+    theme:"sandy"
+  });
+
+  document
+    .getElementById("onboardingModal")
+    .classList
+    .add("hidden");
+
+  await enterProfile();
+};
+
+document.getElementById(
+  "onboardSoft"
+).onclick=async()=>{
+  profileMode="soft";
+
+  await saveProfileSettings({
+    calculation_mode:"soft",
+    avatar:selectedAvatar,
+    font_size:16,
+    font_family:"system",
+    theme:"sandy"
+  });
+
+  document
+    .getElementById("onboardingModal")
+    .classList
+    .add("hidden");
+
+  await enterProfile();
+};
+
+document.getElementById(
+  "addIncomeButton"
+).onclick=()=>{
+  newMoneyEditor("income");
+};
+
+document.getElementById(
+  "addMonthlyBillButton"
+).onclick=()=>{
+  newMoneyEditor("monthlyBill");
+};
+
+document.getElementById(
+  "addWeeklyBillButton"
+).onclick=()=>{
+  newMoneyEditor("weeklyBill");
+};
+
+document.getElementById(
+  "saveBudgetButton"
+).onclick=saveBudget;
+
+document.getElementById(
+  "budgetHelpButton"
+).onclick=()=>{
+  document
+    .getElementById("budgetHelpModal")
+    .classList
+    .remove("hidden");
+};
+
+document.getElementById(
+  "closeBudgetHelp"
+).onclick=()=>{
+  document
+    .getElementById("budgetHelpModal")
+    .classList
+    .add("hidden");
+};
+
+document.getElementById(
+  "addExpenseButton"
+).onclick=()=>{
+  openExpenseForm(
+    "needs",
+    null,
+    false
+  );
+};
+
+document.getElementById(
+  "needsFundCard"
+).onclick=()=>{
+  openExpenseForm(
+    "needs",
+    null,
+    true
+  );
+};
+
+document.getElementById(
+  "funFundCard"
+).onclick=()=>{
+  openExpenseForm(
+    "fun",
+    null,
+    true
+  );
+};
+
+document.getElementById(
+  "saveExpenseButton"
+).onclick=saveExpense;
+
+document.getElementById(
+  "cancelExpenseButton"
+).onclick=closeExpenseForm;
+
+document.getElementById(
+  "settingsGear"
+).onclick=openSettings;
+
+document
+  .querySelectorAll(
+    "[data-settings-section]"
+  )
+  .forEach(button=>{
+    button.onclick=()=>{
+      settingsSection=
+        button.dataset.settingsSection;
+
+      renderSettingsSection();
+    };
+  });
+
+document.getElementById(
+  "settingsBackButton"
+).onclick=()=>{
+  if(settingsSection!=="menu"){
+    settingsSection="menu";
+    renderSettingsSection();
+  }
+  else{
+    showMain();
+
+    requestAnimationFrame(()=>{
+      showPanel(
+        activePanelIndex,
+        false
+      );
+    });
+  }
+};
+
+document.getElementById(
+  "settingsSwitchProfileButton"
+).onclick=async()=>{
+  localStorage.removeItem(
+    "profileSessionToken"
+  );
+
+  localStorage.removeItem(
+    "profileId"
+  );
+
+  currentProfile=null;
+
+  hideScreens();
+
+  document
+    .getElementById("profileScreen")
+    .classList
+    .remove("hidden");
+
+  await renderProfiles();
+};
+
+document.getElementById(
+  "settingsLogoutButton"
+).onclick=logout;
+
+document.getElementById(
+  "fontFamilySelect"
+).onchange=event=>{
+  selectedFont=
+    event.target.value;
+
+  applyAppearance();
+  updateFontPreview();
+};
+
+document.getElementById(
+  "fontSizeRange"
+).oninput=event=>{
+  selectedFontSize=
+    Number(
+      event.target.value
+    );
+
+  document.getElementById(
+    "fontSizeLabel"
+  ).textContent=
+    `${selectedFontSize}px`;
+
+  applyAppearance();
+  updateFontPreview();
+};
+
+document.getElementById(
+  "saveAppearanceButton"
+).onclick=()=>{
+  saveProfileSettings({
+    font_size:selectedFontSize,
+    font_family:selectedFont,
+    theme:selectedTheme
+  });
+};
+
+document.getElementById(
+  "saveAvatarButton"
+).onclick=()=>{
+  saveProfileSettings({
+    avatar:selectedSettingsAvatar
+  });
+};
+
+document.getElementById(
+  "hardModeButton"
+).onclick=()=>{
+  profileMode="hard";
+  renderSettingsSection();
+};
+
+document.getElementById(
+  "softModeButton"
+).onclick=()=>{
+  profileMode="soft";
+  renderSettingsSection();
+};
+
+document.getElementById(
+  "saveBudgetSettingsButton"
+).onclick=async()=>{
+  await saveProfileSettings({
+    calculation_mode:profileMode
+  });
+
+  await openBudgetSetup();
+};
+
+document.getElementById(
+  "resetPasswordSettingsButton"
+).onclick=async()=>{
+  const message=
+    document.getElementById(
+      "securityMessage"
+    );
+
+  try{
+    await sendPasswordReset(
+      currentUser.email
+    );
+
+    message.textContent=
+      `Password reset email sent to ${currentUser.email}.`;
+
+    message.classList.remove(
+      "hidden"
+    );
+  }
+  catch(error){
+    alert(error.message);
+  }
+};
+
+document.getElementById(
+  "resetPinEmailButton"
+).onclick=async()=>{
+  const message=
+    document.getElementById(
+      "securityMessage"
+    );
+
+  try{
+    await sendPinResetLink();
+
+    message.textContent=
+      `PIN reset link sent to ${currentUser.email}.`;
+
+    message.classList.remove(
+      "hidden"
+    );
+  }
+  catch(error){
+    alert(error.message);
+  }
+};
+
+document.getElementById(
+  "saveNewPasswordButton"
+).onclick=async()=>{
+  const password=
+    document.getElementById(
+      "newAccountPassword"
+    ).value;
+
+  const errorBox=
+    document.getElementById(
+      "passwordResetError"
+    );
+
+  errorBox.classList.add(
+    "hidden"
+  );
+
+  if(password.length<8){
+    errorBox.textContent=
+      "Use at least 8 characters.";
+
+    errorBox.classList.remove(
+      "hidden"
+    );
+
+    return;
+  }
+
+  const {error}=
+    await supabaseClient.auth.updateUser({
+      password
+    });
+
+  if(error){
+    errorBox.textContent=
+      error.message;
+
+    errorBox.classList.remove(
+      "hidden"
+    );
+
+    return;
+  }
+
+  document
+    .getElementById("newPasswordModal")
+    .classList
+    .add("hidden");
+
+  alert("Password changed.");
+};
+
+document.getElementById(
+  "saveResetPinButton"
+).onclick=async()=>{
+  const pin=
+    document.getElementById(
+      "newProfilePinReset"
+    ).value;
+
+  const errorBox=
+    document.getElementById(
+      "pinResetError"
+    );
+
+  errorBox.classList.add(
+    "hidden"
+  );
+
+  if(!/^[0-9]{4}$/.test(pin)){
+    errorBox.textContent=
+      "PIN must be exactly four digits.";
+
+    errorBox.classList.remove(
+      "hidden"
+    );
+
+    return;
+  }
+
+  const {error}=
+    await supabaseClient.rpc(
+      "set_profile_pin",
+      {
+        p_profile_id:
+          currentProfile.id,
+        p_new_pin:pin
+      }
+    );
+
+  if(error){
+    errorBox.textContent=
+      error.message;
+
+    errorBox.classList.remove(
+      "hidden"
+    );
+
+    return;
+  }
+
+  localStorage.removeItem(
+    "pendingPinResetProfile"
+  );
+
+  document
+    .getElementById("newPinModal")
+    .classList
+    .add("hidden");
+
+  alert("PIN changed.");
+};
+
+window.editExpense=
+  editExpense;
+
+window.deleteExpense=
+  deleteExpense;
+
+window.addEventListener(
+  "resize",
+  ()=>{
+    if(
+      !document
+        .getElementById("appScreen")
+        .classList
+        .contains("hidden")
+    ){
+      showPanel(
+        activePanelIndex,
+        false
+      );
+    }
+  }
+);
+
+bindFluidSwipe();
+bindExpenseSheetDismiss();
+disableDoubleTapZoom();
+
+selectedTheme=
+  localStorage.getItem(
+    "budgetTheme"
+  )||"sandy";
+
+applyAppearance();
+
+supabaseClient.auth.onAuthStateChange(
+  (event,session)=>{
+    if(event==="PASSWORD_RECOVERY"){
+      currentUser=
+        session?.user||
+        currentUser;
+
+      document
+        .getElementById("newPasswordModal")
+        .classList
+        .remove("hidden");
+    }
+  }
+);
+
+(async()=>{
+  await handleAuthRedirect();
+
+  const {
+    data:{session}
+  }=
+    await supabaseClient.auth.getSession();
+
+  if(session?.user){
+    currentUser=session.user;
+    await startApp();
+  }
+})();
 </script>
-</body></html>
+
+</body>
+</html>
