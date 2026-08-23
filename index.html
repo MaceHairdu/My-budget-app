@@ -539,6 +539,7 @@ select:focus{
 select{
   appearance:none;
   -webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3C/svg%3E");
   background-repeat:no-repeat;
   background-position:right 12px center;
   padding-right:40px;
@@ -720,23 +721,23 @@ input[type=number]{
 .sheet-overlay{
   position:fixed;
   inset:0;
-  z-index:1300;
+  z-index:1450;
+  background:rgba(25,20,15,.5);
   display:flex;
   align-items:flex-end;
-  background:rgba(25,20,15,.5);
-  backdrop-filter:blur(3px);
+  justify-content:center;
+  touch-action:none;
 }
 
 .expense-sheet{
-  width:min(600px,100%);
-  max-height:88vh;
+  width:min(620px,100%);
+  max-width:100vw;
+  max-height:92dvh;
   overflow:auto;
-  margin:0 auto;
-  padding:14px 20px calc(22px + env(safe-area-inset-bottom));
-  background:var(--panel);
-  border-radius:25px 25px 0 0;
-  box-shadow:0 -10px 40px rgba(0,0,0,.2);
-  animation:sheetIn .34s cubic-bezier(.2,.9,.25,1.12);
+  padding:24px;
+  border-radius:28px 28px 0 0;
+  transform:translateY(0);
+  animation:sheetIn .44s cubic-bezier(.2,.85,.25,1.12);
   touch-action:pan-y;
 }
 
@@ -746,252 +747,325 @@ input[type=number]{
 }
 
 .expense-sheet.settling{
+  animation:none;
   transition:transform .2s ease;
 }
 
 .sheet-handle{
-  width:48px;
-  height:5px;
+  width:46px;
+  height:6px;
   border-radius:99px;
-  background:var(--input);
-  margin:0 auto 16px;
+  background:var(--edge);
+  margin:-6px auto 18px;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.15);
 }
 
 @keyframes sheetIn{
-  0%{transform:translateY(105%)}
-  80%{transform:translateY(-9px)}
+  0%{transform:translateY(110%)}
+  82%{transform:translateY(-5px)}
   100%{transform:translateY(0)}
+}
+
+.expense-sheet input[type=date]{
+  display:block;
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  -webkit-appearance:none;
+  appearance:none;
+}
+
+.login{
+  width:min(500px,100%);
+  height:100%;
+  margin:auto;
+  padding:40px 20px;
+  overflow:auto;
+}
+
+.login .card{
+  padding:24px;
+}
+
+.profile-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:10px;
+}
+
+.profile-avatar{
+  width:46px;
+  height:46px;
+  flex:0 0 46px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:var(--accent);
+  box-shadow:
+    inset 4px 4px 7px rgba(45,35,20,.15),
+    inset -3px -3px 6px rgba(255,255,255,.45);
+}
+
+.profile-avatar svg{
+  width:34px;
+  height:34px;
+}
+
+.profile-button{
+  flex:1;
+  text-align:left;
 }
 
 .avatar-grid{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
-  margin-top:12px;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  margin-top:10px;
 }
 
 .avatar-choice{
-  aspect-ratio:1;
-  padding:8px;
-  border-radius:18px;
+  padding:9px 5px;
   background:var(--panel);
-  box-shadow:0 0 0 1px var(--edge);
+  border:1px solid var(--edge);
+  border-radius:15px;
+  min-width:0;
 }
 
 .avatar-choice.selected{
-  box-shadow:0 0 0 4px var(--accent);
+  box-shadow:0 0 0 3px var(--accent);
 }
 
 .avatar-choice svg{
-  width:100%;
+  display:block;
+  width:45px;
+  height:45px;
+  margin:auto;
+}
+
+.avatar-label{
+  display:block;
+  font-size:.72em;
+  margin-top:5px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.settings-shell{
   height:100%;
+  overflow:hidden;
+}
+
+.settings{
+  height:100%;
+  overflow:auto;
+  padding:82px 20px 34px;
+  max-width:720px;
+  margin:auto;
+  overscroll-behavior:contain;
+}
+
+.settings-title{
+  margin:0 0 8px;
+}
+
+.settings-profile-name{
+  margin-bottom:28px;
+}
+
+.settings-card{
+  padding:20px;
+  margin-bottom:16px;
+}
+
+.settings-card h2{
+  margin-top:0;
 }
 
 .theme-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:12px;
+  gap:10px;
 }
 
 .theme-button{
   background:var(--panel);
   box-shadow:0 0 0 1px var(--edge);
+  text-align:left;
 }
 
 .theme-button.selected{
-  box-shadow:0 0 0 4px var(--text);
+  box-shadow:0 0 0 3px var(--text);
 }
 
-.palette{
+.swatches{
   display:flex;
-  height:22px;
-  overflow:hidden;
-  border-radius:8px;
-  margin-bottom:8px;
+  gap:5px;
+  margin-top:8px;
 }
 
-.palette span{
-  flex:1;
+.swatch{
+  width:19px;
+  height:19px;
+  border-radius:50%;
+  border:1px solid rgba(0,0,0,.12);
 }
 
-.settings-screen{
-  position:fixed;
-  inset:0;
-  z-index:1200;
-  background:var(--bg);
-  overflow:auto;
-  padding:76px 20px 35px;
-}
-
-.settings-content{
-  width:min(620px,100%);
-  margin:0 auto;
-}
-
-.settings-title{
-  margin:0 0 6px;
-}
-
-.settings-profile{
-  margin-bottom:30px;
-}
-
-.settings-section{
-  padding-bottom:35px;
-}
-
-.settings-card{
-  padding:20px;
-  margin-bottom:18px;
+.font-preview{
+  margin-top:8px;
+  padding:12px;
+  border-radius:12px;
+  background:color-mix(in srgb,var(--panel) 90%,var(--edge));
 }
 
 .range-row{
   display:flex;
   align-items:center;
-  gap:13px;
+  gap:12px;
 }
 
 .range-row input{
-  flex:1;
+  padding:0;
+  border:0;
+  box-shadow:none;
+  background:transparent;
 }
 
-.font-preview{
-  margin-top:14px;
-  padding:16px;
-  border-radius:14px;
-  background:var(--panel);
-  border:1px solid var(--edge);
+.security-email{
+  font-weight:900;
+  overflow-wrap:anywhere;
 }
 
-.analytics-stat{
-  padding:14px 0;
-  border-bottom:1px solid var(--input);
-}
-
-.analytics-stat strong{
-  display:block;
-  font-size:1.7em;
-  margin-top:5px;
-}
-
-.login-wrap,
-.profile-wrap{
-  min-height:100%;
-  overflow:auto;
-  padding:35px 20px;
-}
-
-.login-box,
-.profile-box{
-  width:min(500px,100%);
-  margin:40px auto;
-  padding:24px;
-}
-
-.profile-button{
-  width:100%;
-  margin-top:12px;
-}
-
-@media(max-width:800px){
-  #mainWorkspace{
-    display:block;
-    padding:0;
-    height:100%;
-    overflow:hidden;
+@media(max-width:900px){
+  html,body{
+    height:100dvh;
   }
 
-  .mobile-viewport{
-    width:100%;
-    height:100%;
-    overflow:visible;
+  #mainWorkspace{
+    height:100dvh;
+    padding:0;
+    display:block;
+    overflow:hidden;
+    position:relative;
     touch-action:pan-y;
   }
 
   .mobile-track{
-    height:100%;
     display:flex;
-    gap:14px;
+    height:100%;
+    gap:12px;
     will-change:transform;
     transform:translate3d(0,0,0);
   }
 
   .workspace-panel{
-    flex:0 0 calc(100vw - 42px);
-    height:calc(100dvh - 18px);
-    margin-top:0;
+    display:block;
+    flex:0 0 88vw;
+    width:88vw;
+    height:100dvh;
+    min-height:0;
+    border-radius:20px;
+    box-shadow:
+      0 0 0 1px var(--edge),
+      0 8px 0 var(--edge),
+      0 18px 35px rgba(60,45,25,.14);
+    overflow:hidden;
   }
 
-  .workspace-panel:first-child{
-    margin-left:21px;
-  }
-
-  .workspace-panel:last-child{
-    margin-right:21px;
-  }
-
-  .panel-inner{
-    padding:20px 17px 24px;
+  .workspace-panel .panel-inner{
+    padding:69px 15px 28px;
     overflow-y:auto;
     overscroll-behavior:contain;
   }
 
-  #homePanel .panel-inner{
+  .home-panel .panel-inner{
     overflow:hidden;
+    padding-top:68px;
   }
 
   .date-strip{
+    max-width:100%;
     margin-top:0;
-    margin-bottom:13px;
   }
 
   .date-day{
-    height:39px;
+    height:42px;
   }
 
   .date-day::before{
-    width:34px;
-    height:34px;
+    width:35px;
+    height:35px;
   }
 
   .fund-card{
-    min-height:0;
-    flex:1;
-    padding:13px;
-  }
-
-  .home-funds{
-    height:calc(100% - 80px);
-    gap:14px;
-  }
-
-  .balance{
-    font-size:clamp(27px,10vw,39px);
-  }
-
-  .home-expenses{
-    margin-top:7px;
-  }
-
-  .home-expense{
-    padding:5px 1px;
+    min-height:calc((100dvh - 224px)/2);
+    max-height:280px;
   }
 
   .settings-gear{
     top:12px;
-    right:13px;
+    right:12px;
+  }
+
+  .settings-back{
+    top:12px;
+    left:12px;
+  }
+
+  .panel-header h2{
+    font-size:1.35em;
+  }
+
+  .edit-grid{
+    grid-template-columns:minmax(0,1fr) 108px;
+  }
+
+  .modal-overlay{
+    padding:12px;
+  }
+
+  .modal-card{
+    max-height:92dvh;
+  }
+
+  .avatar-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+
+  .allocation-row{
+    grid-template-columns:minmax(0,1fr) 115px;
+  }
+
+  .theme-grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+@media(max-width:390px){
+  .workspace-panel{
+    flex-basis:90vw;
+    width:90vw;
+  }
+
+  .workspace-panel .panel-inner{
+    padding-left:12px;
+    padding-right:12px;
+  }
+
+  .fund-card{
+    min-height:190px;
+  }
+
+  .balance{
+    font-size:29px;
   }
 
   .edit-grid{
     grid-template-columns:1fr;
   }
 
-  .allocation-row{
-    grid-template-columns:1fr;
-  }
-
   .avatar-grid{
-    grid-template-columns:repeat(3,1fr);
+    grid-template-columns:repeat(3,minmax(0,1fr));
   }
 }
 </style>
@@ -999,284 +1073,315 @@ input[type=number]{
 
 <body class="theme-sandy font-system">
 
-<div id="loginScreen" class="app">
-  <div class="login-wrap">
-    <div class="card login-box">
-      <h1>My Budget</h1>
-      <p class="subtext">Sign in to continue.</p>
+<button class="icon-button settings-gear hidden" id="settingsGear" aria-label="Settings">
+  <svg viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="3.2"></circle>
+    <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.12 2.12-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V20.3h-3v-.08a1.7 1.7 0 0 0-1.03-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-2.12-2.12.06-.06A1.7 1.7 0 0 0 7 15a1.7 1.7 0 0 0-1.56-1.03H5.3v-3h.14A1.7 1.7 0 0 0 7 9.94a1.7 1.7 0 0 0-.34-1.88L6.6 8l2.12-2.12.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 11.7 4.7v-.1h3v.1a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.88-.34l.06-.06L19.8 8l-.06.06a1.7 1.7 0 0 0-.34 1.88 1.7 1.7 0 0 0 1.56 1.03h.14v3h-.14A1.7 1.7 0 0 0 19.4 15Z"></path>
+  </svg>
+</button>
 
-      <label>Email</label>
-      <input type="email" id="loginEmail" autocomplete="email">
+<section class="login" id="loginScreen">
+  <div class="card">
+    <h1>Budget</h1>
+    <p class="subtext">Sign in to continue.</p>
 
-      <label>Password</label>
-      <input type="password" id="loginPassword" autocomplete="current-password">
+    <label>Email</label>
+    <input id="loginEmail" type="email" autocomplete="email">
 
-      <button class="primary-button" id="loginButton" style="width:100%;margin-top:20px">
-        Sign In
-      </button>
+    <label>Password</label>
+    <input id="loginPassword" type="password" autocomplete="current-password">
 
-      <button class="secondary-button" id="forgotPasswordButton" style="width:100%;margin-top:12px">
-        Forgot Password
-      </button>
+    <button class="primary-button" id="loginButton" style="width:100%;margin-top:18px">
+      Sign In
+    </button>
 
-      <div id="loginError" class="error hidden"></div>
-      <div id="loginMessage" class="success hidden"></div>
-    </div>
+    <button class="secondary-button" id="forgotPasswordButton" style="width:100%;margin-top:11px">
+      Forgot Password?
+    </button>
+
+    <div id="loginError" class="error hidden"></div>
+    <div id="loginMessage" class="success hidden"></div>
   </div>
-</div>
+</section>
 
-<div id="profileScreen" class="app hidden">
-  <div class="profile-wrap">
-    <div class="profile-box">
-      <h1>Who's using My Budget?</h1>
-      <p class="subtext">Select a profile.</p>
+<section class="login hidden" id="profileScreen">
+  <div class="card">
+    <h1>Choose a profile</h1>
+    <p class="subtext">Select a profile or create a new one.</p>
 
-      <div id="profileList"></div>
+    <div id="profileList"></div>
 
-      <button class="secondary-button" id="addProfileButton" style="width:100%;margin-top:16px">
-        Add Profile
-      </button>
-
-      <div class="card hidden" id="addProfileForm" style="padding:20px;margin-top:18px">
-        <h2>Add Profile</h2>
-
-        <label>Name</label>
-        <input type="text" id="newProfileName">
-
-        <label>4-Digit PIN</label>
-        <input type="password" id="newProfilePin" inputmode="numeric" maxlength="4">
-
-        <label>Profile Picture</label>
-        <div id="avatarGrid" class="avatar-grid"></div>
-
-        <button class="primary-button" id="saveProfileButton" style="width:100%;margin-top:20px">
-          Save Profile
-        </button>
-
-        <button class="secondary-button" id="cancelProfileButton" style="width:100%;margin-top:10px">
-          Cancel
-        </button>
-
-        <div id="profileError" class="error hidden"></div>
-      </div>
-
-      <div class="card hidden" id="pinScreen" style="padding:20px;margin-top:18px">
-        <h2>Enter PIN</h2>
-        <p id="pinProfileName" class="subtext"></p>
-
-        <input type="password" id="profilePin" inputmode="numeric" maxlength="4">
-
-        <button class="primary-button" id="unlockProfileButton" style="width:100%;margin-top:14px">
-          Unlock
-        </button>
-
-        <button class="secondary-button" id="cancelPinButton" style="width:100%;margin-top:10px">
-          Back
-        </button>
-
-        <div id="pinError" class="error hidden"></div>
-      </div>
-
-      <button class="secondary-button" id="profileLogoutButton" style="width:100%;margin-top:20px">
-        Log Out
-      </button>
-    </div>
+    <button class="secondary-button" id="addProfileButton" style="width:100%;margin-top:14px">
+      + Add Profile
+    </button>
   </div>
-</div>
 
-<div id="appScreen" class="app hidden">
+  <div class="card hidden" id="addProfileForm" style="margin-top:14px">
+    <h2>New Profile</h2>
 
-  <button class="icon-button settings-gear" id="settingsGear" aria-label="Settings">
-    <svg viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="3"></circle>
-      <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21h-4v-.09A1.7 1.7 0 0 0 8.6 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3v-4h.09A1.7 1.7 0 0 0 4.6 8.6a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3h4v.09A1.7 1.7 0 0 0 15.4 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.4 9c.14.36.35.7.6 1 .28.3.66.46 1.1.4H21v4h-.09a1.7 1.7 0 0 0-1.51.6z"></path>
-    </svg>
+    <label>Name</label>
+    <input id="newProfileName">
+
+    <label>4-Digit PIN</label>
+    <input id="newProfilePin" type="password" inputmode="numeric" maxlength="4">
+
+    <label>Profile Picture</label>
+    <div id="avatarGrid" class="avatar-grid"></div>
+
+    <button class="primary-button" id="saveProfileButton" style="width:100%;margin-top:18px">
+      Create Profile
+    </button>
+
+    <button class="secondary-button" id="cancelProfileButton" style="width:100%;margin-top:10px">
+      Cancel
+    </button>
+
+    <div id="profileError" class="error hidden"></div>
+  </div>
+
+  <div class="card hidden" id="pinScreen" style="margin-top:14px">
+    <h2>Enter PIN</h2>
+    <p class="subtext" id="pinProfileName"></p>
+
+    <input id="profilePin" type="password" inputmode="numeric" maxlength="4">
+
+    <button class="primary-button" id="unlockProfileButton" style="width:100%;margin-top:12px">
+      Unlock
+    </button>
+
+    <button class="secondary-button" id="cancelPinButton" style="width:100%;margin-top:10px">
+      Back
+    </button>
+
+    <div id="pinError" class="error hidden"></div>
+  </div>
+
+  <button class="danger-button" id="profileLogoutButton" style="width:100%;margin-top:14px">
+    Log Out
   </button>
+</section>
 
-  <div class="mobile-viewport" id="mobileViewport">
-    <div id="mainWorkspace">
-      <div class="mobile-track" id="mobileTrack">
+<section class="app hidden" id="appScreen">
+  <main id="mainWorkspace">
+    <div class="mobile-track" id="mobileTrack">
 
-        <section class="panel workspace-panel" id="analyticsPanel">
-          <div class="panel-inner">
-            <div class="panel-header">
-              <h2>Analytics</h2>
-            </div>
+      <section class="panel workspace-panel" id="analyticsPanel">
+        <div class="panel-inner">
+          <div class="panel-header">
+            <h2>Analytics</h2>
+          </div>
 
-            <div class="analytics-stat">
-              <span class="subtext">Saved This Year</span>
-              <strong id="savedThisYear">$0.00</strong>
-            </div>
+          <div class="card" style="padding:18px;margin-bottom:16px">
+            <div class="subtext">Spending This Year</div>
+            <div class="balance" id="analyticsTotal">$0.00</div>
+          </div>
 
-            <div class="analytics-stat">
-              <span class="subtext">Needs Spending This Month</span>
+          <div class="card" style="padding:18px;margin-bottom:16px">
+            <h3>Needs Spending</h3>
+            <div class="calc-row">
+              <span>This year</span>
               <strong id="analyticsNeeds">$0.00</strong>
             </div>
+          </div>
 
-            <div class="analytics-stat">
-              <span class="subtext">Fun Money Spending This Month</span>
+          <div class="card" style="padding:18px;margin-bottom:16px">
+            <h3>Fun Money Spending</h3>
+            <div class="calc-row">
+              <span>This year</span>
               <strong id="analyticsFun">$0.00</strong>
             </div>
-
-            <div id="previousSavingsYears"></div>
           </div>
-        </section>
 
-        <section class="panel workspace-panel" id="historyPanel">
-          <div class="panel-inner">
-            <div class="panel-header">
-              <h2>Expense History</h2>
-              <button class="primary-button small-button" id="addExpenseButton">
-                Add Expense
-              </button>
+          <div class="card" style="padding:18px">
+            <h3>Amount You've Saved This Year</h3>
+
+            <div class="balance" id="analyticsSavedThisYear">$0.00</div>
+
+            <div class="subtext" style="margin-top:8px">
+              Adds each saved monthly Savings allocation across that month's actual budget weeks.
             </div>
 
-            <div id="expenseHistory"></div>
-          </div>
-        </section>
-
-        <section class="panel workspace-panel" id="homePanel">
-          <div class="panel-inner">
-            <div class="date-strip">
-              <div class="date-month" id="dateMonth"></div>
-              <div class="date-days" id="dateDays"></div>
-            </div>
-
-            <div class="home-funds">
-              <div class="card fund-card" id="needsFundCard">
-                <div class="fund-label">Needs</div>
-                <div class="balance" id="needsBalance">$0.00</div>
-                <div class="subtext">Available</div>
-                <div class="home-expenses" id="needsHomeExpenses"></div>
-              </div>
-
-              <div class="card fund-card" id="funFundCard">
-                <div class="fund-label">Fun Money</div>
-                <div class="balance" id="funBalance">$0.00</div>
-                <div class="subtext">Available</div>
-                <div class="home-expenses" id="funHomeExpenses"></div>
-              </div>
+            <div class="calc-row" style="margin-top:12px">
+              <span id="analyticsPriorYearLabel">Last year</span>
+              <strong id="analyticsSavedPriorYear">$0.00</strong>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="panel workspace-panel" id="budgetPanel">
-          <div class="panel-inner">
-            <h2 id="budgetTitle">Prepare Your Next Budget</h2>
-            <p class="subtext" id="budgetInstructions"></p>
+      <section class="panel workspace-panel" id="expenseHistoryPanel">
+        <div class="panel-inner">
+          <div class="panel-header">
+            <h2>Expense History</h2>
 
-            <div class="mode-note" id="budgetModeNote"></div>
-
-            <div class="info-link" id="budgetHelpButton">
-              <span>What if I pay a bill in the middle of the month?</span>
-              <span class="info-icon">i</span>
-            </div>
-
-            <h3>Income</h3>
-            <div id="incomeList" class="saved-list"></div>
-            <button class="secondary-button" id="addIncomeButton" style="width:100%;margin-top:10px">
-              Add Income
+            <button class="primary-button small-button" id="addExpenseButton">
+              + Expense
             </button>
-
-            <h3>Monthly Bills</h3>
-            <div id="monthlyBillList" class="saved-list"></div>
-            <button class="secondary-button" id="addMonthlyBillButton" style="width:100%;margin-top:10px">
-              Add Monthly Bill
-            </button>
-
-            <h3>Weekly Bills</h3>
-            <p class="subtext">
-              Optional recurring weekly expenses such as childcare.
-            </p>
-            <div id="weeklyBillList" class="saved-list"></div>
-            <button class="secondary-button" id="addWeeklyBillButton" style="width:100%;margin-top:10px">
-              Add Weekly Bill
-            </button>
-
-            <h3>Weekly Allocations</h3>
-
-            <label>Needs</label>
-            <input class="money-input" id="weeklyNeeds" inputmode="decimal" placeholder="$0.00">
-
-            <label>Savings</label>
-            <input class="money-input" id="weeklySavings" inputmode="decimal" placeholder="$0.00">
-
-            <div class="calculation">
-              <h3 style="margin-top:0">Calculation</h3>
-
-              <div class="calc-row">
-                <span>Monthly Income</span>
-                <strong id="calcIncome">$0.00</strong>
-              </div>
-
-              <div class="calc-row">
-                <span>Monthly Bills</span>
-                <strong id="calcBills">-$0.00</strong>
-              </div>
-
-              <div class="calc-row">
-                <span>Monthly Net</span>
-                <strong id="calcNet">$0.00</strong>
-              </div>
-
-              <div class="calc-row">
-                <span id="weeklyTotalLabel">Weekly Total</span>
-                <strong id="calcWeeklyTotal">$0.00</strong>
-              </div>
-
-              <div class="calc-row">
-                <span>Weekly Bills</span>
-                <strong id="calcWeeklyBills">-$0.00</strong>
-              </div>
-
-              <div class="calc-row">
-                <span>Needs</span>
-                <strong id="calcNeeds">-$0.00</strong>
-              </div>
-
-              <div class="calc-row">
-                <span>Savings</span>
-                <strong id="calcSavings">-$0.00</strong>
-              </div>
-
-              <div class="calc-row calc-total">
-                <span>Fun Money Pool</span>
-                <strong id="calcFunPool">$0.00</strong>
-              </div>
-            </div>
-
-            <h3>Fun Money Allocation</h3>
-            <p class="subtext">
-              Divide the weekly Fun Money pool among profiles.
-            </p>
-
-            <div id="profileAllocationList"></div>
-
-            <div class="allocation-summary">
-              <div class="calc-row">
-                <span>Assigned</span>
-                <strong id="allocatedFun">$0.00</strong>
-              </div>
-              <div class="calc-row">
-                <span>Unassigned</span>
-                <strong id="unallocatedFun">$0.00</strong>
-              </div>
-            </div>
-
-            <button class="primary-button" id="saveBudgetButton" style="width:100%;margin-top:20px">
-              Save Budget
-            </button>
-
-            <div id="budgetMessage" class="success hidden"></div>
           </div>
-        </section>
 
-      </div>
+          <div id="transactions">
+            <p class="subtext">No expenses yet.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel workspace-panel home-panel" id="homePanel">
+        <div class="panel-inner">
+
+          <div class="date-strip">
+            <div class="date-month" id="dateMonth"></div>
+            <div class="date-days" id="dateDays"></div>
+          </div>
+
+          <div class="home-funds">
+
+            <div class="card fund-card" id="needsFundCard">
+              <div class="fund-label">Needs</div>
+              <div class="balance" id="needsBalance">$0.00</div>
+              <div class="home-expenses" id="homeNeedsExpenses"></div>
+            </div>
+
+            <div class="card fund-card" id="funFundCard">
+              <div class="fund-label">Fun Money</div>
+              <div class="balance" id="funBalance">$0.00</div>
+              <div class="home-expenses" id="homeFunExpenses"></div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <section class="panel workspace-panel" id="monthlyBudgetPanel">
+        <div class="panel-inner">
+
+          <div class="panel-header">
+            <h2 id="budgetSetupTitle">Prepare Your Next Budget</h2>
+          </div>
+
+          <p class="subtext" id="budgetSetupInstructions"></p>
+
+          <div class="mode-note" id="calculationModeNote"></div>
+
+          <div class="info-link" id="budgetHelpButton">
+            <span>What if I pay a bill in the middle of the month?</span>
+            <span class="info-icon">i</span>
+          </div>
+
+          <h3>Income</h3>
+          <p class="subtext" id="incomePeriodLabel"></p>
+
+          <div class="saved-list" id="incomeList"></div>
+
+          <button class="secondary-button" id="addIncomeButton" style="width:100%;margin-top:10px">
+            + Add Income
+          </button>
+
+          <div id="newIncomeEditor"></div>
+
+          <h3>Monthly Bills</h3>
+
+          <p class="subtext">
+            Bills that are paid monthly are subtracted before the budget is converted to a weekly amount.
+          </p>
+
+          <div class="saved-list" id="monthlyBillList"></div>
+
+          <button class="secondary-button" id="addMonthlyBillButton" style="width:100%;margin-top:10px">
+            + Add Monthly Bill
+          </button>
+
+          <div id="newMonthlyBillEditor"></div>
+
+          <h3>Weekly Bills</h3>
+
+          <p class="subtext">
+            Optional. Use this for things such as weekly childcare. Weekly Bills are subtracted after the monthly Net is converted to a weekly amount.
+          </p>
+
+          <div class="saved-list" id="weeklyBillList"></div>
+
+          <button class="secondary-button" id="addWeeklyBillButton" style="width:100%;margin-top:10px">
+            + Add Weekly Bill
+          </button>
+
+          <div id="newWeeklyBillEditor"></div>
+
+          <h3>Weekly Allocations</h3>
+
+          <label>Needs</label>
+          <input id="weeklyNeeds" class="money-input" inputmode="decimal" placeholder="$0.00">
+
+          <label>Savings</label>
+          <input id="weeklySavings" class="money-input" inputmode="decimal" placeholder="$0.00">
+
+          <div class="calculation">
+            <h3>Monthly Calculation</h3>
+
+            <div class="calc-row">
+              <span>Monthly Income</span>
+              <strong id="calcIncome">$0.00</strong>
+            </div>
+
+            <div class="calc-row">
+              <span>Monthly Bills</span>
+              <strong id="calcBills">-$0.00</strong>
+            </div>
+
+            <div class="calc-row">
+              <span>Net</span>
+              <strong id="calcNet">$0.00</strong>
+            </div>
+
+            <div class="calc-row">
+              <span>Weekly Total</span>
+              <strong id="calcWeeklyTotal">$0.00</strong>
+            </div>
+
+            <div class="calc-row">
+              <span>Weekly Bills</span>
+              <strong id="calcWeeklyBills">-$0.00</strong>
+            </div>
+
+            <div class="calc-row">
+              <span>Weekly Needs</span>
+              <strong id="calcWeeklyNeeds">-$0.00</strong>
+            </div>
+
+            <div class="calc-row">
+              <span>Weekly Savings</span>
+              <strong id="calcWeeklySavings">-$0.00</strong>
+            </div>
+
+            <div class="calc-row calc-total">
+              <span>Fun Money Pool</span>
+              <strong id="calcFunPool">$0.00</strong>
+            </div>
+          </div>
+
+          <h3>Fun Money Allocation</h3>
+
+          <p class="subtext">
+            Assign the weekly Fun Money pool among profiles. The total assigned cannot exceed the pool.
+          </p>
+
+          <div id="profileAllocationList"></div>
+
+          <div class="allocation-summary subtext" id="allocationSummary"></div>
+
+          <button class="primary-button" id="saveBudgetButton" style="width:100%;margin-top:18px">
+            Save Budget
+          </button>
+
+          <div id="budgetMessage" class="success hidden"></div>
+
+        </div>
+      </section>
+
     </div>
-  </div>
-</div>
+  </main>
+</section>
 
-<div id="settingsScreen" class="settings-screen hidden">
+<section class="app hidden settings-shell" id="settingsScreen">
 
   <button class="icon-button settings-back" id="settingsBackButton" aria-label="Back">
     <svg viewBox="0 0 24 24">
@@ -1284,43 +1389,50 @@ input[type=number]{
     </svg>
   </button>
 
-  <div class="settings-content">
-    <h1 class="settings-title">Settings</h1>
-    <div class="settings-profile">
-      <strong id="settingsProfileName"></strong>
-      <div class="subtext" id="settingsProfileType"></div>
-    </div>
+  <div class="settings">
 
-    <div id="settingsMenu" class="settings-section">
+    <h1 class="settings-title" id="settingsTitle">Settings</h1>
+    <div class="settings-profile-name subtext" id="settingsProfileName"></div>
+
+    <div id="settingsMenu">
+
       <button class="folder-button" data-settings-section="appearance">
-        <span>Appearance</span><span>›</span>
+        <span>Appearance</span>
+        <span>›</span>
       </button>
 
       <button class="folder-button" data-settings-section="profile">
-        <span>Profile</span><span>›</span>
+        <span>Profile</span>
+        <span>›</span>
       </button>
 
       <button class="folder-button" data-settings-section="budget">
-        <span>Budget Settings</span><span>›</span>
+        <span>Budget Settings</span>
+        <span>›</span>
       </button>
 
-      <button class="secondary-button" id="settingsSwitchProfileButton" style="width:100%;margin-top:12px">
-        Switch Profile
+      <button class="folder-button" id="settingsSwitchProfileButton">
+        <span>Switch Profile</span>
+        <span>›</span>
       </button>
 
-      <button class="secondary-button" id="settingsLogoutButton" style="width:100%;margin-top:12px">
+      <button class="danger-button" id="settingsLogoutButton" style="width:100%;margin-top:5px">
         Log Out
       </button>
     </div>
 
-    <div id="appearanceSettings" class="settings-section hidden">
+    <div id="appearanceSettings" class="hidden">
+
       <div class="card settings-card">
-        <h2>Appearance</h2>
-
-        <h3>Color Palette</h3>
+        <h2>Theme</h2>
         <div class="theme-grid" id="themeGrid"></div>
+      </div>
 
-        <h3>Font</h3>
+      <div class="card settings-card">
+        <h2>Font</h2>
+
+        <label>Font Style</label>
+
         <select id="fontFamilySelect">
           <option value="system">Clean</option>
           <option value="rounded">Rounded</option>
@@ -1329,30 +1441,32 @@ input[type=number]{
           <option value="pixel">Pixel</option>
         </select>
 
-        <h3>Font Size</h3>
+        <div class="font-preview" id="fontPreview">
+          The quick brown fox jumps over the lazy dog. 1234567890
+        </div>
+
+        <label>Font Size</label>
+
         <div class="range-row">
-          <input type="range" id="fontSizeRange" min="13" max="24" step="1">
+          <input id="fontSizeRange" type="range" min="12" max="30" step="1">
           <strong id="fontSizeLabel">16px</strong>
         </div>
 
-        <div class="font-preview" id="fontPreview">
-          This is what your selected font will look like.
-        </div>
-
-        <button class="primary-button" id="saveAppearanceButton" style="width:100%;margin-top:20px">
+        <button class="primary-button" id="saveAppearanceButton" style="width:100%;margin-top:15px">
           Save Appearance
         </button>
       </div>
+
     </div>
 
-    <div id="profileSettings" class="settings-section hidden">
+    <div id="profileSettings" class="hidden">
+
       <div class="card settings-card">
-        <h2>Profile</h2>
+        <h2>Profile Picture</h2>
 
-        <h3>Profile Picture</h3>
-        <div class="avatar-grid" id="settingsAvatarGrid"></div>
+        <div id="settingsAvatarGrid" class="avatar-grid"></div>
 
-        <button class="primary-button" id="saveAvatarButton" style="width:100%;margin-top:16px">
+        <button class="primary-button" id="saveAvatarButton" style="width:100%;margin-top:15px">
           Save Profile Picture
         </button>
       </div>
@@ -1361,99 +1475,47 @@ input[type=number]{
         <h2>Security</h2>
 
         <p class="subtext">
-          Security emails are sent only to the email address already attached to this account.
+          Security emails are sent only to the email address attached to this account.
         </p>
 
-        <button class="secondary-button" id="resetPasswordSettingsButton" style="width:100%;margin-top:12px">
-          Reset Password
+        <div class="security-email" id="accountEmailDisplay"></div>
+
+        <button class="secondary-button" id="resetPinEmailButton" style="width:100%;margin-top:14px">
+          Email Me a PIN Reset Link
         </button>
 
-        <button class="secondary-button" id="resetPinEmailButton" style="width:100%;margin-top:12px">
-          Reset Profile PIN
+        <button class="secondary-button" id="resetPasswordSettingsButton" style="width:100%;margin-top:10px">
+          Email Me a Password Reset Link
         </button>
 
         <div id="securityMessage" class="success hidden"></div>
       </div>
+
     </div>
 
-    <div id="budgetSettings" class="settings-section hidden">
+    <div id="budgetSettings" class="hidden">
+
       <div class="card settings-card">
         <h2>Budget Calculation</h2>
 
-        <button class="choice-button" id="hardModeButton" style="width:100%;margin-top:10px">
-          <strong>Hard Budget</strong>
-          <div class="subtext">
-            Divide the monthly net by the actual number of budget weeks owned by that month.
-          </div>
-        </button>
-
-        <button class="choice-button" id="softModeButton" style="width:100%;margin-top:12px">
-          <strong>Soft Budget</strong>
-          <div class="subtext">
-            Divide the monthly net by 4.345 to spread money more evenly across the year.
-          </div>
-        </button>
-
         <div class="mode-note">
-          Soft Budget can show more weekly spending money than is physically available during some five-week months. Hard Budget is safer when you do not maintain a cash buffer.
+          <strong>Standard Budget</strong><br>
+          Your monthly Net is divided by the actual number of budget weeks assigned to that month. A Sunday-through-Saturday week belongs to whichever month contains at least four days of that week.
         </div>
 
-        <button class="primary-button" id="saveBudgetSettingsButton" style="width:100%;margin-top:18px">
-          Save Budget Setting
-        </button>
+        <p class="subtext">
+          Five-week months will have a smaller weekly budget than four-week months. Building savings during more comfortable months can help when a five-week month is tighter.
+        </p>
       </div>
-    </div>
-  </div>
-</div>
 
-<div class="sheet-overlay hidden" id="expenseSheetOverlay">
-  <div class="expense-sheet" id="expenseSheet">
-    <div class="sheet-handle"></div>
-
-    <h2 id="expenseSheetTitle">Add Expense</h2>
-
-    <label>Name of the Expense</label>
-    <input type="text" id="expenseDescription">
-
-    <label>Amount</label>
-    <input class="money-input" id="expenseAmount" inputmode="decimal" placeholder="$0.00">
-
-    <div id="expenseFundField">
-      <label>Use Money From</label>
-      <select id="expenseFund">
-        <option value="needs">Needs</option>
-        <option value="fun">Fun Money</option>
-      </select>
     </div>
 
-    <label>Category</label>
-    <select id="expenseCategory">
-      <option value="Groceries">Groceries</option>
-      <option value="Gas">Gas</option>
-      <option value="Bill">Bill</option>
-      <option value="Dining">Dining</option>
-      <option value="Shopping">Shopping</option>
-      <option value="Entertainment">Entertainment</option>
-      <option value="Household">Household</option>
-      <option value="Transportation">Transportation</option>
-      <option value="Other">Other</option>
-    </select>
-
-    <label>Date</label>
-    <input type="date" id="expenseDate">
-
-    <button class="primary-button" id="saveExpenseButton" style="width:100%;margin-top:20px">
-      Save Expense
-    </button>
-
-    <button class="secondary-button" id="cancelExpenseButton" style="width:100%;margin-top:10px">
-      Cancel
-    </button>
   </div>
-</div>
+</section>
 
 <div class="modal-overlay hidden" id="budgetHelpModal">
   <div class="card modal-card">
+
     <h2>What if I pay a bill in the middle of the month?</h2>
 
     <p>
@@ -1461,7 +1523,7 @@ input[type=number]{
     </p>
 
     <p>
-      Also input all your monthly bills. If you have a bill that isn't paid on the 1st of the month, include it as if you paid it on the next "1st of the Month" that occurs.
+      Also input all your monthly bills. If you have a bill that isn’t paid on the 1st of the month, include it as if you paid it on the next “1st of the Month” that occurs.
     </p>
 
     <p>
@@ -1472,88 +1534,120 @@ input[type=number]{
       This is so that all income and bills paid throughout the previous month, in addition to the bills paid on the 1st of this month, are used to calculate your budget for next month. This gives you the foresight to plan a month in advance.
     </p>
 
-    <button class="secondary-button" id="closeBudgetHelp" style="width:100%">
+    <button class="secondary-button" id="closeBudgetHelp" style="width:100%;margin-top:10px">
       Close
     </button>
-  </div>
-</div>
 
-<div class="modal-overlay hidden" id="onboardingModal">
-  <div class="card modal-card">
-    <h2>Please read this before you accidentally spend more than you have.</h2>
-
-    <p>
-      Budget months do not all contain the same number of Sunday-through-Saturday budget weeks. Some months effectively own five weeks instead of four.
-    </p>
-
-    <p>
-      Hard Budget divides your available monthly money by the actual number of budget weeks in that month. This is the safer choice if you are frequently near the bottom of your bank account.
-    </p>
-
-    <p>
-      Soft Budget divides by 4.345, the average number of weeks per month. This spreads your spending allowance more evenly across the year, but it assumes you have enough money saved to absorb the difference during some five-week months.
-    </p>
-
-    <button class="primary-button" id="onboardHard" style="width:100%;margin-top:12px">
-      Use Hard Budget
-    </button>
-
-    <button class="secondary-button" id="onboardSoft" style="width:100%;margin-top:12px">
-      Use Soft Budget
-    </button>
   </div>
 </div>
 
 <div class="modal-overlay hidden" id="newPasswordModal">
   <div class="card modal-card">
+
     <h2>Choose a New Password</h2>
 
     <label>New Password</label>
-    <input type="password" id="newAccountPassword">
+    <input id="newAccountPassword" type="password" autocomplete="new-password">
 
-    <button class="primary-button" id="saveNewPasswordButton" style="width:100%;margin-top:18px">
-      Save Password
+    <button class="primary-button" id="saveNewPasswordButton" style="width:100%;margin-top:14px">
+      Save New Password
     </button>
 
     <div id="passwordResetError" class="error hidden"></div>
+
   </div>
 </div>
 
 <div class="modal-overlay hidden" id="newPinModal">
   <div class="card modal-card">
+
     <h2>Choose a New PIN</h2>
-    <p class="subtext" id="pinResetProfileName"></p>
+
+    <p class="subtext">
+      Your email link verified the account. Enter the new PIN for <span id="pinResetProfileName"></span>.
+    </p>
 
     <label>New 4-Digit PIN</label>
-    <input type="password" id="newProfilePinReset" inputmode="numeric" maxlength="4">
+    <input id="newProfilePinReset" type="password" inputmode="numeric" maxlength="4">
 
-    <button class="primary-button" id="saveResetPinButton" style="width:100%;margin-top:18px">
-      Save PIN
+    <button class="primary-button" id="saveResetPinButton" style="width:100%;margin-top:14px">
+      Save New PIN
     </button>
 
     <div id="pinResetError" class="error hidden"></div>
+
+  </div>
+</div>
+
+<div class="sheet-overlay hidden" id="expenseSheetOverlay">
+  <div class="card expense-sheet" id="expenseSheet">
+
+    <div class="sheet-handle"></div>
+
+    <h2 id="expenseFormTitle">Add Expense</h2>
+
+    <label>Name of the Expense</label>
+    <input id="expenseName" placeholder="Example: Groceries">
+
+    <label>Amount</label>
+    <input id="expenseAmount" class="money-input" inputmode="decimal" placeholder="$0.00">
+
+    <label id="expenseFundLabel">Use Money From</label>
+
+    <select id="expenseFund">
+      <option value="needs">Needs</option>
+      <option value="fun">Fun Money</option>
+    </select>
+
+    <label>Category</label>
+
+    <select id="expenseCategory">
+      <option value="Groceries">Groceries</option>
+      <option value="Bill">Bill</option>
+      <option value="Gas">Gas</option>
+      <option value="Dining">Dining</option>
+      <option value="Entertainment">Entertainment</option>
+      <option value="Shopping">Shopping</option>
+      <option value="Transportation">Transportation</option>
+      <option value="Medical">Medical</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label>Date</label>
+    <input id="expenseDate" type="date">
+
+    <button class="primary-button" id="saveExpenseButton" style="width:100%;margin-top:18px">
+      Save Expense
+    </button>
+
+    <button class="secondary-button" id="cancelExpenseButton" style="width:100%;margin-top:10px">
+      Cancel
+    </button>
+
   </div>
 </div>
 
 <script>
-const SUPABASE_URL="https://jivygwszzlaxnhhvxxsg.supabase.co";
-const SUPABASE_KEY="sb_publishable_cZM-7AaU0xD6L_fMa_foOw_-Cjk2edj";
+const SUPABASE_URL=
+  "https://jivygwszzlaxnhhvxxsg.supabase.co";
 
-const supabaseClient=window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+const SUPABASE_KEY=
+  "sb_publishable_cZM-7AaU0xD6L_fMa_foOw_-Cjk2edj";
+
+const supabaseClient=
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
 let currentUser=null;
 let householdId=null;
 let currentProfile=null;
-let profileSessionToken=null;
-
-let currentHomeBudget=null;
-let currentPrepareBudget=null;
-
+let homeBudgetPlan=null;
+let preparedBudgetPlan=null;
 let editingExpenseId=null;
-let expenseOpenedFromFund=false;
+
+let activePanelIndex=2;
 
 let selectedAvatar="knight";
 let selectedSettingsAvatar="knight";
@@ -1562,237 +1656,1007 @@ let selectedTheme="sandy";
 let selectedFont="system";
 let selectedFontSize=16;
 
-let profileMode="hard";
 let settingsSection="menu";
+let expenseOpenedFromHome=false;
 
-let activePanelIndex=2;
-let weeklyBillCache=[];
-let incomeCache=[];
-let monthlyBillCache=[];
-let profileCache=[];
+const panels=[
+  "analyticsPanel",
+  "expenseHistoryPanel",
+  "homePanel",
+  "monthlyBudgetPanel"
+];
 
-function money(value){
-  return Number(value||0).toLocaleString(
+const avatarNames=[
+  "knight",
+  "princess",
+  "dragon",
+  "fish",
+  "lion",
+  "turtle",
+  "bird"
+];
+
+const themeData={
+  sandy:[
+    "#e8d9ad",
+    "#fff9e9",
+    "#4e351d",
+    "#a9b982"
+  ],
+  petals:[
+    "#aaaee0",
+    "#f7d7c8",
+    "#494e96",
+    "#eda5b5"
+  ],
+  harbor:[
+    "#9fb7be",
+    "#f3eadb",
+    "#263e4b",
+    "#d58f79"
+  ],
+  cedar:[
+    "#aebca5",
+    "#eee1c8",
+    "#304638",
+    "#c77f63"
+  ],
+  plum:[
+    "#b9a5b5",
+    "#f2e5cf",
+    "#51374e",
+    "#c7a24c"
+  ]
+};
+
+const money=n=>
+  Number(n||0).toLocaleString(
     "en-US",
     {
       style:"currency",
       currency:"USD"
     }
   );
+
+const dateOnly=d=>{
+  const x=new Date(d);
+
+  return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,"0")}-${String(x.getDate()).padStart(2,"0")}`;
+};
+
+const firstOfMonth=d=>
+  new Date(
+    d.getFullYear(),
+    d.getMonth(),
+    1
+  );
+
+const addMonths=(d,n)=>
+  new Date(
+    d.getFullYear(),
+    d.getMonth()+n,
+    1
+  );
+
+const currentBudgetMonth=()=>
+  firstOfMonth(
+    new Date()
+  );
+
+const preparedBudgetMonth=()=>
+  addMonths(
+    currentBudgetMonth(),
+    1
+  );
+
+const previousMonth=()=>
+  addMonths(
+    currentBudgetMonth(),
+    -1
+  );
+
+const weekStart=d=>{
+  const x=new Date(d);
+
+  x.setHours(
+    0,0,0,0
+  );
+
+  x.setDate(
+    x.getDate()-
+    x.getDay()
+  );
+
+  return x;
+};
+
+const escapeHtml=v=>{
+  const d=
+    document.createElement(
+      "div"
+    );
+
+  d.textContent=v??"";
+
+  return d.innerHTML;
+};
+
+function getBudgetWeekCount(monthDate){
+  const y=
+    monthDate.getFullYear();
+
+  const m=
+    monthDate.getMonth();
+
+  const first=
+    new Date(
+      y,
+      m,
+      1
+    );
+
+  const last=
+    new Date(
+      y,
+      m+1,
+      0
+    );
+
+  let ws=
+    weekStart(first);
+
+  const end=
+    weekStart(last);
+
+  let count=0;
+
+  while(ws<=end){
+    let inMonth=0;
+
+    for(let i=0;i<7;i++){
+      const d=
+        new Date(ws);
+
+      d.setDate(
+        ws.getDate()+i
+      );
+
+      if(
+        d.getFullYear()===y &&
+        d.getMonth()===m
+      ){
+        inMonth++;
+      }
+    }
+
+    if(inMonth>=4){
+      count++;
+    }
+
+    ws=
+      new Date(ws);
+
+    ws.setDate(
+      ws.getDate()+7
+    );
+  }
+
+  return count;
 }
 
-function numberValue(value){
-  const cleaned=String(value??"")
-    .replace(/[$,\s]/g,"")
-    .replace(/[^\d.-]/g,"");
+function budgetMonthForWeek(
+  date=new Date()
+){
+  const ws=
+    weekStart(date);
 
-  const number=Number(cleaned);
+  const counts=
+    new Map();
 
-  return Number.isFinite(number)
-    ? number
-    : 0;
+  for(let i=0;i<7;i++){
+    const d=
+      new Date(ws);
+
+    d.setDate(
+      ws.getDate()+i
+    );
+
+    const key=
+      `${d.getFullYear()}-${d.getMonth()}`;
+
+    counts.set(
+      key,
+      (counts.get(key)||0)+1
+    );
+  }
+
+  const winner=
+    [...counts.entries()]
+      .sort(
+        (a,b)=>b[1]-a[1]
+      )[0][0];
+
+  const [y,m]=
+    winner
+      .split("-")
+      .map(Number);
+
+  return new Date(
+    y,
+    m,
+    1
+  );
 }
 
-function formatMoneyInput(input,negative=false){
-  const value=Math.abs(numberValue(input.value));
+function parseMoney(v){
+  const n=
+    Number(
+      String(v??"")
+        .replace(
+          /[^0-9.-]/g,
+          ""
+        )
+    );
 
-  if(!input.value.trim()){
-    input.value="";
+  return Number.isFinite(n)
+    ?n
+    :0;
+}
+
+function moneyTyping(
+  el,
+  negative=false
+){
+  const raw=
+    String(el.value)
+      .replace(
+        /[^0-9.]/g,
+        ""
+      );
+
+  const parts=
+    raw.split(".");
+
+  const clean=
+    parts[0]+
+    (
+      parts.length>1
+        ?"."+
+          parts
+            .slice(1)
+            .join("")
+            .slice(0,2)
+        :""
+    );
+
+  el.value=
+    clean
+      ?`${negative?"-$":"$"}${clean}`
+      :"";
+
+  try{
+    el.setSelectionRange(
+      el.value.length,
+      el.value.length
+    );
+  }
+  catch{}
+}
+
+function formatMoneyInput(
+  el,
+  negative=false
+){
+  const n=
+    Math.abs(
+      parseMoney(
+        el.value
+      )
+    );
+
+  el.value=
+    n
+      ?`${negative?"-":""}${money(n)}`
+      :"";
+}
+
+function bindMoneyInput(
+  el,
+  negative=false
+){
+  if(
+    !el ||
+    el.dataset.moneyBound
+  ){
     return;
   }
 
-  input.value=(negative?"-":"")+money(value);
-}
+  el.dataset.moneyBound="1";
 
-function dateOnly(date){
-  const year=date.getFullYear();
-  const month=String(date.getMonth()+1).padStart(2,"0");
-  const day=String(date.getDate()).padStart(2,"0");
+  el.addEventListener(
+    "input",
+    ()=>{
+      moneyTyping(
+        el,
+        negative
+      );
 
-  return `${year}-${month}-${day}`;
-}
-
-function firstOfMonth(date){
-  return new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    1
-  );
-}
-
-function addMonths(date,amount){
-  return new Date(
-    date.getFullYear(),
-    date.getMonth()+amount,
-    1
-  );
-}
-
-function getUpcomingBudgetMonth(){
-  return addMonths(
-    firstOfMonth(new Date()),
-    1
-  );
-}
-
-function getWeekStart(date=new Date()){
-  const result=new Date(date);
-
-  result.setHours(0,0,0,0);
-  result.setDate(
-    result.getDate()-result.getDay()
-  );
-
-  return result;
-}
-
-function getWeekOwnerMonth(date=new Date()){
-  const start=getWeekStart(date);
-
-  const counts={};
-
-  for(let i=0;i<7;i++){
-    const day=new Date(start);
-    day.setDate(start.getDate()+i);
-
-    const key=
-      `${day.getFullYear()}-${String(day.getMonth()+1).padStart(2,"0")}`;
-
-    counts[key]=(counts[key]||0)+1;
-  }
-
-  const owner=Object.entries(counts)
-    .sort((a,b)=>b[1]-a[1])[0][0];
-
-  const [year,month]=owner
-    .split("-")
-    .map(Number);
-
-  return new Date(year,month-1,1);
-}
-
-function budgetWeekCount(monthDate){
-  const year=monthDate.getFullYear();
-  const month=monthDate.getMonth();
-
-  const searchStart=new Date(year,month,1);
-  searchStart.setDate(
-    searchStart.getDate()-7
-  );
-
-  const searchEnd=new Date(year,month+1,1);
-  searchEnd.setDate(
-    searchEnd.getDate()+7
-  );
-
-  const starts=new Set();
-
-  for(
-    let d=new Date(searchStart);
-    d<=searchEnd;
-    d.setDate(d.getDate()+1)
-  ){
-    const start=getWeekStart(d);
-    const owner=getWeekOwnerMonth(start);
-
-    if(
-      owner.getFullYear()===year &&
-      owner.getMonth()===month
-    ){
-      starts.add(dateOnly(start));
+      updateBudgetCalculation();
     }
-  }
+  );
 
-  return starts.size;
-}
-
-function escapeHtml(value){
-  const div=document.createElement("div");
-  div.textContent=value??"";
-  return div.innerHTML;
-}
-
-function escapeAttribute(value){
-  return String(value??"")
-    .replace(/&/g,"&amp;")
-    .replace(/"/g,"&quot;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;");
+  el.addEventListener(
+    "blur",
+    ()=>{
+      formatMoneyInput(
+        el,
+        negative
+      );
+    }
+  );
 }
 
 function hideScreens(){
-  document.getElementById("loginScreen").classList.add("hidden");
-  document.getElementById("profileScreen").classList.add("hidden");
-  document.getElementById("appScreen").classList.add("hidden");
-  document.getElementById("settingsScreen").classList.add("hidden");
+  [
+    "loginScreen",
+    "profileScreen",
+    "appScreen",
+    "settingsScreen"
+  ].forEach(id=>
+    document
+      .getElementById(id)
+      .classList
+      .add("hidden")
+  );
+
+  document
+    .getElementById(
+      "settingsGear"
+    )
+    .classList
+    .add("hidden");
+}
+
+function applyAppearance(){
+  document.body.className=
+    `theme-${selectedTheme} font-${selectedFont}`;
+
+  document.documentElement
+    .style
+    .setProperty(
+      "--font-size",
+      `${selectedFontSize}px`
+    );
+
+  localStorage.setItem(
+    "budgetTheme",
+    selectedTheme
+  );
+}
+
+function gearVisible(show){
+  document
+    .getElementById(
+      "settingsGear"
+    )
+    .classList
+    .toggle(
+      "hidden",
+      !show
+    );
+}
+
+function avatarSvg(name){
+  const c="currentColor";
+
+  const common=
+    `viewBox="0 0 64 64" aria-hidden="true"`;
+
+  if(name==="princess"){
+    return `
+      <svg ${common}>
+        <circle cx="32" cy="34" r="14" fill="none" stroke="${c}" stroke-width="4"/>
+        <path d="M18 24 22 11l10 8 10-8 4 13" fill="none" stroke="${c}" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M19 53c4-8 22-8 26 0" fill="none" stroke="${c}" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+    `;
+  }
+
+  if(name==="dragon"){
+    return `
+      <svg ${common}>
+        <path d="M14 43c6-17 13-25 27-27l-3 9 11-4-5 11 7 6-11 1c-3 8-12 12-26 4Z" fill="none" stroke="${c}" stroke-width="4" stroke-linejoin="round"/>
+        <circle cx="35" cy="31" r="2.5" fill="${c}"/>
+      </svg>
+    `;
+  }
+
+  if(name==="fish"){
+    return `
+      <svg ${common}>
+        <path d="M14 32c11-13 25-13 34 0-9 13-23 13-34 0Z" fill="none" stroke="${c}" stroke-width="4"/>
+        <path d="m48 32 10-9v18Z" fill="none" stroke="${c}" stroke-width="4" stroke-linejoin="round"/>
+        <circle cx="25" cy="29" r="2.5" fill="${c}"/>
+      </svg>
+    `;
+  }
+
+  if(name==="lion"){
+    return `
+      <svg ${common}>
+        <circle cx="32" cy="32" r="19" fill="none" stroke="${c}" stroke-width="4"/>
+        <circle cx="32" cy="33" r="12" fill="none" stroke="${c}" stroke-width="4"/>
+        <path d="M27 29h.1M37 29h.1M28 38c3 3 5 3 8 0" stroke="${c}" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+    `;
+  }
+
+  if(name==="turtle"){
+    return `
+      <svg ${common}>
+        <ellipse cx="31" cy="33" rx="17" ry="13" fill="none" stroke="${c}" stroke-width="4"/>
+        <circle cx="52" cy="32" r="5" fill="none" stroke="${c}" stroke-width="4"/>
+        <path d="M17 24l-6-5M17 42l-6 5M37 22l5-6M37 44l5 6" stroke="${c}" stroke-width="4" stroke-linecap="round"/>
+        <path d="M25 26l12 14M38 26 25 40" stroke="${c}" stroke-width="3"/>
+      </svg>
+    `;
+  }
+
+  if(name==="bird"){
+    return `
+      <svg ${common}>
+        <path d="M14 41c8-18 20-24 34-19-7 3-10 7-11 12 7-1 12 1 16 6-13 1-26 6-39 1Z" fill="none" stroke="${c}" stroke-width="4" stroke-linejoin="round"/>
+        <circle cx="38" cy="25" r="2.5" fill="${c}"/>
+        <path d="m47 28 10 3-10 4" fill="none" stroke="${c}" stroke-width="3"/>
+      </svg>
+    `;
+  }
+
+  return `
+    <svg ${common}>
+      <path d="M18 18c0-7 28-7 28 0v21c0 10-7 17-14 17s-14-7-14-17Z" fill="none" stroke="${c}" stroke-width="4"/>
+      <path d="M18 26h28M24 26v16M32 26v16M40 26v16" stroke="${c}" stroke-width="4"/>
+      <path d="M14 18h36" stroke="${c}" stroke-width="4" stroke-linecap="round"/>
+    </svg>
+  `;
+}
+
+function renderAvatarGrid(
+  id,
+  selected,
+  onSelect
+){
+  const box=
+    document.getElementById(id);
+
+  box.innerHTML="";
+
+  avatarNames.forEach(name=>{
+    const b=
+      document.createElement(
+        "button"
+      );
+
+    b.type="button";
+
+    b.className=
+      "avatar-choice"+
+      (
+        name===selected
+          ?" selected"
+          :""
+      );
+
+    b.innerHTML=
+      avatarSvg(name)+
+      `<span class="avatar-label">${name[0].toUpperCase()+name.slice(1)}</span>`;
+
+    b.onclick=()=>{
+      onSelect(name);
+    };
+
+    box.appendChild(b);
+  });
+}
+
+function renderDateStrip(){
+  const now=
+    new Date();
+
+  const ws=
+    weekStart(now);
+
+  document.getElementById(
+    "dateMonth"
+  ).textContent=
+    now.toLocaleDateString(
+      "en-US",
+      {
+        month:"long"
+      }
+    );
+
+  const box=
+    document.getElementById(
+      "dateDays"
+    );
+
+  box.innerHTML="";
+
+  for(let i=0;i<7;i++){
+    const d=
+      new Date(ws);
+
+    d.setDate(
+      ws.getDate()+i
+    );
+
+    const el=
+      document.createElement(
+        "div"
+      );
+
+    el.className=
+      "date-day"+
+      (
+        dateOnly(d)===
+        dateOnly(now)
+          ?" today"
+          :""
+      );
+
+    el.innerHTML=
+      `<span>${d.getDate()}</span>`;
+
+    box.appendChild(el);
+  }
+}
+
+function showMain(){
+  hideScreens();
+
+  document
+    .getElementById(
+      "appScreen"
+    )
+    .classList
+    .remove("hidden");
+
+  gearVisible(true);
+
+  renderDateStrip();
+
+  requestAnimationFrame(
+    ()=>{
+      showPanel(
+        2,
+        false
+      );
+    }
+  );
+}
+
+function panelMetrics(){
+  const p=
+    document.querySelector(
+      ".workspace-panel"
+    );
+
+  if(!p){
+    return{
+      width:
+        window.innerWidth*.88,
+      gap:12,
+      center:
+        window.innerWidth*.06
+    };
+  }
+
+  const width=
+    p.getBoundingClientRect()
+      .width;
+
+  const gap=12;
+
+  const center=
+    (
+      window.innerWidth-
+      width
+    )/2;
+
+  return{
+    width,
+    gap,
+    center,
+    step:
+      width+gap
+  };
+}
+
+function showPanel(
+  i,
+  animate=true
+){
+  i=
+    Math.max(
+      0,
+      Math.min(
+        panels.length-1,
+        i
+      )
+    );
+
+  activePanelIndex=i;
+
+  if(
+    window.innerWidth<=900
+  ){
+    const track=
+      document.getElementById(
+        "mobileTrack"
+      );
+
+    const m=
+      panelMetrics();
+
+    const x=
+      m.center-
+      i*m.step;
+
+    track.style.transition=
+      animate
+        ?"transform .32s cubic-bezier(.2,.78,.22,1)"
+        :"none";
+
+    track.style.transform=
+      `translate3d(${x}px,0,0)`;
+  }
+  else{
+    document
+      .getElementById(
+        "mobileTrack"
+      )
+      .style
+      .transform=
+        "none";
+  }
+}
+
+function bindFluidSwipe(){
+  const area=
+    document.getElementById(
+      "mainWorkspace"
+    );
+
+  const track=
+    document.getElementById(
+      "mobileTrack"
+    );
+
+  let sx=0;
+  let sy=0;
+  let lastX=0;
+  let lastT=0;
+  let velocity=0;
+  let baseX=0;
+  let axis=null;
+  let drag=false;
+
+  area.addEventListener(
+    "touchstart",
+    e=>{
+      if(
+        window.innerWidth>900 ||
+        e.touches.length!==1
+      ){
+        return;
+      }
+
+      drag=true;
+      axis=null;
+
+      sx=
+      lastX=
+        e.touches[0]
+          .clientX;
+
+      sy=
+        e.touches[0]
+          .clientY;
+
+      lastT=
+        performance.now();
+
+      const m=
+        panelMetrics();
+
+      baseX=
+        m.center-
+        activePanelIndex*
+        m.step;
+
+      track.style.transition=
+        "none";
+    },
+    {
+      passive:true
+    }
+  );
+
+  area.addEventListener(
+    "touchmove",
+    e=>{
+      if(
+        !drag ||
+        window.innerWidth>900
+      ){
+        return;
+      }
+
+      const x=
+        e.touches[0]
+          .clientX;
+
+      const y=
+        e.touches[0]
+          .clientY;
+
+      const dx=
+        x-sx;
+
+      const dy=
+        y-sy;
+
+      if(
+        !axis &&
+        Math.hypot(
+          dx,
+          dy
+        )>7
+      ){
+        axis=
+          Math.abs(dx)>
+          Math.abs(dy)
+            ?"x"
+            :"y";
+      }
+
+      if(axis!=="x"){
+        return;
+      }
+
+      e.preventDefault();
+
+      const now=
+        performance.now();
+
+      velocity=
+        (
+          x-lastX
+        )/
+        Math.max(
+          1,
+          now-lastT
+        );
+
+      lastX=x;
+      lastT=now;
+
+      const m=
+        panelMetrics();
+
+      const min=
+        m.center-
+        (
+          panels.length-1
+        )*
+        m.step;
+
+      const max=
+        m.center;
+
+      let pos=
+        baseX+dx;
+
+      if(pos>max){
+        pos=
+          max+
+          (
+            pos-max
+          )*.22;
+      }
+
+      if(pos<min){
+        pos=
+          min+
+          (
+            pos-min
+          )*.22;
+      }
+
+      track.style.transform=
+        `translate3d(${pos}px,0,0)`;
+    },
+    {
+      passive:false
+    }
+  );
+
+  area.addEventListener(
+    "touchend",
+    e=>{
+      if(
+        !drag ||
+        window.innerWidth>900
+      ){
+        return;
+      }
+
+      drag=false;
+
+      if(axis!=="x"){
+        showPanel(
+          activePanelIndex,
+          true
+        );
+
+        return;
+      }
+
+      const dx=
+        e.changedTouches[0]
+          .clientX-sx;
+
+      const m=
+        panelMetrics();
+
+      let target=
+        activePanelIndex;
+
+      if(
+        Math.abs(dx)>
+        m.width*.23 ||
+        Math.abs(velocity)>.38
+      ){
+        target+=
+          dx<0
+            ?1
+            :-1;
+      }
+
+      showPanel(
+        target,
+        true
+      );
+    },
+    {
+      passive:true
+    }
+  );
+
+  area.addEventListener(
+    "touchcancel",
+    ()=>{
+      drag=false;
+
+      showPanel(
+        activePanelIndex,
+        true
+      );
+    },
+    {
+      passive:true
+    }
+  );
 }
 
 async function login(){
-  const email=document
-    .getElementById("loginEmail")
-    .value
-    .trim();
+  const err=
+    document.getElementById(
+      "loginError"
+    );
 
-  const password=document
-    .getElementById("loginPassword")
-    .value;
+  const msg=
+    document.getElementById(
+      "loginMessage"
+    );
 
-  const errorBox=document.getElementById("loginError");
+  err.classList.add(
+    "hidden"
+  );
 
-  errorBox.classList.add("hidden");
+  msg.classList.add(
+    "hidden"
+  );
+
+  const email=
+    document
+      .getElementById(
+        "loginEmail"
+      )
+      .value
+      .trim();
+
+  const password=
+    document
+      .getElementById(
+        "loginPassword"
+      )
+      .value;
 
   if(!email||!password){
-    errorBox.textContent="Enter your email and password.";
-    errorBox.classList.remove("hidden");
+    err.textContent=
+      "Enter your email and password.";
+
+    err.classList.remove(
+      "hidden"
+    );
+
     return;
   }
 
   const {data,error}=
-    await supabaseClient.auth.signInWithPassword({
-      email,
-      password
-    });
+    await supabaseClient
+      .auth
+      .signInWithPassword({
+        email,
+        password
+      });
 
   if(error){
-    errorBox.textContent=error.message;
-    errorBox.classList.remove("hidden");
+    err.textContent=
+      error.message;
+
+    err.classList.remove(
+      "hidden"
+    );
+
     return;
   }
 
-  currentUser=data.user;
+  currentUser=
+    data.user;
 
   await startApp();
 }
 
 async function startApp(){
+  hideScreens();
+
+  document
+    .getElementById(
+      "profileScreen"
+    )
+    .classList
+    .remove("hidden");
+
   await loadHousehold();
 
   if(!householdId){
     return;
   }
 
-  const restored=await restoreProfileSession();
+  const restored=
+    await restoreProfileSession();
 
-  if(restored){
-    return;
+  if(!restored){
+    await renderProfiles();
   }
-
-  hideScreens();
-
-  document
-    .getElementById("profileScreen")
-    .classList
-    .remove("hidden");
-
-  await renderProfiles();
 }
 
 async function loadHousehold(){
   const {data,error}=
     await supabaseClient
-      .from("household_members")
-      .select("household_id")
-      .eq("user_id",currentUser.id)
+      .from(
+        "household_members"
+      )
+      .select(
+        "household_id"
+      )
+      .eq(
+        "user_id",
+        currentUser.id
+      )
       .limit(1)
       .maybeSingle();
 
@@ -1801,320 +2665,304 @@ async function loadHousehold(){
       "Could not load household: "+
       error.message
     );
+
     return;
   }
 
-  if(!data){
+  householdId=
+    data?.household_id||
+    null;
+
+  if(!householdId){
     alert(
       "This account is not connected to a household."
     );
-    return;
   }
-
-  householdId=data.household_id;
 }
 
 async function loadProfiles(){
   const {data,error}=
     await supabaseClient
-      .from("profiles")
+      .from(
+        "profiles"
+      )
       .select("*")
-      .eq("household_id",householdId)
-      .order("display_name");
+      .eq(
+        "household_id",
+        householdId
+      )
+      .order(
+        "display_name"
+      );
 
   if(error){
     alert(
       "Could not load profiles: "+
       error.message
     );
+
     return [];
   }
 
-  profileCache=data||[];
-
-  return profileCache;
-}
-
-function avatarSvg(name){
-  const common=
-    `viewBox="0 0 100 100" aria-hidden="true"`;
-
-  if(name==="princess"){
-    return `
-      <svg ${common}>
-        <circle cx="50" cy="50" r="45" fill="var(--accent)" opacity=".35"/>
-        <path d="M27 38l10-19 13 13 13-13 10 19-7 8H34z" fill="var(--text)"/>
-        <circle cx="50" cy="55" r="23" fill="var(--panel)" stroke="var(--text)" stroke-width="4"/>
-        <path d="M36 75c6-11 22-11 28 0" fill="none" stroke="var(--text)" stroke-width="5" stroke-linecap="round"/>
-        <circle cx="42" cy="54" r="3" fill="var(--text)"/>
-        <circle cx="58" cy="54" r="3" fill="var(--text)"/>
-      </svg>
-    `;
-  }
-
-  if(name==="dragon"){
-    return `
-      <svg ${common}>
-        <circle cx="50" cy="50" r="45" fill="var(--accent)" opacity=".35"/>
-        <path d="M23 58c4-25 19-37 39-31l14-11-2 18 11 10-14 4c2 18-9 31-28 31-13 0-21-7-20-21z" fill="var(--text)"/>
-        <circle cx="59" cy="39" r="4" fill="var(--panel)"/>
-        <path d="M31 58l-15 10 17 1M67 58l17 9-17 3" fill="none" stroke="var(--text)" stroke-width="5" stroke-linecap="round"/>
-      </svg>
-    `;
-  }
-
-  if(name==="fish"){
-    return `
-      <svg ${common}>
-        <circle cx="50" cy="50" r="45" fill="var(--accent)" opacity=".35"/>
-        <path d="M25 50c14-21 38-21 52 0-14 21-38 21-52 0z" fill="var(--text)"/>
-        <path d="M75 50l17-14v28z" fill="var(--text)"/>
-        <circle cx="42" cy="44" r="4" fill="var(--panel)"/>
-      </svg>
-    `;
-  }
-
-  if(name==="lion"){
-    return `
-      <svg ${common}>
-        <circle cx="50" cy="50" r="45" fill="var(--accent)" opacity=".35"/>
-        <circle cx="50" cy="51" r="32" fill="var(--text)"/>
-        <circle cx="50" cy="53" r="21" fill="var(--panel)"/>
-        <circle cx="42" cy="49" r="3" fill="var(--text)"/>
-        <circle cx="58" cy="49" r="3" fill="var(--text)"/>
-        <path d="M45 61h10M50 56v7" stroke="var(--text)" stroke-width="4" stroke-linecap="round"/>
-      </svg>
-    `;
-  }
-
-  if(name==="turtle"){
-    return `
-      <svg ${common}>
-        <circle cx="50" cy="50" r="45" fill="var(--accent)" opacity=".35"/>
-        <ellipse cx="48" cy="53" rx="28" ry="22" fill="var(--text)"/>
-        <circle cx="79" cy="51" r="10" fill="var(--text)"/>
-        <path d="M28 34l-10-9M28 70l-11 8M60 34l8-10M60 70l9 9" stroke="var(--text)" stroke-width="7" stroke-linecap="round"/>
-        <path d="M32 53h32M48 34v38" stroke="var(--panel)" stroke-width="3" opacity=".7"/>
-      </svg>
-    `;
-  }
-
-  if(name==="bird"){
-    return `
-      <svg ${common}>
-        <circle cx="50" cy="50" r="45" fill="var(--accent)" opacity=".35"/>
-        <path d="M25 62c6-27 27-38 47-24 6 4 9 10 10 17-14-6-23-3-29 10-9 18-25 12-28-3z" fill="var(--text)"/>
-        <path d="M76 42l17 8-17 7z" fill="var(--text)"/>
-        <circle cx="65" cy="42" r="4" fill="var(--panel)"/>
-      </svg>
-    `;
-  }
-
-  return `
-    <svg ${common}>
-      <circle cx="50" cy="50" r="45" fill="var(--accent)" opacity=".35"/>
-      <path d="M31 34h38l-5 42H36z" fill="var(--text)"/>
-      <path d="M38 35c0-15 24-15 24 0" fill="none" stroke="var(--text)" stroke-width="7"/>
-      <path d="M39 48h22" stroke="var(--panel)" stroke-width="5"/>
-      <path d="M43 58h14" stroke="var(--panel)" stroke-width="4"/>
-    </svg>
-  `;
-}
-
-function renderAvatarGrid(
-  elementId,
-  current,
-  callback
-){
-  const grid=document.getElementById(elementId);
-
-  const avatars=[
-    "knight",
-    "princess",
-    "dragon",
-    "fish",
-    "lion",
-    "turtle",
-    "bird"
-  ];
-
-  grid.innerHTML="";
-
-  avatars.forEach(name=>{
-    const button=document.createElement("button");
-
-    button.type="button";
-
-    button.className=
-      "avatar-choice"+
-      (name===current?" selected":"");
-
-    button.innerHTML=avatarSvg(name);
-
-    button.setAttribute(
-      "aria-label",
-      name
-    );
-
-    button.onclick=()=>{
-      callback(name);
-    };
-
-    grid.appendChild(button);
-  });
+  return data||[];
 }
 
 async function renderProfiles(){
-  const profiles=await loadProfiles();
-
-  const list=document.getElementById("profileList");
+  const list=
+    document.getElementById(
+      "profileList"
+    );
 
   list.innerHTML="";
 
-  document
-    .getElementById("addProfileForm")
-    .classList
-    .add("hidden");
+  (
+    await loadProfiles()
+  ).forEach(p=>{
+    const row=
+      document.createElement(
+        "div"
+      );
+
+    row.className=
+      "profile-row";
+
+    const av=
+      document.createElement(
+        "div"
+      );
+
+    av.className=
+      "profile-avatar";
+
+    av.innerHTML=
+      avatarSvg(
+        p.avatar||
+        "knight"
+      );
+
+    const b=
+      document.createElement(
+        "button"
+      );
+
+    b.className=
+      "primary-button profile-button";
+
+    b.textContent=
+      p.display_name;
+
+    b.onclick=()=>{
+      selectProfile(p);
+    };
+
+    row.append(
+      av,
+      b
+    );
+
+    list.appendChild(row);
+  });
 
   document
-    .getElementById("pinScreen")
-    .classList
-    .add("hidden");
-
-  document
-    .getElementById("addProfileButton")
+    .getElementById(
+      "profileList"
+    )
     .classList
     .remove("hidden");
 
-  profiles.forEach(profile=>{
-    const button=document.createElement("button");
+  document
+    .getElementById(
+      "addProfileButton"
+    )
+    .classList
+    .remove("hidden");
 
-    button.className=
-      "primary-button profile-button";
+  document
+    .getElementById(
+      "addProfileForm"
+    )
+    .classList
+    .add("hidden");
 
-    button.textContent=
-      profile.display_name;
+  document
+    .getElementById(
+      "pinScreen"
+    )
+    .classList
+    .add("hidden");
+}
 
-    button.onclick=()=>{
-      currentProfile=profile;
+function selectProfile(p){
+  currentProfile=p;
 
-      document
-        .getElementById("profileList")
-        .classList
-        .add("hidden");
+  document
+    .getElementById(
+      "profileList"
+    )
+    .classList
+    .add("hidden");
 
-      document
-        .getElementById("addProfileButton")
-        .classList
-        .add("hidden");
+  document
+    .getElementById(
+      "addProfileButton"
+    )
+    .classList
+    .add("hidden");
 
-      document
-        .getElementById("pinScreen")
-        .classList
-        .remove("hidden");
+  document
+    .getElementById(
+      "pinScreen"
+    )
+    .classList
+    .remove("hidden");
 
-      document.getElementById(
-        "pinProfileName"
-      ).textContent=
-        profile.display_name;
+  document.getElementById(
+    "pinProfileName"
+  ).textContent=
+    p.display_name;
 
-      document.getElementById(
-        "profilePin"
-      ).value="";
+  document.getElementById(
+    "profilePin"
+  ).value="";
 
-      document
-        .getElementById("pinError")
-        .classList
-        .add("hidden");
-    };
+  document
+    .getElementById(
+      "pinError"
+    )
+    .classList
+    .add("hidden");
 
-    list.appendChild(button);
-  });
+  document.getElementById(
+    "profilePin"
+  ).focus();
 }
 
 async function saveProfile(){
-  const name=document
-    .getElementById("newProfileName")
-    .value
-    .trim();
+  const name=
+    document
+      .getElementById(
+        "newProfileName"
+      )
+      .value
+      .trim();
 
-  const pin=document
-    .getElementById("newProfilePin")
-    .value;
+  const pin=
+    document
+      .getElementById(
+        "newProfilePin"
+      )
+      .value;
 
-  const errorBox=
-    document.getElementById("profileError");
+  const err=
+    document.getElementById(
+      "profileError"
+    );
 
-  errorBox.classList.add("hidden");
+  err.classList.add(
+    "hidden"
+  );
 
-  if(!name){
-    errorBox.textContent=
-      "Profile name is required.";
+  if(
+    !name ||
+    !/^[0-9]{4}$/.test(pin)
+  ){
+    err.textContent=
+      "Enter a profile name and exactly four PIN digits.";
 
-    errorBox.classList.remove("hidden");
+    err.classList.remove(
+      "hidden"
+    );
+
     return;
   }
 
-  if(!/^\d{4}$/.test(pin)){
-    errorBox.textContent=
-      "PIN must be exactly 4 digits.";
-
-    errorBox.classList.remove("hidden");
-    return;
-  }
-
-  const {data,error}=
+  const {error}=
     await supabaseClient.rpc(
       "create_profile",
       {
-        p_household_id:householdId,
-        p_display_name:name,
-        p_pin:pin
+        p_household_id:
+          householdId,
+        p_display_name:
+          name,
+        p_pin:
+          pin
       }
     );
 
   if(error){
-    errorBox.textContent=error.message;
-    errorBox.classList.remove("hidden");
+    err.textContent=
+      error.message;
+
+    err.classList.remove(
+      "hidden"
+    );
+
     return;
   }
 
-  let newProfileId=null;
+  const profiles=
+    await loadProfiles();
 
-  if(typeof data==="string"){
-    newProfileId=data;
-  }
+  const created=
+    [...profiles]
+      .reverse()
+      .find(
+        p=>
+          p.display_name===
+          name
+      );
 
-  if(!newProfileId){
-    const {data:created}=await supabaseClient
-      .from("profiles")
-      .select("*")
-      .eq("household_id",householdId)
-      .eq("display_name",name)
-      .order("created_at",{ascending:false})
-      .limit(1)
-      .maybeSingle();
-
-    newProfileId=created?.id||null;
-  }
-
-  if(newProfileId){
-    await supabaseClient
-      .from("profile_preferences")
-      .upsert(
+  if(created){
+    const {
+      error:settingsError
+    }=
+      await supabaseClient.rpc(
+        "set_profile_settings",
         {
-          profile_id:newProfileId,
-          household_id:householdId,
-          avatar:selectedAvatar,
-          theme:"sandy",
-          font_family:"system",
-          font_size:16,
-          calculation_mode:"hard"
-        },
-        {
-          onConflict:"profile_id"
+          p_profile_id:
+            created.id,
+          p_avatar:
+            selectedAvatar,
+          p_calculation_mode:
+            "hard",
+          p_font_size:
+            16,
+          p_font_family:
+            "system"
         }
       );
+
+    if(settingsError){
+      console.error(
+        settingsError
+      );
+    }
+
+    currentProfile={
+      ...created,
+      avatar:
+        selectedAvatar,
+      calculation_mode:
+        "hard",
+      font_size:
+        16,
+      font_family:
+        "system"
+    };
+
+    document.getElementById(
+      "newProfileName"
+    ).value="";
+
+    document.getElementById(
+      "newProfilePin"
+    ).value="";
+
+    selectProfile(
+      currentProfile
+    );
+
+    return;
   }
 
   document.getElementById(
@@ -2125,44 +2973,48 @@ async function saveProfile(){
     "newProfilePin"
   ).value="";
 
-  selectedAvatar="knight";
-
   await renderProfiles();
 }
 
 async function unlockProfile(){
-  const pin=document
-    .getElementById("profilePin")
-    .value;
+  const pin=
+    document.getElementById(
+      "profilePin"
+    ).value;
 
-  const errorBox=
-    document.getElementById("pinError");
+  const err=
+    document.getElementById(
+      "pinError"
+    );
 
-  errorBox.classList.add("hidden");
-
-  if(!pin){
-    return;
-  }
+  err.classList.add(
+    "hidden"
+  );
 
   const {data,error}=
     await supabaseClient.rpc(
       "create_profile_session",
       {
-        p_profile_id:currentProfile.id,
-        p_pin:pin,
-        p_session_minutes:1440
+        p_profile_id:
+          currentProfile.id,
+        p_pin:
+          pin,
+        p_session_minutes:
+          1440
       }
     );
 
   if(error){
-    errorBox.textContent=
-      error.message||"Incorrect PIN.";
+    err.textContent=
+      error.message||
+      "Incorrect PIN.";
 
-    errorBox.classList.remove("hidden");
+    err.classList.remove(
+      "hidden"
+    );
+
     return;
   }
-
-  profileSessionToken=data;
 
   localStorage.setItem(
     "profileSessionToken",
@@ -2183,343 +3035,270 @@ async function restoreProfileSession(){
       "profileSessionToken"
     );
 
-  const profileId=
+  const id=
     localStorage.getItem(
       "profileId"
     );
 
-  if(!token||!profileId){
+  if(!token||!id){
     return false;
   }
 
-  try{
-    const {data,error}=
-      await supabaseClient.rpc(
-        "validate_profile_session",
-        {
-          p_session_token:token
-        }
-      );
-
-    if(error){
-      throw error;
-    }
-
-    if(data!==profileId){
-      throw new Error(
-        "Profile session mismatch"
-      );
-    }
-
-    const {data:profile,error:profileError}=
-      await supabaseClient
-        .from("profiles")
-        .select("*")
-        .eq("id",profileId)
-        .single();
-
-    if(profileError){
-      throw profileError;
-    }
-
-    currentProfile=profile;
-    profileSessionToken=token;
-
-    await enterProfile();
-
-    return true;
-  }
-  catch(error){
-    console.error(error);
-
-    localStorage.removeItem(
-      "profileSessionToken"
+  const {data,error}=
+    await supabaseClient.rpc(
+      "validate_profile_session",
+      {
+        p_session_token:
+          token
+      }
     );
 
-    localStorage.removeItem(
-      "profileId"
-    );
-
+  if(
+    error ||
+    data!==id
+  ){
     return false;
   }
+
+  const {
+    data:p,
+    error:profileError
+  }=
+    await supabaseClient
+      .from("profiles")
+      .select("*")
+      .eq(
+        "id",
+        id
+      )
+      .single();
+
+  if(profileError){
+    return false;
+  }
+
+  currentProfile=p;
+
+  await enterProfile();
+
+  return true;
 }
 
-async function loadProfilePreferences(){
+async function loadProfileSettings(){
   const {data,error}=
     await supabaseClient
-      .from("profile_preferences")
+      .from("profiles")
       .select("*")
-      .eq("profile_id",currentProfile.id)
-      .maybeSingle();
-
-  if(error){
-    console.error(error);
-  }
-
-  if(!data){
-    return null;
-  }
-
-  selectedTheme=
-    data.theme||"sandy";
-
-  selectedFont=
-    data.font_family||"system";
-
-  selectedFontSize=
-    Number(data.font_size)||16;
-
-  selectedSettingsAvatar=
-    data.avatar||"knight";
-
-  profileMode=
-    data.calculation_mode||"hard";
-
-  applyAppearance();
-
-  return data;
-}
-
-async function enterProfile(){
-  const preferences=
-    await loadProfilePreferences();
-
-  if(!preferences){
-    selectedTheme="sandy";
-    selectedFont="system";
-    selectedFontSize=16;
-    selectedSettingsAvatar="knight";
-    profileMode="hard";
-
-    applyAppearance();
-
-    document
-      .getElementById("onboardingModal")
-      .classList
-      .remove("hidden");
-  }
-
-  await showMain();
-}
-
-function applyAppearance(){
-  const body=document.body;
-
-  [
-    "theme-sandy",
-    "theme-petals",
-    "theme-harbor",
-    "theme-cedar",
-    "theme-plum"
-  ].forEach(c=>body.classList.remove(c));
-
-  [
-    "font-system",
-    "font-rounded",
-    "font-serif",
-    "font-mono",
-    "font-pixel"
-  ].forEach(c=>body.classList.remove(c));
-
-  body.classList.add(
-    `theme-${selectedTheme}`
-  );
-
-  body.classList.add(
-    `font-${selectedFont}`
-  );
-
-  document.documentElement.style.setProperty(
-    "--font-size",
-    `${selectedFontSize}px`
-  );
-
-  localStorage.setItem(
-    "budgetTheme",
-    selectedTheme
-  );
-}
-
-async function saveProfileSettings(values){
-  const payload={
-    profile_id:currentProfile.id,
-    household_id:householdId,
-    ...values,
-    updated_at:new Date().toISOString()
-  };
-
-  const {error}=
-    await supabaseClient
-      .from("profile_preferences")
-      .upsert(
-        payload,
-        {
-          onConflict:"profile_id"
-        }
-      );
+      .eq(
+        "id",
+        currentProfile.id
+      )
+      .single();
 
   if(error){
     throw error;
   }
 
-  await loadProfilePreferences();
+  currentProfile=data;
+
+  selectedSettingsAvatar=
+    data.avatar||
+    "knight";
+
+  selectedTheme=
+    data.theme||
+    localStorage.getItem(
+      "budgetTheme"
+    )||
+    "sandy";
+
+  selectedFont=
+    data.font_family||
+    "system";
+
+  selectedFontSize=
+    Number(
+      data.font_size||
+      16
+    );
+
+  applyAppearance();
 }
 
-function renderDateStrip(){
-  const today=new Date();
+async function enterProfile(){
+  await loadProfileSettings();
 
-  document.getElementById(
-    "dateMonth"
-  ).textContent=
-    today.toLocaleDateString(
-      "en-US",
-      {
-        month:"long"
-      }
-    );
+  showMain();
 
-  const weekStart=
-    getWeekStart(today);
+  await Promise.all([
+    loadHomeBudget(),
+    loadPreparedBudget(),
+    loadExpenses()
+  ]);
 
-  const container=
-    document.getElementById(
-      "dateDays"
-    );
-
-  container.innerHTML="";
-
-  for(let i=0;i<7;i++){
-    const day=new Date(weekStart);
-
-    day.setDate(
-      weekStart.getDate()+i
-    );
-
-    const div=
-      document.createElement("div");
-
-    div.className=
-      "date-day"+
-      (
-        dateOnly(day)===dateOnly(today)
-          ?" today"
-          :""
-      );
-
-    div.innerHTML=
-      `<span>${day.getDate()}</span>`;
-
-    container.appendChild(div);
-  }
-}
-
-async function showMain(){
-  hideScreens();
-
-  document
-    .getElementById("appScreen")
-    .classList
-    .remove("hidden");
-
-  renderDateStrip();
-
-  await loadProfiles();
-  await loadHomeBudget();
-  await loadExpenses();
-  await calculateBalances();
-  await loadAnalytics();
   await openBudgetSetup();
-
-  requestAnimationFrame(()=>{
-    showPanel(activePanelIndex,false);
-  });
+  await calculateBalances();
+  await updateAnalytics();
 
   scheduleWeekBoundaryRefresh();
 }
 
-async function getBudgetForMonth(monthDate){
-  const {data,error}=
-    await supabaseClient
-      .from("budget_plans")
-      .select("*")
-      .eq("household_id",householdId)
-      .eq("budget_month",dateOnly(monthDate))
-      .maybeSingle();
+async function logout(){
+  localStorage.removeItem(
+    "profileSessionToken"
+  );
 
-  if(error){
-    console.error(error);
-    return null;
-  }
+  localStorage.removeItem(
+    "profileId"
+  );
 
-  return data||null;
+  currentProfile=null;
+  homeBudgetPlan=null;
+  preparedBudgetPlan=null;
+
+  await supabaseClient
+    .auth
+    .signOut();
+
+  hideScreens();
+
+  document
+    .getElementById(
+      "loginScreen"
+    )
+    .classList
+    .remove("hidden");
 }
 
 async function loadHomeBudget(){
-  const ownerMonth=
-    getWeekOwnerMonth(new Date());
+  const bm=
+    dateOnly(
+      budgetMonthForWeek(
+        new Date()
+      )
+    );
 
-  currentHomeBudget=
-    await getBudgetForMonth(ownerMonth);
+  const {data,error}=
+    await supabaseClient
+      .from(
+        "budget_plans"
+      )
+      .select("*")
+      .eq(
+        "household_id",
+        householdId
+      )
+      .eq(
+        "budget_month",
+        bm
+      )
+      .maybeSingle();
 
-  return currentHomeBudget;
+  if(error){
+    console.error(
+      error
+    );
+  }
+
+  homeBudgetPlan=
+    data||null;
+}
+
+async function loadPreparedBudget(){
+  const bm=
+    dateOnly(
+      preparedBudgetMonth()
+    );
+
+  const {data,error}=
+    await supabaseClient
+      .from(
+        "budget_plans"
+      )
+      .select("*")
+      .eq(
+        "household_id",
+        householdId
+      )
+      .eq(
+        "budget_month",
+        bm
+      )
+      .maybeSingle();
+
+  if(error){
+    console.error(
+      error
+    );
+  }
+
+  preparedBudgetPlan=
+    data||null;
 }
 
 async function openBudgetSetup(){
-  const month=
-    getUpcomingBudgetMonth();
+  await loadPreparedBudget();
 
-  currentPrepareBudget=
-    await getBudgetForMonth(month);
+  const bm=
+    preparedBudgetMonth();
 
-  const monthName=
-    month.toLocaleDateString(
-      "en-US",
-      {
-        month:"long",
-        year:"numeric"
-      }
+  const pm=
+    previousMonth();
+
+  const weeks=
+    getBudgetWeekCount(
+      bm
     );
 
   document.getElementById(
-    "budgetTitle"
+    "budgetSetupTitle"
   ).textContent=
-    `Prepare Your ${monthName} Budget`;
+    `Prepare Your ${bm.toLocaleDateString("en-US",{month:"long",year:"numeric"})} Budget`;
 
   document.getElementById(
-    "budgetInstructions"
+    "budgetSetupInstructions"
   ).textContent=
-    "Enter the income and bills used to prepare this budget, then choose your weekly allocations.";
-
-  const weeks=
-    budgetWeekCount(month);
+    `This month has ${weeks} budget weeks under the Sunday–Saturday majority-of-days rule.`;
 
   document.getElementById(
-    "budgetModeNote"
+    "incomePeriodLabel"
   ).textContent=
-    profileMode==="soft"
-      ? "Soft Budget is active. Monthly Net is divided by 4.345 before weekly bills, Needs, and Savings are subtracted."
-      : `Hard Budget is active. ${monthName} owns ${weeks} budget weeks, so Monthly Net is divided by ${weeks}.`;
+    `Income received during ${pm.toLocaleDateString("en-US",{month:"long",year:"numeric"})}`;
 
   document.getElementById(
-    "weeklyTotalLabel"
+    "calculationModeNote"
   ).textContent=
-    profileMode==="soft"
-      ?"Weekly Total ÷ 4.345"
-      :`Weekly Total ÷ ${weeks}`;
+    `Standard calculation: Net is divided by ${weeks}, the actual number of budget weeks assigned to this month. Weekly Bills, Needs, and Savings are then subtracted.`;
 
   document.getElementById(
     "weeklyNeeds"
   ).value=
-    currentPrepareBudget?.weekly_needs
-      ?money(currentPrepareBudget.weekly_needs)
+    preparedBudgetPlan?.weekly_needs
+      ?money(
+        preparedBudgetPlan.weekly_needs
+      )
       :"";
 
   document.getElementById(
     "weeklySavings"
   ).value=
-    currentPrepareBudget?.weekly_savings
-      ?money(currentPrepareBudget.weekly_savings)
+    preparedBudgetPlan?.weekly_savings
+      ?money(
+        preparedBudgetPlan.weekly_savings
+      )
       :"";
+
+  bindMoneyInput(
+    document.getElementById(
+      "weeklyNeeds"
+    )
+  );
+
+  bindMoneyInput(
+    document.getElementById(
+      "weeklySavings"
+    )
+  );
 
   await Promise.all([
     loadIncomeSources(),
@@ -2534,715 +3313,963 @@ async function openBudgetSetup(){
 async function loadIncomeSources(){
   const {data,error}=
     await supabaseClient
-      .from("income_sources")
+      .from(
+        "income_sources"
+      )
       .select("*")
-      .eq("household_id",householdId)
-      .order("created_at");
+      .eq(
+        "household_id",
+        householdId
+      )
+      .order(
+        "created_at",
+        {
+          ascending:true
+        }
+      );
 
   if(error){
-    console.error(error);
+    console.error(
+      error
+    );
     return;
   }
 
-  incomeCache=data||[];
+  const box=
+    document.getElementById(
+      "incomeList"
+    );
 
-  renderMoneyRows(
-    "incomeList",
-    incomeCache,
-    "income"
+  box.innerHTML="";
+
+  (data||[]).forEach(
+    x=>
+      box.appendChild(
+        savedMoneyRow(
+          "income",
+          x.id,
+          x.name,
+          Number(
+            x.amount
+          )||0,
+          false
+        )
+      )
   );
+
+  document.getElementById(
+    "newIncomeEditor"
+  ).innerHTML="";
 }
 
 async function loadMonthlyBills(){
   const {data,error}=
     await supabaseClient
-      .from("bills")
+      .from(
+        "bills"
+      )
       .select("*")
-      .eq("household_id",householdId)
-      .order("created_at");
+      .eq(
+        "household_id",
+        householdId
+      )
+      .order(
+        "created_at",
+        {
+          ascending:true
+        }
+      );
 
   if(error){
-    console.error(error);
+    console.error(
+      error
+    );
     return;
   }
 
-  monthlyBillCache=data||[];
+  const box=
+    document.getElementById(
+      "monthlyBillList"
+    );
 
-  renderMoneyRows(
-    "monthlyBillList",
-    monthlyBillCache,
-    "monthlyBill"
+  box.innerHTML="";
+
+  (data||[]).forEach(
+    x=>
+      box.appendChild(
+        savedMoneyRow(
+          "monthlyBill",
+          x.id,
+          x.name,
+          Math.abs(
+            Number(
+              x.amount
+            )||0
+          ),
+          true
+        )
+      )
   );
+
+  document.getElementById(
+    "newMonthlyBillEditor"
+  ).innerHTML="";
 }
 
 async function loadWeeklyBills(){
   const {data,error}=
     await supabaseClient
-      .from("weekly_bills")
+      .from(
+        "weekly_bills"
+      )
       .select("*")
-      .eq("household_id",householdId)
-      .order("created_at");
+      .eq(
+        "household_id",
+        householdId
+      )
+      .order(
+        "created_at",
+        {
+          ascending:true
+        }
+      );
 
   if(error){
-    console.error(error);
-    return;
-  }
-
-  weeklyBillCache=data||[];
-
-  renderMoneyRows(
-    "weeklyBillList",
-    weeklyBillCache,
-    "weeklyBill"
-  );
-}
-
-function renderMoneyRows(
-  elementId,
-  items,
-  type
-){
-  const list=
-    document.getElementById(elementId);
-
-  list.innerHTML="";
-
-  if(!items.length){
-    const empty=
-      document.createElement("div");
-
-    empty.className="subtext";
-    empty.textContent="None added.";
-
-    list.appendChild(empty);
-    return;
-  }
-
-  items.forEach(item=>{
-    const row=
-      document.createElement("div");
-
-    row.className="saved-row";
-
-    const displayAmount=
-      type==="monthlyBill"
-        ?"-"+money(Math.abs(item.amount))
-        :money(Math.abs(item.amount));
-
-    row.innerHTML=`
-      <div class="saved-row-main">
-        <div class="saved-row-name">
-          ${escapeHtml(item.name)}
-        </div>
-      </div>
-
-      <div class="saved-row-amount">
-        ${displayAmount}
-      </div>
-
-      <div class="saved-row-actions">
-        <button class="secondary-button small-button">
-          Edit
-        </button>
-        <button class="danger-button small-button">
-          Delete
-        </button>
-      </div>
-    `;
-
-    const buttons=
-      row.querySelectorAll("button");
-
-    buttons[0].onclick=()=>{
-      editMoneyRow(
-        row,
-        item,
-        type
-      );
-    };
-
-    buttons[1].onclick=()=>{
-      deleteMoneyItem(
-        item.id,
-        type
-      );
-    };
-
-    list.appendChild(row);
-  });
-}
-
-function newMoneyEditor(type){
-  const map={
-    income:"incomeList",
-    monthlyBill:"monthlyBillList",
-    weeklyBill:"weeklyBillList"
-  };
-
-  const list=
-    document.getElementById(
-      map[type]
+    console.error(
+      error
     );
-
-  const existing=
-    list.querySelector(".edit-box.new-item");
-
-  if(existing){
-    existing.scrollIntoView({
-      behavior:"smooth",
-      block:"center"
-    });
     return;
   }
 
   const box=
-    document.createElement("div");
+    document.getElementById(
+      "weeklyBillList"
+    );
 
-  box.className="edit-box new-item";
+  box.innerHTML="";
+
+  (data||[]).forEach(
+    x=>
+      box.appendChild(
+        savedMoneyRow(
+          "weeklyBill",
+          x.id,
+          x.name,
+          Math.abs(
+            Number(
+              x.amount
+            )||0
+          ),
+          true
+        )
+      )
+  );
+
+  document.getElementById(
+    "newWeeklyBillEditor"
+  ).innerHTML="";
+}
+
+function savedMoneyRow(
+  kind,
+  id,
+  name,
+  amount,
+  negative
+){
+  const row=
+    document.createElement(
+      "div"
+    );
+
+  row.className=
+    "saved-row";
+
+  row.innerHTML=`
+    <div class="saved-row-main">
+      <div class="saved-row-name">
+        ${escapeHtml(name)}
+      </div>
+    </div>
+
+    <div class="saved-row-amount">
+      ${negative?"-":""}${money(amount)}
+    </div>
+
+    <div class="saved-row-actions">
+      <button class="secondary-button small-button">
+        Edit
+      </button>
+
+      <button class="danger-button small-button">
+        Delete
+      </button>
+    </div>
+  `;
+
+  const [editButton,deleteButton]=
+    row.querySelectorAll(
+      "button"
+    );
+
+  editButton.onclick=()=>{
+    editSavedMoney(
+      kind,
+      id,
+      name,
+      amount
+    );
+  };
+
+  deleteButton.onclick=()=>{
+    deleteSavedMoney(
+      kind,
+      id
+    );
+  };
+
+  return row;
+}
+
+function editorTarget(kind){
+  return kind==="income"
+    ?"newIncomeEditor"
+    :kind==="monthlyBill"
+      ?"newMonthlyBillEditor"
+      :"newWeeklyBillEditor";
+}
+
+function editSavedMoney(
+  kind,
+  id,
+  name,
+  amount
+){
+  const target=
+    document.getElementById(
+      editorTarget(
+        kind
+      )
+    );
+
+  target.innerHTML="";
+
+  const box=
+    document.createElement(
+      "div"
+    );
+
+  box.className=
+    "edit-box";
 
   box.innerHTML=`
     <div class="edit-grid">
-      <input class="editor-name" type="text" placeholder="Name">
-      <input class="editor-amount money-input" inputmode="decimal" placeholder="$0.00">
+      <input
+        class="edit-name"
+        value="${escapeHtml(name)}"
+      >
+
+      <input
+        class="edit-amount money-input"
+        inputmode="decimal"
+        value="${money(amount)}"
+      >
     </div>
 
     <div class="edit-actions">
-      <button class="primary-button">Save</button>
-      <button class="secondary-button">Cancel</button>
+      <button class="primary-button">
+        Save
+      </button>
+
+      <button class="secondary-button">
+        Cancel
+      </button>
     </div>
   `;
 
-  const amount=
-    box.querySelector(".editor-amount");
-
-  amount.addEventListener(
-    "blur",
-    ()=>{
-      formatMoneyInput(
-        amount,
-        type==="monthlyBill"
-      );
-    }
+  target.appendChild(
+    box
   );
 
-  const buttons=
-    box.querySelectorAll("button");
+  const amountInput=
+    box.querySelector(
+      ".edit-amount"
+    );
 
-  buttons[0].onclick=()=>{
+  bindMoneyInput(
+    amountInput,
+    kind!=="income"
+  );
+
+  if(kind!=="income"){
+    formatMoneyInput(
+      amountInput,
+      true
+    );
+  }
+
+  const [save,cancel]=
+    box.querySelectorAll(
+      "button"
+    );
+
+  save.onclick=()=>{
     saveMoneyItem(
-      box,
-      type,
-      null
+      kind,
+      id,
+      box
     );
   };
 
-  buttons[1].onclick=()=>{
-    box.remove();
+  cancel.onclick=()=>{
+    target.innerHTML="";
   };
 
-  list.prepend(box);
+  box.scrollIntoView({
+    behavior:"smooth",
+    block:"nearest"
+  });
 }
 
-function editMoneyRow(
-  row,
-  item,
-  type
-){
-  row.innerHTML=`
-    <div style="width:100%">
-      <div class="edit-grid">
-        <input class="editor-name" type="text" value="${escapeAttribute(item.name)}">
-        <input class="editor-amount money-input" inputmode="decimal" value="${type==="monthlyBill"?"-":""}${money(Math.abs(item.amount))}">
-      </div>
+function newMoneyEditor(kind){
+  const target=
+    document.getElementById(
+      editorTarget(
+        kind
+      )
+    );
 
-      <div class="edit-actions">
-        <button class="primary-button">Save</button>
-        <button class="secondary-button">Cancel</button>
-      </div>
+  target.innerHTML="";
+
+  const box=
+    document.createElement(
+      "div"
+    );
+
+  box.className=
+    "edit-box";
+
+  box.innerHTML=`
+    <div class="edit-grid">
+      <input
+        class="edit-name"
+        placeholder="${
+          kind==="income"
+            ?"Income source"
+            :kind==="monthlyBill"
+              ?"Monthly bill"
+              :"Weekly bill"
+        }"
+      >
+
+      <input
+        class="edit-amount money-input"
+        inputmode="decimal"
+        placeholder="${
+          kind==="income"
+            ?"$0.00"
+            :"-$0.00"
+        }"
+      >
+    </div>
+
+    <div class="edit-actions">
+      <button class="primary-button">
+        Add
+      </button>
+
+      <button class="secondary-button">
+        Cancel
+      </button>
     </div>
   `;
 
-  const amount=
-    row.querySelector(".editor-amount");
-
-  amount.addEventListener(
-    "blur",
-    ()=>{
-      formatMoneyInput(
-        amount,
-        type==="monthlyBill"
-      );
-    }
+  target.appendChild(
+    box
   );
 
-  const buttons=
-    row.querySelectorAll("button");
+  bindMoneyInput(
+    box.querySelector(
+      ".edit-amount"
+    ),
+    kind!=="income"
+  );
 
-  buttons[0].onclick=()=>{
+  const [save,cancel]=
+    box.querySelectorAll(
+      "button"
+    );
+
+  save.onclick=()=>{
     saveMoneyItem(
-      row,
-      type,
-      item.id
+      kind,
+      null,
+      box
     );
   };
 
-  buttons[1].onclick=async()=>{
-    await reloadMoneyType(type);
+  cancel.onclick=()=>{
+    target.innerHTML="";
   };
+
+  box.querySelector(
+    ".edit-name"
+  ).focus();
 }
 
 async function saveMoneyItem(
-  container,
-  type,
-  id
+  kind,
+  id,
+  box
 ){
   const name=
-    container
-      .querySelector(".editor-name")
+    box
+      .querySelector(
+        ".edit-name"
+      )
       .value
       .trim();
 
-  const rawAmount=
-    numberValue(
-      container
-        .querySelector(".editor-amount")
-        .value
+  const amount=
+    Math.abs(
+      parseMoney(
+        box.querySelector(
+          ".edit-amount"
+        ).value
+      )
     );
 
-  const amount=
-    Math.abs(rawAmount);
+  if(
+    !name ||
+    !Number.isFinite(
+      amount
+    )
+  ){
+    alert(
+      "Enter a name and valid amount."
+    );
 
-  if(!name){
-    alert("Enter a name.");
     return;
   }
 
-  if(!Number.isFinite(amount)){
-    alert("Enter a valid amount.");
-    return;
-  }
+  let query;
 
-  let table;
-
-  if(type==="income"){
-    table="income_sources";
+  if(kind==="income"){
+    query=
+      id
+        ?supabaseClient
+          .from(
+            "income_sources"
+          )
+          .update({
+            name,
+            amount
+          })
+          .eq(
+            "id",
+            id
+          )
+        :supabaseClient
+          .from(
+            "income_sources"
+          )
+          .insert({
+            household_id:
+              householdId,
+            name,
+            amount
+          });
   }
-  else if(type==="monthlyBill"){
-    table="bills";
+  else if(kind==="monthlyBill"){
+    query=
+      id
+        ?supabaseClient
+          .from(
+            "bills"
+          )
+          .update({
+            name,
+            amount
+          })
+          .eq(
+            "id",
+            id
+          )
+        :supabaseClient
+          .from(
+            "bills"
+          )
+          .insert({
+            household_id:
+              householdId,
+            name,
+            amount
+          });
   }
   else{
-    table="weekly_bills";
-  }
-
-  const payload={
-    household_id:householdId,
-    name,
-    amount
-  };
-
-  let result;
-
-  if(id){
-    result=
-      await supabaseClient
-        .from(table)
-        .update(payload)
-        .eq("id",id);
-  }
-  else{
-    result=
-      await supabaseClient
-        .from(table)
-        .insert(payload);
-  }
-
-  if(result.error){
-    alert(result.error.message);
-    return;
-  }
-
-  await reloadMoneyType(type);
-
-  updateBudgetCalculation();
-}
-
-async function deleteMoneyItem(
-  id,
-  type
-){
-  if(!confirm("Delete this item?")){
-    return;
-  }
-
-  let table;
-
-  if(type==="income"){
-    table="income_sources";
-  }
-  else if(type==="monthlyBill"){
-    table="bills";
-  }
-  else{
-    table="weekly_bills";
+    query=
+      id
+        ?supabaseClient
+          .from(
+            "weekly_bills"
+          )
+          .update({
+            name,
+            amount
+          })
+          .eq(
+            "id",
+            id
+          )
+        :supabaseClient
+          .from(
+            "weekly_bills"
+          )
+          .insert({
+            household_id:
+              householdId,
+            name,
+            amount
+          });
   }
 
   const {error}=
-    await supabaseClient
-      .from(table)
-      .delete()
-      .eq("id",id);
+    await query;
 
   if(error){
-    alert(error.message);
+    alert(
+      error.message
+    );
+
     return;
   }
 
-  await reloadMoneyType(type);
-
-  updateBudgetCalculation();
-}
-
-async function reloadMoneyType(type){
-  if(type==="income"){
+  if(kind==="income"){
     await loadIncomeSources();
   }
-  else if(type==="monthlyBill"){
+  else if(kind==="monthlyBill"){
     await loadMonthlyBills();
   }
   else{
     await loadWeeklyBills();
   }
+
+  updateBudgetCalculation();
 }
 
-function getBudgetCalculation(){
+async function deleteSavedMoney(
+  kind,
+  id
+){
+  if(
+    !confirm(
+      "Delete this item?"
+    )
+  ){
+    return;
+  }
+
+  const table=
+    kind==="income"
+      ?"income_sources"
+      :kind==="monthlyBill"
+        ?"bills"
+        :"weekly_bills";
+
+  const {error}=
+    await supabaseClient
+      .from(table)
+      .delete()
+      .eq(
+        "id",
+        id
+      );
+
+  if(error){
+    alert(
+      error.message
+    );
+    return;
+  }
+
+  if(kind==="income"){
+    await loadIncomeSources();
+  }
+  else if(kind==="monthlyBill"){
+    await loadMonthlyBills();
+  }
+  else{
+    await loadWeeklyBills();
+  }
+
+  updateBudgetCalculation();
+}
+
+function totalFromSavedRows(
+  listId
+){
+  let n=0;
+
+  document
+    .querySelectorAll(
+      `#${listId} .saved-row-amount`
+    )
+    .forEach(el=>{
+      n+=
+        Math.abs(
+          parseMoney(
+            el.textContent
+          )
+        );
+    });
+
+  return n;
+}
+
+function updateBudgetCalculation(){
   const income=
-    incomeCache.reduce(
-      (sum,item)=>
-        sum+
-        Math.abs(Number(item.amount)||0),
-      0
+    totalFromSavedRows(
+      "incomeList"
     );
 
   const monthlyBills=
-    monthlyBillCache.reduce(
-      (sum,item)=>
-        sum+
-        Math.abs(Number(item.amount)||0),
-      0
+    totalFromSavedRows(
+      "monthlyBillList"
     );
 
   const weeklyBills=
-    weeklyBillCache.reduce(
-      (sum,item)=>
-        sum+
-        Math.abs(Number(item.amount)||0),
-      0
+    totalFromSavedRows(
+      "weeklyBillList"
     );
 
-  const weeklyNeeds=
+  const needs=
     Math.abs(
-      numberValue(
+      parseMoney(
         document.getElementById(
           "weeklyNeeds"
         ).value
       )
     );
 
-  const weeklySavings=
+  const savings=
     Math.abs(
-      numberValue(
+      parseMoney(
         document.getElementById(
           "weeklySavings"
         ).value
       )
     );
 
+  const weeks=
+    getBudgetWeekCount(
+      preparedBudgetMonth()
+    );
+
   const net=
-    income-monthlyBills;
-
-  const month=
-    getUpcomingBudgetMonth();
-
-  const divisor=
-    profileMode==="soft"
-      ?4.345
-      :budgetWeekCount(month);
+    income-
+    monthlyBills;
 
   const weeklyTotal=
-    divisor>0
-      ?net/divisor
+    weeks
+      ?net/weeks
       :0;
 
-  const remaining=
-    weeklyTotal
-    -weeklyBills
-    -weeklyNeeds
-    -weeklySavings;
-
-  return {
-    income,
-    monthlyBills,
-    net,
-    divisor,
-    weeklyTotal,
-    weeklyBills,
-    weeklyNeeds,
-    weeklySavings,
-    remaining
-  };
-}
-
-function updateBudgetCalculation(){
-  const calc=
-    getBudgetCalculation();
+  const funPool=
+    weeklyTotal-
+    weeklyBills-
+    needs-
+    savings;
 
   document.getElementById(
     "calcIncome"
   ).textContent=
-    money(calc.income);
+    money(income);
 
   document.getElementById(
     "calcBills"
   ).textContent=
-    "-"+money(calc.monthlyBills);
+    `-${money(monthlyBills)}`;
 
   document.getElementById(
     "calcNet"
   ).textContent=
-    money(calc.net);
+    money(net);
 
   document.getElementById(
     "calcWeeklyTotal"
   ).textContent=
-    money(calc.weeklyTotal);
+    money(weeklyTotal);
 
   document.getElementById(
     "calcWeeklyBills"
   ).textContent=
-    "-"+money(calc.weeklyBills);
+    `-${money(weeklyBills)}`;
 
   document.getElementById(
-    "calcNeeds"
+    "calcWeeklyNeeds"
   ).textContent=
-    "-"+money(calc.weeklyNeeds);
+    `-${money(needs)}`;
 
   document.getElementById(
-    "calcSavings"
+    "calcWeeklySavings"
   ).textContent=
-    "-"+money(calc.weeklySavings);
+    `-${money(savings)}`;
 
-  const fun=
-    document.getElementById(
-      "calcFunPool"
-    );
+  document.getElementById(
+    "calcFunPool"
+  ).textContent=
+    money(funPool);
 
-  fun.textContent=
-    money(calc.remaining);
-
-  fun.classList.toggle(
-    "negative",
-    calc.remaining<0
+  updateAllocationSummary(
+    funPool
   );
 
-  updateAllocationSummary();
-
-  return calc;
+  return{
+    income,
+    monthlyBills,
+    weeklyBills,
+    needs,
+    savings,
+    weeks,
+    net,
+    weeklyTotal,
+    funPool
+  };
 }
 
 async function renderProfileAllocations(){
   const profiles=
-    profileCache.length
-      ?profileCache
-      :await loadProfiles();
+    await loadProfiles();
 
-  const month=
+  const bm=
     dateOnly(
-      getUpcomingBudgetMonth()
+      preparedBudgetMonth()
     );
 
-  const {data,error}=
+  const {
+    data:allocations
+  }=
     await supabaseClient
-      .from("budget_profile_allocations")
-      .select("*")
-      .eq("household_id",householdId)
-      .eq("budget_month",month);
+      .from(
+        "budget_profile_allocations"
+      )
+      .select(
+        "profile_id,weekly_fun_amount"
+      )
+      .eq(
+        "household_id",
+        householdId
+      )
+      .eq(
+        "budget_month",
+        bm
+      );
 
-  if(error){
-    console.error(error);
-  }
+  const map=
+    new Map(
+      (allocations||[])
+        .map(
+          x=>[
+            x.profile_id,
+            Number(
+              x.weekly_fun_amount
+            )||0
+          ]
+        )
+    );
 
-  const saved=new Map(
-    (data||[]).map(
-      item=>[
-        item.profile_id,
-        Number(item.weekly_fun_amount)||0
-      ]
-    )
-  );
-
-  const list=
+  const box=
     document.getElementById(
       "profileAllocationList"
     );
 
-  list.innerHTML="";
+  box.innerHTML="";
 
-  profiles.forEach(profile=>{
+  profiles.forEach(p=>{
     const row=
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
     row.className=
       "allocation-row";
 
     row.innerHTML=`
       <div class="allocation-name">
-        ${escapeHtml(profile.display_name)}
+        ${escapeHtml(p.display_name)}
       </div>
+
       <input
-        class="profile-allocation money-input"
-        data-profile-id="${profile.id}"
+        class="allocation-input money-input"
         inputmode="decimal"
+        data-profile-id="${p.id}"
+        value="${map.has(p.id)?money(map.get(p.id)):""}"
         placeholder="$0.00"
-        value="${saved.has(profile.id)?money(saved.get(profile.id)):""}"
       >
     `;
 
-    const input=
-      row.querySelector("input");
+    box.appendChild(
+      row
+    );
 
-    input.addEventListener(
+    bindMoneyInput(
+      row.querySelector(
+        "input"
+      )
+    );
+
+    row.querySelector(
+      "input"
+    ).addEventListener(
       "input",
-      updateAllocationSummary
+      updateBudgetCalculation
     );
-
-    input.addEventListener(
-      "blur",
-      ()=>{
-        formatMoneyInput(input,false);
-        updateAllocationSummary();
-      }
-    );
-
-    list.appendChild(row);
   });
 
-  updateAllocationSummary();
+  if(
+    !(allocations||[]).length &&
+    profiles.length
+  ){
+    requestAnimationFrame(
+      ()=>{
+        const calculation=
+          updateBudgetCalculation();
+
+        const each=
+          Math.max(
+            0,
+            calculation.funPool
+          )/
+          profiles.length;
+
+        document
+          .querySelectorAll(
+            ".allocation-input"
+          )
+          .forEach(
+            el=>{
+              el.value=
+                money(each);
+            }
+          );
+
+        updateAllocationSummary(
+          calculation.funPool
+        );
+      }
+    );
+  }
 }
 
-function updateAllocationSummary(){
-  const calc=
-    getBudgetCalculation();
-
-  let assigned=0;
+function allocationTotal(){
+  let n=0;
 
   document
     .querySelectorAll(
-      ".profile-allocation"
+      ".allocation-input"
     )
-    .forEach(input=>{
-      assigned+=Math.abs(
-        numberValue(input.value)
-      );
+    .forEach(el=>{
+      n+=
+        Math.abs(
+          parseMoney(
+            el.value
+          )
+        );
     });
 
-  const unassigned=
-    calc.remaining-assigned;
+  return n;
+}
 
-  document.getElementById(
-    "allocatedFun"
-  ).textContent=
-    money(assigned);
+function updateAllocationSummary(
+  pool
+){
+  const assigned=
+    allocationTotal();
 
-  const unallocated=
+  const remaining=
+    pool-assigned;
+
+  const el=
     document.getElementById(
-      "unallocatedFun"
+      "allocationSummary"
     );
 
-  unallocated.textContent=
-    money(unassigned);
+  el.textContent=
+    `Assigned: ${money(assigned)} · Unassigned: ${money(remaining)}`;
 
-  unallocated.classList.toggle(
+  el.classList.toggle(
     "negative",
-    unassigned<-.005
+    remaining<-.005
   );
 }
 
 async function saveBudget(){
-  const calc=
+  const calculation=
     updateBudgetCalculation();
 
-  if(calc.remaining<0){
+  if(
+    calculation.funPool<0
+  ){
     alert(
-      "Weekly Bills, Needs, and Savings are greater than the weekly amount available."
+      "The selected budget leaves a negative Fun Money pool."
     );
+
     return;
   }
 
-  let assigned=0;
+  const assigned=
+    allocationTotal();
 
-  const allocations=[];
-
-  document
-    .querySelectorAll(
-      ".profile-allocation"
-    )
-    .forEach(input=>{
-      const amount=
-        Math.abs(
-          numberValue(input.value)
-        );
-
-      assigned+=amount;
-
-      allocations.push({
-        household_id:householdId,
-        budget_month:
-          dateOnly(
-            getUpcomingBudgetMonth()
-          ),
-        profile_id:
-          input.dataset.profileId,
-        weekly_fun_amount:
-          amount,
-        updated_at:
-          new Date().toISOString()
-      });
-    });
-
-  if(assigned>calc.remaining+.01){
+  if(
+    assigned>
+    calculation.funPool+.01
+  ){
     alert(
-      "You assigned more Fun Money than is available."
+      "The profile allocations exceed the Fun Money pool."
     );
+
     return;
   }
 
-  const month=
+  const bm=
     dateOnly(
-      getUpcomingBudgetMonth()
+      preparedBudgetMonth()
     );
+
+  const payload={
+    household_id:
+      householdId,
+
+    budget_month:
+      bm,
+
+    weekly_needs:
+      calculation.needs,
+
+    weekly_savings:
+      calculation.savings,
+
+    weekly_fun:
+      calculation.funPool,
+
+    calculation_mode:
+      "hard",
+
+    updated_at:
+      new Date()
+        .toISOString(),
+
+    preparation_completed:
+      true
+  };
 
   const {data,error}=
     await supabaseClient
-      .from("budget_plans")
+      .from(
+        "budget_plans"
+      )
       .upsert(
-        {
-          household_id:householdId,
-          budget_month:month,
-          weekly_needs:calc.weeklyNeeds,
-          weekly_savings:calc.weeklySavings,
-          calculation_mode:profileMode,
-          budget_week_count:
-            budgetWeekCount(
-              getUpcomingBudgetMonth()
-            ),
-          monthly_income:calc.income,
-          monthly_bills:calc.monthlyBills,
-          weekly_bills_total:calc.weeklyBills,
-          weekly_total:calc.weeklyTotal,
-          weekly_fun_pool:calc.remaining,
-          preparation_completed:true,
-          updated_at:new Date().toISOString()
-        },
+        payload,
         {
           onConflict:
             "household_id,budget_month"
@@ -3256,17 +4283,48 @@ async function saveBudget(){
       "Could not save budget: "+
       error.message
     );
+
     return;
   }
 
-  currentPrepareBudget=data;
+  preparedBudgetPlan=
+    data;
 
-  if(allocations.length){
-    const {error:allocationError}=
+  const rows=
+    [
+      ...document.querySelectorAll(
+        ".allocation-input"
+      )
+    ].map(
+      el=>({
+        household_id:
+          householdId,
+
+        budget_month:
+          bm,
+
+        profile_id:
+          el.dataset.profileId,
+
+        weekly_fun_amount:
+          Math.abs(
+            parseMoney(
+              el.value
+            )
+          )
+      })
+    );
+
+  if(rows.length){
+    const {
+      error:allocationError
+    }=
       await supabaseClient
-        .from("budget_profile_allocations")
+        .from(
+          "budget_profile_allocations"
+        )
         .upsert(
-          allocations,
+          rows,
           {
             onConflict:
               "household_id,budget_month,profile_id"
@@ -3275,304 +4333,319 @@ async function saveBudget(){
 
     if(allocationError){
       alert(
-        "Budget saved, but Fun Money allocations could not be saved: "+
+        "Budget saved, but profile allocations failed: "+
         allocationError.message
       );
+
       return;
     }
   }
 
-  const message=
+  const msg=
     document.getElementById(
       "budgetMessage"
     );
 
-  message.textContent=
+  msg.textContent=
     "Budget saved.";
 
-  message.classList.remove(
+  msg.classList.remove(
     "hidden"
   );
 
-  setTimeout(()=>{
-    message.classList.add(
-      "hidden"
+  setTimeout(
+    ()=>{
+      msg.classList.add(
+        "hidden"
+      );
+    },
+    2600
+  );
+
+  await updateAnalytics();
+}
+
+async function ensureCurrentWeekDeposits(){
+  if(!homeBudgetPlan){
+    return;
+  }
+
+  const ws=
+    dateOnly(
+      weekStart(
+        new Date()
+      )
     );
-  },2500);
 
-  await loadHomeBudget();
-  await calculateBalances();
-  await loadAnalytics();
-}
-
-function currentWeekRange(){
-  const start=
-    getWeekStart(new Date());
-
-  const end=
-    new Date(start);
-
-  end.setDate(
-    start.getDate()+6
-  );
-
-  end.setHours(
-    23,59,59,999
-  );
-
-  return {
-    start,
-    end
-  };
-}
-
-async function loadExpenses(){
-  const {data,error}=
+  const {
+    error:needsError
+  }=
     await supabaseClient
-      .from("expenses")
-      .select("*")
-      .eq("household_id",householdId)
-      .order("spent_at",{
-        ascending:false
-      });
+      .from(
+        "allowance_deposits"
+      )
+      .upsert(
+        {
+          household_id:
+            householdId,
 
-  if(error){
-    console.error(error);
-    return;
-  }
+          week_start:
+            ws,
 
-  const expenses=data||[];
+          fund:
+            "needs",
 
-  renderExpenseHistory(expenses);
-  renderHomeExpenses(expenses);
-}
+          amount:
+            Number(
+              homeBudgetPlan.weekly_needs
+            )||0
+        },
+        {
+          onConflict:
+            "household_id,week_start,fund",
 
-function renderExpenseHistory(expenses){
-  const container=
-    document.getElementById(
-      "expenseHistory"
-    );
-
-  if(!expenses.length){
-    container.innerHTML=
-      '<p class="subtext">No expenses yet.</p>';
-    return;
-  }
-
-  container.innerHTML="";
-
-  expenses.forEach(expense=>{
-    const row=
-      document.createElement("div");
-
-    row.className="transaction";
-
-    const date=
-      new Date(
-        expense.spent_at||
-        expense.created_at
+          ignoreDuplicates:
+            true
+        }
       );
 
-    row.innerHTML=`
-      <div class="transaction-top">
-        <div>
-          <div class="transaction-name">
-            ${escapeHtml(expense.description)}
-          </div>
+  if(needsError){
+    console.error(
+      needsError
+    );
+  }
 
-          <div class="transaction-meta">
-            ${escapeHtml(expense.category||"Other")} ·
-            ${expense.fund==="needs"?"Needs":"Fun Money"} ·
-            ${date.toLocaleDateString("en-US")}
-          </div>
-        </div>
+  const bm=
+    dateOnly(
+      budgetMonthForWeek(
+        new Date()
+      )
+    );
 
-        <div class="transaction-amount">
-          -${money(expense.amount)}
-        </div>
-      </div>
+  let {
+    data:allocations,
+    error:allocationError
+  }=
+    await supabaseClient
+      .from(
+        "budget_profile_allocations"
+      )
+      .select(
+        "profile_id,weekly_fun_amount"
+      )
+      .eq(
+        "household_id",
+        householdId
+      )
+      .eq(
+        "budget_month",
+        bm
+      );
 
-      <div class="transaction-actions">
-        <button
-          class="secondary-button small-button"
-          onclick="editExpense('${expense.id}')"
-        >
-          Edit
-        </button>
+  if(allocationError){
+    console.error(
+      allocationError
+    );
+  }
 
-        <button
-          class="danger-button small-button"
-          onclick="deleteExpense('${expense.id}')"
-        >
-          Delete
-        </button>
-      </div>
-    `;
+  if(
+    !allocations?.length
+  ){
+    const profiles=
+      await loadProfiles();
 
-    container.appendChild(row);
-  });
-}
+    const pool=
+      Number(
+        homeBudgetPlan.weekly_fun
+      )||0;
 
-function renderHomeExpenses(expenses){
-  const range=
-    currentWeekRange();
+    allocations=
+      profiles.length
+        ?profiles.map(
+          profile=>({
+            profile_id:
+              profile.id,
 
-  const weekly=
-    expenses.filter(expense=>{
-      const date=
-        new Date(
-          expense.spent_at||
-          expense.created_at
+            weekly_fun_amount:
+              pool/
+              profiles.length
+          })
+        )
+        :[];
+  }
+
+  if(allocations.length){
+    const rows=
+      allocations.map(
+        allocation=>({
+          household_id:
+            householdId,
+
+          profile_id:
+            allocation.profile_id,
+
+          week_start:
+            ws,
+
+          amount:
+            Number(
+              allocation.weekly_fun_amount
+            )||0
+        })
+      );
+
+    const {
+      error:funError
+    }=
+      await supabaseClient
+        .from(
+          "profile_fun_deposits"
+        )
+        .upsert(
+          rows,
+          {
+            onConflict:
+              "household_id,profile_id,week_start",
+
+            ignoreDuplicates:
+              true
+          }
         );
 
-      return (
-        date>=range.start &&
-        date<=range.end
+    if(funError){
+      console.error(
+        funError
       );
-    });
-
-  renderHomeFundExpenses(
-    "needsHomeExpenses",
-    weekly.filter(
-      e=>e.fund==="needs"
-    )
-  );
-
-  renderHomeFundExpenses(
-    "funHomeExpenses",
-    weekly.filter(
-      e=>
-        e.fund==="fun" &&
-        (
-          !e.profile_id ||
-          e.profile_id===currentProfile.id
-        )
-    )
-  );
-}
-
-function renderHomeFundExpenses(
-  elementId,
-  expenses
-){
-  const container=
-    document.getElementById(elementId);
-
-  if(!expenses.length){
-    container.innerHTML=
-      '<div class="empty-home-expenses">No expenses this week.</div>';
-    return;
+    }
   }
-
-  container.innerHTML="";
-
-  expenses
-    .slice(0,4)
-    .forEach(expense=>{
-      const row=
-        document.createElement("div");
-
-      row.className="home-expense";
-
-      row.innerHTML=`
-        <span class="home-expense-name">
-          ${escapeHtml(expense.description)}
-        </span>
-
-        <span class="home-expense-amount">
-          -${money(expense.amount)}
-        </span>
-      `;
-
-      container.appendChild(row);
-    });
 }
 
 async function calculateBalances(){
   await loadHomeBudget();
 
-  const range=
-    currentWeekRange();
-
-  const ownerMonth=
-    getWeekOwnerMonth(new Date());
-
-  const ownerMonthString=
-    dateOnly(ownerMonth);
-
-  let weeklyNeeds=
-    Number(
-      currentHomeBudget?.weekly_needs
-    )||0;
-
-  let profileFun=0;
-
-  if(currentHomeBudget){
-    const {data:allocation,error}=
-      await supabaseClient
-        .from("budget_profile_allocations")
-        .select("weekly_fun_amount")
-        .eq("household_id",householdId)
-        .eq("budget_month",ownerMonthString)
-        .eq("profile_id",currentProfile.id)
-        .maybeSingle();
-
-    if(error){
-      console.error(error);
-    }
-
-    profileFun=
-      Number(
-        allocation?.weekly_fun_amount
-      )||0;
+  if(homeBudgetPlan){
+    await ensureCurrentWeekDeposits();
   }
 
-  const {data:expenses,error}=
+  const {
+    data:needsDeposits
+  }=
     await supabaseClient
-      .from("expenses")
-      .select("*")
-      .eq("household_id",householdId)
-      .gte(
-        "spent_at",
-        range.start.toISOString()
+      .from(
+        "allowance_deposits"
       )
-      .lte(
-        "spent_at",
-        range.end.toISOString()
+      .select("amount")
+      .eq(
+        "household_id",
+        householdId
+      )
+      .eq(
+        "fund",
+        "needs"
       );
 
-  if(error){
-    console.error(error);
-    return;
-  }
-
-  let needsSpent=0;
-  let funSpent=0;
-
-  (expenses||[]).forEach(expense=>{
-    const amount=
-      Number(expense.amount)||0;
-
-    if(expense.fund==="needs"){
-      needsSpent+=amount;
-    }
-
-    if(
-      expense.fund==="fun" &&
-      (
-        !expense.profile_id ||
-        expense.profile_id===currentProfile.id
+  const {
+    data:funDeposits
+  }=
+    await supabaseClient
+      .from(
+        "profile_fun_deposits"
       )
-    ){
-      funSpent+=amount;
-    }
-  });
+      .select("amount")
+      .eq(
+        "household_id",
+        householdId
+      )
+      .eq(
+        "profile_id",
+        currentProfile.id
+      );
+
+  const {
+    data:needsExpenses
+  }=
+    await supabaseClient
+      .from(
+        "expenses"
+      )
+      .select("amount")
+      .eq(
+        "household_id",
+        householdId
+      )
+      .eq(
+        "fund",
+        "needs"
+      );
+
+  const {
+    data:funExpenses
+  }=
+    await supabaseClient
+      .from(
+        "expenses"
+      )
+      .select("amount")
+      .eq(
+        "household_id",
+        householdId
+      )
+      .eq(
+        "fund",
+        "fun"
+      )
+      .eq(
+        "profile_id",
+        currentProfile.id
+      );
 
   const needs=
-    weeklyNeeds-needsSpent;
+    (
+      needsDeposits||[]
+    ).reduce(
+      (sum,x)=>
+        sum+
+        Number(
+          x.amount||
+          0
+        ),
+      0
+    )-
+    (
+      needsExpenses||[]
+    ).reduce(
+      (sum,x)=>
+        sum+
+        Number(
+          x.amount||
+          0
+        ),
+      0
+    );
 
   const fun=
-    profileFun-funSpent;
+    (
+      funDeposits||[]
+    ).reduce(
+      (sum,x)=>
+        sum+
+        Number(
+          x.amount||
+          0
+        ),
+      0
+    )-
+    (
+      funExpenses||[]
+    ).reduce(
+      (sum,x)=>
+        sum+
+        Number(
+          x.amount||
+          0
+        ),
+      0
+    );
 
   const needsElement=
     document.getElementById(
@@ -3599,103 +4672,260 @@ async function calculateBalances(){
     "negative",
     fun<0
   );
+
+  await loadHomeExpenseLists();
+}
+
+async function loadHomeExpenseLists(){
+  const start=
+    weekStart(
+      new Date()
+    ).toISOString();
+
+  const {
+    data:needs
+  }=
+    await supabaseClient
+      .from("expenses")
+      .select(
+        "description,amount,spent_at"
+      )
+      .eq(
+        "household_id",
+        householdId
+      )
+      .eq(
+        "fund",
+        "needs"
+      )
+      .gte(
+        "spent_at",
+        start
+      )
+      .order(
+        "spent_at",
+        {
+          ascending:false
+        }
+      )
+      .limit(5);
+
+  const {
+    data:fun
+  }=
+    await supabaseClient
+      .from("expenses")
+      .select(
+        "description,amount,spent_at"
+      )
+      .eq(
+        "household_id",
+        householdId
+      )
+      .eq(
+        "fund",
+        "fun"
+      )
+      .eq(
+        "profile_id",
+        currentProfile.id
+      )
+      .gte(
+        "spent_at",
+        start
+      )
+      .order(
+        "spent_at",
+        {
+          ascending:false
+        }
+      )
+      .limit(5);
+
+  renderHomeExpenseList(
+    "homeNeedsExpenses",
+    needs
+  );
+
+  renderHomeExpenseList(
+    "homeFunExpenses",
+    fun
+  );
+}
+
+function renderHomeExpenseList(
+  id,
+  items
+){
+  const box=
+    document.getElementById(
+      id
+    );
+
+  box.innerHTML="";
+
+  if(!items?.length){
+    box.innerHTML=
+      '<div class="empty-home-expenses">No expenses this week.</div>';
+
+    return;
+  }
+
+  items.forEach(x=>{
+    const row=
+      document.createElement(
+        "div"
+      );
+
+    row.className=
+      "home-expense";
+
+    row.innerHTML=`
+      <span class="home-expense-name">
+        ${escapeHtml(x.description)}
+      </span>
+
+      <span class="home-expense-amount">
+        -${money(x.amount)}
+      </span>
+    `;
+
+    box.appendChild(
+      row
+    );
+  });
 }
 
 function openExpenseForm(
   fund="needs",
   expense=null,
-  fromFund=false
+  fromHome=false
 ){
   editingExpenseId=
-    expense?.id||null;
+    expense?.id||
+    null;
 
-  expenseOpenedFromFund=
-    fromFund;
+  expenseOpenedFromHome=
+    fromHome;
 
   document.getElementById(
-    "expenseSheetTitle"
+    "expenseFormTitle"
   ).textContent=
-    editingExpenseId
+    expense
       ?"Edit Expense"
       :"Add Expense";
 
   document.getElementById(
-    "expenseDescription"
+    "expenseName"
   ).value=
-    expense?.description||"";
+    expense?.description||
+    "";
 
   document.getElementById(
     "expenseAmount"
   ).value=
     expense?.amount
-      ?money(expense.amount)
+      ?money(
+        expense.amount
+      )
       :"";
 
   document.getElementById(
     "expenseFund"
   ).value=
-    expense?.fund||fund;
+    expense?.fund||
+    fund;
 
   document.getElementById(
     "expenseCategory"
   ).value=
-    expense?.category||"Other";
-
-  const date=
-    expense?.spent_at
-      ?new Date(expense.spent_at)
-      :new Date();
+    expense?.category||
+    "Other";
 
   document.getElementById(
     "expenseDate"
   ).value=
-    dateOnly(date);
+    expense?.spent_at
+      ?String(
+        expense.spent_at
+      ).slice(0,10)
+      :dateOnly(
+        new Date()
+      );
 
   document.getElementById(
-    "expenseFundField"
+    "expenseFund"
+  ).disabled=
+    fromHome &&
+    !expense;
+
+  document.getElementById(
+    "expenseFundLabel"
   ).classList.toggle(
     "hidden",
-    fromFund
+    fromHome &&
+    !expense
   );
 
-  document
-    .getElementById("expenseSheetOverlay")
-    .classList
-    .remove("hidden");
-
   document.getElementById(
-    "expenseSheet"
-  ).style.transform=
+    "expenseFund"
+  ).classList.toggle(
+    "hidden",
+    fromHome &&
+    !expense
+  );
+
+  const overlay=
+    document.getElementById(
+      "expenseSheetOverlay"
+    );
+
+  const sheet=
+    document.getElementById(
+      "expenseSheet"
+    );
+
+  sheet.style.transform=
     "translateY(0)";
+
+  overlay.classList.remove(
+    "hidden"
+  );
+
+  bindMoneyInput(
+    document.getElementById(
+      "expenseAmount"
+    )
+  );
 }
 
 function closeExpenseForm(){
   editingExpenseId=null;
-  expenseOpenedFromFund=false;
 
   document
-    .getElementById("expenseSheetOverlay")
+    .getElementById(
+      "expenseSheetOverlay"
+    )
     .classList
     .add("hidden");
 
   document.getElementById(
-    "expenseSheet"
-  ).style.transform=
-    "translateY(0)";
+    "expenseFund"
+  ).disabled=false;
 }
 
 async function saveExpense(){
   const description=
     document
       .getElementById(
-        "expenseDescription"
+        "expenseName"
       )
       .value
       .trim();
 
   const amount=
     Math.abs(
-      numberValue(
+      parseMoney(
         document.getElementById(
           "expenseAmount"
         ).value
@@ -3717,38 +4947,42 @@ async function saveExpense(){
       "expenseDate"
     ).value;
 
-  if(!description){
+  if(
+    !description ||
+    !amount ||
+    !date
+  ){
     alert(
-      "Enter the name of the expense."
+      "Enter the expense name, amount, and date."
     );
+
     return;
   }
-
-  if(amount<=0){
-    alert(
-      "Enter an amount greater than zero."
-    );
-    return;
-  }
-
-  const spentAt=
-    new Date(
-      `${date}T12:00:00`
-    ).toISOString();
 
   const payload={
-    household_id:householdId,
-    user_id:currentUser.id,
+    household_id:
+      householdId,
+
     profile_id:
-      fund==="fun"
-        ?currentProfile.id
-        :null,
-    amount,
-    fund,
-    category,
+      currentProfile.id,
+
+    user_id:
+      currentUser.id,
+
     description,
-    spent_at:spentAt,
-    updated_at:new Date().toISOString()
+
+    amount,
+
+    fund,
+
+    category,
+
+    spent_at:
+      `${date}T12:00:00`,
+
+    updated_at:
+      new Date()
+        .toISOString()
   };
 
   let result;
@@ -3775,6 +5009,7 @@ async function saveExpense(){
       "Could not save expense: "+
       result.error.message
     );
+
     return;
   }
 
@@ -3782,7 +5017,7 @@ async function saveExpense(){
 
   await loadExpenses();
   await calculateBalances();
-  await loadAnalytics();
+  await updateAnalytics();
 }
 
 async function editExpense(id){
@@ -3790,11 +5025,17 @@ async function editExpense(id){
     await supabaseClient
       .from("expenses")
       .select("*")
-      .eq("id",id)
+      .eq(
+        "id",
+        id
+      )
       .single();
 
   if(error){
-    alert(error.message);
+    alert(
+      error.message
+    );
+
     return;
   }
 
@@ -3806,7 +5047,11 @@ async function editExpense(id){
 }
 
 async function deleteExpense(id){
-  if(!confirm("Delete this expense?")){
+  if(
+    !confirm(
+      "Delete this expense?"
+    )
+  ){
     return;
   }
 
@@ -3814,105 +5059,164 @@ async function deleteExpense(id){
     await supabaseClient
       .from("expenses")
       .delete()
-      .eq("id",id);
+      .eq(
+        "id",
+        id
+      );
 
   if(error){
-    alert(error.message);
+    alert(
+      error.message
+    );
+
     return;
   }
 
   await loadExpenses();
   await calculateBalances();
-  await loadAnalytics();
+  await updateAnalytics();
 }
 
-async function loadAnalytics(){
-  const now=new Date();
-
-  const year=now.getFullYear();
-
-  const yearStart=
-    `${year}-01-01`;
-
-  const nextYear=
-    `${year+1}-01-01`;
-
-  const {data:plans,error:planError}=
-    await supabaseClient
-      .from("budget_plans")
-      .select(
-        "budget_month,weekly_savings,budget_week_count"
-      )
-      .eq("household_id",householdId)
-      .gte("budget_month",yearStart)
-      .lt("budget_month",nextYear);
-
-  if(planError){
-    console.error(planError);
-  }
-
-  let saved=0;
-
-  (plans||[]).forEach(plan=>{
-    const monthDate=
-      new Date(
-        `${plan.budget_month}T12:00:00`
-      );
-
-    const weeks=
-      Number(plan.budget_week_count)||
-      budgetWeekCount(monthDate);
-
-    saved+=
-      (Number(plan.weekly_savings)||0)
-      *weeks;
-  });
-
-  document.getElementById(
-    "savedThisYear"
-  ).textContent=
-    money(saved);
-
-  const monthStart=
-    firstOfMonth(now);
-
-  const nextMonth=
-    addMonths(monthStart,1);
-
-  const {data:expenses,error:expenseError}=
+async function loadExpenses(){
+  const {data,error}=
     await supabaseClient
       .from("expenses")
-      .select("fund,amount,profile_id")
-      .eq("household_id",householdId)
-      .gte(
-        "spent_at",
-        monthStart.toISOString()
+      .select("*")
+      .eq(
+        "household_id",
+        householdId
       )
-      .lt(
+      .order(
         "spent_at",
-        nextMonth.toISOString()
+        {
+          ascending:false
+        }
+      )
+      .limit(200);
+
+  if(error){
+    console.error(
+      error
+    );
+
+    return;
+  }
+
+  const box=
+    document.getElementById(
+      "transactions"
+    );
+
+  box.innerHTML="";
+
+  if(!data?.length){
+    box.innerHTML=
+      '<p class="subtext">No expenses yet.</p>';
+
+    return;
+  }
+
+  data.forEach(x=>{
+    const row=
+      document.createElement(
+        "div"
       );
 
-  if(expenseError){
-    console.error(expenseError);
-  }
+    row.className=
+      "transaction";
+
+    row.innerHTML=`
+      <div class="transaction-top">
+
+        <div>
+
+          <div class="transaction-name">
+            ${escapeHtml(x.description)}
+          </div>
+
+          <div class="transaction-meta">
+            ${escapeHtml(x.category||"Other")} ·
+            ${x.fund==="needs"?"Needs":"Fun Money"} ·
+            ${new Date(x.spent_at).toLocaleDateString()}
+          </div>
+
+        </div>
+
+        <div class="transaction-amount">
+          -${money(x.amount)}
+        </div>
+
+      </div>
+
+      <div class="transaction-actions">
+
+        <button
+          class="secondary-button small-button"
+          onclick="editExpense('${x.id}')"
+        >
+          Edit
+        </button>
+
+        <button
+          class="danger-button small-button"
+          onclick="deleteExpense('${x.id}')"
+        >
+          Delete
+        </button>
+
+      </div>
+    `;
+
+    box.appendChild(
+      row
+    );
+  });
+}
+
+async function updateAnalytics(){
+  const year=
+    new Date()
+      .getFullYear();
+
+  const {
+    data:expenses
+  }=
+    await supabaseClient
+      .from("expenses")
+      .select(
+        "fund,amount,spent_at,profile_id"
+      )
+      .eq(
+        "household_id",
+        householdId
+      );
 
   let needs=0;
   let fun=0;
 
-  (expenses||[]).forEach(expense=>{
-    if(expense.fund==="needs"){
-      needs+=Number(expense.amount)||0;
+  (expenses||[]).forEach(x=>{
+    if(
+      new Date(
+        x.spent_at
+      ).getFullYear()!==year
+    ){
+      return;
     }
 
-    if(
-      expense.fund==="fun" &&
-      (
-        !expense.profile_id ||
-        expense.profile_id===currentProfile.id
-      )
+    if(x.fund==="needs"){
+      needs+=
+        Number(
+          x.amount
+        )||0;
+    }
+    else if(
+      x.profile_id===
+      currentProfile.id
     ){
-      fun+=Number(expense.amount)||0;
+      fun+=
+        Number(
+          x.amount
+        )||0;
     }
   });
 
@@ -3926,105 +5230,105 @@ async function loadAnalytics(){
   ).textContent=
     money(fun);
 
-  await loadPreviousSavingsYears();
-}
-
-async function loadPreviousSavingsYears(){
-  const currentYear=
-    new Date().getFullYear();
-
-  const {data,error}=
-    await supabaseClient
-      .from("budget_plans")
-      .select(
-        "budget_month,weekly_savings,budget_week_count"
-      )
-      .eq("household_id",householdId)
-      .lt(
-        "budget_month",
-        `${currentYear}-01-01`
-      );
-
-  if(error){
-    console.error(error);
-    return;
-  }
-
-  const totals={};
-
-  (data||[]).forEach(plan=>{
-    const date=
-      new Date(
-        `${plan.budget_month}T12:00:00`
-      );
-
-    const year=
-      date.getFullYear();
-
-    const weeks=
-      Number(plan.budget_week_count)||
-      budgetWeekCount(date);
-
-    totals[year]=
-      (totals[year]||0)+
-      (
-        Number(plan.weekly_savings)||0
-      )*weeks;
-  });
-
-  const container=
-    document.getElementById(
-      "previousSavingsYears"
+  document.getElementById(
+    "analyticsTotal"
+  ).textContent=
+    money(
+      needs+fun
     );
 
-  container.innerHTML="";
+  const end=
+    `${year+1}-01-01`;
 
-  Object.keys(totals)
-    .sort((a,b)=>b-a)
-    .forEach(year=>{
-      const row=
-        document.createElement("div");
+  const previousStart=
+    `${year-1}-01-01`;
 
-      row.className=
-        "analytics-stat";
+  const {
+    data:plans
+  }=
+    await supabaseClient
+      .from(
+        "budget_plans"
+      )
+      .select(
+        "budget_month,weekly_savings"
+      )
+      .eq(
+        "household_id",
+        householdId
+      )
+      .gte(
+        "budget_month",
+        previousStart
+      )
+      .lt(
+        "budget_month",
+        end
+      );
 
-      row.innerHTML=`
-        <span class="subtext">
-          Total Saved in ${year}
-        </span>
-        <strong>
-          ${money(totals[year])}
-        </strong>
-      `;
+  let current=0;
+  let prior=0;
 
-      container.appendChild(row);
-    });
+  (plans||[]).forEach(p=>{
+    const d=
+      new Date(
+        String(
+          p.budget_month
+        )+
+        "T00:00:00"
+      );
+
+    const value=
+      (
+        Number(
+          p.weekly_savings
+        )||0
+      )*
+      getBudgetWeekCount(d);
+
+    if(
+      d.getFullYear()===
+      year
+    ){
+      current+=value;
+    }
+
+    if(
+      d.getFullYear()===
+      year-1
+    ){
+      prior+=value;
+    }
+  });
+
+  document.getElementById(
+    "analyticsSavedThisYear"
+  ).textContent=
+    money(current);
+
+  document.getElementById(
+    "analyticsSavedPriorYear"
+  ).textContent=
+    money(prior);
+
+  document.getElementById(
+    "analyticsPriorYearLabel"
+  ).textContent=
+    `Saved in ${year-1}`;
 }
 
 function openSettings(){
   hideScreens();
 
   document
-    .getElementById("settingsScreen")
+    .getElementById(
+      "settingsScreen"
+    )
     .classList
     .remove("hidden");
 
-  document.getElementById(
-    "settingsProfileName"
-  ).textContent=
-    currentProfile.display_name;
-
-  const access=
-    currentProfile.access_level||"";
-
-  document.getElementById(
-    "settingsProfileType"
-  ).textContent=
-    access
-      ?`${access.charAt(0).toUpperCase()}${access.slice(1)} Profile`
-      :"";
-
-  settingsSection="menu";
+  settingsSection=
+    "menu";
 
   renderSettingsSection();
 }
@@ -4035,14 +5339,48 @@ function renderSettingsSection(){
     "appearanceSettings",
     "profileSettings",
     "budgetSettings"
-  ].forEach(id=>{
+  ].forEach(id=>
     document
       .getElementById(id)
       .classList
-      .add("hidden");
-  });
+      .add("hidden")
+  );
 
-  if(settingsSection==="appearance"){
+  document.getElementById(
+    "settingsProfileName"
+  ).textContent=
+    currentProfile?.display_name||
+    "";
+
+  const title=
+    document.getElementById(
+      "settingsTitle"
+    );
+
+  if(
+    settingsSection===
+    "menu"
+  ){
+    title.textContent=
+      "Settings";
+
+    document
+      .getElementById(
+        "settingsMenu"
+      )
+      .classList
+      .remove("hidden");
+
+    return;
+  }
+
+  if(
+    settingsSection===
+    "appearance"
+  ){
+    title.textContent=
+      "Appearance";
+
     document
       .getElementById(
         "appearanceSettings"
@@ -4050,7 +5388,7 @@ function renderSettingsSection(){
       .classList
       .remove("hidden");
 
-    renderThemeGrid();
+    renderThemes();
 
     document.getElementById(
       "fontFamilySelect"
@@ -4068,8 +5406,17 @@ function renderSettingsSection(){
       `${selectedFontSize}px`;
 
     updateFontPreview();
+
+    return;
   }
-  else if(settingsSection==="profile"){
+
+  if(
+    settingsSection===
+    "profile"
+  ){
+    title.textContent=
+      "Profile";
+
     document
       .getElementById(
         "profileSettings"
@@ -4077,144 +5424,106 @@ function renderSettingsSection(){
       .classList
       .remove("hidden");
 
-    renderSettingsAvatars();
-  }
-  else if(settingsSection==="budget"){
-    document
-      .getElementById(
-        "budgetSettings"
-      )
-      .classList
-      .remove("hidden");
+    selectedSettingsAvatar=
+      selectedSettingsAvatar||
+      currentProfile.avatar||
+      "knight";
 
-    document
-      .getElementById(
-        "hardModeButton"
-      )
-      .classList
-      .toggle(
-        "selected",
-        profileMode==="hard"
-      );
+    renderAvatarGrid(
+      "settingsAvatarGrid",
+      selectedSettingsAvatar,
+      name=>{
+        selectedSettingsAvatar=
+          name;
 
-    document
-      .getElementById(
-        "softModeButton"
-      )
-      .classList
-      .toggle(
-        "selected",
-        profileMode==="soft"
-      );
+        renderProfileAvatarSettings();
+      }
+    );
+
+    document.getElementById(
+      "accountEmailDisplay"
+    ).textContent=
+      currentUser?.email||
+      "";
+
+    return;
   }
-  else{
-    document
-      .getElementById(
-        "settingsMenu"
-      )
-      .classList
-      .remove("hidden");
-  }
+
+  title.textContent=
+    "Budget Settings";
 
   document
-    .getElementById("settingsScreen")
-    .scrollTo({
-      top:0,
-      behavior:"auto"
-    });
+    .getElementById(
+      "budgetSettings"
+    )
+    .classList
+    .remove("hidden");
 }
 
-const themes={
-  sandy:{
-    name:"Sandy",
-    colors:[
-      "#e8d9ad",
-      "#fff9e9",
-      "#4e351d",
-      "#a9b982"
-    ]
-  },
+function renderProfileAvatarSettings(){
+  renderAvatarGrid(
+    "settingsAvatarGrid",
+    selectedSettingsAvatar,
+    name=>{
+      selectedSettingsAvatar=
+        name;
 
-  petals:{
-    name:"Petals",
-    colors:[
-      "#aaaee0",
-      "#f7d7c8",
-      "#494e96",
-      "#eda5b5"
-    ]
-  },
+      renderProfileAvatarSettings();
+    }
+  );
+}
 
-  harbor:{
-    name:"Harbor",
-    colors:[
-      "#9fb7be",
-      "#f3eadb",
-      "#263e4b",
-      "#d58f79"
-    ]
-  },
-
-  cedar:{
-    name:"Cedar",
-    colors:[
-      "#aebca5",
-      "#eee1c8",
-      "#304638",
-      "#c77f63"
-    ]
-  },
-
-  plum:{
-    name:"Plum & Gold",
-    colors:[
-      "#b9a5b5",
-      "#f2e5cf",
-      "#51374e",
-      "#c7a24c"
-    ]
-  }
-};
-
-function renderThemeGrid(){
-  const grid=
+function renderThemes(){
+  const box=
     document.getElementById(
       "themeGrid"
     );
 
-  grid.innerHTML="";
+  box.innerHTML="";
 
-  Object.entries(themes)
-    .forEach(([key,theme])=>{
+  Object.entries(
+    themeData
+  ).forEach(
+    ([name,colors])=>{
       const button=
-        document.createElement("button");
+        document.createElement(
+          "button"
+        );
 
       button.className=
         "theme-button"+
         (
-          key===selectedTheme
+          name===selectedTheme
             ?" selected"
             :""
         );
 
       button.innerHTML=`
-        <div class="palette">
-          ${theme.colors.map(
+        <strong>
+          ${name[0].toUpperCase()+name.slice(1)}
+        </strong>
+
+        <div class="swatches">
+          ${colors.map(
             color=>
-              `<span style="background:${color}"></span>`
+              `<span class="swatch" style="background:${color}"></span>`
           ).join("")}
         </div>
-        ${theme.name}
       `;
 
       button.onclick=()=>{
-        selectedTheme=key;
+        selectedTheme=name;
+
         applyAppearance();
-        renderThemeGrid();
+
+        renderThemes();
       };
 
-      grid.appendChild(button);
-    });
+      box.appendChild(
+        button
+      );
+    }
+  );
 }
 
 function updateFontPreview(){
@@ -4223,305 +5532,97 @@ function updateFontPreview(){
       "fontPreview"
     );
 
-  preview.textContent=
-    "This is what your selected font will look like.";
+  const map={
+    system:
+      '-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif',
+
+    rounded:
+      '"Nunito",sans-serif',
+
+    serif:
+      '"Merriweather",serif',
+
+    mono:
+      '"Space Mono",monospace',
+
+    pixel:
+      '"Press Start 2P",monospace'
+  };
+
+  preview.style.fontFamily=
+    map[
+      document.getElementById(
+        "fontFamilySelect"
+      ).value
+    ];
+
+  preview.style.fontSize=
+    document.getElementById(
+      "fontSizeRange"
+    ).value+
+    "px";
 }
 
-function renderSettingsAvatars(){
-  renderAvatarGrid(
-    "settingsAvatarGrid",
-    selectedSettingsAvatar,
-    name=>{
-      selectedSettingsAvatar=name;
-      renderSettingsAvatars();
-    }
-  );
-}
-
-async function logout(){
-  localStorage.removeItem(
-    "profileSessionToken"
-  );
-
-  localStorage.removeItem(
-    "profileId"
-  );
-
-  currentProfile=null;
-  profileSessionToken=null;
-  currentUser=null;
-  householdId=null;
-  currentHomeBudget=null;
-  currentPrepareBudget=null;
-
-  await supabaseClient.auth.signOut();
-
-  hideScreens();
-
-  document
-    .getElementById("loginScreen")
-    .classList
-    .remove("hidden");
-}
-
-function isMobile(){
-  return window.matchMedia(
-    "(max-width:800px)"
-  ).matches;
-}
-
-function panelOffset(index){
-  const panels=[
-    ...document.querySelectorAll(
-      ".workspace-panel"
-    )
-  ];
-
-  if(!panels[index]){
-    return 0;
-  }
-
-  return panels[index].offsetLeft;
-}
-
-function showPanel(
-  index,
-  animate=true
+async function saveProfileSettings(
+  fields
 ){
-  activePanelIndex=
-    Math.max(
-      0,
-      Math.min(3,index)
+  const {error}=
+    await supabaseClient.rpc(
+      "set_profile_settings",
+      {
+        p_profile_id:
+          currentProfile.id,
+
+        p_avatar:
+          fields.avatar??
+          currentProfile.avatar??
+          "knight",
+
+        p_calculation_mode:
+          "hard",
+
+        p_font_size:
+          fields.font_size??
+          selectedFontSize,
+
+        p_font_family:
+          fields.font_family??
+          selectedFont,
+
+        p_theme:
+          fields.theme??
+          selectedTheme
+      }
     );
 
-  if(!isMobile()){
+  if(error){
+    alert(
+      "Could not save settings: "+
+      error.message
+    );
+
     return;
   }
 
-  const track=
-    document.getElementById(
-      "mobileTrack"
-    );
+  await loadProfileSettings();
 
-  track.style.transition=
-    animate
-      ?"transform .32s cubic-bezier(.22,.8,.25,1)"
-      :"none";
-
-  track.style.transform=
-    `translate3d(${-panelOffset(activePanelIndex)}px,0,0)`;
+  renderSettingsSection();
 }
 
-function bindFluidSwipe(){
-  const viewport=
-    document.getElementById(
-      "mobileViewport"
-    );
-
-  const track=
-    document.getElementById(
-      "mobileTrack"
-    );
-
-  let startX=0;
-  let startY=0;
-  let baseX=0;
-  let currentX=0;
-  let dragging=false;
-  let horizontal=false;
-  let startTime=0;
-
-  viewport.addEventListener(
-    "touchstart",
-    event=>{
-      if(
-        !isMobile() ||
-        event.touches.length!==1
-      ){
-        return;
-      }
-
-      startX=
-        event.touches[0].clientX;
-
-      startY=
-        event.touches[0].clientY;
-
-      baseX=
-        -panelOffset(activePanelIndex);
-
-      currentX=baseX;
-
-      dragging=true;
-      horizontal=false;
-      startTime=performance.now();
-
-      track.style.transition="none";
-    },
-    {
-      passive:true
-    }
-  );
-
-  viewport.addEventListener(
-    "touchmove",
-    event=>{
-      if(
-        !dragging ||
-        !isMobile()
-      ){
-        return;
-      }
-
-      const x=
-        event.touches[0].clientX;
-
-      const y=
-        event.touches[0].clientY;
-
-      const dx=x-startX;
-      const dy=y-startY;
-
-      if(!horizontal){
-        if(
-          Math.abs(dx)<6 &&
-          Math.abs(dy)<6
-        ){
-          return;
-        }
-
-        if(Math.abs(dy)>Math.abs(dx)){
-          dragging=false;
-          return;
-        }
-
-        horizontal=true;
-      }
-
-      event.preventDefault();
-
-      let next=
-        baseX+dx;
-
-      const min=
-        -panelOffset(3);
-
-      const max=
-        -panelOffset(0);
-
-      if(next>max){
-        next=
-          max+(next-max)*.25;
-      }
-
-      if(next<min){
-        next=
-          min+(next-min)*.25;
-      }
-
-      currentX=next;
-
-      track.style.transform=
-        `translate3d(${next}px,0,0)`;
-    },
-    {
-      passive:false
-    }
-  );
-
-  viewport.addEventListener(
-    "touchend",
-    event=>{
-      if(!horizontal){
-        dragging=false;
-        return;
-      }
-
-      const endX=
-        event.changedTouches[0].clientX;
-
-      const dx=
-        endX-startX;
-
-      const elapsed=
-        Math.max(
-          1,
-          performance.now()-startTime
-        );
-
-      const velocity=
-        dx/elapsed;
-
-      let target=
-        activePanelIndex;
-
-      if(
-        Math.abs(velocity)>.45 ||
-        Math.abs(dx)>
-          viewport.clientWidth*.22
-      ){
-        target+=
-          dx<0
-            ?1
-            :-1;
-      }
-      else{
-        const centers=[
-          0,1,2,3
-        ].map(
-          index=>
-            -panelOffset(index)
-        );
-
-        let closest=0;
-        let distance=Infinity;
-
-        centers.forEach(
-          (value,index)=>{
-            const d=
-              Math.abs(
-                currentX-value
-              );
-
-            if(d<distance){
-              distance=d;
-              closest=index;
-            }
-          }
-        );
-
-        target=closest;
-      }
-
-      dragging=false;
-      horizontal=false;
-
-      showPanel(target,true);
-    }
-  );
-
-  viewport.addEventListener(
-    "touchcancel",
-    ()=>{
-      dragging=false;
-      horizontal=false;
-      showPanel(
-        activePanelIndex,
-        true
-      );
-    }
-  );
-}
-
-async function sendPasswordReset(email){
+async function sendPasswordReset(
+  email
+){
   const {error}=
-    await supabaseClient.auth.resetPasswordForEmail(
-      email,
-      {
-        redirectTo:
-          `${location.origin}${location.pathname}`
-      }
-    );
+    await supabaseClient
+      .auth
+      .resetPasswordForEmail(
+        email,
+        {
+          redirectTo:
+            location.origin+
+            location.pathname
+        }
+      );
 
   if(error){
     throw error;
@@ -4529,14 +5630,17 @@ async function sendPasswordReset(email){
 }
 
 async function sendPinResetLink(){
-  const email=currentUser?.email;
+  const email=
+    currentUser?.email;
 
   if(!email){
     return;
   }
 
   const url=
-    new URL(location.href);
+    new URL(
+      location.href
+    );
 
   url.search="";
 
@@ -4551,14 +5655,18 @@ async function sendPinResetLink(){
   );
 
   const {error}=
-    await supabaseClient.auth.signInWithOtp({
-      email,
-      options:{
-        shouldCreateUser:false,
-        emailRedirectTo:
-          url.toString()
-      }
-    });
+    await supabaseClient
+      .auth
+      .signInWithOtp({
+        email,
+        options:{
+          shouldCreateUser:
+            false,
+
+          emailRedirectTo:
+            url.toString()
+        }
+      });
 
   if(error){
     throw error;
@@ -4572,10 +5680,14 @@ async function handleAuthRedirect(){
     );
 
   if(
-    params.get("pin-reset")==="1"
+    params.get(
+      "pin-reset"
+    )==="1"
   ){
     const profileId=
-      params.get("profile");
+      params.get(
+        "profile"
+      );
 
     if(profileId){
       localStorage.setItem(
@@ -4592,12 +5704,17 @@ async function handleAuthRedirect(){
   }
 
   const {
-    data:{session}
+    data:{
+      session
+    }
   }=
-    await supabaseClient.auth.getSession();
+    await supabaseClient
+      .auth
+      .getSession();
 
   if(session?.user){
-    currentUser=session.user;
+    currentUser=
+      session.user;
   }
 
   const pending=
@@ -4605,16 +5722,25 @@ async function handleAuthRedirect(){
       "pendingPinResetProfile"
     );
 
-  if(pending&&currentUser){
-    const {data:profile}=
+  if(
+    pending &&
+    currentUser
+  ){
+    const {
+      data:profile
+    }=
       await supabaseClient
         .from("profiles")
         .select("*")
-        .eq("id",pending)
+        .eq(
+          "id",
+          pending
+        )
         .maybeSingle();
 
     if(profile){
-      currentProfile=profile;
+      currentProfile=
+        profile;
 
       document.getElementById(
         "pinResetProfileName"
@@ -4622,7 +5748,9 @@ async function handleAuthRedirect(){
         profile.display_name;
 
       document
-        .getElementById("newPinModal")
+        .getElementById(
+          "newPinModal"
+        )
         .classList
         .remove("hidden");
     }
@@ -4642,8 +5770,11 @@ function bindExpenseSheetDismiss(){
 
   overlay.addEventListener(
     "click",
-    event=>{
-      if(event.target===overlay){
+    e=>{
+      if(
+        e.target===
+        overlay
+      ){
         closeExpenseForm();
       }
     }
@@ -4651,22 +5782,25 @@ function bindExpenseSheetDismiss(){
 
   let startY=0;
   let startScroll=0;
-  let dragging=false;
+  let drag=false;
 
   sheet.addEventListener(
     "touchstart",
-    event=>{
-      if(event.touches.length!==1){
+    e=>{
+      if(
+        e.touches.length!==1
+      ){
         return;
       }
 
       startY=
-        event.touches[0].clientY;
+        e.touches[0]
+          .clientY;
 
       startScroll=
         sheet.scrollTop;
 
-      dragging=false;
+      drag=false;
     },
     {
       passive:true
@@ -4675,18 +5809,19 @@ function bindExpenseSheetDismiss(){
 
   sheet.addEventListener(
     "touchmove",
-    event=>{
+    e=>{
       const dy=
-        event.touches[0].clientY-
+        e.touches[0]
+          .clientY-
         startY;
 
       if(
         startScroll<=0 &&
         dy>0
       ){
-        dragging=true;
+        drag=true;
 
-        event.preventDefault();
+        e.preventDefault();
 
         sheet.classList.add(
           "dragging"
@@ -4703,13 +5838,14 @@ function bindExpenseSheetDismiss(){
 
   sheet.addEventListener(
     "touchend",
-    event=>{
-      if(!dragging){
+    e=>{
+      if(!drag){
         return;
       }
 
       const dy=
-        event.changedTouches[0].clientY-
+        e.changedTouches[0]
+          .clientY-
         startY;
 
       sheet.classList.remove(
@@ -4724,26 +5860,32 @@ function bindExpenseSheetDismiss(){
         sheet.style.transform=
           "translateY(110%)";
 
-        setTimeout(()=>{
-          sheet.classList.remove(
-            "settling"
-          );
+        setTimeout(
+          ()=>{
+            sheet.classList.remove(
+              "settling"
+            );
 
-          closeExpenseForm();
+            closeExpenseForm();
 
-          sheet.style.transform=
-            "translateY(0)";
-        },190);
+            sheet.style.transform=
+              "translateY(0)";
+          },
+          190
+        );
       }
       else{
         sheet.style.transform=
           "translateY(0)";
 
-        setTimeout(()=>{
-          sheet.classList.remove(
-            "settling"
-          );
-        },210);
+        setTimeout(
+          ()=>{
+            sheet.classList.remove(
+              "settling"
+            );
+          },
+          210
+        );
       }
     }
   );
@@ -4753,18 +5895,27 @@ let weekTimer=null;
 
 function scheduleWeekBoundaryRefresh(){
   if(weekTimer){
-    clearTimeout(weekTimer);
+    clearTimeout(
+      weekTimer
+    );
   }
 
-  const now=new Date();
+  const now=
+    new Date();
 
-  const next=new Date(now);
+  const next=
+    new Date(now);
 
-  next.setHours(0,0,0,0);
+  next.setHours(
+    0,0,0,0
+  );
 
   next.setDate(
     next.getDate()+
-    (7-next.getDay())%7
+    (
+      7-
+      next.getDay()
+    )%7
   );
 
   if(next<=now){
@@ -4773,17 +5924,19 @@ function scheduleWeekBoundaryRefresh(){
     );
   }
 
-  weekTimer=setTimeout(
-    async()=>{
-      await calculateBalances();
-      await loadExpenses();
-      scheduleWeekBoundaryRefresh();
-    },
-    Math.min(
-      next-now,
-      2147483647
-    )
-  );
+  weekTimer=
+    setTimeout(
+      async()=>{
+        await calculateBalances();
+        await loadExpenses();
+
+        scheduleWeekBoundaryRefresh();
+      },
+      Math.min(
+        next-now,
+        2147483647
+      )
+    );
 }
 
 function disableDoubleTapZoom(){
@@ -4791,11 +5944,15 @@ function disableDoubleTapZoom(){
 
   document.addEventListener(
     "touchend",
-    event=>{
-      const now=Date.now();
+    e=>{
+      const now=
+        Date.now();
 
-      if(now-last<300){
-        event.preventDefault();
+      if(
+        now-last<
+        300
+      ){
+        e.preventDefault();
       }
 
       last=now;
@@ -4806,50 +5963,28 @@ function disableDoubleTapZoom(){
   );
 }
 
-document
-  .querySelectorAll(
-    ".money-input"
-  )
-  .forEach(input=>{
-    input.addEventListener(
-      "blur",
-      ()=>{
-        formatMoneyInput(
-          input,
-          false
-        );
-      }
-    );
-  });
-
-document
-  .getElementById(
-    "weeklyNeeds"
-  )
-  .addEventListener(
-    "input",
-    updateBudgetCalculation
-  );
-
-document
-  .getElementById(
-    "weeklySavings"
-  )
-  .addEventListener(
-    "input",
-    updateBudgetCalculation
-  );
-
 document.getElementById(
   "loginButton"
-).onclick=login;
+).onclick=
+  login;
 
 document.getElementById(
   "loginPassword"
 ).addEventListener(
   "keydown",
-  event=>{
-    if(event.key==="Enter"){
+  e=>{
+    if(e.key==="Enter"){
+      login();
+    }
+  }
+);
+
+document.getElementById(
+  "loginEmail"
+).addEventListener(
+  "keydown",
+  e=>{
+    if(e.key==="Enter"){
       login();
     }
   }
@@ -4857,72 +5992,75 @@ document.getElementById(
 
 document.getElementById(
   "forgotPasswordButton"
-).onclick=async()=>{
-  const email=
-    document
-      .getElementById(
-        "loginEmail"
-      )
-      .value
-      .trim();
+).onclick=
+  async()=>{
+    const email=
+      document
+        .getElementById(
+          "loginEmail"
+        )
+        .value
+        .trim();
 
-  const errorBox=
-    document.getElementById(
-      "loginError"
-    );
+    const err=
+      document.getElementById(
+        "loginError"
+      );
 
-  const message=
-    document.getElementById(
-      "loginMessage"
-    );
+    const msg=
+      document.getElementById(
+        "loginMessage"
+      );
 
-  errorBox.classList.add(
-    "hidden"
-  );
-
-  message.classList.add(
-    "hidden"
-  );
-
-  if(!email){
-    errorBox.textContent=
-      "Enter your account email in the Email field first.";
-
-    errorBox.classList.remove(
+    err.classList.add(
       "hidden"
     );
 
-    return;
-  }
-
-  try{
-    await sendPasswordReset(
-      email
-    );
-
-    message.textContent=
-      "Password reset email sent to the account email.";
-
-    message.classList.remove(
+    msg.classList.add(
       "hidden"
     );
-  }
-  catch(error){
-    errorBox.textContent=
-      error.message;
 
-    errorBox.classList.remove(
-      "hidden"
-    );
-  }
-};
+    if(!email){
+      err.textContent=
+        "Enter your account email in the Email field first.";
+
+      err.classList.remove(
+        "hidden"
+      );
+
+      return;
+    }
+
+    try{
+      await sendPasswordReset(
+        email
+      );
+
+      msg.textContent=
+        "Password reset email sent to the account email.";
+
+      msg.classList.remove(
+        "hidden"
+      );
+    }
+    catch(error){
+      err.textContent=
+        error.message;
+
+      err.classList.remove(
+        "hidden"
+      );
+    }
+  };
 
 function renderNewProfileAvatars(){
   renderAvatarGrid(
     "avatarGrid",
     selectedAvatar,
     name=>{
-      selectedAvatar=name;
+      selectedAvatar=
+        name;
+
       renderNewProfileAvatars();
     }
   );
@@ -4930,459 +6068,516 @@ function renderNewProfileAvatars(){
 
 document.getElementById(
   "addProfileButton"
-).onclick=()=>{
-  document
-    .getElementById("profileList")
-    .classList
-    .add("hidden");
+).onclick=
+  ()=>{
+    document
+      .getElementById(
+        "profileList"
+      )
+      .classList
+      .add("hidden");
 
-  document
-    .getElementById("addProfileButton")
-    .classList
-    .add("hidden");
+    document
+      .getElementById(
+        "addProfileButton"
+      )
+      .classList
+      .add("hidden");
 
-  document
-    .getElementById("addProfileForm")
-    .classList
-    .remove("hidden");
+    document
+      .getElementById(
+        "addProfileForm"
+      )
+      .classList
+      .remove("hidden");
 
-  selectedAvatar="knight";
+    selectedAvatar=
+      "knight";
 
-  renderNewProfileAvatars();
-};
+    renderNewProfileAvatars();
+  };
 
 document.getElementById(
   "cancelProfileButton"
-).onclick=renderProfiles;
+).onclick=
+  renderProfiles;
 
 document.getElementById(
   "saveProfileButton"
-).onclick=saveProfile;
+).onclick=
+  saveProfile;
+
+document.getElementById(
+  "newProfilePin"
+).addEventListener(
+  "keydown",
+  e=>{
+    if(e.key==="Enter"){
+      saveProfile();
+    }
+  }
+);
+
+document.getElementById(
+  "newProfileName"
+).addEventListener(
+  "keydown",
+  e=>{
+    if(e.key==="Enter"){
+      document.getElementById(
+        "newProfilePin"
+      ).focus();
+    }
+  }
+);
 
 document.getElementById(
   "unlockProfileButton"
-).onclick=unlockProfile;
+).onclick=
+  unlockProfile;
+
+document.getElementById(
+  "profilePin"
+).addEventListener(
+  "keydown",
+  e=>{
+    if(e.key==="Enter"){
+      unlockProfile();
+    }
+  }
+);
 
 document.getElementById(
   "cancelPinButton"
-).onclick=renderProfiles;
+).onclick=
+  renderProfiles;
 
 document.getElementById(
   "profileLogoutButton"
-).onclick=logout;
-
-document.getElementById(
-  "onboardHard"
-).onclick=async()=>{
-  profileMode="hard";
-
-  await saveProfileSettings({
-    calculation_mode:"hard",
-    avatar:selectedAvatar,
-    font_size:16,
-    font_family:"system",
-    theme:"sandy"
-  });
-
-  document
-    .getElementById("onboardingModal")
-    .classList
-    .add("hidden");
-
-  await enterProfile();
-};
-
-document.getElementById(
-  "onboardSoft"
-).onclick=async()=>{
-  profileMode="soft";
-
-  await saveProfileSettings({
-    calculation_mode:"soft",
-    avatar:selectedAvatar,
-    font_size:16,
-    font_family:"system",
-    theme:"sandy"
-  });
-
-  document
-    .getElementById("onboardingModal")
-    .classList
-    .add("hidden");
-
-  await enterProfile();
-};
+).onclick=
+  logout;
 
 document.getElementById(
   "addIncomeButton"
-).onclick=()=>{
-  newMoneyEditor("income");
-};
+).onclick=
+  ()=>{
+    newMoneyEditor(
+      "income"
+    );
+  };
 
 document.getElementById(
   "addMonthlyBillButton"
-).onclick=()=>{
-  newMoneyEditor("monthlyBill");
-};
+).onclick=
+  ()=>{
+    newMoneyEditor(
+      "monthlyBill"
+    );
+  };
 
 document.getElementById(
   "addWeeklyBillButton"
-).onclick=()=>{
-  newMoneyEditor("weeklyBill");
-};
+).onclick=
+  ()=>{
+    newMoneyEditor(
+      "weeklyBill"
+    );
+  };
 
 document.getElementById(
   "saveBudgetButton"
-).onclick=saveBudget;
+).onclick=
+  saveBudget;
 
 document.getElementById(
   "budgetHelpButton"
-).onclick=()=>{
-  document
-    .getElementById("budgetHelpModal")
-    .classList
-    .remove("hidden");
-};
+).onclick=
+  ()=>{
+    document
+      .getElementById(
+        "budgetHelpModal"
+      )
+      .classList
+      .remove("hidden");
+  };
 
 document.getElementById(
   "closeBudgetHelp"
-).onclick=()=>{
-  document
-    .getElementById("budgetHelpModal")
-    .classList
-    .add("hidden");
-};
+).onclick=
+  ()=>{
+    document
+      .getElementById(
+        "budgetHelpModal"
+      )
+      .classList
+      .add("hidden");
+  };
 
 document.getElementById(
   "addExpenseButton"
-).onclick=()=>{
-  openExpenseForm(
-    "needs",
-    null,
-    false
-  );
-};
+).onclick=
+  ()=>{
+    openExpenseForm(
+      "needs",
+      null,
+      false
+    );
+  };
 
 document.getElementById(
   "needsFundCard"
-).onclick=()=>{
-  openExpenseForm(
-    "needs",
-    null,
-    true
-  );
-};
+).onclick=
+  ()=>{
+    openExpenseForm(
+      "needs",
+      null,
+      true
+    );
+  };
 
 document.getElementById(
   "funFundCard"
-).onclick=()=>{
-  openExpenseForm(
-    "fun",
-    null,
-    true
-  );
-};
+).onclick=
+  ()=>{
+    openExpenseForm(
+      "fun",
+      null,
+      true
+    );
+  };
 
 document.getElementById(
   "saveExpenseButton"
-).onclick=saveExpense;
+).onclick=
+  saveExpense;
 
 document.getElementById(
   "cancelExpenseButton"
-).onclick=closeExpenseForm;
+).onclick=
+  closeExpenseForm;
 
 document.getElementById(
   "settingsGear"
-).onclick=openSettings;
+).onclick=
+  openSettings;
 
 document
   .querySelectorAll(
     "[data-settings-section]"
   )
-  .forEach(button=>{
-    button.onclick=()=>{
-      settingsSection=
-        button.dataset.settingsSection;
+  .forEach(
+    button=>{
+      button.onclick=
+        ()=>{
+          settingsSection=
+            button.dataset
+              .settingsSection;
 
-      renderSettingsSection();
-    };
-  });
+          renderSettingsSection();
+        };
+    }
+  );
 
 document.getElementById(
   "settingsBackButton"
-).onclick=()=>{
-  if(settingsSection!=="menu"){
-    settingsSection="menu";
-    renderSettingsSection();
-  }
-  else{
-    showMain();
+).onclick=
+  ()=>{
+    if(
+      settingsSection!=="menu"
+    ){
+      settingsSection=
+        "menu";
 
-    requestAnimationFrame(()=>{
-      showPanel(
-        activePanelIndex,
-        false
+      renderSettingsSection();
+    }
+    else{
+      showMain();
+
+      requestAnimationFrame(
+        ()=>{
+          showPanel(
+            activePanelIndex,
+            false
+          );
+        }
       );
-    });
-  }
-};
+    }
+  };
 
 document.getElementById(
   "settingsSwitchProfileButton"
-).onclick=async()=>{
-  localStorage.removeItem(
-    "profileSessionToken"
-  );
+).onclick=
+  async()=>{
+    localStorage.removeItem(
+      "profileSessionToken"
+    );
 
-  localStorage.removeItem(
-    "profileId"
-  );
+    localStorage.removeItem(
+      "profileId"
+    );
 
-  currentProfile=null;
+    currentProfile=null;
 
-  hideScreens();
+    hideScreens();
 
-  document
-    .getElementById("profileScreen")
-    .classList
-    .remove("hidden");
+    document
+      .getElementById(
+        "profileScreen"
+      )
+      .classList
+      .remove("hidden");
 
-  await renderProfiles();
-};
+    await renderProfiles();
+  };
 
 document.getElementById(
   "settingsLogoutButton"
-).onclick=logout;
+).onclick=
+  logout;
 
 document.getElementById(
   "fontFamilySelect"
-).onchange=event=>{
-  selectedFont=
-    event.target.value;
+).onchange=
+  e=>{
+    selectedFont=
+      e.target.value;
 
-  applyAppearance();
-  updateFontPreview();
-};
+    applyAppearance();
+
+    updateFontPreview();
+  };
 
 document.getElementById(
   "fontSizeRange"
-).oninput=event=>{
-  selectedFontSize=
-    Number(
-      event.target.value
-    );
+).oninput=
+  e=>{
+    selectedFontSize=
+      Number(
+        e.target.value
+      );
 
-  document.getElementById(
-    "fontSizeLabel"
-  ).textContent=
-    `${selectedFontSize}px`;
+    document.getElementById(
+      "fontSizeLabel"
+    ).textContent=
+      `${selectedFontSize}px`;
 
-  applyAppearance();
-  updateFontPreview();
-};
+    applyAppearance();
+
+    updateFontPreview();
+  };
 
 document.getElementById(
   "saveAppearanceButton"
-).onclick=()=>{
-  saveProfileSettings({
-    font_size:selectedFontSize,
-    font_family:selectedFont,
-    theme:selectedTheme
-  });
-};
+).onclick=
+  ()=>{
+    saveProfileSettings({
+      font_size:
+        selectedFontSize,
+
+      font_family:
+        selectedFont,
+
+      theme:
+        selectedTheme
+    });
+  };
 
 document.getElementById(
   "saveAvatarButton"
-).onclick=()=>{
-  saveProfileSettings({
-    avatar:selectedSettingsAvatar
-  });
-};
-
-document.getElementById(
-  "hardModeButton"
-).onclick=()=>{
-  profileMode="hard";
-  renderSettingsSection();
-};
-
-document.getElementById(
-  "softModeButton"
-).onclick=()=>{
-  profileMode="soft";
-  renderSettingsSection();
-};
-
-document.getElementById(
-  "saveBudgetSettingsButton"
-).onclick=async()=>{
-  await saveProfileSettings({
-    calculation_mode:profileMode
-  });
-
-  await openBudgetSetup();
-};
+).onclick=
+  ()=>{
+    saveProfileSettings({
+      avatar:
+        selectedSettingsAvatar
+    });
+  };
 
 document.getElementById(
   "resetPasswordSettingsButton"
-).onclick=async()=>{
-  const message=
-    document.getElementById(
-      "securityMessage"
-    );
+).onclick=
+  async()=>{
+    const msg=
+      document.getElementById(
+        "securityMessage"
+      );
 
-  try{
-    await sendPasswordReset(
-      currentUser.email
-    );
+    try{
+      await sendPasswordReset(
+        currentUser.email
+      );
 
-    message.textContent=
-      `Password reset email sent to ${currentUser.email}.`;
+      msg.textContent=
+        `Password reset email sent to ${currentUser.email}.`;
 
-    message.classList.remove(
-      "hidden"
-    );
-  }
-  catch(error){
-    alert(error.message);
-  }
-};
+      msg.classList.remove(
+        "hidden"
+      );
+    }
+    catch(error){
+      alert(
+        error.message
+      );
+    }
+  };
 
 document.getElementById(
   "resetPinEmailButton"
-).onclick=async()=>{
-  const message=
-    document.getElementById(
-      "securityMessage"
-    );
+).onclick=
+  async()=>{
+    const msg=
+      document.getElementById(
+        "securityMessage"
+      );
 
-  try{
-    await sendPinResetLink();
+    try{
+      await sendPinResetLink();
 
-    message.textContent=
-      `PIN reset link sent to ${currentUser.email}.`;
+      msg.textContent=
+        `PIN reset link sent to ${currentUser.email}.`;
 
-    message.classList.remove(
-      "hidden"
-    );
-  }
-  catch(error){
-    alert(error.message);
-  }
-};
+      msg.classList.remove(
+        "hidden"
+      );
+    }
+    catch(error){
+      alert(
+        error.message
+      );
+    }
+  };
 
 document.getElementById(
   "saveNewPasswordButton"
-).onclick=async()=>{
-  const password=
-    document.getElementById(
-      "newAccountPassword"
-    ).value;
+).onclick=
+  async()=>{
+    const password=
+      document.getElementById(
+        "newAccountPassword"
+      ).value;
 
-  const errorBox=
-    document.getElementById(
-      "passwordResetError"
-    );
+    const err=
+      document.getElementById(
+        "passwordResetError"
+      );
 
-  errorBox.classList.add(
-    "hidden"
-  );
-
-  if(password.length<8){
-    errorBox.textContent=
-      "Use at least 8 characters.";
-
-    errorBox.classList.remove(
+    err.classList.add(
       "hidden"
     );
 
-    return;
-  }
+    if(
+      password.length<8
+    ){
+      err.textContent=
+        "Use at least 8 characters.";
 
-  const {error}=
-    await supabaseClient.auth.updateUser({
-      password
-    });
+      err.classList.remove(
+        "hidden"
+      );
 
-  if(error){
-    errorBox.textContent=
-      error.message;
+      return;
+    }
 
-    errorBox.classList.remove(
-      "hidden"
+    const {error}=
+      await supabaseClient
+        .auth
+        .updateUser({
+          password
+        });
+
+    if(error){
+      err.textContent=
+        error.message;
+
+      err.classList.remove(
+        "hidden"
+      );
+
+      return;
+    }
+
+    document
+      .getElementById(
+        "newPasswordModal"
+      )
+      .classList
+      .add("hidden");
+
+    alert(
+      "Password changed."
     );
-
-    return;
-  }
-
-  document
-    .getElementById("newPasswordModal")
-    .classList
-    .add("hidden");
-
-  alert("Password changed.");
-};
+  };
 
 document.getElementById(
   "saveResetPinButton"
-).onclick=async()=>{
-  const pin=
-    document.getElementById(
-      "newProfilePinReset"
-    ).value;
+).onclick=
+  async()=>{
+    const pin=
+      document.getElementById(
+        "newProfilePinReset"
+      ).value;
 
-  const errorBox=
-    document.getElementById(
-      "pinResetError"
-    );
+    const err=
+      document.getElementById(
+        "pinResetError"
+      );
 
-  errorBox.classList.add(
-    "hidden"
-  );
-
-  if(!/^[0-9]{4}$/.test(pin)){
-    errorBox.textContent=
-      "PIN must be exactly four digits.";
-
-    errorBox.classList.remove(
+    err.classList.add(
       "hidden"
     );
 
-    return;
-  }
+    if(
+      !/^[0-9]{4}$/.test(
+        pin
+      )
+    ){
+      err.textContent=
+        "PIN must be exactly four digits.";
 
-  const {error}=
-    await supabaseClient.rpc(
-      "set_profile_pin",
-      {
-        p_profile_id:
-          currentProfile.id,
-        p_new_pin:pin
-      }
+      err.classList.remove(
+        "hidden"
+      );
+
+      return;
+    }
+
+    const {error}=
+      await supabaseClient.rpc(
+        "set_profile_pin",
+        {
+          p_profile_id:
+            currentProfile.id,
+
+          p_new_pin:
+            pin
+        }
+      );
+
+    if(error){
+      err.textContent=
+        error.message;
+
+      err.classList.remove(
+        "hidden"
+      );
+
+      return;
+    }
+
+    localStorage.removeItem(
+      "pendingPinResetProfile"
     );
 
-  if(error){
-    errorBox.textContent=
-      error.message;
+    document
+      .getElementById(
+        "newPinModal"
+      )
+      .classList
+      .add("hidden");
 
-    errorBox.classList.remove(
-      "hidden"
+    alert(
+      "PIN changed."
     );
-
-    return;
-  }
-
-  localStorage.removeItem(
-    "pendingPinResetProfile"
-  );
-
-  document
-    .getElementById("newPinModal")
-    .classList
-    .add("hidden");
-
-  alert("PIN changed.");
-};
+  };
 
 window.editExpense=
   editExpense;
@@ -5395,9 +6590,13 @@ window.addEventListener(
   ()=>{
     if(
       !document
-        .getElementById("appScreen")
+        .getElementById(
+          "appScreen"
+        )
         .classList
-        .contains("hidden")
+        .contains(
+          "hidden"
+        )
     ){
       showPanel(
         activePanelIndex,
@@ -5414,19 +6613,28 @@ disableDoubleTapZoom();
 selectedTheme=
   localStorage.getItem(
     "budgetTheme"
-  )||"sandy";
+  )||
+  "sandy";
 
 applyAppearance();
 
 supabaseClient.auth.onAuthStateChange(
-  (event,session)=>{
-    if(event==="PASSWORD_RECOVERY"){
+  (
+    event,
+    session
+  )=>{
+    if(
+      event===
+      "PASSWORD_RECOVERY"
+    ){
       currentUser=
         session?.user||
         currentUser;
 
       document
-        .getElementById("newPasswordModal")
+        .getElementById(
+          "newPasswordModal"
+        )
         .classList
         .remove("hidden");
     }
@@ -5437,12 +6645,18 @@ supabaseClient.auth.onAuthStateChange(
   await handleAuthRedirect();
 
   const {
-    data:{session}
+    data:{
+      session
+    }
   }=
-    await supabaseClient.auth.getSession();
+    await supabaseClient
+      .auth
+      .getSession();
 
   if(session?.user){
-    currentUser=session.user;
+    currentUser=
+      session.user;
+
     await startApp();
   }
 })();
