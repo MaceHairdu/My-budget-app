@@ -3,51 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#e8d9ad">
+<meta name="theme-color" content="#aebca5">
 <title>Budget</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Nunito:wght@500;700;800;900&family=Press+Start+2P&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
-
-html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  touch-action:manipulation;
-}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;touch-action:manipulation}
+body{background:var(--bg);color:var(--text);font-family:var(--font-family);font-size:var(--font-size);font-weight:600}
+button,input,select{font:inherit;color:inherit}
+button{border:0;cursor:pointer}
+button:active{transform:translateY(1px)}
 
 :root{
-  --bg:#e8d9ad;
-  --panel:#fff9e9;
-  --text:#4e351d;
-  --muted:#796245;
-  --accent:#a9b982;
-  --edge:#bca975;
-  --input:#cdbd91;
+  --bg:#aebca5;
+  --panel:#eee1c8;
+  --text:#304638;
+  --muted:#5f705e;
+  --accent:#c77f63;
+  --edge:#9eaa8f;
+  --input:#b9b49d;
   --danger:#9b4e45;
   --danger-bg:#f1d6cf;
   --success:#536f49;
   --success-bg:#dce8cf;
   --font-size:16px;
-  --font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-}
-
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:var(--font-family);
-  font-size:var(--font-size);
-  font-weight:600;
+  --font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif
 }
 
 body.theme-sandy{
@@ -57,7 +40,7 @@ body.theme-sandy{
   --muted:#796245;
   --accent:#a9b982;
   --edge:#bca975;
-  --input:#cdbd91;
+  --input:#cdbd91
 }
 
 body.theme-petals{
@@ -67,7 +50,7 @@ body.theme-petals{
   --muted:#686ca2;
   --accent:#eda5b5;
   --edge:#c99ba4;
-  --input:#d0a8ad;
+  --input:#d0a8ad
 }
 
 body.theme-harbor{
@@ -77,7 +60,7 @@ body.theme-harbor{
   --muted:#56717a;
   --accent:#d58f79;
   --edge:#8ea0a0;
-  --input:#b3b7ad;
+  --input:#b3b7ad
 }
 
 body.theme-cedar{
@@ -87,7 +70,7 @@ body.theme-cedar{
   --muted:#5f705e;
   --accent:#c77f63;
   --edge:#9eaa8f;
-  --input:#b9b49d;
+  --input:#b9b49d
 }
 
 body.theme-plum{
@@ -97,114 +80,56 @@ body.theme-plum{
   --muted:#756173;
   --accent:#c7a24c;
   --edge:#a9969e;
-  --input:#c4b5ad;
+  --input:#c4b5ad
 }
 
 body.font-system{
-  --font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  --font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif
 }
 
 body.font-rounded{
-  --font-family:"Nunito",sans-serif;
+  --font-family:"Nunito",sans-serif
 }
 
 body.font-serif{
-  --font-family:"Merriweather",serif;
+  --font-family:"Merriweather",serif
 }
 
 body.font-mono{
-  --font-family:"Space Mono",monospace;
+  --font-family:"Space Mono",monospace
 }
 
 body.font-pixel{
   --font-family:"Press Start 2P",monospace;
-  letter-spacing:-.03em;
+  letter-spacing:-.03em
 }
 
 body.font-pixel button,
 body.font-pixel input,
 body.font-pixel select{
-  font-size:.82em;
+  font-size:.82em
 }
 
-button,input,select{
-  font:inherit;
-  color:inherit;
-}
+.hidden{display:none!important}
+.subtext{color:var(--muted);font-size:.86em;font-weight:700}
+.error{color:var(--danger);background:var(--danger-bg);padding:11px;border-radius:12px;margin-top:12px}
+.success{color:var(--success);background:var(--success-bg);padding:11px;border-radius:12px;margin-top:12px}
+.negative{color:var(--danger)}
 
-button{
-  border:0;
-  cursor:pointer;
-}
-
-button:active{
-  transform:translateY(1px);
-}
-
-.hidden{
-  display:none!important;
-}
-
-.subtext{
-  color:var(--muted);
-  font-size:.86em;
-  font-weight:700;
-}
-
-.error{
-  color:var(--danger);
-  background:var(--danger-bg);
-  padding:11px;
-  border-radius:12px;
-  margin-top:12px;
-}
-
-.success{
-  color:var(--success);
-  background:var(--success-bg);
-  padding:11px;
-  border-radius:12px;
-  margin-top:12px;
-}
-
-.negative{
-  color:var(--danger);
-}
-
-.card,
-.panel{
+.card,.panel{
   background:var(--panel);
   border-radius:18px;
   box-shadow:
     0 0 0 1px var(--edge),
     0 9px 0 var(--edge),
-    0 18px 36px rgba(52,39,21,.15);
+    0 18px 36px rgba(52,39,21,.15)
 }
 
-.panel{
-  min-width:0;
-  overflow:hidden;
-}
-
-.panel-inner{
-  height:100%;
-  min-width:0;
-  padding:22px;
-  overflow:auto;
-}
-
-.panel h2{
-  margin:0 0 16px;
-}
-
-.panel h3{
-  margin:20px 0 8px;
-}
-
-.app{
-  width:100%;
-  height:100%;
-}
+.panel{min-width:0;overflow:hidden}
+.panel-inner{height:100%;min-width:0;padding:22px;overflow:auto}
+.panel h2{margin:0 0 16px}
+.panel h3{margin:20px 0 8px}
+.app{width:100%;height:100%}
 
 .icon-button{
   display:grid;
@@ -218,7 +143,7 @@ button:active{
   box-shadow:
     inset 5px 5px 9px rgba(68,50,25,.16),
     inset -4px -4px 7px rgba(255,255,255,.55),
-    0 0 0 1px color-mix(in srgb,var(--edge) 85%,transparent);
+    0 0 0 1px color-mix(in srgb,var(--edge) 85%,transparent)
 }
 
 .icon-button svg{
@@ -228,26 +153,26 @@ button:active{
   stroke-width:2.7;
   fill:none;
   stroke-linecap:round;
-  stroke-linejoin:round;
+  stroke-linejoin:round
 }
 
 .settings-gear{
   position:fixed;
   z-index:500;
   top:15px;
-  right:17px;
+  right:17px
 }
 
 .settings-back{
   position:fixed;
   z-index:1510;
   top:15px;
-  left:17px;
+  left:17px
 }
 
 .settings-back svg{
   width:24px;
-  height:24px;
+  height:24px
 }
 
 #mainWorkspace{
@@ -260,37 +185,35 @@ button:active{
     minmax(0,1fr)
     minmax(0,1.15fr)
     minmax(0,1fr);
-  gap:20px;
+  gap:20px
 }
 
-.mobile-track{
-  display:contents;
-}
+.mobile-track{display:contents}
 
 .workspace-panel{
   height:calc(100vh - 24px);
   min-height:0;
   width:100%;
   max-width:100%;
-  min-width:0;
+  min-width:0
 }
 
 .date-strip{
   max-width:390px;
   margin:6px auto 23px;
-  text-align:center;
+  text-align:center
 }
 
 .date-month{
   font-size:1.3em;
   font-weight:900;
-  margin-bottom:9px;
+  margin-bottom:9px
 }
 
 .date-days{
   display:grid;
   grid-template-columns:repeat(7,1fr);
-  gap:5px;
+  gap:5px
 }
 
 .date-day{
@@ -298,39 +221,53 @@ button:active{
   display:grid;
   place-items:center;
   position:relative;
-  font-weight:900;
+  font-weight:900
 }
 
 .date-day::before{
   content:"";
   position:absolute;
-  width:38px;
-  height:38px;
+  width:39px;
+  height:39px;
   border-radius:50%;
-  background:var(--panel);
+  background:
+    radial-gradient(
+      circle at 48% 46%,
+      color-mix(in srgb,var(--panel) 82%,#000 18%) 0 48%,
+      color-mix(in srgb,var(--panel) 88%,#000 12%) 50% 58%,
+      color-mix(in srgb,var(--edge) 68%,var(--panel)) 61% 69%,
+      var(--panel) 72% 100%
+    );
   box-shadow:
-    inset 5px 5px 8px rgba(56,43,25,.22),
-    inset -4px -4px 7px rgba(255,255,255,.66),
-    0 1px 0 rgba(255,255,255,.45);
+    inset 5px 5px 7px rgba(48,36,20,.28),
+    inset -4px -4px 7px rgba(255,255,255,.55),
+    0 1px 1px rgba(255,255,255,.35)
 }
 
 .date-day.today::before{
-  background:color-mix(in srgb,var(--accent) 74%,var(--panel));
+  background:
+    radial-gradient(
+      circle at 48% 46%,
+      color-mix(in srgb,var(--accent) 72%,#000 12%) 0 48%,
+      color-mix(in srgb,var(--accent) 82%,var(--panel)) 50% 58%,
+      color-mix(in srgb,var(--edge) 70%,var(--accent)) 61% 69%,
+      var(--panel) 72% 100%
+    );
   box-shadow:
-    inset 5px 5px 8px rgba(56,43,25,.23),
-    inset -4px -4px 7px rgba(255,255,255,.38),
-    0 0 0 1px var(--edge);
+    inset 5px 5px 7px rgba(48,36,20,.3),
+    inset -4px -4px 7px rgba(255,255,255,.35),
+    0 1px 1px rgba(255,255,255,.3)
 }
 
 .date-day span{
   position:relative;
-  z-index:1;
+  z-index:1
 }
 
 .home-funds{
   display:flex;
   flex-direction:column;
-  gap:17px;
+  gap:17px
 }
 
 .fund-card{
@@ -342,13 +279,13 @@ button:active{
   justify-content:flex-start;
   text-align:center;
   cursor:pointer;
-  user-select:none;
+  user-select:none
 }
 
 .fund-label{
   font-size:1.1em;
   font-weight:900;
-  margin-top:5px;
+  margin-top:5px
 }
 
 .balance{
@@ -359,14 +296,14 @@ button:active{
   overflow:hidden;
   text-overflow:ellipsis;
   white-space:nowrap;
-  margin:10px 0 4px;
+  margin:10px 0 4px
 }
 
 .home-expenses{
   width:100%;
   margin-top:12px;
   text-align:left;
-  pointer-events:none;
+  pointer-events:none
 }
 
 .home-expense{
@@ -375,25 +312,25 @@ button:active{
   gap:10px;
   padding:7px 2px;
   border-top:1px solid color-mix(in srgb,var(--edge) 55%,transparent);
-  font-size:.83em;
+  font-size:.83em
 }
 
 .home-expense-name{
   overflow:hidden;
   text-overflow:ellipsis;
-  white-space:nowrap;
+  white-space:nowrap
 }
 
 .home-expense-amount{
   white-space:nowrap;
-  font-weight:900;
+  font-weight:900
 }
 
 .empty-home-expenses{
   text-align:center;
   color:var(--muted);
   font-size:.8em;
-  padding-top:8px;
+  padding-top:8px
 }
 
 .panel-header{
@@ -401,44 +338,42 @@ button:active{
   align-items:center;
   justify-content:space-between;
   gap:12px;
-  margin-bottom:16px;
+  margin-bottom:16px
 }
 
-.panel-header h2{
-  margin:0;
-}
+.panel-header h2{margin:0}
 
 .transaction{
   padding:14px 0;
-  border-bottom:1px solid color-mix(in srgb,var(--edge) 68%,transparent);
+  border-bottom:1px solid color-mix(in srgb,var(--edge) 68%,transparent)
 }
 
 .transaction-top{
   display:flex;
   justify-content:space-between;
-  gap:12px;
+  gap:12px
 }
 
 .transaction-name{
   font-weight:900;
-  overflow-wrap:anywhere;
+  overflow-wrap:anywhere
 }
 
 .transaction-meta{
   color:var(--muted);
   font-size:.8em;
-  margin-top:4px;
+  margin-top:4px
 }
 
 .transaction-amount{
   font-weight:900;
-  white-space:nowrap;
+  white-space:nowrap
 }
 
 .transaction-actions{
   display:flex;
   gap:8px;
-  margin-top:9px;
+  margin-top:9px
 }
 
 .primary-button,
@@ -449,31 +384,43 @@ button:active{
 .theme-button{
   border-radius:14px;
   padding:13px 15px;
-  font-weight:900;
+  font-weight:900
 }
 
 .primary-button{
   background:var(--accent);
   color:var(--text);
-  box-shadow:0 4px 0 var(--edge);
+  box-shadow:0 4px 0 var(--edge)
 }
 
 .secondary-button{
   background:var(--panel);
   box-shadow:
     0 0 0 1px var(--edge),
-    0 4px 0 var(--edge);
+    0 4px 0 var(--edge)
 }
 
 .danger-button{
   background:var(--danger-bg);
   color:var(--danger);
+  box-shadow:
+    0 4px 0
+    color-mix(in srgb,var(--danger) 58%,var(--edge))
+}
+
+.primary-button:active,
+.secondary-button:active,
+.danger-button:active,
+.folder-button:active,
+.theme-button:active{
+  transform:translateY(3px);
+  box-shadow:0 1px 0 var(--edge)
 }
 
 .small-button{
   padding:7px 10px;
   border-radius:10px;
-  font-size:.8em;
+  font-size:.8em
 }
 
 .folder-button{
@@ -486,35 +433,35 @@ button:active{
   align-items:center;
   justify-content:space-between;
   text-align:left;
-  margin:0 0 14px;
+  margin:0 0 14px
 }
 
 .folder-button span:last-child{
-  font-size:1.35em;
+  font-size:1.35em
 }
 
 .choice-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:11px;
+  gap:11px
 }
 
 .choice-button{
   background:var(--panel);
   box-shadow:0 0 0 1px var(--edge);
-  text-align:left;
+  text-align:left
 }
 
 .choice-button.selected{
   box-shadow:
     0 0 0 3px var(--accent),
-    0 4px 0 var(--edge);
+    0 4px 0 var(--edge)
 }
 
 label{
   display:block;
   font-weight:900;
-  margin:14px 0 6px;
+  margin:14px 0 6px
 }
 
 .field,
@@ -528,12 +475,14 @@ select{
   border-radius:14px;
   background:var(--panel);
   color:var(--text);
-  outline:0;
+  outline:0
 }
 
 input:focus,
 select:focus{
-  box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 72%,transparent);
+  box-shadow:
+    0 0 0 3px
+    color-mix(in srgb,var(--accent) 72%,transparent)
 }
 
 select{
@@ -542,27 +491,27 @@ select{
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3C/svg%3E");
   background-repeat:no-repeat;
   background-position:right 12px center;
-  padding-right:40px;
+  padding-right:40px
 }
 
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button{
   -webkit-appearance:none;
-  margin:0;
+  margin:0
 }
 
 input[type=number]{
-  -moz-appearance:textfield;
+  -moz-appearance:textfield
 }
 
 .money-input{
-  font-variant-numeric:tabular-nums;
+  font-variant-numeric:tabular-nums
 }
 
 .saved-list{
   display:flex;
   flex-direction:column;
-  gap:9px;
+  gap:9px
 }
 
 .saved-row{
@@ -573,77 +522,82 @@ input[type=number]{
   padding:11px 12px;
   border:1px solid color-mix(in srgb,var(--edge) 70%,transparent);
   border-radius:13px;
-  background:color-mix(in srgb,var(--panel) 94%,var(--edge));
+  background:color-mix(in srgb,var(--panel) 94%,var(--edge))
 }
 
 .saved-row-main{
   min-width:0;
+  flex:1
 }
 
 .saved-row-name{
   font-weight:900;
   overflow:hidden;
   text-overflow:ellipsis;
-  white-space:nowrap;
+  white-space:nowrap
 }
 
 .saved-row-amount{
   font-weight:900;
   white-space:nowrap;
+  width:112px;
+  text-align:right;
+  font-variant-numeric:tabular-nums
 }
 
 .saved-row-actions{
   display:flex;
   gap:7px;
   margin-left:8px;
+  flex:0 0 auto
 }
 
 .edit-box{
   padding:12px;
   border:1px solid var(--input);
   border-radius:15px;
-  margin-top:9px;
+  margin-top:9px
 }
 
 .edit-grid{
   display:grid;
   grid-template-columns:minmax(0,1fr) 130px;
-  gap:10px;
+  gap:10px
 }
 
 .edit-actions{
   display:flex;
   gap:8px;
-  margin-top:9px;
+  margin-top:9px
 }
 
 .edit-actions>*{
-  flex:1;
+  flex:1
 }
 
 .calculation{
   margin-top:18px;
   padding:15px;
   border-radius:17px;
-  background:rgba(0,0,0,.035);
+  background:rgba(0,0,0,.035)
 }
 
 .calc-row{
   display:flex;
   justify-content:space-between;
   gap:14px;
-  padding:7px 0;
+  padding:7px 0
 }
 
 .calc-row strong{
-  white-space:nowrap;
+  white-space:nowrap
 }
 
 .calc-total{
   border-top:1px solid var(--input);
   margin-top:7px;
   padding-top:12px;
-  font-weight:900;
+  font-weight:900
 }
 
 .mode-note{
@@ -651,7 +605,7 @@ input[type=number]{
   border-radius:14px;
   background:color-mix(in srgb,var(--accent) 25%,var(--panel));
   margin:12px 0;
-  line-height:1.42;
+  line-height:1.42
 }
 
 .info-link{
@@ -661,7 +615,7 @@ input[type=number]{
   gap:10px;
   margin:18px 0;
   font-weight:900;
-  cursor:pointer;
+  cursor:pointer
 }
 
 .info-icon{
@@ -672,7 +626,7 @@ input[type=number]{
   display:grid;
   place-items:center;
   font-weight:900;
-  flex:0 0 auto;
+  flex:0 0 auto
 }
 
 .allocation-row{
@@ -680,15 +634,15 @@ input[type=number]{
   grid-template-columns:minmax(0,1fr) 135px;
   gap:10px;
   align-items:center;
-  margin-top:9px;
+  margin-top:9px
 }
 
 .allocation-name{
-  font-weight:900;
+  font-weight:900
 }
 
 .allocation-summary{
-  margin-top:10px;
+  margin-top:10px
 }
 
 .modal-overlay{
@@ -700,22 +654,22 @@ input[type=number]{
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:20px;
+  padding:20px
 }
 
 .modal-card{
   width:min(580px,100%);
   max-height:90vh;
   overflow:auto;
-  padding:24px;
+  padding:24px
 }
 
 .modal-card h2{
-  margin-top:0;
+  margin-top:0
 }
 
 .modal-card p{
-  line-height:1.55;
+  line-height:1.55
 }
 
 .sheet-overlay{
@@ -726,7 +680,7 @@ input[type=number]{
   display:flex;
   align-items:flex-end;
   justify-content:center;
-  touch-action:none;
+  touch-action:none
 }
 
 .expense-sheet{
@@ -738,17 +692,17 @@ input[type=number]{
   border-radius:28px 28px 0 0;
   transform:translateY(0);
   animation:sheetIn .44s cubic-bezier(.2,.85,.25,1.12);
-  touch-action:pan-y;
+  touch-action:pan-y
 }
 
 .expense-sheet.dragging{
   animation:none;
-  transition:none;
+  transition:none
 }
 
 .expense-sheet.settling{
   animation:none;
-  transition:transform .2s ease;
+  transition:transform .2s ease
 }
 
 .sheet-handle{
@@ -757,7 +711,7 @@ input[type=number]{
   border-radius:99px;
   background:var(--edge);
   margin:-6px auto 18px;
-  box-shadow:inset 0 1px 2px rgba(0,0,0,.15);
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.15)
 }
 
 @keyframes sheetIn{
@@ -772,7 +726,7 @@ input[type=number]{
   min-width:0;
   max-width:100%;
   -webkit-appearance:none;
-  appearance:none;
+  appearance:none
 }
 
 .login{
@@ -780,18 +734,18 @@ input[type=number]{
   height:100%;
   margin:auto;
   padding:40px 20px;
-  overflow:auto;
+  overflow:auto
 }
 
 .login .card{
-  padding:24px;
+  padding:24px
 }
 
 .profile-row{
   display:flex;
   align-items:center;
   gap:12px;
-  margin-bottom:10px;
+  margin-bottom:10px
 }
 
 .profile-avatar{
@@ -804,24 +758,24 @@ input[type=number]{
   background:var(--accent);
   box-shadow:
     inset 4px 4px 7px rgba(45,35,20,.15),
-    inset -3px -3px 6px rgba(255,255,255,.45);
+    inset -3px -3px 6px rgba(255,255,255,.45)
 }
 
 .profile-avatar svg{
   width:34px;
-  height:34px;
+  height:34px
 }
 
 .profile-button{
   flex:1;
-  text-align:left;
+  text-align:left
 }
 
 .avatar-grid{
   display:grid;
   grid-template-columns:repeat(4,minmax(0,1fr));
   gap:10px;
-  margin-top:10px;
+  margin-top:10px
 }
 
 .avatar-choice{
@@ -829,18 +783,18 @@ input[type=number]{
   background:var(--panel);
   border:1px solid var(--edge);
   border-radius:15px;
-  min-width:0;
+  min-width:0
 }
 
 .avatar-choice.selected{
-  box-shadow:0 0 0 3px var(--accent);
+  box-shadow:0 0 0 3px var(--accent)
 }
 
 .avatar-choice svg{
   display:block;
   width:45px;
   height:45px;
-  margin:auto;
+  margin:auto
 }
 
 .avatar-label{
@@ -848,97 +802,137 @@ input[type=number]{
   font-size:.72em;
   margin-top:5px;
   overflow:hidden;
-  text-overflow:ellipsis;
+  text-overflow:ellipsis
 }
 
 .settings-shell{
   height:100%;
-  overflow:hidden;
+  width:100vw;
+  max-width:100vw;
+  overflow:hidden
 }
 
 .settings{
   height:100%;
-  overflow:auto;
-  padding:82px 20px 34px;
+  width:100%;
   max-width:720px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding:82px 20px 34px;
   margin:auto;
   overscroll-behavior:contain;
+  touch-action:pan-y
+}
+
+.settings *{
+  max-width:100%;
+  min-width:0
+}
+
+.settings button,
+.settings p,
+.settings div{
+  overflow-wrap:anywhere
 }
 
 .settings-title{
-  margin:0 0 8px;
+  margin:0 0 8px
 }
 
 .settings-profile-name{
-  margin-bottom:28px;
+  margin-bottom:28px
 }
 
 .settings-card{
   padding:20px;
-  margin-bottom:16px;
+  margin-bottom:16px
 }
 
 .settings-card h2{
-  margin-top:0;
+  margin-top:0
 }
 
 .theme-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:10px;
+  gap:10px
 }
 
 .theme-button{
   background:var(--panel);
   box-shadow:0 0 0 1px var(--edge);
-  text-align:left;
+  text-align:left
 }
 
 .theme-button.selected{
-  box-shadow:0 0 0 3px var(--text);
+  box-shadow:0 0 0 3px var(--text)
 }
 
 .swatches{
   display:flex;
   gap:5px;
-  margin-top:8px;
+  margin-top:8px
 }
 
 .swatch{
   width:19px;
   height:19px;
   border-radius:50%;
-  border:1px solid rgba(0,0,0,.12);
+  border:1px solid rgba(0,0,0,.12)
 }
 
 .font-preview{
   margin-top:8px;
   padding:12px;
   border-radius:12px;
-  background:color-mix(in srgb,var(--panel) 90%,var(--edge));
+  background:color-mix(in srgb,var(--panel) 90%,var(--edge))
 }
 
 .range-row{
   display:flex;
   align-items:center;
-  gap:12px;
+  gap:12px
 }
 
 .range-row input{
   padding:0;
   border:0;
   box-shadow:none;
-  background:transparent;
+  background:transparent
 }
 
 .security-email{
   font-weight:900;
-  overflow-wrap:anywhere;
+  overflow-wrap:anywhere
+}
+
+.toast{
+  position:fixed;
+  z-index:2200;
+  left:50%;
+  bottom:28px;
+  transform:translate(-50%,18px) scale(.96);
+  opacity:0;
+  pointer-events:none;
+  background:var(--text);
+  color:var(--panel);
+  padding:12px 18px;
+  border-radius:14px;
+  font-weight:900;
+  box-shadow:0 10px 28px rgba(0,0,0,.22);
+  transition:
+    opacity .18s ease,
+    transform .22s cubic-bezier(.2,.8,.2,1.15)
+}
+
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0) scale(1)
 }
 
 @media(max-width:900px){
   html,body{
-    height:100dvh;
+    height:100dvh
   }
 
   #mainWorkspace{
@@ -947,7 +941,7 @@ input[type=number]{
     display:block;
     overflow:hidden;
     position:relative;
-    touch-action:pan-y;
+    touch-action:pan-y
   }
 
   .mobile-track{
@@ -955,128 +949,129 @@ input[type=number]{
     height:100%;
     gap:12px;
     will-change:transform;
-    transform:translate3d(0,0,0);
+    transform:translate3d(0,0,0)
   }
 
   .workspace-panel{
     display:block;
     flex:0 0 88vw;
     width:88vw;
-    height:100dvh;
+    height:calc(100dvh - 28px);
+    margin-top:8px;
     min-height:0;
     border-radius:20px;
     box-shadow:
       0 0 0 1px var(--edge),
       0 8px 0 var(--edge),
       0 18px 35px rgba(60,45,25,.14);
-    overflow:hidden;
+    overflow:hidden
   }
 
   .workspace-panel .panel-inner{
     padding:69px 15px 28px;
     overflow-y:auto;
-    overscroll-behavior:contain;
+    overscroll-behavior:contain
   }
 
   .home-panel .panel-inner{
     overflow:hidden;
-    padding-top:68px;
+    padding-top:68px
   }
 
   .date-strip{
     max-width:100%;
-    margin-top:0;
+    margin-top:0
   }
 
   .date-day{
-    height:42px;
+    height:42px
   }
 
   .date-day::before{
     width:35px;
-    height:35px;
+    height:35px
   }
 
   .fund-card{
     min-height:calc((100dvh - 224px)/2);
-    max-height:280px;
+    max-height:280px
   }
 
   .settings-gear{
     top:12px;
-    right:12px;
+    right:12px
   }
 
   .settings-back{
     top:12px;
-    left:12px;
+    left:12px
   }
 
   .panel-header h2{
-    font-size:1.35em;
+    font-size:1.35em
   }
 
   .edit-grid{
-    grid-template-columns:minmax(0,1fr) 108px;
+    grid-template-columns:minmax(0,1fr) 108px
   }
 
   .modal-overlay{
-    padding:12px;
+    padding:12px
   }
 
   .modal-card{
-    max-height:92dvh;
+    max-height:92dvh
   }
 
   .avatar-grid{
-    grid-template-columns:repeat(4,minmax(0,1fr));
+    grid-template-columns:repeat(4,minmax(0,1fr))
   }
 
   .allocation-row{
-    grid-template-columns:minmax(0,1fr) 115px;
+    grid-template-columns:minmax(0,1fr) 115px
   }
 
   .theme-grid{
-    grid-template-columns:1fr 1fr;
+    grid-template-columns:1fr 1fr
   }
 }
 
 @media(max-width:390px){
   .workspace-panel{
     flex-basis:90vw;
-    width:90vw;
+    width:90vw
   }
 
   .workspace-panel .panel-inner{
     padding-left:12px;
-    padding-right:12px;
+    padding-right:12px
   }
 
   .fund-card{
-    min-height:190px;
+    min-height:190px
   }
 
   .balance{
-    font-size:29px;
+    font-size:29px
   }
 
   .edit-grid{
-    grid-template-columns:1fr;
+    grid-template-columns:1fr
   }
 
   .avatar-grid{
-    grid-template-columns:repeat(3,minmax(0,1fr));
+    grid-template-columns:repeat(3,minmax(0,1fr))
   }
 }
 </style>
 </head>
 
-<body class="theme-sandy font-system">
+<body class="theme-cedar font-system">
 
 <button class="icon-button settings-gear hidden" id="settingsGear" aria-label="Settings">
   <svg viewBox="0 0 24 24">
-    <circle cx="12" cy="12" r="3.2"></circle>
-    <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.12 2.12-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V20.3h-3v-.08a1.7 1.7 0 0 0-1.03-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-2.12-2.12.06-.06A1.7 1.7 0 0 0 7 15a1.7 1.7 0 0 0-1.56-1.03H5.3v-3h.14A1.7 1.7 0 0 0 7 9.94a1.7 1.7 0 0 0-.34-1.88L6.6 8l2.12-2.12.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 11.7 4.7v-.1h3v.1a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.88-.34l.06-.06L19.8 8l-.06.06a1.7 1.7 0 0 0-.34 1.88 1.7 1.7 0 0 0 1.56 1.03h.14v3h-.14A1.7 1.7 0 0 0 19.4 15Z"></path>
+    <circle cx="12" cy="12" r="3"></circle>
+    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06-2.12 2.12-.06-.06a1.65 1.65 0 0 0-1.82-.33l-.4.17a1.65 1.65 0 0 0-1 1.51V21h-3v-.71a1.65 1.65 0 0 0-1-1.51l-.4-.17a1.65 1.65 0 0 0-1.82.33l-.06.06-2.12-2.12.06-.06A1.65 1.65 0 0 0 4.6 15l-.17-.4a1.65 1.65 0 0 0-1.51-1H2.2v-3h.72a1.65 1.65 0 0 0 1.51-1l.17-.4a1.65 1.65 0 0 0-.33-1.82l-.06-.06L6.33 5.2l.06.06a1.65 1.65 0 0 0 1.82.33l.4-.17a1.65 1.65 0 0 0 1-1.51V3.2h3v.71a1.65 1.65 0 0 0 1 1.51l.4.17a1.65 1.65 0 0 0 1.82-.33l.06-.06 2.12 2.12-.06.06a1.65 1.65 0 0 0-.33 1.82l.17.4a1.65 1.65 0 0 0 1.51 1h.72v3h-.72a1.65 1.65 0 0 0-1.51 1Z"></path>
   </svg>
 </button>
 
@@ -1167,35 +1162,61 @@ input[type=number]{
 
       <section class="panel workspace-panel" id="analyticsPanel">
         <div class="panel-inner">
+
           <div class="panel-header">
             <h2>Analytics</h2>
           </div>
 
           <div class="card" style="padding:18px;margin-bottom:16px">
-            <div class="subtext">Spending This Year</div>
-            <div class="balance" id="analyticsTotal">$0.00</div>
-          </div>
+            <div class="subtext">Spending This Month</div>
 
-          <div class="card" style="padding:18px;margin-bottom:16px">
-            <h3>Needs Spending</h3>
+            <div class="balance" id="analyticsThisMonth">
+              $0.00
+            </div>
+
             <div class="calc-row">
-              <span>This year</span>
-              <strong id="analyticsNeeds">$0.00</strong>
+              <span>Needs</span>
+              <strong id="analyticsNeedsMonth">$0.00</strong>
+            </div>
+
+            <div class="calc-row">
+              <span>Fun Money</span>
+              <strong id="analyticsFunMonth">$0.00</strong>
             </div>
           </div>
 
           <div class="card" style="padding:18px;margin-bottom:16px">
-            <h3>Fun Money Spending</h3>
+            <div class="subtext">Spending This Year</div>
+
+            <div class="balance" id="analyticsTotal">
+              $0.00
+            </div>
+
             <div class="calc-row">
-              <span>This year</span>
+              <span>Needs</span>
+              <strong id="analyticsNeeds">$0.00</strong>
+            </div>
+
+            <div class="calc-row">
+              <span>Fun Money</span>
               <strong id="analyticsFun">$0.00</strong>
+            </div>
+          </div>
+
+          <div class="card" style="padding:18px;margin-bottom:16px">
+            <h3>Categories This Month</h3>
+
+            <div id="analyticsCategories" class="subtext">
+              No expenses this month.
             </div>
           </div>
 
           <div class="card" style="padding:18px">
             <h3>Amount You've Saved This Year</h3>
 
-            <div class="balance" id="analyticsSavedThisYear">$0.00</div>
+            <div class="balance" id="analyticsSavedThisYear">
+              $0.00
+            </div>
 
             <div class="subtext" style="margin-top:8px">
               Adds each saved monthly Savings allocation across that month's actual budget weeks.
@@ -1206,11 +1227,13 @@ input[type=number]{
               <strong id="analyticsSavedPriorYear">$0.00</strong>
             </div>
           </div>
+
         </div>
       </section>
 
       <section class="panel workspace-panel" id="expenseHistoryPanel">
         <div class="panel-inner">
+
           <div class="panel-header">
             <h2>Expense History</h2>
 
@@ -1222,6 +1245,7 @@ input[type=number]{
           <div id="transactions">
             <p class="subtext">No expenses yet.</p>
           </div>
+
         </div>
       </section>
 
@@ -1419,6 +1443,7 @@ input[type=number]{
       <button class="danger-button" id="settingsLogoutButton" style="width:100%;margin-top:5px">
         Log Out
       </button>
+
     </div>
 
     <div id="appearanceSettings" class="hidden">
@@ -1448,7 +1473,7 @@ input[type=number]{
         <label>Font Size</label>
 
         <div class="range-row">
-          <input id="fontSizeRange" type="range" min="12" max="30" step="1">
+          <input id="fontSizeRange" type="range" min="12" max="24" step="1">
           <strong id="fontSizeLabel">16px</strong>
         </div>
 
@@ -1564,7 +1589,8 @@ input[type=number]{
     <h2>Choose a New PIN</h2>
 
     <p class="subtext">
-      Your email link verified the account. Enter the new PIN for <span id="pinResetProfileName"></span>.
+      Your email link verified the account. Enter the new PIN for
+      <span id="pinResetProfileName"></span>.
     </p>
 
     <label>New 4-Digit PIN</label>
@@ -1627,6 +1653,10 @@ input[type=number]{
   </div>
 </div>
 
+<div class="toast" id="appToast">
+  Saved
+</div>
+
 <script>
 const SUPABASE_URL=
   "https://jivygwszzlaxnhhvxxsg.supabase.co";
@@ -1652,12 +1682,17 @@ let activePanelIndex=2;
 let selectedAvatar="knight";
 let selectedSettingsAvatar="knight";
 
-let selectedTheme="sandy";
+let profileMode="hard";
+
+let selectedTheme="cedar";
 let selectedFont="system";
 let selectedFontSize=16;
 
 let settingsSection="menu";
 let expenseOpenedFromHome=false;
+
+let allocationUserEdited=false;
+let toastTimer=null;
 
 const panels=[
   "analyticsPanel",
@@ -1683,24 +1718,28 @@ const themeData={
     "#4e351d",
     "#a9b982"
   ],
+
   petals:[
     "#aaaee0",
     "#f7d7c8",
     "#494e96",
     "#eda5b5"
   ],
+
   harbor:[
     "#9fb7be",
     "#f3eadb",
     "#263e4b",
     "#d58f79"
   ],
+
   cedar:[
     "#aebca5",
     "#eee1c8",
     "#304638",
     "#c77f63"
   ],
+
   plum:[
     "#b9a5b5",
     "#f2e5cf",
@@ -1710,16 +1749,18 @@ const themeData={
 };
 
 const money=n=>
-  Number(n||0).toLocaleString(
-    "en-US",
-    {
-      style:"currency",
-      currency:"USD"
-    }
-  );
+  Number(n||0)
+    .toLocaleString(
+      "en-US",
+      {
+        style:"currency",
+        currency:"USD"
+      }
+    );
 
 const dateOnly=d=>{
-  const x=new Date(d);
+  const x=
+    new Date(d);
 
   return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,"0")}-${String(x.getDate()).padStart(2,"0")}`;
 };
@@ -1756,10 +1797,14 @@ const previousMonth=()=>
   );
 
 const weekStart=d=>{
-  const x=new Date(d);
+  const x=
+    new Date(d);
 
   x.setHours(
-    0,0,0,0
+    0,
+    0,
+    0,
+    0
   );
 
   x.setDate(
@@ -1776,12 +1821,14 @@ const escapeHtml=v=>{
       "div"
     );
 
-  d.textContent=v??"";
+  d.textContent=
+    v??"";
 
   return d.innerHTML;
 };
 
 function getBudgetWeekCount(monthDate){
+
   const y=
     monthDate.getFullYear();
 
@@ -1811,9 +1858,11 @@ function getBudgetWeekCount(monthDate){
   let count=0;
 
   while(ws<=end){
+
     let inMonth=0;
 
     for(let i=0;i<7;i++){
+
       const d=
         new Date(ws);
 
@@ -1847,6 +1896,7 @@ function getBudgetWeekCount(monthDate){
 function budgetMonthForWeek(
   date=new Date()
 ){
+
   const ws=
     weekStart(date);
 
@@ -1854,6 +1904,7 @@ function budgetMonthForWeek(
     new Map();
 
   for(let i=0;i<7;i++){
+
     const d=
       new Date(ws);
 
@@ -1889,6 +1940,7 @@ function budgetMonthForWeek(
 }
 
 function parseMoney(v){
+
   const n=
     Number(
       String(v??"")
@@ -1907,6 +1959,7 @@ function moneyTyping(
   el,
   negative=false
 ){
+
   const raw=
     String(el.value)
       .replace(
@@ -1947,6 +2000,7 @@ function formatMoneyInput(
   el,
   negative=false
 ){
+
   const n=
     Math.abs(
       parseMoney(
@@ -1964,6 +2018,7 @@ function bindMoneyInput(
   el,
   negative=false
 ){
+
   if(
     !el ||
     el.dataset.moneyBound
@@ -1971,7 +2026,8 @@ function bindMoneyInput(
     return;
   }
 
-  el.dataset.moneyBound="1";
+  el.dataset.moneyBound=
+    "1";
 
   el.addEventListener(
     "input",
@@ -1997,16 +2053,18 @@ function bindMoneyInput(
 }
 
 function hideScreens(){
+
   [
     "loginScreen",
     "profileScreen",
     "appScreen",
     "settingsScreen"
-  ].forEach(id=>
-    document
-      .getElementById(id)
-      .classList
-      .add("hidden")
+  ].forEach(
+    id=>
+      document
+        .getElementById(id)
+        .classList
+        .add("hidden")
   );
 
   document
@@ -2018,6 +2076,7 @@ function hideScreens(){
 }
 
 function applyAppearance(){
+
   document.body.className=
     `theme-${selectedTheme} font-${selectedFont}`;
 
@@ -2035,6 +2094,7 @@ function applyAppearance(){
 }
 
 function gearVisible(show){
+
   document
     .getElementById(
       "settingsGear"
@@ -2047,17 +2107,78 @@ function gearVisible(show){
 }
 
 function avatarSvg(name){
-  const c="currentColor";
+
+  const c=
+    "currentColor";
 
   const common=
     `viewBox="0 0 64 64" aria-hidden="true"`;
 
+  if(name==="knight"){
+    return `
+      <svg ${common}>
+        <path
+          d="M18 28V22c0-11 7-17 14-17s14 6 14 17v6"
+          fill="none"
+          stroke="${c}"
+          stroke-width="4"
+          stroke-linecap="round"
+        />
+        <path
+          d="M16 27h32v18c0 8-7 14-16 14s-16-6-16-14Z"
+          fill="none"
+          stroke="${c}"
+          stroke-width="4"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M16 34h32M25 34v13M32 34v13M39 34v13"
+          stroke="${c}"
+          stroke-width="3.5"
+          stroke-linecap="round"
+        />
+        <path
+          d="M32 5V1M32 1l9 7"
+          stroke="${c}"
+          stroke-width="4"
+          stroke-linecap="round"
+        />
+      </svg>
+    `;
+  }
+
   if(name==="princess"){
     return `
       <svg ${common}>
-        <circle cx="32" cy="34" r="14" fill="none" stroke="${c}" stroke-width="4"/>
-        <path d="M18 24 22 11l10 8 10-8 4 13" fill="none" stroke="${c}" stroke-width="4" stroke-linejoin="round"/>
-        <path d="M19 53c4-8 22-8 26 0" fill="none" stroke="${c}" stroke-width="4" stroke-linecap="round"/>
+        <path
+          d="M19 21 23 8l9 9 9-9 4 13Z"
+          fill="none"
+          stroke="${c}"
+          stroke-width="4"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M20 32c0-9 5-14 12-14s12 5 12 14v9c0 9-5 16-12 16s-12-7-12-16Z"
+          fill="none"
+          stroke="${c}"
+          stroke-width="4"
+        />
+        <path
+          d="M18 38c-4 7-3 15 2 21M46 38c4 7 3 15-2 21"
+          fill="none"
+          stroke="${c}"
+          stroke-width="4"
+          stroke-linecap="round"
+        />
+        <circle cx="27" cy="34" r="2" fill="${c}"/>
+        <circle cx="37" cy="34" r="2" fill="${c}"/>
+        <path
+          d="M28 43c3 2 5 2 8 0"
+          fill="none"
+          stroke="${c}"
+          stroke-width="3"
+          stroke-linecap="round"
+        />
       </svg>
     `;
   }
@@ -2065,8 +2186,27 @@ function avatarSvg(name){
   if(name==="dragon"){
     return `
       <svg ${common}>
-        <path d="M14 43c6-17 13-25 27-27l-3 9 11-4-5 11 7 6-11 1c-3 8-12 12-26 4Z" fill="none" stroke="${c}" stroke-width="4" stroke-linejoin="round"/>
-        <circle cx="35" cy="31" r="2.5" fill="${c}"/>
+        <path
+          d="M13 45c4-19 14-31 31-33l-4 9 11-5-5 11 8 7-11 2c-1 14-9 22-23 22-7 0-11-5-7-13Z"
+          fill="none"
+          stroke="${c}"
+          stroke-width="4"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M24 42c8-7 15-7 22-1M20 25l-7-8M32 18l-2-10"
+          fill="none"
+          stroke="${c}"
+          stroke-width="4"
+          stroke-linecap="round"
+        />
+        <circle cx="36" cy="29" r="2.4" fill="${c}"/>
+        <path
+          d="M43 36c5 0 9 2 12 5"
+          stroke="${c}"
+          stroke-width="3"
+          stroke-linecap="round"
+        />
       </svg>
     `;
   }
@@ -2074,9 +2214,26 @@ function avatarSvg(name){
   if(name==="fish"){
     return `
       <svg ${common}>
-        <path d="M14 32c11-13 25-13 34 0-9 13-23 13-34 0Z" fill="none" stroke="${c}" stroke-width="4"/>
-        <path d="m48 32 10-9v18Z" fill="none" stroke="${c}" stroke-width="4" stroke-linejoin="round"/>
-        <circle cx="25" cy="29" r="2.5" fill="${c}"/>
+        <path
+          d="M12 32c11-14 27-14 38 0-11 14-27 14-38 0Z"
+          fill="none"
+          stroke="${c}"
+          stroke-width="4"
+        />
+        <path
+          d="m49 32 11-10v20Z"
+          fill="none"
+          stroke="${c}"
+          stroke-width="4"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M28 19c4 4 6 8 6 13s-2 9-6 13"
+          fill="none"
+          stroke="${c}"
+          stroke-width="3"
+        />
+        <circle cx="23" cy="28" r="2.4" fill="${c}"/>
       </svg>
     `;
   }
@@ -2084,9 +2241,28 @@ function avatarSvg(name){
   if(name==="lion"){
     return `
       <svg ${common}>
-        <circle cx="32" cy="32" r="19" fill="none" stroke="${c}" stroke-width="4"/>
-        <circle cx="32" cy="33" r="12" fill="none" stroke="${c}" stroke-width="4"/>
-        <path d="M27 29h.1M37 29h.1M28 38c3 3 5 3 8 0" stroke="${c}" stroke-width="4" stroke-linecap="round"/>
+        <path
+          d="M32 7c6 0 9 5 12 8 6-1 10 3 10 9 4 3 4 10 0 13 1 6-4 10-10 10-3 6-8 9-12 9s-9-3-12-9c-6 0-11-4-10-10-4-3-4-10 0-13 0-6 4-10 10-9 3-3 6-8 12-8Z"
+          fill="none"
+          stroke="${c}"
+          stroke-width="4"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M20 29c0-8 5-13 12-13s12 5 12 13v8c0 9-5 15-12 15s-12-6-12-15Z"
+          fill="none"
+          stroke="${c}"
+          stroke-width="4"
+        />
+        <circle cx="27" cy="31" r="2.2" fill="${c}"/>
+        <circle cx="37" cy="31" r="2.2" fill="${c}"/>
+        <path
+          d="m29 39 3 3 3-3M32 42v5"
+          fill="none"
+          stroke="${c}"
+          stroke-width="3"
+          stroke-linecap="round"
+        />
       </svg>
     `;
   }
@@ -2094,10 +2270,36 @@ function avatarSvg(name){
   if(name==="turtle"){
     return `
       <svg ${common}>
-        <ellipse cx="31" cy="33" rx="17" ry="13" fill="none" stroke="${c}" stroke-width="4"/>
-        <circle cx="52" cy="32" r="5" fill="none" stroke="${c}" stroke-width="4"/>
-        <path d="M17 24l-6-5M17 42l-6 5M37 22l5-6M37 44l5 6" stroke="${c}" stroke-width="4" stroke-linecap="round"/>
-        <path d="M25 26l12 14M38 26 25 40" stroke="${c}" stroke-width="3"/>
+        <ellipse
+          cx="30"
+          cy="33"
+          rx="18"
+          ry="14"
+          fill="none"
+          stroke="${c}"
+          stroke-width="4"
+        />
+        <circle
+          cx="52"
+          cy="32"
+          r="6"
+          fill="none"
+          stroke="${c}"
+          stroke-width="4"
+        />
+        <path
+          d="M18 23 9 17M17 43 8 49M38 21l7-8M39 44l7 8"
+          stroke="${c}"
+          stroke-width="4"
+          stroke-linecap="round"
+        />
+        <path
+          d="M20 33h20M30 19v28M20 24l20 18M40 24 20 18"
+          stroke="${c}"
+          stroke-width="2.5"
+          opacity=".8"
+        />
+        <circle cx="54" cy="30" r="1.5" fill="${c}"/>
       </svg>
     `;
   }
@@ -2105,18 +2307,51 @@ function avatarSvg(name){
   if(name==="bird"){
     return `
       <svg ${common}>
-        <path d="M14 41c8-18 20-24 34-19-7 3-10 7-11 12 7-1 12 1 16 6-13 1-26 6-39 1Z" fill="none" stroke="${c}" stroke-width="4" stroke-linejoin="round"/>
-        <circle cx="38" cy="25" r="2.5" fill="${c}"/>
-        <path d="m47 28 10 3-10 4" fill="none" stroke="${c}" stroke-width="3"/>
+        <path
+          d="M13 43c6-18 17-28 32-24 6 2 10 6 11 12l-10-2c0 14-8 24-22 24-7 0-12-4-11-10Z"
+          fill="none"
+          stroke="${c}"
+          stroke-width="4"
+          stroke-linejoin="round"
+        />
+        <path
+          d="m54 29 8 5-9 4M24 39c6-5 12-6 18-3-3 7-8 11-15 12"
+          fill="none"
+          stroke="${c}"
+          stroke-width="3.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <circle cx="45" cy="25" r="2.3" fill="${c}"/>
+        <path
+          d="M30 53v7M24 60h12"
+          stroke="${c}"
+          stroke-width="3"
+          stroke-linecap="round"
+        />
       </svg>
     `;
   }
 
   return `
     <svg ${common}>
-      <path d="M18 18c0-7 28-7 28 0v21c0 10-7 17-14 17s-14-7-14-17Z" fill="none" stroke="${c}" stroke-width="4"/>
-      <path d="M18 26h28M24 26v16M32 26v16M40 26v16" stroke="${c}" stroke-width="4"/>
-      <path d="M14 18h36" stroke="${c}" stroke-width="4" stroke-linecap="round"/>
+      <circle
+        cx="32"
+        cy="32"
+        r="22"
+        fill="none"
+        stroke="${c}"
+        stroke-width="4"
+      />
+      <path
+        d="M20 29c5-8 19-8 24 0M22 43c6 6 14 6 20 0"
+        fill="none"
+        stroke="${c}"
+        stroke-width="4"
+        stroke-linecap="round"
+      />
+      <circle cx="25" cy="31" r="2.5" fill="${c}"/>
+      <circle cx="39" cy="31" r="2.5" fill="${c}"/>
     </svg>
   `;
 }
@@ -2126,40 +2361,94 @@ function renderAvatarGrid(
   selected,
   onSelect
 ){
+
   const box=
     document.getElementById(id);
 
   box.innerHTML="";
 
-  avatarNames.forEach(name=>{
-    const b=
-      document.createElement(
-        "button"
+  avatarNames.forEach(
+    name=>{
+
+      const button=
+        document.createElement(
+          "button"
+        );
+
+      button.type=
+        "button";
+
+      button.className=
+        "avatar-choice"+
+        (
+          name===selected
+            ?" selected"
+            :""
+        );
+
+      button.innerHTML=
+        avatarSvg(name)+
+        `<span class="avatar-label">${name[0].toUpperCase()+name.slice(1)}</span>`;
+
+      button.onclick=
+        ()=>{
+          onSelect(name);
+        };
+
+      box.appendChild(
+        button
       );
+    }
+  );
+}
 
-    b.type="button";
+function showToast(
+  message="Saved"
+){
 
-    b.className=
-      "avatar-choice"+
-      (
-        name===selected
-          ?" selected"
-          :""
+  const toast=
+    document.getElementById(
+      "appToast"
+    );
+
+  if(!toast){
+    return;
+  }
+
+  toast.textContent=
+    message;
+
+  toast.classList.remove(
+    "show"
+  );
+
+  requestAnimationFrame(
+    ()=>{
+      toast.classList.add(
+        "show"
       );
+    }
+  );
 
-    b.innerHTML=
-      avatarSvg(name)+
-      `<span class="avatar-label">${name[0].toUpperCase()+name.slice(1)}</span>`;
+  if(toastTimer){
+    clearTimeout(
+      toastTimer
+    );
+  }
 
-    b.onclick=()=>{
-      onSelect(name);
-    };
-
-    box.appendChild(b);
-  });
+  toastTimer=
+    setTimeout(
+      ()=>{
+        toast.classList.remove(
+          "show"
+        );
+      },
+      1800
+    );
 }
 
 function renderDateStrip(){
+
   const now=
     new Date();
 
@@ -2184,6 +2473,7 @@ function renderDateStrip(){
   box.innerHTML="";
 
   for(let i=0;i<7;i++){
+
     const d=
       new Date(ws);
 
@@ -2213,6 +2503,7 @@ function renderDateStrip(){
 }
 
 function showMain(){
+
   hideScreens();
 
   document
@@ -2237,23 +2528,22 @@ function showMain(){
 }
 
 function panelMetrics(){
-  const p=
+
+  const panel=
     document.querySelector(
       ".workspace-panel"
     );
 
-  if(!p){
+  if(!panel){
     return{
-      width:
-        window.innerWidth*.88,
+      width:window.innerWidth*.88,
       gap:12,
-      center:
-        window.innerWidth*.06
+      center:window.innerWidth*.06
     };
   }
 
   const width=
-    p.getBoundingClientRect()
+    panel.getBoundingClientRect()
       .width;
 
   const gap=12;
@@ -2274,34 +2564,38 @@ function panelMetrics(){
 }
 
 function showPanel(
-  i,
+  index,
   animate=true
 ){
-  i=
+
+  index=
     Math.max(
       0,
       Math.min(
         panels.length-1,
-        i
+        index
       )
     );
 
-  activePanelIndex=i;
+  activePanelIndex=
+    index;
 
   if(
     window.innerWidth<=900
   ){
+
     const track=
       document.getElementById(
         "mobileTrack"
       );
 
-    const m=
+    const metrics=
       panelMetrics();
 
     const x=
-      m.center-
-      i*m.step;
+      metrics.center-
+      index*
+      metrics.step;
 
     track.style.transition=
       animate
@@ -2312,6 +2606,7 @@ function showPanel(
       `translate3d(${x}px,0,0)`;
   }
   else{
+
     document
       .getElementById(
         "mobileTrack"
@@ -2323,6 +2618,7 @@ function showPanel(
 }
 
 function bindFluidSwipe(){
+
   const area=
     document.getElementById(
       "mainWorkspace"
@@ -2333,47 +2629,50 @@ function bindFluidSwipe(){
       "mobileTrack"
     );
 
-  let sx=0;
-  let sy=0;
+  let startX=0;
+  let startY=0;
   let lastX=0;
-  let lastT=0;
+  let lastTime=0;
+
   let velocity=0;
   let baseX=0;
+
   let axis=null;
-  let drag=false;
+  let dragging=false;
 
   area.addEventListener(
     "touchstart",
-    e=>{
+    event=>{
+
       if(
         window.innerWidth>900 ||
-        e.touches.length!==1
+        event.touches.length!==1
       ){
         return;
       }
 
-      drag=true;
+      dragging=true;
       axis=null;
 
-      sx=
+      startX=
       lastX=
-        e.touches[0]
+        event.touches[0]
           .clientX;
 
-      sy=
-        e.touches[0]
+      startY=
+        event.touches[0]
           .clientY;
 
-      lastT=
+      lastTime=
         performance.now();
 
-      const m=
+      const metrics=
         panelMetrics();
 
       baseX=
-        m.center-
+        metrics.center-
         activePanelIndex*
-        m.step;
+        metrics.step;
 
       track.style.transition=
         "none";
@@ -2385,27 +2684,28 @@ function bindFluidSwipe(){
 
   area.addEventListener(
     "touchmove",
-    e=>{
+    event=>{
+
       if(
-        !drag ||
+        !dragging ||
         window.innerWidth>900
       ){
         return;
       }
 
       const x=
-        e.touches[0]
+        event.touches[0]
           .clientX;
 
       const y=
-        e.touches[0]
+        event.touches[0]
           .clientY;
 
       const dx=
-        x-sx;
+        x-startX;
 
       const dy=
-        y-sy;
+        y-startY;
 
       if(
         !axis &&
@@ -2425,7 +2725,7 @@ function bindFluidSwipe(){
         return;
       }
 
-      e.preventDefault();
+      event.preventDefault();
 
       const now=
         performance.now();
@@ -2436,46 +2736,46 @@ function bindFluidSwipe(){
         )/
         Math.max(
           1,
-          now-lastT
+          now-lastTime
         );
 
       lastX=x;
-      lastT=now;
+      lastTime=now;
 
-      const m=
+      const metrics=
         panelMetrics();
 
       const min=
-        m.center-
+        metrics.center-
         (
           panels.length-1
         )*
-        m.step;
+        metrics.step;
 
       const max=
-        m.center;
+        metrics.center;
 
-      let pos=
+      let position=
         baseX+dx;
 
-      if(pos>max){
-        pos=
+      if(position>max){
+        position=
           max+
           (
-            pos-max
+            position-max
           )*.22;
       }
 
-      if(pos<min){
-        pos=
+      if(position<min){
+        position=
           min+
           (
-            pos-min
+            position-min
           )*.22;
       }
 
       track.style.transform=
-        `translate3d(${pos}px,0,0)`;
+        `translate3d(${position}px,0,0)`;
     },
     {
       passive:false
@@ -2484,15 +2784,16 @@ function bindFluidSwipe(){
 
   area.addEventListener(
     "touchend",
-    e=>{
+    event=>{
+
       if(
-        !drag ||
+        !dragging ||
         window.innerWidth>900
       ){
         return;
       }
 
-      drag=false;
+      dragging=false;
 
       if(axis!=="x"){
         showPanel(
@@ -2504,10 +2805,11 @@ function bindFluidSwipe(){
       }
 
       const dx=
-        e.changedTouches[0]
-          .clientX-sx;
+        event.changedTouches[0]
+          .clientX-
+        startX;
 
-      const m=
+      const metrics=
         panelMetrics();
 
       let target=
@@ -2515,7 +2817,7 @@ function bindFluidSwipe(){
 
       if(
         Math.abs(dx)>
-        m.width*.23 ||
+        metrics.width*.23 ||
         Math.abs(velocity)>.38
       ){
         target+=
@@ -2537,7 +2839,7 @@ function bindFluidSwipe(){
   area.addEventListener(
     "touchcancel",
     ()=>{
-      drag=false;
+      dragging=false;
 
       showPanel(
         activePanelIndex,
@@ -2551,21 +2853,22 @@ function bindFluidSwipe(){
 }
 
 async function login(){
-  const err=
+
+  const errorBox=
     document.getElementById(
       "loginError"
     );
 
-  const msg=
+  const messageBox=
     document.getElementById(
       "loginMessage"
     );
 
-  err.classList.add(
+  errorBox.classList.add(
     "hidden"
   );
 
-  msg.classList.add(
+  messageBox.classList.add(
     "hidden"
   );
 
@@ -2585,10 +2888,11 @@ async function login(){
       .value;
 
   if(!email||!password){
-    err.textContent=
+
+    errorBox.textContent=
       "Enter your email and password.";
 
-    err.classList.remove(
+    errorBox.classList.remove(
       "hidden"
     );
 
@@ -2604,10 +2908,11 @@ async function login(){
       });
 
   if(error){
-    err.textContent=
+
+    errorBox.textContent=
       error.message;
 
-    err.classList.remove(
+    errorBox.classList.remove(
       "hidden"
     );
 
@@ -2621,6 +2926,7 @@ async function login(){
 }
 
 async function startApp(){
+
   hideScreens();
 
   document
@@ -2645,6 +2951,7 @@ async function startApp(){
 }
 
 async function loadHousehold(){
+
   const {data,error}=
     await supabaseClient
       .from(
@@ -2681,6 +2988,7 @@ async function loadHousehold(){
 }
 
 async function loadProfiles(){
+
   const {data,error}=
     await supabaseClient
       .from(
@@ -2708,6 +3016,7 @@ async function loadProfiles(){
 }
 
 async function renderProfiles(){
+
   const list=
     document.getElementById(
       "profileList"
@@ -2717,51 +3026,59 @@ async function renderProfiles(){
 
   (
     await loadProfiles()
-  ).forEach(p=>{
-    const row=
-      document.createElement(
-        "div"
+  ).forEach(
+    profile=>{
+
+      const row=
+        document.createElement(
+          "div"
+        );
+
+      row.className=
+        "profile-row";
+
+      const avatar=
+        document.createElement(
+          "div"
+        );
+
+      avatar.className=
+        "profile-avatar";
+
+      avatar.innerHTML=
+        avatarSvg(
+          profile.avatar||
+          "knight"
+        );
+
+      const button=
+        document.createElement(
+          "button"
+        );
+
+      button.className=
+        "primary-button profile-button";
+
+      button.textContent=
+        profile.display_name;
+
+      button.onclick=
+        ()=>{
+          selectProfile(
+            profile
+          );
+        };
+
+      row.append(
+        avatar,
+        button
       );
 
-    row.className=
-      "profile-row";
-
-    const av=
-      document.createElement(
-        "div"
+      list.appendChild(
+        row
       );
-
-    av.className=
-      "profile-avatar";
-
-    av.innerHTML=
-      avatarSvg(
-        p.avatar||
-        "knight"
-      );
-
-    const b=
-      document.createElement(
-        "button"
-      );
-
-    b.className=
-      "primary-button profile-button";
-
-    b.textContent=
-      p.display_name;
-
-    b.onclick=()=>{
-      selectProfile(p);
-    };
-
-    row.append(
-      av,
-      b
-    );
-
-    list.appendChild(row);
-  });
+    }
+  );
 
   document
     .getElementById(
@@ -2792,8 +3109,10 @@ async function renderProfiles(){
     .add("hidden");
 }
 
-function selectProfile(p){
-  currentProfile=p;
+function selectProfile(profile){
+
+  currentProfile=
+    profile;
 
   document
     .getElementById(
@@ -2819,7 +3138,7 @@ function selectProfile(p){
   document.getElementById(
     "pinProfileName"
   ).textContent=
-    p.display_name;
+    profile.display_name;
 
   document.getElementById(
     "profilePin"
@@ -2838,6 +3157,7 @@ function selectProfile(p){
 }
 
 async function saveProfile(){
+
   const name=
     document
       .getElementById(
@@ -2853,12 +3173,12 @@ async function saveProfile(){
       )
       .value;
 
-  const err=
+  const errorBox=
     document.getElementById(
       "profileError"
     );
 
-  err.classList.add(
+  errorBox.classList.add(
     "hidden"
   );
 
@@ -2866,10 +3186,11 @@ async function saveProfile(){
     !name ||
     !/^[0-9]{4}$/.test(pin)
   ){
-    err.textContent=
+
+    errorBox.textContent=
       "Enter a profile name and exactly four PIN digits.";
 
-    err.classList.remove(
+    errorBox.classList.remove(
       "hidden"
     );
 
@@ -2882,18 +3203,21 @@ async function saveProfile(){
       {
         p_household_id:
           householdId,
+
         p_display_name:
           name,
+
         p_pin:
           pin
       }
     );
 
   if(error){
-    err.textContent=
+
+    errorBox.textContent=
       error.message;
 
-    err.classList.remove(
+    errorBox.classList.remove(
       "hidden"
     );
 
@@ -2907,12 +3231,13 @@ async function saveProfile(){
     [...profiles]
       .reverse()
       .find(
-        p=>
-          p.display_name===
+        profile=>
+          profile.display_name===
           name
       );
 
   if(created){
+
     const {
       error:settingsError
     }=
@@ -2921,14 +3246,21 @@ async function saveProfile(){
         {
           p_profile_id:
             created.id,
+
           p_avatar:
             selectedAvatar,
+
           p_calculation_mode:
             "hard",
+
           p_font_size:
             16,
+
           p_font_family:
-            "system"
+            "system",
+
+          p_theme:
+            "cedar"
         }
       );
 
@@ -2947,7 +3279,9 @@ async function saveProfile(){
       font_size:
         16,
       font_family:
-        "system"
+        "system",
+      theme:
+        "cedar"
     };
 
     document.getElementById(
@@ -2957,6 +3291,10 @@ async function saveProfile(){
     document.getElementById(
       "newProfilePin"
     ).value="";
+
+    showToast(
+      "Profile created"
+    );
 
     selectProfile(
       currentProfile
@@ -2977,17 +3315,18 @@ async function saveProfile(){
 }
 
 async function unlockProfile(){
+
   const pin=
     document.getElementById(
       "profilePin"
     ).value;
 
-  const err=
+  const errorBox=
     document.getElementById(
       "pinError"
     );
 
-  err.classList.add(
+  errorBox.classList.add(
     "hidden"
   );
 
@@ -2997,19 +3336,22 @@ async function unlockProfile(){
       {
         p_profile_id:
           currentProfile.id,
+
         p_pin:
           pin,
+
         p_session_minutes:
           1440
       }
     );
 
   if(error){
-    err.textContent=
+
+    errorBox.textContent=
       error.message||
       "Incorrect PIN.";
 
-    err.classList.remove(
+    errorBox.classList.remove(
       "hidden"
     );
 
@@ -3030,6 +3372,7 @@ async function unlockProfile(){
 }
 
 async function restoreProfileSession(){
+
   const token=
     localStorage.getItem(
       "profileSessionToken"
@@ -3061,11 +3404,13 @@ async function restoreProfileSession(){
   }
 
   const {
-    data:p,
+    data:profile,
     error:profileError
   }=
     await supabaseClient
-      .from("profiles")
+      .from(
+        "profiles"
+      )
       .select("*")
       .eq(
         "id",
@@ -3077,7 +3422,8 @@ async function restoreProfileSession(){
     return false;
   }
 
-  currentProfile=p;
+  currentProfile=
+    profile;
 
   await enterProfile();
 
@@ -3085,9 +3431,12 @@ async function restoreProfileSession(){
 }
 
 async function loadProfileSettings(){
+
   const {data,error}=
     await supabaseClient
-      .from("profiles")
+      .from(
+        "profiles"
+      )
       .select("*")
       .eq(
         "id",
@@ -3099,7 +3448,11 @@ async function loadProfileSettings(){
     throw error;
   }
 
-  currentProfile=data;
+  currentProfile=
+    data;
+
+  profileMode=
+    "hard";
 
   selectedSettingsAvatar=
     data.avatar||
@@ -3107,10 +3460,7 @@ async function loadProfileSettings(){
 
   selectedTheme=
     data.theme||
-    localStorage.getItem(
-      "budgetTheme"
-    )||
-    "sandy";
+    "cedar";
 
   selectedFont=
     data.font_family||
@@ -3126,6 +3476,7 @@ async function loadProfileSettings(){
 }
 
 async function enterProfile(){
+
   await loadProfileSettings();
 
   showMain();
@@ -3144,6 +3495,7 @@ async function enterProfile(){
 }
 
 async function logout(){
+
   localStorage.removeItem(
     "profileSessionToken"
   );
@@ -3171,7 +3523,8 @@ async function logout(){
 }
 
 async function loadHomeBudget(){
-  const bm=
+
+  const budgetMonth=
     dateOnly(
       budgetMonthForWeek(
         new Date()
@@ -3190,7 +3543,7 @@ async function loadHomeBudget(){
       )
       .eq(
         "budget_month",
-        bm
+        budgetMonth
       )
       .maybeSingle();
 
@@ -3205,7 +3558,8 @@ async function loadHomeBudget(){
 }
 
 async function loadPreparedBudget(){
-  const bm=
+
+  const budgetMonth=
     dateOnly(
       preparedBudgetMonth()
     );
@@ -3222,7 +3576,7 @@ async function loadPreparedBudget(){
       )
       .eq(
         "budget_month",
-        bm
+        budgetMonth
       )
       .maybeSingle();
 
@@ -3237,23 +3591,24 @@ async function loadPreparedBudget(){
 }
 
 async function openBudgetSetup(){
+
   await loadPreparedBudget();
 
-  const bm=
+  const budgetMonth=
     preparedBudgetMonth();
 
-  const pm=
+  const priorMonth=
     previousMonth();
 
   const weeks=
     getBudgetWeekCount(
-      bm
+      budgetMonth
     );
 
   document.getElementById(
     "budgetSetupTitle"
   ).textContent=
-    `Prepare Your ${bm.toLocaleDateString("en-US",{month:"long",year:"numeric"})} Budget`;
+    `Prepare Your ${budgetMonth.toLocaleDateString("en-US",{month:"long",year:"numeric"})} Budget`;
 
   document.getElementById(
     "budgetSetupInstructions"
@@ -3263,7 +3618,7 @@ async function openBudgetSetup(){
   document.getElementById(
     "incomePeriodLabel"
   ).textContent=
-    `Income received during ${pm.toLocaleDateString("en-US",{month:"long",year:"numeric"})}`;
+    `Income received during ${priorMonth.toLocaleDateString("en-US",{month:"long",year:"numeric"})}`;
 
   document.getElementById(
     "calculationModeNote"
@@ -3300,17 +3655,19 @@ async function openBudgetSetup(){
     )
   );
 
-  await Promise.all([
-    loadIncomeSources(),
-    loadMonthlyBills(),
-    loadWeeklyBills(),
-    renderProfileAllocations()
-  ]);
+  await loadIncomeSources();
+  await loadMonthlyBills();
+  await loadWeeklyBills();
+
+  updateBudgetCalculation();
+
+  await renderProfileAllocations();
 
   updateBudgetCalculation();
 }
 
 async function loadIncomeSources(){
+
   const {data,error}=
     await supabaseClient
       .from(
@@ -3343,14 +3700,14 @@ async function loadIncomeSources(){
   box.innerHTML="";
 
   (data||[]).forEach(
-    x=>
+    item=>
       box.appendChild(
         savedMoneyRow(
           "income",
-          x.id,
-          x.name,
+          item.id,
+          item.name,
           Number(
-            x.amount
+            item.amount
           )||0,
           false
         )
@@ -3363,6 +3720,7 @@ async function loadIncomeSources(){
 }
 
 async function loadMonthlyBills(){
+
   const {data,error}=
     await supabaseClient
       .from(
@@ -3395,15 +3753,15 @@ async function loadMonthlyBills(){
   box.innerHTML="";
 
   (data||[]).forEach(
-    x=>
+    item=>
       box.appendChild(
         savedMoneyRow(
           "monthlyBill",
-          x.id,
-          x.name,
+          item.id,
+          item.name,
           Math.abs(
             Number(
-              x.amount
+              item.amount
             )||0
           ),
           true
@@ -3417,6 +3775,7 @@ async function loadMonthlyBills(){
 }
 
 async function loadWeeklyBills(){
+
   const {data,error}=
     await supabaseClient
       .from(
@@ -3449,15 +3808,15 @@ async function loadWeeklyBills(){
   box.innerHTML="";
 
   (data||[]).forEach(
-    x=>
+    item=>
       box.appendChild(
         savedMoneyRow(
           "weeklyBill",
-          x.id,
-          x.name,
+          item.id,
+          item.name,
           Math.abs(
             Number(
-              x.amount
+              item.amount
             )||0
           ),
           true
@@ -3477,6 +3836,7 @@ function savedMoneyRow(
   amount,
   negative
 ){
+
   const row=
     document.createElement(
       "div"
@@ -3497,6 +3857,7 @@ function savedMoneyRow(
     </div>
 
     <div class="saved-row-actions">
+
       <button class="secondary-button small-button">
         Edit
       </button>
@@ -3504,34 +3865,41 @@ function savedMoneyRow(
       <button class="danger-button small-button">
         Delete
       </button>
+
     </div>
   `;
 
-  const [editButton,deleteButton]=
+  const [
+    editButton,
+    deleteButton
+  ]=
     row.querySelectorAll(
       "button"
     );
 
-  editButton.onclick=()=>{
-    editSavedMoney(
-      kind,
-      id,
-      name,
-      amount
-    );
-  };
+  editButton.onclick=
+    ()=>{
+      editSavedMoney(
+        kind,
+        id,
+        name,
+        amount
+      );
+    };
 
-  deleteButton.onclick=()=>{
-    deleteSavedMoney(
-      kind,
-      id
-    );
-  };
+  deleteButton.onclick=
+    ()=>{
+      deleteSavedMoney(
+        kind,
+        id
+      );
+    };
 
   return row;
 }
 
 function editorTarget(kind){
+
   return kind==="income"
     ?"newIncomeEditor"
     :kind==="monthlyBill"
@@ -3545,6 +3913,7 @@ function editSavedMoney(
   name,
   amount
 ){
+
   const target=
     document.getElementById(
       editorTarget(
@@ -3564,6 +3933,7 @@ function editSavedMoney(
 
   box.innerHTML=`
     <div class="edit-grid">
+
       <input
         class="edit-name"
         value="${escapeHtml(name)}"
@@ -3574,9 +3944,11 @@ function editSavedMoney(
         inputmode="decimal"
         value="${money(amount)}"
       >
+
     </div>
 
     <div class="edit-actions">
+
       <button class="primary-button">
         Save
       </button>
@@ -3584,6 +3956,7 @@ function editSavedMoney(
       <button class="secondary-button">
         Cancel
       </button>
+
     </div>
   `;
 
@@ -3608,22 +3981,27 @@ function editSavedMoney(
     );
   }
 
-  const [save,cancel]=
+  const [
+    saveButton,
+    cancelButton
+  ]=
     box.querySelectorAll(
       "button"
     );
 
-  save.onclick=()=>{
-    saveMoneyItem(
-      kind,
-      id,
-      box
-    );
-  };
+  saveButton.onclick=
+    ()=>{
+      saveMoneyItem(
+        kind,
+        id,
+        box
+      );
+    };
 
-  cancel.onclick=()=>{
-    target.innerHTML="";
-  };
+  cancelButton.onclick=
+    ()=>{
+      target.innerHTML="";
+    };
 
   box.scrollIntoView({
     behavior:"smooth",
@@ -3632,6 +4010,7 @@ function editSavedMoney(
 }
 
 function newMoneyEditor(kind){
+
   const target=
     document.getElementById(
       editorTarget(
@@ -3651,6 +4030,7 @@ function newMoneyEditor(kind){
 
   box.innerHTML=`
     <div class="edit-grid">
+
       <input
         class="edit-name"
         placeholder="${
@@ -3671,9 +4051,11 @@ function newMoneyEditor(kind){
             :"-$0.00"
         }"
       >
+
     </div>
 
     <div class="edit-actions">
+
       <button class="primary-button">
         Add
       </button>
@@ -3681,6 +4063,7 @@ function newMoneyEditor(kind){
       <button class="secondary-button">
         Cancel
       </button>
+
     </div>
   `;
 
@@ -3695,22 +4078,27 @@ function newMoneyEditor(kind){
     kind!=="income"
   );
 
-  const [save,cancel]=
+  const [
+    saveButton,
+    cancelButton
+  ]=
     box.querySelectorAll(
       "button"
     );
 
-  save.onclick=()=>{
-    saveMoneyItem(
-      kind,
-      null,
-      box
-    );
-  };
+  saveButton.onclick=
+    ()=>{
+      saveMoneyItem(
+        kind,
+        null,
+        box
+      );
+    };
 
-  cancel.onclick=()=>{
-    target.innerHTML="";
-  };
+  cancelButton.onclick=
+    ()=>{
+      target.innerHTML="";
+    };
 
   box.querySelector(
     ".edit-name"
@@ -3722,6 +4110,7 @@ async function saveMoneyItem(
   id,
   box
 ){
+
   const name=
     box
       .querySelector(
@@ -3755,6 +4144,7 @@ async function saveMoneyItem(
   let query;
 
   if(kind==="income"){
+
     query=
       id
         ?supabaseClient
@@ -3781,6 +4171,7 @@ async function saveMoneyItem(
           });
   }
   else if(kind==="monthlyBill"){
+
     query=
       id
         ?supabaseClient
@@ -3807,6 +4198,7 @@ async function saveMoneyItem(
           });
   }
   else{
+
     query=
       id
         ?supabaseClient
@@ -3855,12 +4247,19 @@ async function saveMoneyItem(
   }
 
   updateBudgetCalculation();
+
+  showToast(
+    id
+      ?"Changes saved"
+      :"Item added"
+  );
 }
 
 async function deleteSavedMoney(
   kind,
   id
 ){
+
   if(
     !confirm(
       "Delete this item?"
@@ -3889,6 +4288,7 @@ async function deleteSavedMoney(
     alert(
       error.message
     );
+
     return;
   }
 
@@ -3903,30 +4303,38 @@ async function deleteSavedMoney(
   }
 
   updateBudgetCalculation();
+
+  showToast(
+    "Item deleted"
+  );
 }
 
 function totalFromSavedRows(
   listId
 ){
-  let n=0;
+
+  let total=0;
 
   document
     .querySelectorAll(
       `#${listId} .saved-row-amount`
     )
-    .forEach(el=>{
-      n+=
-        Math.abs(
-          parseMoney(
-            el.textContent
-          )
-        );
-    });
+    .forEach(
+      element=>{
+        total+=
+          Math.abs(
+            parseMoney(
+              element.textContent
+            )
+          );
+      }
+    );
 
-  return n;
+  return total;
 }
 
 function updateBudgetCalculation(){
+
   const income=
     totalFromSavedRows(
       "incomeList"
@@ -4020,6 +4428,18 @@ function updateBudgetCalculation(){
   ).textContent=
     money(funPool);
 
+  if(
+    !allocationUserEdited &&
+    document
+      .querySelectorAll(
+        ".allocation-input"
+      ).length
+  ){
+    autoSplitFunPool(
+      funPool
+    );
+  }
+
   updateAllocationSummary(
     funPool
   );
@@ -4037,17 +4457,77 @@ function updateBudgetCalculation(){
   };
 }
 
+function autoSplitFunPool(pool){
+
+  const inputs=[
+    ...document.querySelectorAll(
+      ".allocation-input"
+    )
+  ];
+
+  if(!inputs.length){
+    return;
+  }
+
+  const safePool=
+    Math.max(
+      0,
+      pool
+    );
+
+  const base=
+    Math.floor(
+      (
+        safePool/
+        inputs.length
+      )*
+      100
+    )/
+    100;
+
+  let assigned=0;
+
+  inputs.forEach(
+    (input,index)=>{
+
+      const value=
+        index===
+        inputs.length-1
+          ?Math.max(
+            0,
+            Math.round(
+              (
+                safePool-
+                assigned
+              )*
+              100
+            )/
+            100
+          )
+          :base;
+
+      input.value=
+        money(value);
+
+      assigned+=
+        value;
+    }
+  );
+}
+
 async function renderProfileAllocations(){
+
   const profiles=
     await loadProfiles();
 
-  const bm=
+  const budgetMonth=
     dateOnly(
       preparedBudgetMonth()
     );
 
   const {
-    data:allocations
+    data:allocations,
+    error
   }=
     await supabaseClient
       .from(
@@ -4062,20 +4542,31 @@ async function renderProfileAllocations(){
       )
       .eq(
         "budget_month",
-        bm
+        budgetMonth
       );
+
+  if(error){
+    console.error(
+      error
+    );
+  }
 
   const map=
     new Map(
       (allocations||[])
         .map(
-          x=>[
-            x.profile_id,
+          item=>[
+            item.profile_id,
             Number(
-              x.weekly_fun_amount
+              item.weekly_fun_amount
             )||0
           ]
         )
+    );
+
+  allocationUserEdited=
+    Boolean(
+      (allocations||[]).length
     );
 
   const box=
@@ -4085,125 +4576,125 @@ async function renderProfileAllocations(){
 
   box.innerHTML="";
 
-  profiles.forEach(p=>{
-    const row=
-      document.createElement(
-        "div"
+  profiles.forEach(
+    profile=>{
+
+      const row=
+        document.createElement(
+          "div"
+        );
+
+      row.className=
+        "allocation-row";
+
+      row.innerHTML=`
+        <div class="allocation-name">
+          ${escapeHtml(profile.display_name)}
+        </div>
+
+        <input
+          class="allocation-input money-input"
+          inputmode="decimal"
+          data-profile-id="${profile.id}"
+          value="${map.has(profile.id)?money(map.get(profile.id)):""}"
+          placeholder="$0.00"
+        >
+      `;
+
+      box.appendChild(
+        row
       );
 
-    row.className=
-      "allocation-row";
+      const input=
+        row.querySelector(
+          "input"
+        );
 
-    row.innerHTML=`
-      <div class="allocation-name">
-        ${escapeHtml(p.display_name)}
-      </div>
+      bindMoneyInput(
+        input
+      );
 
-      <input
-        class="allocation-input money-input"
-        inputmode="decimal"
-        data-profile-id="${p.id}"
-        value="${map.has(p.id)?money(map.get(p.id)):""}"
-        placeholder="$0.00"
-      >
-    `;
+      input.addEventListener(
+        "input",
+        event=>{
 
-    box.appendChild(
-      row
-    );
+          if(event.isTrusted){
+            allocationUserEdited=
+              true;
+          }
 
-    bindMoneyInput(
-      row.querySelector(
-        "input"
-      )
-    );
-
-    row.querySelector(
-      "input"
-    ).addEventListener(
-      "input",
-      updateBudgetCalculation
-    );
-  });
+          updateBudgetCalculation();
+        }
+      );
+    }
+  );
 
   if(
-    !(allocations||[]).length &&
-    profiles.length
+    !(allocations||[]).length
   ){
-    requestAnimationFrame(
-      ()=>{
-        const calculation=
-          updateBudgetCalculation();
 
-        const each=
-          Math.max(
-            0,
-            calculation.funPool
-          )/
-          profiles.length;
+    allocationUserEdited=
+      false;
 
-        document
-          .querySelectorAll(
-            ".allocation-input"
-          )
-          .forEach(
-            el=>{
-              el.value=
-                money(each);
-            }
-          );
+    const calculation=
+      updateBudgetCalculation();
 
-        updateAllocationSummary(
-          calculation.funPool
-        );
-      }
+    autoSplitFunPool(
+      calculation.funPool
+    );
+
+    updateAllocationSummary(
+      calculation.funPool
     );
   }
 }
 
 function allocationTotal(){
-  let n=0;
+
+  let total=0;
 
   document
     .querySelectorAll(
       ".allocation-input"
     )
-    .forEach(el=>{
-      n+=
-        Math.abs(
-          parseMoney(
-            el.value
-          )
-        );
-    });
+    .forEach(
+      input=>{
+        total+=
+          Math.abs(
+            parseMoney(
+              input.value
+            )
+          );
+      }
+    );
 
-  return n;
+  return total;
 }
 
-function updateAllocationSummary(
-  pool
-){
+function updateAllocationSummary(pool){
+
   const assigned=
     allocationTotal();
 
   const remaining=
     pool-assigned;
 
-  const el=
+  const element=
     document.getElementById(
       "allocationSummary"
     );
 
-  el.textContent=
+  element.textContent=
     `Assigned: ${money(assigned)} · Unassigned: ${money(remaining)}`;
 
-  el.classList.toggle(
+  element.classList.toggle(
     "negative",
     remaining<-.005
   );
 }
 
 async function saveBudget(){
+
   const calculation=
     updateBudgetCalculation();
 
@@ -4231,7 +4722,7 @@ async function saveBudget(){
     return;
   }
 
-  const bm=
+  const budgetMonth=
     dateOnly(
       preparedBudgetMonth()
     );
@@ -4241,7 +4732,7 @@ async function saveBudget(){
       householdId,
 
     budget_month:
-      bm,
+      budgetMonth,
 
     weekly_needs:
       calculation.needs,
@@ -4290,32 +4781,35 @@ async function saveBudget(){
   preparedBudgetPlan=
     data;
 
-  const rows=
-    [
-      ...document.querySelectorAll(
-        ".allocation-input"
-      )
-    ].map(
-      el=>({
-        household_id:
-          householdId,
+  const rows=[
+    ...document.querySelectorAll(
+      ".allocation-input"
+    )
+  ].map(
+    input=>({
+      budget_id:
+        data.id,
 
-        budget_month:
-          bm,
+      household_id:
+        householdId,
 
-        profile_id:
-          el.dataset.profileId,
+      budget_month:
+        budgetMonth,
 
-        weekly_fun_amount:
-          Math.abs(
-            parseMoney(
-              el.value
-            )
+      profile_id:
+        input.dataset.profileId,
+
+      weekly_fun_amount:
+        Math.abs(
+          parseMoney(
+            input.value
           )
-      })
-    );
+        )
+    })
+  );
 
   if(rows.length){
+
     const {
       error:allocationError
     }=
@@ -4341,36 +4835,41 @@ async function saveBudget(){
     }
   }
 
-  const msg=
+  const message=
     document.getElementById(
       "budgetMessage"
     );
 
-  msg.textContent=
+  message.textContent=
     "Budget saved.";
 
-  msg.classList.remove(
+  message.classList.remove(
     "hidden"
   );
 
   setTimeout(
     ()=>{
-      msg.classList.add(
+      message.classList.add(
         "hidden"
       );
     },
     2600
   );
 
+  showToast(
+    "Budget saved"
+  );
+
   await updateAnalytics();
 }
 
 async function ensureCurrentWeekDeposits(){
+
   if(!homeBudgetPlan){
     return;
   }
 
-  const ws=
+  const week=
     dateOnly(
       weekStart(
         new Date()
@@ -4390,7 +4889,7 @@ async function ensureCurrentWeekDeposits(){
             householdId,
 
           week_start:
-            ws,
+            week,
 
           fund:
             "needs",
@@ -4415,7 +4914,7 @@ async function ensureCurrentWeekDeposits(){
     );
   }
 
-  const bm=
+  const budgetMonth=
     dateOnly(
       budgetMonthForWeek(
         new Date()
@@ -4439,7 +4938,7 @@ async function ensureCurrentWeekDeposits(){
       )
       .eq(
         "budget_month",
-        bm
+        budgetMonth
       );
 
   if(allocationError){
@@ -4451,6 +4950,7 @@ async function ensureCurrentWeekDeposits(){
   if(
     !allocations?.length
   ){
+
     const profiles=
       await loadProfiles();
 
@@ -4475,6 +4975,7 @@ async function ensureCurrentWeekDeposits(){
   }
 
   if(allocations.length){
+
     const rows=
       allocations.map(
         allocation=>({
@@ -4485,7 +4986,7 @@ async function ensureCurrentWeekDeposits(){
             allocation.profile_id,
 
           week_start:
-            ws,
+            week,
 
           amount:
             Number(
@@ -4521,6 +5022,7 @@ async function ensureCurrentWeekDeposits(){
 }
 
 async function calculateBalances(){
+
   await loadHomeBudget();
 
   if(homeBudgetPlan){
@@ -4534,7 +5036,9 @@ async function calculateBalances(){
       .from(
         "allowance_deposits"
       )
-      .select("amount")
+      .select(
+        "amount"
+      )
       .eq(
         "household_id",
         householdId
@@ -4551,7 +5055,9 @@ async function calculateBalances(){
       .from(
         "profile_fun_deposits"
       )
-      .select("amount")
+      .select(
+        "amount"
+      )
       .eq(
         "household_id",
         householdId
@@ -4568,7 +5074,9 @@ async function calculateBalances(){
       .from(
         "expenses"
       )
-      .select("amount")
+      .select(
+        "amount"
+      )
       .eq(
         "household_id",
         householdId
@@ -4585,7 +5093,9 @@ async function calculateBalances(){
       .from(
         "expenses"
       )
-      .select("amount")
+      .select(
+        "amount"
+      )
       .eq(
         "household_id",
         householdId
@@ -4603,10 +5113,10 @@ async function calculateBalances(){
     (
       needsDeposits||[]
     ).reduce(
-      (sum,x)=>
+      (sum,item)=>
         sum+
         Number(
-          x.amount||
+          item.amount||
           0
         ),
       0
@@ -4614,10 +5124,10 @@ async function calculateBalances(){
     (
       needsExpenses||[]
     ).reduce(
-      (sum,x)=>
+      (sum,item)=>
         sum+
         Number(
-          x.amount||
+          item.amount||
           0
         ),
       0
@@ -4627,10 +5137,10 @@ async function calculateBalances(){
     (
       funDeposits||[]
     ).reduce(
-      (sum,x)=>
+      (sum,item)=>
         sum+
         Number(
-          x.amount||
+          item.amount||
           0
         ),
       0
@@ -4638,10 +5148,10 @@ async function calculateBalances(){
     (
       funExpenses||[]
     ).reduce(
-      (sum,x)=>
+      (sum,item)=>
         sum+
         Number(
-          x.amount||
+          item.amount||
           0
         ),
       0
@@ -4677,6 +5187,7 @@ async function calculateBalances(){
 }
 
 async function loadHomeExpenseLists(){
+
   const start=
     weekStart(
       new Date()
@@ -4686,7 +5197,9 @@ async function loadHomeExpenseLists(){
     data:needs
   }=
     await supabaseClient
-      .from("expenses")
+      .from(
+        "expenses"
+      )
       .select(
         "description,amount,spent_at"
       )
@@ -4714,7 +5227,9 @@ async function loadHomeExpenseLists(){
     data:fun
   }=
     await supabaseClient
-      .from("expenses")
+      .from(
+        "expenses"
+      )
       .select(
         "description,amount,spent_at"
       )
@@ -4757,6 +5272,7 @@ function renderHomeExpenseList(
   id,
   items
 ){
+
   const box=
     document.getElementById(
       id
@@ -4765,35 +5281,39 @@ function renderHomeExpenseList(
   box.innerHTML="";
 
   if(!items?.length){
+
     box.innerHTML=
       '<div class="empty-home-expenses">No expenses this week.</div>';
 
     return;
   }
 
-  items.forEach(x=>{
-    const row=
-      document.createElement(
-        "div"
+  items.forEach(
+    item=>{
+
+      const row=
+        document.createElement(
+          "div"
+        );
+
+      row.className=
+        "home-expense";
+
+      row.innerHTML=`
+        <span class="home-expense-name">
+          ${escapeHtml(item.description)}
+        </span>
+
+        <span class="home-expense-amount">
+          -${money(item.amount)}
+        </span>
+      `;
+
+      box.appendChild(
+        row
       );
-
-    row.className=
-      "home-expense";
-
-    row.innerHTML=`
-      <span class="home-expense-name">
-        ${escapeHtml(x.description)}
-      </span>
-
-      <span class="home-expense-amount">
-        -${money(x.amount)}
-      </span>
-    `;
-
-    box.appendChild(
-      row
-    );
-  });
+    }
+  );
 }
 
 function openExpenseForm(
@@ -4801,6 +5321,7 @@ function openExpenseForm(
   expense=null,
   fromHome=false
 ){
+
   editingExpenseId=
     expense?.id||
     null;
@@ -4900,6 +5421,7 @@ function openExpenseForm(
 }
 
 function closeExpenseForm(){
+
   editingExpenseId=null;
 
   document
@@ -4911,10 +5433,17 @@ function closeExpenseForm(){
 
   document.getElementById(
     "expenseFund"
-  ).disabled=false;
+  ).disabled=
+    false;
 }
 
 async function saveExpense(){
+
+  const wasEditing=
+    Boolean(
+      editingExpenseId
+    );
+
   const description=
     document
       .getElementById(
@@ -4988,23 +5517,34 @@ async function saveExpense(){
   let result;
 
   if(editingExpenseId){
+
     result=
       await supabaseClient
-        .from("expenses")
-        .update(payload)
+        .from(
+          "expenses"
+        )
+        .update(
+          payload
+        )
         .eq(
           "id",
           editingExpenseId
         );
   }
   else{
+
     result=
       await supabaseClient
-        .from("expenses")
-        .insert(payload);
+        .from(
+          "expenses"
+        )
+        .insert(
+          payload
+        );
   }
 
   if(result.error){
+
     alert(
       "Could not save expense: "+
       result.error.message
@@ -5018,12 +5558,21 @@ async function saveExpense(){
   await loadExpenses();
   await calculateBalances();
   await updateAnalytics();
+
+  showToast(
+    wasEditing
+      ?"Expense updated"
+      :"Expense saved"
+  );
 }
 
 async function editExpense(id){
+
   const {data,error}=
     await supabaseClient
-      .from("expenses")
+      .from(
+        "expenses"
+      )
       .select("*")
       .eq(
         "id",
@@ -5032,6 +5581,7 @@ async function editExpense(id){
       .single();
 
   if(error){
+
     alert(
       error.message
     );
@@ -5047,6 +5597,7 @@ async function editExpense(id){
 }
 
 async function deleteExpense(id){
+
   if(
     !confirm(
       "Delete this expense?"
@@ -5057,7 +5608,9 @@ async function deleteExpense(id){
 
   const {error}=
     await supabaseClient
-      .from("expenses")
+      .from(
+        "expenses"
+      )
       .delete()
       .eq(
         "id",
@@ -5065,6 +5618,7 @@ async function deleteExpense(id){
       );
 
   if(error){
+
     alert(
       error.message
     );
@@ -5075,12 +5629,19 @@ async function deleteExpense(id){
   await loadExpenses();
   await calculateBalances();
   await updateAnalytics();
+
+  showToast(
+    "Expense deleted"
+  );
 }
 
 async function loadExpenses(){
+
   const {data,error}=
     await supabaseClient
-      .from("expenses")
+      .from(
+        "expenses"
+      )
       .select("*")
       .eq(
         "household_id",
@@ -5095,6 +5656,7 @@ async function loadExpenses(){
       .limit(200);
 
   if(error){
+
     console.error(
       error
     );
@@ -5110,137 +5672,264 @@ async function loadExpenses(){
   box.innerHTML="";
 
   if(!data?.length){
+
     box.innerHTML=
       '<p class="subtext">No expenses yet.</p>';
 
     return;
   }
 
-  data.forEach(x=>{
-    const row=
-      document.createElement(
-        "div"
+  data.forEach(
+    item=>{
+
+      const row=
+        document.createElement(
+          "div"
+        );
+
+      row.className=
+        "transaction";
+
+      row.innerHTML=`
+        <div class="transaction-top">
+
+          <div>
+
+            <div class="transaction-name">
+              ${escapeHtml(item.description)}
+            </div>
+
+            <div class="transaction-meta">
+              ${escapeHtml(item.category||"Other")} ·
+              ${item.fund==="needs"?"Needs":"Fun Money"} ·
+              ${new Date(item.spent_at).toLocaleDateString()}
+            </div>
+
+          </div>
+
+          <div class="transaction-amount">
+            -${money(item.amount)}
+          </div>
+
+        </div>
+
+        <div class="transaction-actions">
+
+          <button
+            class="secondary-button small-button"
+            onclick="editExpense('${item.id}')"
+          >
+            Edit
+          </button>
+
+          <button
+            class="danger-button small-button"
+            onclick="deleteExpense('${item.id}')"
+          >
+            Delete
+          </button>
+
+        </div>
+      `;
+
+      box.appendChild(
+        row
       );
-
-    row.className=
-      "transaction";
-
-    row.innerHTML=`
-      <div class="transaction-top">
-
-        <div>
-
-          <div class="transaction-name">
-            ${escapeHtml(x.description)}
-          </div>
-
-          <div class="transaction-meta">
-            ${escapeHtml(x.category||"Other")} ·
-            ${x.fund==="needs"?"Needs":"Fun Money"} ·
-            ${new Date(x.spent_at).toLocaleDateString()}
-          </div>
-
-        </div>
-
-        <div class="transaction-amount">
-          -${money(x.amount)}
-        </div>
-
-      </div>
-
-      <div class="transaction-actions">
-
-        <button
-          class="secondary-button small-button"
-          onclick="editExpense('${x.id}')"
-        >
-          Edit
-        </button>
-
-        <button
-          class="danger-button small-button"
-          onclick="deleteExpense('${x.id}')"
-        >
-          Delete
-        </button>
-
-      </div>
-    `;
-
-    box.appendChild(
-      row
-    );
-  });
+    }
+  );
 }
 
 async function updateAnalytics(){
+
+  const now=
+    new Date();
+
   const year=
-    new Date()
-      .getFullYear();
+    now.getFullYear();
+
+  const month=
+    now.getMonth();
 
   const {
-    data:expenses
+    data:expenses,
+    error
   }=
     await supabaseClient
-      .from("expenses")
+      .from(
+        "expenses"
+      )
       .select(
-        "fund,amount,spent_at,profile_id"
+        "fund,amount,spent_at,profile_id,category"
       )
       .eq(
         "household_id",
         householdId
       );
 
-  let needs=0;
-  let fun=0;
+  if(error){
 
-  (expenses||[]).forEach(x=>{
-    if(
-      new Date(
-        x.spent_at
-      ).getFullYear()!==year
-    ){
-      return;
-    }
+    console.error(
+      error
+    );
 
-    if(x.fund==="needs"){
-      needs+=
+    return;
+  }
+
+  let needsYear=0;
+  let funYear=0;
+
+  let needsMonth=0;
+  let funMonth=0;
+
+  const categories={};
+
+  (expenses||[]).forEach(
+    item=>{
+
+      const date=
+        new Date(
+          item.spent_at
+        );
+
+      const amount=
         Number(
-          x.amount
+          item.amount
         )||0;
+
+      const currentProfileExpense=
+        !item.profile_id ||
+        item.profile_id===
+        currentProfile.id;
+
+      if(
+        date.getFullYear()!==
+        year
+      ){
+        return;
+      }
+
+      if(item.fund==="needs"){
+
+        needsYear+=
+          amount;
+      }
+      else if(
+        item.fund==="fun" &&
+        currentProfileExpense
+      ){
+
+        funYear+=
+          amount;
+      }
+
+      if(
+        date.getMonth()===
+        month
+      ){
+
+        if(item.fund==="needs"){
+
+          needsMonth+=
+            amount;
+        }
+        else if(
+          item.fund==="fun" &&
+          currentProfileExpense
+        ){
+
+          funMonth+=
+            amount;
+        }
+
+        if(
+          item.fund==="needs" ||
+          (
+            item.fund==="fun" &&
+            currentProfileExpense
+          )
+        ){
+
+          const category=
+            item.category||
+            "Other";
+
+          categories[category]=
+            (
+              categories[category]||
+              0
+            )+
+            amount;
+        }
+      }
     }
-    else if(
-      x.profile_id===
-      currentProfile.id
-    ){
-      fun+=
-        Number(
-          x.amount
-        )||0;
-    }
-  });
+  );
 
   document.getElementById(
     "analyticsNeeds"
   ).textContent=
-    money(needs);
+    money(needsYear);
 
   document.getElementById(
     "analyticsFun"
   ).textContent=
-    money(fun);
+    money(funYear);
 
   document.getElementById(
     "analyticsTotal"
   ).textContent=
     money(
-      needs+fun
+      needsYear+
+      funYear
     );
 
-  const end=
+  document.getElementById(
+    "analyticsNeedsMonth"
+  ).textContent=
+    money(needsMonth);
+
+  document.getElementById(
+    "analyticsFunMonth"
+  ).textContent=
+    money(funMonth);
+
+  document.getElementById(
+    "analyticsThisMonth"
+  ).textContent=
+    money(
+      needsMonth+
+      funMonth
+    );
+
+  const categoryBox=
+    document.getElementById(
+      "analyticsCategories"
+    );
+
+  const entries=
+    Object.entries(
+      categories
+    )
+    .sort(
+      (a,b)=>
+        b[1]-a[1]
+    );
+
+  categoryBox.innerHTML=
+    entries.length
+      ?entries.map(
+        ([name,value])=>`
+          <div class="calc-row">
+            <span>${escapeHtml(name)}</span>
+            <strong>${money(value)}</strong>
+          </div>
+        `
+      ).join("")
+      :"No expenses this month.";
+
+  const nextYear=
     `${year+1}-01-01`;
 
-  const previousStart=
+  const previousYearStart=
     `${year-1}-01-01`;
 
   const {
@@ -5259,57 +5948,68 @@ async function updateAnalytics(){
       )
       .gte(
         "budget_month",
-        previousStart
+        previousYearStart
       )
       .lt(
         "budget_month",
-        end
+        nextYear
       );
 
-  let current=0;
-  let prior=0;
+  let currentSaved=0;
+  let priorSaved=0;
 
-  (plans||[]).forEach(p=>{
-    const d=
-      new Date(
-        String(
-          p.budget_month
-        )+
-        "T00:00:00"
-      );
+  (plans||[]).forEach(
+    plan=>{
 
-    const value=
-      (
-        Number(
-          p.weekly_savings
-        )||0
-      )*
-      getBudgetWeekCount(d);
+      const date=
+        new Date(
+          String(
+            plan.budget_month
+          )+
+          "T00:00:00"
+        );
 
-    if(
-      d.getFullYear()===
-      year
-    ){
-      current+=value;
+      const value=
+        (
+          Number(
+            plan.weekly_savings
+          )||0
+        )*
+        getBudgetWeekCount(
+          date
+        );
+
+      if(
+        date.getFullYear()===
+        year
+      ){
+        currentSaved+=
+          value;
+      }
+
+      if(
+        date.getFullYear()===
+        year-1
+      ){
+        priorSaved+=
+          value;
+      }
     }
-
-    if(
-      d.getFullYear()===
-      year-1
-    ){
-      prior+=value;
-    }
-  });
+  );
 
   document.getElementById(
     "analyticsSavedThisYear"
   ).textContent=
-    money(current);
+    money(
+      currentSaved
+    );
 
   document.getElementById(
     "analyticsSavedPriorYear"
   ).textContent=
-    money(prior);
+    money(
+      priorSaved
+    );
 
   document.getElementById(
     "analyticsPriorYearLabel"
@@ -5318,6 +6018,7 @@ async function updateAnalytics(){
 }
 
 function openSettings(){
+
   hideScreens();
 
   document
@@ -5334,16 +6035,18 @@ function openSettings(){
 }
 
 function renderSettingsSection(){
+
   [
     "settingsMenu",
     "appearanceSettings",
     "profileSettings",
     "budgetSettings"
-  ].forEach(id=>
-    document
-      .getElementById(id)
-      .classList
-      .add("hidden")
+  ].forEach(
+    id=>
+      document
+        .getElementById(id)
+        .classList
+        .add("hidden")
   );
 
   document.getElementById(
@@ -5361,6 +6064,7 @@ function renderSettingsSection(){
     settingsSection===
     "menu"
   ){
+
     title.textContent=
       "Settings";
 
@@ -5378,6 +6082,7 @@ function renderSettingsSection(){
     settingsSection===
     "appearance"
   ){
+
     title.textContent=
       "Appearance";
 
@@ -5414,6 +6119,7 @@ function renderSettingsSection(){
     settingsSection===
     "profile"
   ){
+
     title.textContent=
       "Profile";
 
@@ -5461,6 +6167,7 @@ function renderSettingsSection(){
 }
 
 function renderProfileAvatarSettings(){
+
   renderAvatarGrid(
     "settingsAvatarGrid",
     selectedSettingsAvatar,
@@ -5474,6 +6181,7 @@ function renderProfileAvatarSettings(){
 }
 
 function renderThemes(){
+
   const box=
     document.getElementById(
       "themeGrid"
@@ -5485,6 +6193,7 @@ function renderThemes(){
     themeData
   ).forEach(
     ([name,colors])=>{
+
       const button=
         document.createElement(
           "button"
@@ -5511,13 +6220,15 @@ function renderThemes(){
         </div>
       `;
 
-      button.onclick=()=>{
-        selectedTheme=name;
+      button.onclick=
+        ()=>{
+          selectedTheme=
+            name;
 
-        applyAppearance();
+          applyAppearance();
 
-        renderThemes();
-      };
+          renderThemes();
+        };
 
       box.appendChild(
         button
@@ -5527,6 +6238,7 @@ function renderThemes(){
 }
 
 function updateFontPreview(){
+
   const preview=
     document.getElementById(
       "fontPreview"
@@ -5563,9 +6275,8 @@ function updateFontPreview(){
     "px";
 }
 
-async function saveProfileSettings(
-  fields
-){
+async function saveProfileSettings(fields){
+
   const {error}=
     await supabaseClient.rpc(
       "set_profile_settings",
@@ -5596,22 +6307,22 @@ async function saveProfileSettings(
     );
 
   if(error){
+
     alert(
       "Could not save settings: "+
       error.message
     );
 
-    return;
+    return false;
   }
 
   await loadProfileSettings();
 
-  renderSettingsSection();
+  return true;
 }
 
-async function sendPasswordReset(
-  email
-){
+async function sendPasswordReset(email){
+
   const {error}=
     await supabaseClient
       .auth
@@ -5630,6 +6341,7 @@ async function sendPasswordReset(
 }
 
 async function sendPinResetLink(){
+
   const email=
     currentUser?.email;
 
@@ -5674,6 +6386,7 @@ async function sendPinResetLink(){
 }
 
 async function handleAuthRedirect(){
+
   const params=
     new URLSearchParams(
       location.search
@@ -5684,12 +6397,14 @@ async function handleAuthRedirect(){
       "pin-reset"
     )==="1"
   ){
+
     const profileId=
       params.get(
         "profile"
       );
 
     if(profileId){
+
       localStorage.setItem(
         "pendingPinResetProfile",
         profileId
@@ -5713,6 +6428,7 @@ async function handleAuthRedirect(){
       .getSession();
 
   if(session?.user){
+
     currentUser=
       session.user;
   }
@@ -5726,11 +6442,14 @@ async function handleAuthRedirect(){
     pending &&
     currentUser
   ){
+
     const {
       data:profile
     }=
       await supabaseClient
-        .from("profiles")
+        .from(
+          "profiles"
+        )
         .select("*")
         .eq(
           "id",
@@ -5739,6 +6458,7 @@ async function handleAuthRedirect(){
         .maybeSingle();
 
     if(profile){
+
       currentProfile=
         profile;
 
@@ -5758,6 +6478,7 @@ async function handleAuthRedirect(){
 }
 
 function bindExpenseSheetDismiss(){
+
   const overlay=
     document.getElementById(
       "expenseSheetOverlay"
@@ -5770,9 +6491,10 @@ function bindExpenseSheetDismiss(){
 
   overlay.addEventListener(
     "click",
-    e=>{
+    event=>{
+
       if(
-        e.target===
+        event.target===
         overlay
       ){
         closeExpenseForm();
@@ -5782,25 +6504,26 @@ function bindExpenseSheetDismiss(){
 
   let startY=0;
   let startScroll=0;
-  let drag=false;
+  let dragging=false;
 
   sheet.addEventListener(
     "touchstart",
-    e=>{
+    event=>{
+
       if(
-        e.touches.length!==1
+        event.touches.length!==1
       ){
         return;
       }
 
       startY=
-        e.touches[0]
+        event.touches[0]
           .clientY;
 
       startScroll=
         sheet.scrollTop;
 
-      drag=false;
+      dragging=false;
     },
     {
       passive:true
@@ -5809,9 +6532,10 @@ function bindExpenseSheetDismiss(){
 
   sheet.addEventListener(
     "touchmove",
-    e=>{
+    event=>{
+
       const dy=
-        e.touches[0]
+        event.touches[0]
           .clientY-
         startY;
 
@@ -5819,9 +6543,10 @@ function bindExpenseSheetDismiss(){
         startScroll<=0 &&
         dy>0
       ){
-        drag=true;
 
-        e.preventDefault();
+        dragging=true;
+
+        event.preventDefault();
 
         sheet.classList.add(
           "dragging"
@@ -5838,13 +6563,14 @@ function bindExpenseSheetDismiss(){
 
   sheet.addEventListener(
     "touchend",
-    e=>{
-      if(!drag){
+    event=>{
+
+      if(!dragging){
         return;
       }
 
       const dy=
-        e.changedTouches[0]
+        event.changedTouches[0]
           .clientY-
         startY;
 
@@ -5857,6 +6583,7 @@ function bindExpenseSheetDismiss(){
       );
 
       if(dy>85){
+
         sheet.style.transform=
           "translateY(110%)";
 
@@ -5875,6 +6602,7 @@ function bindExpenseSheetDismiss(){
         );
       }
       else{
+
         sheet.style.transform=
           "translateY(0)";
 
@@ -5894,6 +6622,7 @@ function bindExpenseSheetDismiss(){
 let weekTimer=null;
 
 function scheduleWeekBoundaryRefresh(){
+
   if(weekTimer){
     clearTimeout(
       weekTimer
@@ -5907,7 +6636,10 @@ function scheduleWeekBoundaryRefresh(){
     new Date(now);
 
   next.setHours(
-    0,0,0,0
+    0,
+    0,
+    0,
+    0
   );
 
   next.setDate(
@@ -5919,6 +6651,7 @@ function scheduleWeekBoundaryRefresh(){
   );
 
   if(next<=now){
+
     next.setDate(
       next.getDate()+7
     );
@@ -5927,6 +6660,7 @@ function scheduleWeekBoundaryRefresh(){
   weekTimer=
     setTimeout(
       async()=>{
+
         await calculateBalances();
         await loadExpenses();
 
@@ -5940,11 +6674,13 @@ function scheduleWeekBoundaryRefresh(){
 }
 
 function disableDoubleTapZoom(){
+
   let last=0;
 
   document.addEventListener(
     "touchend",
-    e=>{
+    event=>{
+
       const now=
         Date.now();
 
@@ -5952,7 +6688,7 @@ function disableDoubleTapZoom(){
         now-last<
         300
       ){
-        e.preventDefault();
+        event.preventDefault();
       }
 
       last=now;
@@ -5972,8 +6708,9 @@ document.getElementById(
   "loginPassword"
 ).addEventListener(
   "keydown",
-  e=>{
-    if(e.key==="Enter"){
+  event=>{
+
+    if(event.key==="Enter"){
       login();
     }
   }
@@ -5983,8 +6720,9 @@ document.getElementById(
   "loginEmail"
 ).addEventListener(
   "keydown",
-  e=>{
-    if(e.key==="Enter"){
+  event=>{
+
+    if(event.key==="Enter"){
       login();
     }
   }
@@ -5994,6 +6732,7 @@ document.getElementById(
   "forgotPasswordButton"
 ).onclick=
   async()=>{
+
     const email=
       document
         .getElementById(
@@ -6002,29 +6741,30 @@ document.getElementById(
         .value
         .trim();
 
-    const err=
+    const errorBox=
       document.getElementById(
         "loginError"
       );
 
-    const msg=
+    const messageBox=
       document.getElementById(
         "loginMessage"
       );
 
-    err.classList.add(
+    errorBox.classList.add(
       "hidden"
     );
 
-    msg.classList.add(
+    messageBox.classList.add(
       "hidden"
     );
 
     if(!email){
-      err.textContent=
+
+      errorBox.textContent=
         "Enter your account email in the Email field first.";
 
-      err.classList.remove(
+      errorBox.classList.remove(
         "hidden"
       );
 
@@ -6032,32 +6772,36 @@ document.getElementById(
     }
 
     try{
+
       await sendPasswordReset(
         email
       );
 
-      msg.textContent=
+      messageBox.textContent=
         "Password reset email sent to the account email.";
 
-      msg.classList.remove(
+      messageBox.classList.remove(
         "hidden"
       );
     }
     catch(error){
-      err.textContent=
+
+      errorBox.textContent=
         error.message;
 
-      err.classList.remove(
+      errorBox.classList.remove(
         "hidden"
       );
     }
   };
 
 function renderNewProfileAvatars(){
+
   renderAvatarGrid(
     "avatarGrid",
     selectedAvatar,
     name=>{
+
       selectedAvatar=
         name;
 
@@ -6070,6 +6814,7 @@ document.getElementById(
   "addProfileButton"
 ).onclick=
   ()=>{
+
     document
       .getElementById(
         "profileList"
@@ -6111,8 +6856,9 @@ document.getElementById(
   "newProfilePin"
 ).addEventListener(
   "keydown",
-  e=>{
-    if(e.key==="Enter"){
+  event=>{
+
+    if(event.key==="Enter"){
       saveProfile();
     }
   }
@@ -6122,11 +6868,15 @@ document.getElementById(
   "newProfileName"
 ).addEventListener(
   "keydown",
-  e=>{
-    if(e.key==="Enter"){
-      document.getElementById(
-        "newProfilePin"
-      ).focus();
+  event=>{
+
+    if(event.key==="Enter"){
+
+      document
+        .getElementById(
+          "newProfilePin"
+        )
+        .focus();
     }
   }
 );
@@ -6140,8 +6890,9 @@ document.getElementById(
   "profilePin"
 ).addEventListener(
   "keydown",
-  e=>{
-    if(e.key==="Enter"){
+  event=>{
+
+    if(event.key==="Enter"){
       unlockProfile();
     }
   }
@@ -6193,6 +6944,7 @@ document.getElementById(
   "budgetHelpButton"
 ).onclick=
   ()=>{
+
     document
       .getElementById(
         "budgetHelpModal"
@@ -6205,6 +6957,7 @@ document.getElementById(
   "closeBudgetHelp"
 ).onclick=
   ()=>{
+
     document
       .getElementById(
         "budgetHelpModal"
@@ -6217,6 +6970,7 @@ document.getElementById(
   "addExpenseButton"
 ).onclick=
   ()=>{
+
     openExpenseForm(
       "needs",
       null,
@@ -6228,6 +6982,7 @@ document.getElementById(
   "needsFundCard"
 ).onclick=
   ()=>{
+
     openExpenseForm(
       "needs",
       null,
@@ -6239,6 +6994,7 @@ document.getElementById(
   "funFundCard"
 ).onclick=
   ()=>{
+
     openExpenseForm(
       "fun",
       null,
@@ -6267,8 +7023,10 @@ document
   )
   .forEach(
     button=>{
+
       button.onclick=
         ()=>{
+
           settingsSection=
             button.dataset
               .settingsSection;
@@ -6282,19 +7040,23 @@ document.getElementById(
   "settingsBackButton"
 ).onclick=
   ()=>{
+
     if(
       settingsSection!=="menu"
     ){
+
       settingsSection=
         "menu";
 
       renderSettingsSection();
     }
     else{
+
       showMain();
 
       requestAnimationFrame(
         ()=>{
+
           showPanel(
             activePanelIndex,
             false
@@ -6308,6 +7070,7 @@ document.getElementById(
   "settingsSwitchProfileButton"
 ).onclick=
   async()=>{
+
     localStorage.removeItem(
       "profileSessionToken"
     );
@@ -6338,9 +7101,10 @@ document.getElementById(
 document.getElementById(
   "fontFamilySelect"
 ).onchange=
-  e=>{
+  event=>{
+
     selectedFont=
-      e.target.value;
+      event.target.value;
 
     applyAppearance();
 
@@ -6350,10 +7114,11 @@ document.getElementById(
 document.getElementById(
   "fontSizeRange"
 ).oninput=
-  e=>{
+  event=>{
+
     selectedFontSize=
       Number(
-        e.target.value
+        event.target.value
       );
 
     document.getElementById(
@@ -6369,51 +7134,80 @@ document.getElementById(
 document.getElementById(
   "saveAppearanceButton"
 ).onclick=
-  ()=>{
-    saveProfileSettings({
-      font_size:
-        selectedFontSize,
+  async()=>{
 
-      font_family:
-        selectedFont,
+    if(
+      await saveProfileSettings({
+        font_size:
+          selectedFontSize,
 
-      theme:
-        selectedTheme
-    });
+        font_family:
+          selectedFont,
+
+        theme:
+          selectedTheme
+      })
+    ){
+
+      settingsSection=
+        "menu";
+
+      renderSettingsSection();
+
+      showToast(
+        "Appearance saved"
+      );
+    }
   };
 
 document.getElementById(
   "saveAvatarButton"
 ).onclick=
-  ()=>{
-    saveProfileSettings({
-      avatar:
-        selectedSettingsAvatar
-    });
+  async()=>{
+
+    if(
+      await saveProfileSettings({
+        avatar:
+          selectedSettingsAvatar
+      })
+    ){
+
+      settingsSection=
+        "menu";
+
+      renderSettingsSection();
+
+      showToast(
+        "Profile picture saved"
+      );
+    }
   };
 
 document.getElementById(
   "resetPasswordSettingsButton"
 ).onclick=
   async()=>{
-    const msg=
+
+    const message=
       document.getElementById(
         "securityMessage"
       );
 
     try{
+
       await sendPasswordReset(
         currentUser.email
       );
 
-      msg.textContent=
+      message.textContent=
         `Password reset email sent to ${currentUser.email}.`;
 
-      msg.classList.remove(
+      message.classList.remove(
         "hidden"
       );
     }
     catch(error){
+
       alert(
         error.message
       );
@@ -6424,22 +7218,25 @@ document.getElementById(
   "resetPinEmailButton"
 ).onclick=
   async()=>{
-    const msg=
+
+    const message=
       document.getElementById(
         "securityMessage"
       );
 
     try{
+
       await sendPinResetLink();
 
-      msg.textContent=
+      message.textContent=
         `PIN reset link sent to ${currentUser.email}.`;
 
-      msg.classList.remove(
+      message.classList.remove(
         "hidden"
       );
     }
     catch(error){
+
       alert(
         error.message
       );
@@ -6450,27 +7247,29 @@ document.getElementById(
   "saveNewPasswordButton"
 ).onclick=
   async()=>{
+
     const password=
       document.getElementById(
         "newAccountPassword"
       ).value;
 
-    const err=
+    const errorBox=
       document.getElementById(
         "passwordResetError"
       );
 
-    err.classList.add(
+    errorBox.classList.add(
       "hidden"
     );
 
     if(
       password.length<8
     ){
-      err.textContent=
+
+      errorBox.textContent=
         "Use at least 8 characters.";
 
-      err.classList.remove(
+      errorBox.classList.remove(
         "hidden"
       );
 
@@ -6485,10 +7284,11 @@ document.getElementById(
         });
 
     if(error){
-      err.textContent=
+
+      errorBox.textContent=
         error.message;
 
-      err.classList.remove(
+      errorBox.classList.remove(
         "hidden"
       );
 
@@ -6502,8 +7302,8 @@ document.getElementById(
       .classList
       .add("hidden");
 
-    alert(
-      "Password changed."
+    showToast(
+      "Password changed"
     );
   };
 
@@ -6511,17 +7311,18 @@ document.getElementById(
   "saveResetPinButton"
 ).onclick=
   async()=>{
+
     const pin=
       document.getElementById(
         "newProfilePinReset"
       ).value;
 
-    const err=
+    const errorBox=
       document.getElementById(
         "pinResetError"
       );
 
-    err.classList.add(
+    errorBox.classList.add(
       "hidden"
     );
 
@@ -6530,10 +7331,11 @@ document.getElementById(
         pin
       )
     ){
-      err.textContent=
+
+      errorBox.textContent=
         "PIN must be exactly four digits.";
 
-      err.classList.remove(
+      errorBox.classList.remove(
         "hidden"
       );
 
@@ -6553,10 +7355,11 @@ document.getElementById(
       );
 
     if(error){
-      err.textContent=
+
+      errorBox.textContent=
         error.message;
 
-      err.classList.remove(
+      errorBox.classList.remove(
         "hidden"
       );
 
@@ -6574,8 +7377,8 @@ document.getElementById(
       .classList
       .add("hidden");
 
-    alert(
-      "PIN changed."
+    showToast(
+      "PIN changed"
     );
   };
 
@@ -6588,6 +7391,7 @@ window.deleteExpense=
 window.addEventListener(
   "resize",
   ()=>{
+
     if(
       !document
         .getElementById(
@@ -6598,6 +7402,7 @@ window.addEventListener(
           "hidden"
         )
     ){
+
       showPanel(
         activePanelIndex,
         false
@@ -6614,7 +7419,7 @@ selectedTheme=
   localStorage.getItem(
     "budgetTheme"
   )||
-  "sandy";
+  "cedar";
 
 applyAppearance();
 
@@ -6623,10 +7428,12 @@ supabaseClient.auth.onAuthStateChange(
     event,
     session
   )=>{
+
     if(
       event===
       "PASSWORD_RECOVERY"
     ){
+
       currentUser=
         session?.user||
         currentUser;
@@ -6642,6 +7449,7 @@ supabaseClient.auth.onAuthStateChange(
 );
 
 (async()=>{
+
   await handleAuthRedirect();
 
   const {
@@ -6654,6 +7462,7 @@ supabaseClient.auth.onAuthStateChange(
       .getSession();
 
   if(session?.user){
+
     currentUser=
       session.user;
 
@@ -6661,6 +7470,5 @@ supabaseClient.auth.onAuthStateChange(
   }
 })();
 </script>
-
 </body>
 </html>
