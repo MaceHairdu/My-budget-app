@@ -3,8 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#aebca5">
-<title>Budget</title>
+<meta id="themeColorMeta" name="theme-color" content="#aebca5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Bicycle Budget">
+
+<title>Bicycle Budget</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,8 +44,6 @@ html,body{
   --danger:#9b4e45;
   --danger-edge:#6f342f;
   --danger-bg:#f1d6cf;
-  --success:#536f49;
-  --success-bg:#dce8cf;
   --font-size:16px;
   --font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif
 }
@@ -54,15 +56,26 @@ body{
   font-weight:600
 }
 
+body.theme-cedar{
+  --bg:#aebca5;
+  --panel:#eee1c8;
+  --text:#304638;
+  --muted:#5f705e;
+  --accent:#c77f63;
+  --accent-edge:#985d48;
+  --edge:#9eaa8f;
+  --input:#b9b49d
+}
+
 body.theme-sandy{
-  --bg:#e8d9ad;
-  --panel:#fff9e9;
-  --text:#4e351d;
-  --muted:#796245;
+  --bg:#e1cf99;
+  --panel:#fff8e5;
+  --text:#422c18;
+  --muted:#705938;
   --accent:#a9b982;
-  --accent-edge:#78865a;
-  --edge:#bca975;
-  --input:#cdbd91
+  --accent-edge:#71804f;
+  --edge:#b3a06c;
+  --input:#c8b582
 }
 
 body.theme-petals{
@@ -85,17 +98,6 @@ body.theme-harbor{
   --accent-edge:#9f6454;
   --edge:#8ea0a0;
   --input:#b3b7ad
-}
-
-body.theme-cedar{
-  --bg:#aebca5;
-  --panel:#eee1c8;
-  --text:#304638;
-  --muted:#5f705e;
-  --accent:#c77f63;
-  --accent-edge:#985d48;
-  --edge:#9eaa8f;
-  --input:#b9b49d
 }
 
 body.theme-plum{
@@ -130,12 +132,6 @@ body.font-pixel{
   letter-spacing:-.03em
 }
 
-body.font-pixel button,
-body.font-pixel input,
-body.font-pixel select{
-  font-size:.78em
-}
-
 button,input,select{
   font:inherit;
   color:inherit
@@ -152,7 +148,7 @@ button{
 
 .subtext{
   color:var(--muted);
-  font-size:.84em;
+  font-size:.82em;
   font-weight:700
 }
 
@@ -162,11 +158,11 @@ button{
 
 .card,.panel{
   background:var(--panel);
-  border-radius:18px;
+  border-radius:17px;
   box-shadow:
     0 0 0 1px var(--edge),
-    0 9px 0 var(--edge),
-    0 18px 36px rgba(52,39,21,.15)
+    0 8px 0 var(--edge),
+    0 18px 36px rgba(40,35,25,.14)
 }
 
 .panel{
@@ -175,37 +171,35 @@ button{
 }
 
 .panel-inner{
+  width:100%;
   height:100%;
   min-width:0;
   padding:22px;
   overflow-y:auto;
   overflow-x:hidden;
   overscroll-behavior:contain;
-  scrollbar-color:var(--edge) color-mix(in srgb,var(--panel) 75%,var(--bg));
-  scrollbar-width:thin
+  scrollbar-width:thin;
+  scrollbar-color:var(--edge) color-mix(in srgb,var(--panel) 75%,var(--bg))
 }
 
 .panel-inner::-webkit-scrollbar,
 .settings::-webkit-scrollbar,
-.modal-card::-webkit-scrollbar,
-.expense-sheet::-webkit-scrollbar{
+.modal-card::-webkit-scrollbar{
   width:9px
 }
 
 .panel-inner::-webkit-scrollbar-track,
 .settings::-webkit-scrollbar-track,
-.modal-card::-webkit-scrollbar-track,
-.expense-sheet::-webkit-scrollbar-track{
-  background:color-mix(in srgb,var(--panel) 72%,var(--bg))
+.modal-card::-webkit-scrollbar-track{
+  background:color-mix(in srgb,var(--panel) 75%,var(--bg))
 }
 
 .panel-inner::-webkit-scrollbar-thumb,
 .settings::-webkit-scrollbar-thumb,
-.modal-card::-webkit-scrollbar-thumb,
-.expense-sheet::-webkit-scrollbar-thumb{
+.modal-card::-webkit-scrollbar-thumb{
   background:var(--edge);
-  border-radius:99px;
-  border:2px solid color-mix(in srgb,var(--panel) 72%,var(--bg))
+  border:2px solid color-mix(in srgb,var(--panel) 75%,var(--bg));
+  border-radius:99px
 }
 
 .app{
@@ -214,7 +208,7 @@ button{
 }
 
 .screen-title{
-  font-size:clamp(24px,2.2vw,34px);
+  font-size:clamp(25px,2.3vw,35px);
   font-weight:900;
   line-height:1.05;
   margin:0 0 18px
@@ -229,23 +223,24 @@ button{
 }
 
 .panel-header .screen-title{
-  margin:0
+  margin:0;
+  min-width:0
 }
 
 .primary-button,
 .secondary-button,
 .danger-button,
 .folder-button,
-.theme-button{
-  border-radius:12px;
+.theme-button,
+.tab-button{
+  border-radius:10px;
   padding:13px 15px;
   font-weight:900;
-  transition:transform .09s ease,box-shadow .09s ease
+  transition:transform .08s ease
 }
 
 .primary-button{
   background:var(--accent);
-  color:var(--text);
   box-shadow:
     0 0 0 1px var(--accent-edge),
     0 5px 0 var(--accent-edge)
@@ -270,23 +265,24 @@ button{
 .secondary-button:active,
 .danger-button:active,
 .folder-button:active,
-.theme-button:active{
+.theme-button:active,
+.tab-button:active{
   transform:translateY(3px)
 }
 
 .small-button{
   padding:7px 10px;
-  border-radius:9px;
+  border-radius:8px;
   font-size:.78em
 }
 
 .icon-well{
   width:46px;
   height:46px;
+  padding:0;
   display:grid;
   place-items:center;
-  padding:0;
-  border-radius:12px;
+  border-radius:9px;
   background:var(--panel);
   color:var(--text);
   box-shadow:
@@ -296,12 +292,11 @@ button{
 }
 
 .icon-well svg{
-  width:27px;
-  height:27px;
-  display:block;
+  width:28px;
+  height:28px;
   stroke:currentColor;
-  stroke-width:2.5;
   fill:none;
+  stroke-width:2.4;
   stroke-linecap:round;
   stroke-linejoin:round
 }
@@ -316,25 +311,25 @@ button{
 #mainWorkspace{
   width:100%;
   height:100%;
-  padding:0 24px 24px;
-  display:grid;
-  grid-template-columns:
-    minmax(0,1fr)
-    minmax(0,1fr)
-    minmax(0,1.15fr)
-    minmax(0,1fr);
-  gap:20px
+  padding:0 20px 24px;
+  overflow-x:auto;
+  overflow-y:hidden
 }
 
 .mobile-track{
-  display:contents
+  width:max-content;
+  min-width:100%;
+  height:100%;
+  display:grid;
+  grid-template-columns:repeat(5,minmax(300px,1fr));
+  gap:18px
 }
 
 .workspace-panel{
+  width:min(24vw,430px);
+  min-width:300px;
   height:calc(100vh - 24px);
-  min-height:0;
-  width:100%;
-  min-width:0
+  min-height:0
 }
 
 .date-strip{
@@ -357,39 +352,39 @@ button{
 
 .date-day{
   height:44px;
+  position:relative;
   display:grid;
   place-items:center;
-  position:relative;
   font-weight:900
 }
 
 .date-day::before{
   content:"";
   position:absolute;
-  width:38px;
-  height:38px;
+  width:37px;
+  height:37px;
   border-radius:50%;
   background:
     radial-gradient(
       circle at 50% 50%,
-      color-mix(in srgb,var(--panel) 90%,var(--edge)) 0 48%,
-      color-mix(in srgb,var(--panel) 82%,var(--edge)) 51% 58%,
-      color-mix(in srgb,var(--edge) 72%,var(--panel)) 61% 67%,
-      var(--panel) 72%
+      color-mix(in srgb,var(--panel) 95%,var(--edge)) 0 47%,
+      color-mix(in srgb,var(--panel) 91%,var(--edge)) 48% 53%,
+      color-mix(in srgb,var(--edge) 52%,var(--panel)) 58% 64%,
+      var(--panel) 71%
     );
   box-shadow:
-    inset 3px 3px 5px rgba(45,34,19,.16),
-    inset -3px -3px 5px rgba(255,255,255,.48)
+    inset 3px 3px 5px rgba(45,34,19,.12),
+    inset -3px -3px 5px rgba(255,255,255,.5)
 }
 
 .date-day.today::before{
   background:
     radial-gradient(
       circle at 50% 50%,
-      color-mix(in srgb,var(--accent) 75%,var(--panel)) 0 48%,
-      color-mix(in srgb,var(--accent) 62%,var(--panel)) 51% 58%,
-      color-mix(in srgb,var(--accent-edge) 60%,var(--panel)) 61% 67%,
-      var(--panel) 72%
+      color-mix(in srgb,var(--accent) 70%,var(--panel)) 0 47%,
+      color-mix(in srgb,var(--accent) 63%,var(--panel)) 48% 53%,
+      color-mix(in srgb,var(--accent-edge) 48%,var(--panel)) 58% 64%,
+      var(--panel) 71%
     )
 }
 
@@ -401,11 +396,11 @@ button{
 .home-funds{
   display:flex;
   flex-direction:column;
-  gap:17px
+  gap:18px
 }
 
 .fund-card{
-  min-height:230px;
+  min-height:235px;
   padding:18px;
   display:flex;
   flex-direction:column;
@@ -417,35 +412,31 @@ button{
 }
 
 .fund-label{
-  font-size:1.12em;
+  font-size:1.14em;
   font-weight:900
 }
 
 .fund-period{
   color:var(--muted);
-  font-size:.75em;
+  font-size:.74em;
   font-weight:800;
-  margin-top:2px
+  margin-top:3px
 }
 
 .balance{
+  max-width:100%;
+  margin:9px 0 4px;
   font-size:clamp(30px,4vw,44px);
   font-weight:900;
   line-height:1.05;
-  max-width:100%;
   overflow:hidden;
   text-overflow:ellipsis;
-  white-space:nowrap;
-  margin:9px 0 4px
-}
-
-.add-funds-button{
-  margin-top:8px
+  white-space:nowrap
 }
 
 .home-expenses{
   width:100%;
-  margin-top:11px;
+  margin-top:10px;
   text-align:left;
   pointer-events:none
 }
@@ -453,46 +444,45 @@ button{
 .home-expense{
   display:flex;
   justify-content:space-between;
-  gap:10px;
+  gap:9px;
   padding:6px 2px;
   border-top:1px solid color-mix(in srgb,var(--edge) 55%,transparent);
   font-size:.8em
 }
 
 .home-expense-name{
+  min-width:0;
   overflow:hidden;
   text-overflow:ellipsis;
   white-space:nowrap
 }
 
 .home-expense-amount{
-  white-space:nowrap;
+  flex:0 0 auto;
   font-weight:900
 }
 
 .empty-home-expenses{
+  padding-top:8px;
   text-align:center;
   color:var(--muted);
-  font-size:.78em;
-  padding-top:8px
+  font-size:.78em
 }
 
 label{
   display:block;
-  font-weight:900;
-  margin:14px 0 6px
+  margin:14px 0 6px;
+  font-weight:900
 }
 
-input,
-select{
+input,select{
   width:100%;
   max-width:100%;
   min-width:0;
   padding:12px 13px;
   border:1px solid var(--input);
-  border-radius:12px;
+  border-radius:10px;
   background:var(--panel);
-  color:var(--text);
   outline:0
 }
 
@@ -506,10 +496,7 @@ select:focus{
 select{
   appearance:none;
   -webkit-appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;
-  background-position:right 12px center;
-  padding-right:40px
+  padding-right:39px
 }
 
 input[type=number]::-webkit-inner-spin-button,
@@ -529,14 +516,14 @@ input[type=number]::-webkit-outer-spin-button{
 }
 
 .saved-row{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) 112px auto;
-  align-items:center;
-  gap:10px;
   min-width:0;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 110px auto;
+  gap:10px;
+  align-items:center;
   padding:10px 11px;
   border:1px solid color-mix(in srgb,var(--edge) 72%,transparent);
-  border-radius:12px;
+  border-radius:10px;
   background:color-mix(in srgb,var(--panel) 94%,var(--edge))
 }
 
@@ -545,27 +532,26 @@ input[type=number]::-webkit-outer-spin-button{
 }
 
 .saved-row-name{
-  font-weight:900;
   overflow:hidden;
   text-overflow:ellipsis;
-  white-space:nowrap
+  white-space:nowrap;
+  font-weight:900
 }
 
 .saved-row-amount{
-  width:112px;
+  width:110px;
   text-align:right;
   white-space:nowrap;
-  font-weight:900;
-  font-variant-numeric:tabular-nums
+  font-weight:900
 }
 
 .transaction{
   display:grid;
-  grid-template-columns:minmax(0,1fr) 105px auto;
-  align-items:center;
+  grid-template-columns:minmax(0,1fr) 100px auto;
   gap:10px;
+  align-items:center;
   padding:10px 0;
-  border-bottom:1px solid color-mix(in srgb,var(--edge) 65%,transparent)
+  border-bottom:1px solid color-mix(in srgb,var(--edge) 62%,transparent)
 }
 
 .transaction-main{
@@ -573,20 +559,20 @@ input[type=number]::-webkit-outer-spin-button{
 }
 
 .transaction-name{
-  font-weight:900;
   overflow:hidden;
   text-overflow:ellipsis;
-  white-space:nowrap
+  white-space:nowrap;
+  font-weight:900
 }
 
 .transaction-meta{
-  color:var(--muted);
-  font-size:.72em;
-  font-weight:700;
   margin-top:3px;
   overflow:hidden;
   text-overflow:ellipsis;
-  white-space:nowrap
+  white-space:nowrap;
+  color:var(--muted);
+  font-size:.71em;
+  font-weight:700
 }
 
 .transaction-amount{
@@ -595,25 +581,14 @@ input[type=number]::-webkit-outer-spin-button{
   font-weight:900
 }
 
-.transaction-actions{
-  display:flex;
-  gap:6px
-}
-
-.mode-note{
-  padding:12px;
-  border-radius:13px;
-  background:color-mix(in srgb,var(--accent) 25%,var(--panel));
-  margin:12px 0;
-  line-height:1.42
-}
-
 .warning-note{
-  padding:12px;
-  border-radius:13px;
-  background:color-mix(in srgb,#dba45c 30%,var(--panel));
-  box-shadow:inset 0 0 0 1px color-mix(in srgb,#a66f2c 50%,transparent);
   margin:12px 0;
+  padding:12px;
+  border-radius:12px;
+  background:color-mix(in srgb,#dba45c 30%,var(--panel));
+  box-shadow:
+    inset 0 0 0 1px
+    color-mix(in srgb,#a66f2c 50%,transparent);
   line-height:1.42
 }
 
@@ -630,18 +605,18 @@ input[type=number]::-webkit-outer-spin-button{
 .info-icon{
   width:25px;
   height:25px;
-  border:2px solid currentColor;
-  border-radius:50%;
+  flex:0 0 auto;
   display:grid;
   place-items:center;
-  font-weight:900;
-  flex:0 0 auto
+  border:2px solid currentColor;
+  border-radius:50%;
+  font-weight:900
 }
 
 .calculation{
   margin-top:18px;
   padding:15px;
-  border-radius:16px;
+  border-radius:14px;
   background:rgba(0,0,0,.035)
 }
 
@@ -657,9 +632,9 @@ input[type=number]::-webkit-outer-spin-button{
 }
 
 .calc-total{
-  border-top:1px solid var(--input);
   margin-top:7px;
   padding-top:12px;
+  border-top:1px solid var(--input);
   font-weight:900
 }
 
@@ -675,20 +650,16 @@ input[type=number]::-webkit-outer-spin-button{
   font-weight:900
 }
 
-.allocation-summary{
-  margin-top:10px
-}
-
 .modal-overlay{
   position:fixed;
   inset:0;
-  z-index:1400;
-  background:rgba(25,20,15,.48);
-  backdrop-filter:blur(4px);
+  z-index:1500;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:20px
+  padding:20px;
+  background:rgba(25,20,15,.48);
+  backdrop-filter:blur(4px)
 }
 
 .modal-card{
@@ -697,8 +668,8 @@ input[type=number]::-webkit-outer-spin-button{
   overflow-y:auto;
   overflow-x:hidden;
   padding:24px;
-  scrollbar-color:var(--edge) color-mix(in srgb,var(--panel) 75%,var(--bg));
-  scrollbar-width:thin
+  scrollbar-width:thin;
+  scrollbar-color:var(--edge) color-mix(in srgb,var(--panel) 75%,var(--bg))
 }
 
 .modal-card h2{
@@ -715,42 +686,29 @@ input[type=number]::-webkit-outer-spin-button{
   flex:1
 }
 
-.sheet-overlay{
-  position:fixed;
-  inset:0;
-  z-index:1450;
-  background:rgba(25,20,15,.5);
+.transaction-tabs{
   display:flex;
   align-items:flex-end;
-  justify-content:center;
-  touch-action:none
+  gap:4px;
+  margin:-24px -24px 19px;
+  padding:13px 16px 0;
+  background:color-mix(in srgb,var(--edge) 22%,var(--panel))
 }
 
-.expense-sheet{
-  width:min(620px,100%);
-  max-width:100vw;
-  max-height:92dvh;
-  overflow-y:auto;
-  overflow-x:hidden;
-  padding:24px;
-  border-radius:28px 28px 0 0;
-  animation:sheetIn .44s cubic-bezier(.2,.85,.25,1.12);
-  scrollbar-color:var(--edge) color-mix(in srgb,var(--panel) 75%,var(--bg));
-  scrollbar-width:thin
+.tab-button{
+  flex:1;
+  position:relative;
+  padding:11px 10px;
+  border-radius:9px 9px 0 0;
+  background:color-mix(in srgb,var(--panel) 80%,var(--edge));
+  box-shadow:
+    inset 0 0 0 1px
+    color-mix(in srgb,var(--edge) 70%,transparent)
 }
 
-@keyframes sheetIn{
-  0%{transform:translateY(110%)}
-  82%{transform:translateY(-5px)}
-  100%{transform:translateY(0)}
-}
-
-.sheet-handle{
-  width:46px;
-  height:6px;
-  border-radius:99px;
-  background:var(--edge);
-  margin:-6px auto 18px
+.tab-button.active{
+  background:var(--panel);
+  transform:translateY(1px)
 }
 
 .login{
@@ -766,6 +724,47 @@ input[type=number]::-webkit-outer-spin-button{
   padding:24px
 }
 
+.password-wrap{
+  position:relative
+}
+
+.password-wrap input{
+  padding-right:68px
+}
+
+.password-toggle{
+  position:absolute;
+  top:50%;
+  right:8px;
+  transform:translateY(-50%);
+  padding:7px 8px;
+  border-radius:7px;
+  background:transparent;
+  font-size:.78em;
+  font-weight:900
+}
+
+.login-error{
+  margin-top:12px;
+  padding:10px;
+  border-radius:9px;
+  background:var(--danger-bg);
+  color:var(--danger);
+  font-weight:900
+}
+
+.shake{
+  animation:shake .34s linear
+}
+
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-7px)}
+  40%{transform:translateX(7px)}
+  60%{transform:translateX(-5px)}
+  80%{transform:translateX(5px)}
+}
+
 .profile-row{
   display:flex;
   align-items:center;
@@ -773,61 +772,40 @@ input[type=number]::-webkit-outer-spin-button{
   margin-bottom:10px
 }
 
-.profile-avatar{
-  width:46px;
-  height:46px;
-  flex:0 0 46px;
-  border-radius:12px;
-  display:grid;
-  place-items:center;
-  background:var(--accent);
-  box-shadow:
-    inset 3px 3px 5px rgba(45,35,20,.13),
-    inset -3px -3px 5px rgba(255,255,255,.35),
-    0 0 0 1px var(--accent-edge)
-}
-
-.profile-avatar svg{
-  width:35px;
-  height:35px
-}
-
 .profile-button{
   flex:1;
   text-align:left
 }
 
-.avatar-grid{
+.pin-length-choice{
   display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:10px;
-  margin-top:10px
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin:12px 0
 }
 
-.avatar-choice{
-  padding:10px 5px;
-  background:var(--panel);
-  border:1px solid var(--edge);
-  border-radius:12px
+.pin-length-choice button.selected{
+  background:var(--accent);
+  box-shadow:
+    0 0 0 1px var(--accent-edge),
+    0 5px 0 var(--accent-edge)
 }
 
-.avatar-choice.selected{
-  box-shadow:0 0 0 3px var(--accent)
+.pin-boxes{
+  display:flex;
+  justify-content:center;
+  gap:9px;
+  margin:17px 0
 }
 
-.avatar-choice svg{
-  display:block;
+.pin-box{
   width:45px;
-  height:45px;
-  margin:auto
-}
-
-.avatar-label{
-  display:block;
-  font-size:.7em;
-  margin-top:5px;
-  overflow:hidden;
-  text-overflow:ellipsis
+  height:54px;
+  padding:0;
+  text-align:center;
+  font-size:1.55em;
+  font-weight:900;
+  border-radius:9px
 }
 
 .settings-shell{
@@ -849,17 +827,17 @@ input[type=number]::-webkit-outer-spin-button{
 }
 
 .settings{
-  height:100%;
   width:100%;
   max-width:760px;
+  height:100%;
   margin:auto;
   padding:76px 20px 36px;
   overflow-y:auto;
   overflow-x:hidden;
   overscroll-behavior:contain;
   touch-action:pan-y;
-  scrollbar-color:var(--edge) color-mix(in srgb,var(--panel) 75%,var(--bg));
-  scrollbar-width:thin
+  scrollbar-width:thin;
+  scrollbar-color:var(--edge) color-mix(in srgb,var(--panel) 75%,var(--bg))
 }
 
 .settings-back{
@@ -879,25 +857,21 @@ input[type=number]::-webkit-outer-spin-button{
 }
 
 .settings-card{
-  padding:20px;
-  margin-bottom:16px
+  margin-bottom:16px;
+  padding:20px
 }
 
 .folder-button{
   width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin:0 0 14px;
   background:var(--panel);
   box-shadow:
     0 0 0 1px var(--edge),
     0 6px 0 var(--edge);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  text-align:left;
-  margin:0 0 14px
-}
-
-.folder-button span:last-child{
-  font-size:1.35em
+  text-align:left
 }
 
 .theme-grid{
@@ -929,15 +903,8 @@ input[type=number]::-webkit-outer-spin-button{
 .swatch{
   width:19px;
   height:19px;
-  border-radius:50%;
-  border:1px solid rgba(0,0,0,.12)
-}
-
-.font-preview{
-  margin-top:8px;
-  padding:12px;
-  border-radius:12px;
-  background:color-mix(in srgb,var(--panel) 90%,var(--edge))
+  border:1px solid rgba(0,0,0,.12);
+  border-radius:50%
 }
 
 .range-row{
@@ -949,8 +916,8 @@ input[type=number]::-webkit-outer-spin-button{
 .range-row input{
   padding:0;
   border:0;
-  box-shadow:none;
-  background:transparent
+  background:transparent;
+  box-shadow:none
 }
 
 .analytics-controls{
@@ -967,6 +934,19 @@ input[type=number]::-webkit-outer-spin-button{
     0 4px 0 var(--accent-edge)
 }
 
+.analytics-month-wrap{
+  width:100%;
+  min-width:0;
+  margin-bottom:14px
+}
+
+.analytics-month-wrap input,
+.analytics-month-wrap select{
+  width:100%;
+  min-width:0;
+  max-width:100%
+}
+
 .custom-date-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -979,16 +959,17 @@ input[type=number]::-webkit-outer-spin-button{
   gap:14px
 }
 
-.pie-wrap{
+.pie-layout{
   display:grid;
-  grid-template-columns:180px minmax(0,1fr);
-  gap:18px;
+  grid-template-columns:minmax(180px,.8fr) minmax(250px,1.2fr);
+  gap:24px;
   align-items:center
 }
 
 .pie-chart{
-  width:180px;
-  height:180px;
+  width:190px;
+  height:190px;
+  margin:auto;
   border-radius:50%;
   background:var(--edge);
   box-shadow:
@@ -996,28 +977,70 @@ input[type=number]::-webkit-outer-spin-button{
     0 5px 0 var(--edge)
 }
 
+.category-head,
 .category-row{
   display:grid;
-  grid-template-columns:minmax(0,1fr) 85px 60px;
-  gap:8px;
-  padding:7px 0;
+  grid-template-columns:minmax(0,1fr) 95px 62px;
+  gap:10px;
+  align-items:center
+}
+
+.category-head{
+  padding-bottom:6px;
+  color:var(--muted);
+  font-size:.72em;
+  font-weight:900
+}
+
+.category-row{
+  padding:8px 0;
   border-bottom:1px solid color-mix(in srgb,var(--edge) 55%,transparent)
 }
 
-.budget-history-row{
-  margin-bottom:10px
-}
-
-.budget-history-button{
-  width:100%;
+.category-name{
+  min-width:0;
   display:flex;
-  justify-content:space-between;
   align-items:center;
-  text-align:left
+  gap:7px;
+  overflow:hidden
 }
 
-.budget-history-details{
-  padding:14px 4px 4px
+.category-name-text{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap
+}
+
+.category-dot{
+  width:11px;
+  height:11px;
+  flex:0 0 11px;
+  border-radius:50%
+}
+
+.category-money,
+.category-percent{
+  text-align:right;
+  white-space:nowrap;
+  font-weight:900
+}
+
+.budget-summary{
+  display:flex;
+  flex-direction:column;
+  gap:7px
+}
+
+.budget-summary-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 125px;
+  gap:12px;
+  padding:9px 0;
+  border-bottom:1px solid color-mix(in srgb,var(--edge) 55%,transparent)
+}
+
+.budget-summary-row strong{
+  text-align:right
 }
 
 .toast{
@@ -1028,10 +1051,10 @@ input[type=number]::-webkit-outer-spin-button{
   transform:translate(-50%,18px) scale(.96);
   opacity:0;
   pointer-events:none;
+  padding:12px 18px;
+  border-radius:10px;
   background:var(--text);
   color:var(--panel);
-  padding:12px 18px;
-  border-radius:12px;
   font-weight:900;
   box-shadow:0 10px 28px rgba(0,0,0,.22);
   transition:
@@ -1052,7 +1075,6 @@ input[type=number]::-webkit-outer-spin-button{
   #mainWorkspace{
     height:100dvh;
     padding:0;
-    display:block;
     overflow:hidden;
     position:relative;
     touch-action:pan-y
@@ -1060,6 +1082,8 @@ input[type=number]::-webkit-outer-spin-button{
 
   .mobile-track{
     display:flex;
+    width:max-content;
+    min-width:0;
     height:100%;
     gap:12px;
     will-change:transform
@@ -1068,28 +1092,34 @@ input[type=number]::-webkit-outer-spin-button{
   .workspace-panel{
     flex:0 0 88vw;
     width:88vw;
+    min-width:0;
     height:calc(100dvh - 34px);
     margin-top:8px;
-    border-radius:20px;
-    overflow:hidden
+    border-radius:19px
   }
 
   .workspace-panel .panel-inner{
-    padding:60px 15px 25px
+    padding:59px 15px 25px
   }
 
   .home-panel .panel-inner{
-    padding-top:56px;
+    padding-top:55px;
     overflow:hidden
   }
 
   .screen-title{
-    font-size:29px;
-    margin-bottom:19px
+    font-size:30px;
+    margin-bottom:20px
   }
 
-  .panel-header{
-    align-items:flex-start
+  .settings-gear{
+    top:12px;
+    right:12px
+  }
+
+  .settings-back{
+    top:12px;
+    left:12px
   }
 
   .date-day{
@@ -1106,71 +1136,36 @@ input[type=number]::-webkit-outer-spin-button{
     max-height:280px
   }
 
-  .settings-gear{
-    top:12px;
-    right:12px
-  }
-
-  .settings-back{
-    top:12px;
-    left:12px
-  }
-
   .saved-row{
-    grid-template-columns:minmax(0,1fr) 92px auto
+    grid-template-columns:minmax(0,1fr) 91px auto
   }
 
   .saved-row-amount{
-    width:92px
+    width:91px
   }
 
   .transaction{
     grid-template-columns:minmax(0,1fr) 82px auto
   }
 
-  .transaction-actions{
-    flex-direction:column
-  }
-
-  .allocation-row{
-    grid-template-columns:minmax(0,1fr) 112px
-  }
-
-  .pie-wrap{
-    grid-template-columns:1fr
+  .pie-layout{
+    grid-template-columns:1fr;
+    gap:18px
   }
 
   .pie-chart{
-    margin:auto
-  }
-}
-
-@media(max-width:390px){
-  .workspace-panel{
-    flex-basis:90vw;
-    width:90vw
+    width:175px;
+    height:175px
   }
 
-  .saved-row{
-    grid-template-columns:minmax(0,1fr) 86px auto;
-    gap:6px
+  .category-head,
+  .category-row{
+    grid-template-columns:minmax(0,1fr) 82px 56px;
+    gap:7px
   }
 
-  .saved-row-amount{
-    width:86px
-  }
-
-  .transaction{
-    grid-template-columns:minmax(0,1fr) 78px auto;
-    gap:6px
-  }
-
-  .theme-grid{
+  .custom-date-grid{
     grid-template-columns:1fr
-  }
-
-  .avatar-grid{
-    grid-template-columns:repeat(3,minmax(0,1fr))
   }
 }
 </style>
@@ -1179,68 +1174,86 @@ input[type=number]::-webkit-outer-spin-button{
 <body class="theme-cedar font-system">
 
 <button class="icon-well settings-gear hidden" id="settingsGear" aria-label="Settings">
-  <svg viewBox="0 0 24 24">
-    <path d="M12 2.8v2.1M12 19.1v2.1M2.8 12h2.1M19.1 12h2.1M5.5 5.5 7 7M17 17l1.5 1.5M18.5 5.5 17 7M7 17l-1.5 1.5"></path>
-    <circle cx="12" cy="12" r="5.1"></circle>
-    <circle cx="12" cy="12" r="2"></circle>
-  </svg>
+<svg viewBox="0 0 24 24">
+  <circle cx="12" cy="12" r="3.2"></circle>
+  <path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"></path>
+  <path d="m5.3 5.3 2.1 2.1m9.2 9.2 2.1 2.1m0-13.4-2.1 2.1m-9.2 9.2-2.1 2.1"></path>
+  <path d="M8.6 4.1 9.8 6M14.2 18l1.2 1.9M4.1 15.4 6 14.2M18 9.8l1.9-1.2M4.1 8.6 6 9.8M18 14.2l1.9 1.2M8.6 19.9 9.8 18M14.2 6l1.2-1.9"></path>
+</svg>
 </button>
 
 <section class="login" id="loginScreen">
-  <div class="card" style="padding:24px">
-    <h1>Budget</h1>
-    <p class="subtext">Sign in to continue.</p>
+<div class="card" id="loginCard">
+<h1>Bicycle Budget</h1>
+<p class="subtext">Sign in to continue.</p>
 
-    <label>Email</label>
-    <input id="loginEmail" type="email" autocomplete="email">
+<label>Email</label>
+<input id="loginEmail" type="email" autocomplete="email">
 
-    <label>Password</label>
-    <input id="loginPassword" type="password" autocomplete="current-password">
+<label>Password</label>
+<div class="password-wrap">
+<input id="loginPassword" type="password" autocomplete="current-password">
+<button type="button" class="password-toggle" id="passwordToggle">Show</button>
+</div>
 
-    <button class="primary-button" id="loginButton" style="width:100%;margin-top:18px">Sign In</button>
-    <button class="secondary-button" id="forgotPasswordButton" style="width:100%;margin-top:11px">Forgot Password?</button>
+<button class="primary-button" id="loginButton" style="width:100%;margin-top:18px">
+Sign In
+</button>
 
-    <div id="loginError" class="hidden"></div>
-    <div id="loginMessage" class="hidden"></div>
-  </div>
+<button class="secondary-button" id="forgotPasswordButton" style="width:100%;margin-top:11px">
+Forgot Password?
+</button>
+
+<div id="loginError" class="login-error hidden"></div>
+</div>
 </section>
 
 <section class="login hidden" id="profileScreen">
-  <div class="card" style="padding:24px">
-    <h1>Choose a Profile</h1>
-    <div id="profileList"></div>
-    <button class="secondary-button" id="addProfileButton" style="width:100%;margin-top:14px">+ Add Profile</button>
-  </div>
+<div class="card" style="padding:24px">
+<h1>Choose a Profile</h1>
+<div id="profileList"></div>
+<button class="secondary-button" id="addProfileButton" style="width:100%;margin-top:14px">+ Add Profile</button>
+</div>
 
-  <div class="card hidden" id="addProfileForm" style="padding:24px;margin-top:14px">
-    <h2>New Profile</h2>
+<div class="card hidden" id="addProfileForm" style="padding:24px;margin-top:14px">
+<h2>New Profile</h2>
 
-    <label>Name</label>
-    <input id="newProfileName">
+<label>Name</label>
+<input id="newProfileName">
 
-    <label>4-Digit PIN</label>
-    <input id="newProfilePin" type="password" inputmode="numeric" maxlength="4">
+<label>PIN Length</label>
+<div class="pin-length-choice" id="newPinLengthChoice">
+<button class="secondary-button selected" data-pin-length="4">4 Digits</button>
+<button class="secondary-button" data-pin-length="6">6 Digits</button>
+</div>
 
-    <label>Profile Picture</label>
-    <div id="avatarGrid" class="avatar-grid"></div>
+<label>Create PIN</label>
+<div class="pin-boxes" id="newProfilePinBoxes"></div>
 
-    <button class="primary-button" id="saveProfileButton" style="width:100%;margin-top:18px">Create Profile</button>
-    <button class="secondary-button" id="cancelProfileButton" style="width:100%;margin-top:10px">Cancel</button>
-  </div>
+<button class="primary-button" id="saveProfileButton" style="width:100%;margin-top:18px">
+Create Profile
+</button>
+<button class="secondary-button" id="cancelProfileButton" style="width:100%;margin-top:10px">
+Cancel
+</button>
+</div>
 
-  <div class="card hidden" id="pinScreen" style="padding:24px;margin-top:14px">
-    <h2>Enter PIN</h2>
-    <p class="subtext" id="pinProfileName"></p>
+<div class="card hidden" id="pinScreen" style="padding:24px;margin-top:14px">
+<h2 id="pinProfileName">Enter PIN</h2>
+<div class="pin-boxes" id="profilePinBoxes"></div>
+<div id="pinError" class="login-error hidden"></div>
 
-    <input id="profilePin" type="password" inputmode="numeric" maxlength="4">
+<button class="primary-button" id="unlockProfileButton" style="width:100%;margin-top:12px">
+Unlock
+</button>
+<button class="secondary-button" id="cancelPinButton" style="width:100%;margin-top:10px">
+Back
+</button>
+</div>
 
-    <button class="primary-button" id="unlockProfileButton" style="width:100%;margin-top:12px">Unlock</button>
-    <button class="secondary-button" id="cancelPinButton" style="width:100%;margin-top:10px">Back</button>
-
-    <div id="pinError" class="hidden"></div>
-  </div>
-
-  <button class="danger-button" id="profileLogoutButton" style="width:100%;margin-top:14px">Log Out</button>
+<button class="danger-button" id="profileLogoutButton" style="width:100%;margin-top:14px">
+Log Out
+</button>
 </section>
 
 <section class="app hidden" id="appScreen">
@@ -1249,178 +1262,210 @@ input[type=number]::-webkit-outer-spin-button{
 
 <section class="panel workspace-panel" id="analyticsPanel">
 <div class="panel-inner">
-  <h1 class="screen-title">Analytics</h1>
 
-  <div class="analytics-controls" id="analyticsRangeButtons">
-    <button class="secondary-button small-button selected" data-range="month">Month</button>
-    <button class="secondary-button small-button" data-range="year">Year</button>
-    <button class="secondary-button small-button" data-range="all">All Time</button>
-    <button class="secondary-button small-button" data-range="custom">Custom</button>
-  </div>
+<h1 class="screen-title">Analytics</h1>
 
-  <div id="analyticsMonthControls">
-    <input id="analyticsMonthInput" type="month">
-  </div>
+<div class="analytics-controls" id="analyticsRangeButtons">
+<button class="secondary-button small-button selected" data-range="month">Month</button>
+<button class="secondary-button small-button" data-range="year">Year</button>
+<button class="secondary-button small-button" data-range="all">All Time</button>
+<button class="secondary-button small-button" data-range="custom">Custom</button>
+</div>
 
-  <div id="analyticsYearControls" class="hidden">
-    <select id="analyticsYearSelect"></select>
-  </div>
+<div class="analytics-month-wrap" id="analyticsMonthControls">
+<input id="analyticsMonthInput" type="month">
+</div>
 
-  <div id="analyticsCustomControls" class="custom-date-grid hidden">
-    <input id="analyticsStartDate" type="date">
-    <input id="analyticsEndDate" type="date">
-  </div>
+<div class="analytics-month-wrap hidden" id="analyticsYearControls">
+<select id="analyticsYearSelect"></select>
+</div>
 
-  <div class="analytics-grid">
-    <div class="card" style="padding:18px">
-      <div class="subtext" id="analyticsPeriodLabel">Selected Period</div>
-      <div class="balance" id="analyticsTotal">$0.00</div>
+<div class="custom-date-grid hidden" id="analyticsCustomControls">
+<input id="analyticsStartDate" type="date">
+<input id="analyticsEndDate" type="date">
+</div>
 
-      <div class="calc-row">
-        <span>Needs</span>
-        <strong id="analyticsNeeds">$0.00</strong>
-      </div>
+<div class="analytics-grid">
 
-      <div class="calc-row">
-        <span>Fun Money</span>
-        <strong id="analyticsFun">$0.00</strong>
-      </div>
+<div class="card" style="padding:18px">
+<div class="subtext" id="analyticsPeriodLabel"></div>
+<div class="balance" id="analyticsTotal">$0.00</div>
 
-      <div class="calc-row">
-        <span>Added Funds</span>
-        <strong id="analyticsAddedFunds">$0.00</strong>
-      </div>
-    </div>
+<div class="calc-row">
+<span>Needs Spending</span>
+<strong id="analyticsNeeds">$0.00</strong>
+</div>
 
-    <div class="card" style="padding:18px">
-      <h3 style="margin-top:0">Spending by Category</h3>
+<div class="calc-row">
+<span>Fun Money Spending</span>
+<strong id="analyticsFun">$0.00</strong>
+</div>
 
-      <div class="pie-wrap">
-        <div class="pie-chart" id="analyticsPie"></div>
-        <div id="analyticsCategories" class="subtext">No expenses.</div>
-      </div>
-    </div>
+<div class="calc-row">
+<span>Added Funds</span>
+<strong id="analyticsAddedFunds">$0.00</strong>
+</div>
+</div>
 
-    <div class="card" style="padding:18px">
-      <h3 style="margin-top:0">Profiles</h3>
-      <div id="analyticsProfiles" class="subtext">No Fun Money spending.</div>
-    </div>
+<div class="card" style="padding:18px">
+<h3 style="margin-top:0">Spending by Category</h3>
 
-    <div class="card" style="padding:18px">
-      <h3 style="margin-top:0">Savings</h3>
-      <div class="balance" id="analyticsSavings">$0.00</div>
-      <div class="subtext">Savings allocated by budgets whose budget month falls inside the selected period.</div>
-    </div>
-  </div>
+<div class="pie-layout">
+<div class="pie-chart" id="analyticsPie"></div>
+
+<div>
+<div class="category-head">
+<span>Category</span>
+<span style="text-align:right">Amount</span>
+<span style="text-align:right">%</span>
+</div>
+<div id="analyticsCategories"></div>
+</div>
+</div>
+</div>
+
+<div class="card" style="padding:18px">
+<h3 style="margin-top:0">Fun Money Spending by Profile</h3>
+<p class="subtext">
+Dollar values below show how much Fun Money each profile spent during the selected period.
+</p>
+<div id="analyticsProfiles"></div>
+</div>
+
+<div class="card" style="padding:18px">
+<h3 style="margin-top:0">Savings Allocated</h3>
+<div class="balance" id="analyticsSavings">$0.00</div>
+</div>
+
+</div>
 </div>
 </section>
 
 <section class="panel workspace-panel" id="expenseHistoryPanel">
 <div class="panel-inner">
-  <div class="panel-header">
-    <h1 class="screen-title">Expense History</h1>
-    <button class="primary-button small-button" id="addExpenseButton">+ Expense</button>
-  </div>
 
-  <div id="transactions"></div>
+<div class="panel-header">
+<h1 class="screen-title">Expense History</h1>
+<button class="primary-button small-button" id="addExpenseButton">+ Expense</button>
+</div>
+
+<div id="transactions"></div>
 </div>
 </section>
 
 <section class="panel workspace-panel home-panel" id="homePanel">
 <div class="panel-inner">
 
-  <div class="date-strip">
-    <div class="date-month" id="dateMonth"></div>
-    <div class="date-days" id="dateDays"></div>
-  </div>
+<div class="date-strip">
+<div class="date-month" id="dateMonth"></div>
+<div class="date-days" id="dateDays"></div>
+</div>
 
-  <div class="home-funds">
-    <div class="card fund-card" id="needsFundCard">
-      <div class="fund-label">Needs</div>
-      <div class="fund-period">Current Balance</div>
-      <div class="balance" id="needsBalance">$0.00</div>
+<div class="home-funds">
 
-      <button class="secondary-button small-button add-funds-button" data-add-fund="needs">+ Add Funds</button>
+<div class="card fund-card" id="needsFundCard">
+<div class="fund-label">Needs</div>
+<div class="fund-period">Current Balance</div>
+<div class="balance" id="needsBalance">$0.00</div>
+<div class="home-expenses" id="homeNeedsExpenses"></div>
+</div>
 
-      <div class="home-expenses" id="homeNeedsExpenses"></div>
-    </div>
+<div class="card fund-card" id="funFundCard">
+<div class="fund-label">Fun Money</div>
+<div class="fund-period" id="funProfileLabel">Current Balance</div>
+<div class="balance" id="funBalance">$0.00</div>
+<div class="home-expenses" id="homeFunExpenses"></div>
+</div>
 
-    <div class="card fund-card" id="funFundCard">
-      <div class="fund-label">Fun Money</div>
-      <div class="fund-period">Current Balance</div>
-      <div class="balance" id="funBalance">$0.00</div>
+</div>
+</div>
+</section>
 
-      <button class="secondary-button small-button add-funds-button" data-add-fund="fun">+ Add Funds</button>
+<section class="panel workspace-panel" id="currentBudgetPanel">
+<div class="panel-inner">
 
-      <div class="home-expenses" id="homeFunExpenses"></div>
-    </div>
-  </div>
+<h1 class="screen-title">Current Budget</h1>
+
+<div class="subtext" id="currentBudgetMonth"></div>
+
+<div class="warning-note hidden" id="currentFiveWeekWarning"></div>
+
+<div class="card" style="padding:17px;margin-top:16px">
+<div class="budget-summary" id="currentBudgetSummary"></div>
+</div>
+
 </div>
 </section>
 
 <section class="panel workspace-panel" id="monthlyBudgetPanel">
 <div class="panel-inner">
 
-  <div class="panel-header">
-    <h1 class="screen-title" id="budgetSetupTitle">Prepare Your Budget</h1>
-  </div>
+<div class="panel-header">
+<h1 class="screen-title" id="budgetSetupTitle">Prepare Your Budget</h1>
+</div>
 
-  <button class="secondary-button small-button" id="viewPreviousBudgetsButton" style="margin-bottom:13px">
-    View Previous Months' Budgets
-  </button>
+<button class="secondary-button small-button" id="viewPreviousBudgetsButton" style="margin-bottom:13px">
+View Previous Months' Budgets
+</button>
 
-  <p class="subtext" id="budgetSetupInstructions"></p>
+<p class="subtext" id="budgetSetupInstructions"></p>
 
-  <div class="warning-note hidden" id="fiveWeekWarning"></div>
+<div class="warning-note hidden" id="fiveWeekWarning"></div>
 
-  <div class="info-link" id="budgetHelpButton">
-    <span>How to Fill Out the Budget</span>
-    <span class="info-icon">i</span>
-  </div>
+<div class="info-link" id="budgetHelpButton">
+<span>How to Fill Out the Budget</span>
+<span class="info-icon">i</span>
+</div>
 
-  <h3>Income</h3>
-  <p class="subtext" id="incomePeriodLabel"></p>
+<h3>Income</h3>
+<p class="subtext" id="incomePeriodLabel"></p>
 
-  <div class="saved-list" id="incomeList"></div>
-  <button class="secondary-button" id="addIncomeButton" style="width:100%;margin-top:10px">+ Add Income</button>
+<div class="saved-list" id="incomeList"></div>
+<button class="secondary-button" id="addIncomeButton" style="width:100%;margin-top:10px">
++ Add Income
+</button>
 
-  <h3>Monthly Bills</h3>
-  <div class="saved-list" id="monthlyBillList"></div>
-  <button class="secondary-button" id="addMonthlyBillButton" style="width:100%;margin-top:10px">+ Add Monthly Bill</button>
+<h3>Monthly Bills</h3>
+<div class="saved-list" id="monthlyBillList"></div>
+<button class="secondary-button" id="addMonthlyBillButton" style="width:100%;margin-top:10px">
++ Add Monthly Bill
+</button>
 
-  <h3>Weekly Bills</h3>
-  <p class="subtext">Optional. Use this for expenses such as weekly childcare.</p>
+<h3>Weekly Bills</h3>
+<div class="saved-list" id="weeklyBillList"></div>
+<button class="secondary-button" id="addWeeklyBillButton" style="width:100%;margin-top:10px">
++ Add Weekly Bill
+</button>
 
-  <div class="saved-list" id="weeklyBillList"></div>
-  <button class="secondary-button" id="addWeeklyBillButton" style="width:100%;margin-top:10px">+ Add Weekly Bill</button>
+<h3>Weekly Allocations</h3>
 
-  <h3>Weekly Allocations</h3>
+<label>Needs</label>
+<input id="weeklyNeeds" class="money-input" inputmode="decimal">
 
-  <label>Needs</label>
-  <input id="weeklyNeeds" class="money-input" inputmode="decimal" placeholder="$0.00">
+<label>Savings</label>
+<input id="weeklySavings" class="money-input" inputmode="decimal">
 
-  <label>Savings</label>
-  <input id="weeklySavings" class="money-input" inputmode="decimal" placeholder="$0.00">
+<div class="calculation">
+<h3 style="margin-top:0">Budget Math</h3>
 
-  <div class="calculation">
-    <h3 style="margin-top:0">Budget Math</h3>
+<div class="calc-row"><span>Monthly Income</span><strong id="calcIncome">$0.00</strong></div>
+<div class="calc-row"><span>Monthly Bills</span><strong id="calcBills">-$0.00</strong></div>
+<div class="calc-row"><span>Net</span><strong id="calcNet">$0.00</strong></div>
+<div class="calc-row"><span>Budget Weeks</span><strong id="calcWeeks">0</strong></div>
+<div class="calc-row"><span>Weekly Total</span><strong id="calcWeeklyTotal">$0.00</strong></div>
+<div class="calc-row"><span>Weekly Bills</span><strong id="calcWeeklyBills">-$0.00</strong></div>
+<div class="calc-row"><span>Weekly Needs</span><strong id="calcWeeklyNeeds">-$0.00</strong></div>
+<div class="calc-row"><span>Weekly Savings</span><strong id="calcWeeklySavings">-$0.00</strong></div>
+<div class="calc-row calc-total"><span>Fun Money Pool</span><strong id="calcFunPool">$0.00</strong></div>
+</div>
 
-    <div class="calc-row"><span>Monthly Income</span><strong id="calcIncome">$0.00</strong></div>
-    <div class="calc-row"><span>Monthly Bills</span><strong id="calcBills">-$0.00</strong></div>
-    <div class="calc-row"><span>Net</span><strong id="calcNet">$0.00</strong></div>
-    <div class="calc-row"><span>Budget Weeks</span><strong id="calcWeeks">0</strong></div>
-    <div class="calc-row"><span>Weekly Total</span><strong id="calcWeeklyTotal">$0.00</strong></div>
-    <div class="calc-row"><span>Weekly Bills</span><strong id="calcWeeklyBills">-$0.00</strong></div>
-    <div class="calc-row"><span>Weekly Needs</span><strong id="calcWeeklyNeeds">-$0.00</strong></div>
-    <div class="calc-row"><span>Weekly Savings</span><strong id="calcWeeklySavings">-$0.00</strong></div>
-    <div class="calc-row calc-total"><span>Fun Money Pool</span><strong id="calcFunPool">$0.00</strong></div>
-  </div>
+<h3>Fun Money Allocation</h3>
+<div id="profileAllocationList"></div>
+<div class="subtext" id="allocationSummary" style="margin-top:10px"></div>
 
-  <h3>Fun Money Allocation</h3>
-  <div id="profileAllocationList"></div>
-  <div class="allocation-summary subtext" id="allocationSummary"></div>
-
-  <button class="primary-button" id="saveBudgetButton" style="width:100%;margin-top:18px">Save Budget</button>
+<button class="primary-button" id="saveBudgetButton" style="width:100%;margin-top:18px">
+Save Budget
+</button>
 
 </div>
 </section>
@@ -1432,177 +1477,226 @@ input[type=number]::-webkit-outer-spin-button{
 <section class="settings-shell" id="settingsScreen">
 
 <button class="icon-well settings-back" id="settingsBackButton" aria-label="Back">
-  <svg viewBox="0 0 24 24">
-    <path d="M15.5 4.5 8 12l7.5 7.5"></path>
-  </svg>
+<svg viewBox="0 0 24 24">
+<path d="M15.5 4.5 8 12l7.5 7.5"></path>
+</svg>
 </button>
 
 <div class="settings">
-  <h1 class="settings-title" id="settingsTitle">Settings</h1>
-  <div class="settings-profile-name subtext" id="settingsProfileName"></div>
+<h1 class="settings-title" id="settingsTitle">Settings</h1>
+<div class="settings-profile-name subtext" id="settingsProfileName"></div>
 
-  <div id="settingsMenu">
-    <button class="folder-button" data-settings-section="appearance"><span>Appearance</span><span>›</span></button>
-    <button class="folder-button" data-settings-section="profile"><span>Profile</span><span>›</span></button>
-    <button class="folder-button" data-settings-section="budget"><span>Budget Info</span><span>›</span></button>
-    <button class="folder-button" id="settingsSwitchProfileButton"><span>Switch Profile</span><span>›</span></button>
-    <button class="danger-button" id="settingsLogoutButton" style="width:100%;margin-top:5px">Log Out</button>
-  </div>
+<div id="settingsMenu">
+<button class="folder-button" data-settings-section="appearance">
+<span>Appearance</span><span>›</span>
+</button>
 
-  <div id="appearanceSettings" class="hidden">
-    <div class="card settings-card">
-      <h2>Theme</h2>
-      <div class="theme-grid" id="themeGrid"></div>
-    </div>
+<button class="folder-button" data-settings-section="profile">
+<span>Profile</span><span>›</span>
+</button>
 
-    <div class="card settings-card">
-      <h2>Font</h2>
+<button class="folder-button" data-settings-section="budget">
+<span>Budget Info</span><span>›</span>
+</button>
 
-      <label>Font Style</label>
-      <select id="fontFamilySelect">
-        <option value="system">Clean</option>
-        <option value="rounded">Rounded</option>
-        <option value="serif">Book</option>
-        <option value="mono">Monospace</option>
-        <option value="pixel">Pixel</option>
-      </select>
+<button class="folder-button" id="settingsSwitchProfileButton">
+<span>Switch Profile</span><span>›</span>
+</button>
 
-      <div class="font-preview" id="fontPreview">The quick brown fox jumps over the lazy dog. 1234567890</div>
+<button class="danger-button" id="settingsLogoutButton" style="width:100%;margin-top:5px">
+Log Out
+</button>
+</div>
 
-      <label>Font Size</label>
-      <div class="range-row">
-        <input id="fontSizeRange" type="range" min="12" max="22" step="1">
-        <strong id="fontSizeLabel">16px</strong>
-      </div>
+<div id="appearanceSettings" class="hidden">
 
-      <button class="primary-button" id="saveAppearanceButton" style="width:100%;margin-top:15px">Save Appearance</button>
-    </div>
-  </div>
+<div class="card settings-card">
+<h2>Theme</h2>
+<div class="theme-grid" id="themeGrid"></div>
+</div>
 
-  <div id="profileSettings" class="hidden">
-    <div class="card settings-card">
-      <h2>Profile Picture</h2>
-      <div id="settingsAvatarGrid" class="avatar-grid"></div>
-      <button class="primary-button" id="saveAvatarButton" style="width:100%;margin-top:15px">Save Profile Picture</button>
-    </div>
+<div class="card settings-card">
+<h2>Font</h2>
 
-    <div class="card settings-card">
-      <h2>Security</h2>
-      <p class="subtext">Security emails are sent only to the email address used for this account.</p>
-      <div id="accountEmailDisplay" style="font-weight:900;overflow-wrap:anywhere"></div>
+<label>Font Style</label>
+<select id="fontFamilySelect">
+<option value="system">Clean</option>
+<option value="rounded">Rounded</option>
+<option value="serif">Book</option>
+<option value="mono">Monospace</option>
+<option value="pixel">Pixel</option>
+</select>
 
-      <button class="secondary-button" id="resetPinEmailButton" style="width:100%;margin-top:14px">Email Me a PIN Reset Link</button>
-      <button class="secondary-button" id="resetPasswordSettingsButton" style="width:100%;margin-top:10px">Email Me a Password Reset Link</button>
+<label>Font Size</label>
+<div class="range-row">
+<input id="fontSizeRange" type="range" min="12" max="22" step="1">
+<strong id="fontSizeLabel">16px</strong>
+</div>
 
-      <div id="securityMessage" class="subtext" style="margin-top:12px"></div>
-    </div>
-  </div>
+<button class="primary-button" id="saveAppearanceButton" style="width:100%;margin-top:15px">
+Save Appearance
+</button>
+</div>
 
-  <div id="budgetSettings" class="hidden">
-    <div class="card settings-card">
-      <h2>Budget Info</h2>
-      <p class="subtext">Saved budgets are stored here so you can review the math later.</p>
-      <div id="budgetHistoryList"></div>
+</div>
 
-      <button class="secondary-button" id="exportBudgetCsvButton" style="width:100%;margin-top:14px">
-        Export Budget History as CSV
-      </button>
-    </div>
-  </div>
+<div id="profileSettings" class="hidden">
+<div class="card settings-card">
+<h2>Security</h2>
+<p class="subtext">
+Security emails are sent only to the email address used for this account.
+</p>
+<div id="accountEmailDisplay" style="font-weight:900;overflow-wrap:anywhere"></div>
+
+<button class="secondary-button" id="resetPinEmailButton" style="width:100%;margin-top:14px">
+Email Me a PIN Reset Link
+</button>
+
+<button class="secondary-button" id="resetPasswordSettingsButton" style="width:100%;margin-top:10px">
+Email Me a Password Reset Link
+</button>
+
+<div id="securityMessage" class="subtext" style="margin-top:12px"></div>
+</div>
+</div>
+
+<div id="budgetSettings" class="hidden">
+<div class="card settings-card">
+<h2>Budget Info</h2>
+<p class="subtext">
+Saved monthly budgets are stored here.
+</p>
+<div id="budgetHistoryList"></div>
+
+<button class="secondary-button" id="exportBudgetCsvButton" style="width:100%;margin-top:14px">
+Export Budget History as CSV
+</button>
+</div>
+</div>
+
 </div>
 </section>
 
 <div class="modal-overlay hidden" id="budgetHelpModal">
 <div class="card modal-card">
-  <h2>How to Fill Out the Budget</h2>
+<h2>How to Fill Out the Budget</h2>
 
-  <p>Input all income deposited into your bank account during the month being used to prepare this budget.</p>
+<p>
+Input all income deposited into your bank account during the month being used to prepare this budget.
+</p>
 
-  <p>Then input all monthly bills. If a bill is paid in the middle of the month, include it with the next budget preparation after it has actually been paid.</p>
+<p>
+Then input all monthly bills that were paid.
+</p>
 
-  <p>The app subtracts Monthly Bills from Monthly Income to determine your Net. The Net is divided by the actual number of Sunday-through-Saturday budget weeks assigned to the budget month.</p>
+<p>
+The app subtracts Monthly Bills from Monthly Income to determine Net. Net is divided by the actual number of budget weeks in the month being prepared.
+</p>
 
-  <p>Weekly Bills, Needs, and Savings are then subtracted from the Weekly Total. What remains becomes the Fun Money pool.</p>
+<p>
+Weekly Bills, Needs, and Savings are then subtracted from the Weekly Total. What remains becomes the Fun Money pool.
+</p>
 
-  <button class="secondary-button" id="closeBudgetHelp" style="width:100%;margin-top:10px">Close</button>
+<button class="secondary-button" id="closeBudgetHelp" style="width:100%;margin-top:10px">
+Close
+</button>
 </div>
 </div>
 
 <div class="modal-overlay hidden" id="moneyEditorModal">
 <div class="card modal-card">
-  <h2 id="moneyEditorTitle">Edit Item</h2>
 
-  <label>Name</label>
-  <input id="moneyEditorName">
+<h2 id="moneyEditorTitle">Edit Item</h2>
 
-  <label>Amount</label>
-  <input id="moneyEditorAmount" class="money-input" inputmode="decimal">
+<label>Name</label>
+<input id="moneyEditorName">
 
-  <div class="modal-actions">
-    <button class="primary-button" id="moneyEditorSaveButton">Save</button>
-    <button class="secondary-button" id="moneyEditorCancelButton">Cancel</button>
-  </div>
+<label>Amount</label>
+<input id="moneyEditorAmount" class="money-input" inputmode="decimal">
 
-  <button class="danger-button hidden" id="moneyEditorDeleteButton" style="width:100%;margin-top:11px">Delete</button>
+<div class="modal-actions">
+<button class="primary-button" id="moneyEditorSaveButton">Save</button>
+<button class="secondary-button" id="moneyEditorCancelButton">Cancel</button>
+</div>
+
+<button class="danger-button hidden" id="moneyEditorDeleteButton" style="width:100%;margin-top:11px">
+Delete
+</button>
+
 </div>
 </div>
 
-<div class="sheet-overlay hidden" id="expenseSheetOverlay">
-<div class="card expense-sheet" id="expenseSheet">
-  <div class="sheet-handle"></div>
-
-  <h2 id="expenseFormTitle">Add Expense</h2>
-
-  <label>Name of the Expense</label>
-  <input id="expenseName">
-
-  <label>Amount</label>
-  <input id="expenseAmount" class="money-input" inputmode="decimal" placeholder="$0.00">
-
-  <label id="expenseFundLabel">Use Money From</label>
-  <select id="expenseFund">
-    <option value="needs">Needs</option>
-    <option value="fun">Fun Money</option>
-  </select>
-
-  <label>Category</label>
-  <select id="expenseCategory">
-    <option value="Groceries">Groceries</option>
-    <option value="Gas">Gas</option>
-    <option value="Dining">Dining</option>
-    <option value="Bill">Bill</option>
-    <option value="Shopping">Shopping</option>
-    <option value="Entertainment">Entertainment</option>
-    <option value="Transportation">Transportation</option>
-    <option value="Medical">Medical</option>
-    <option value="Other">Other</option>
-  </select>
-
-  <label>Date</label>
-  <input id="expenseDate" type="date">
-
-  <button class="primary-button" id="saveExpenseButton" style="width:100%;margin-top:18px">Save Expense</button>
-  <button class="secondary-button" id="cancelExpenseButton" style="width:100%;margin-top:10px">Cancel</button>
-</div>
-</div>
-
-<div class="modal-overlay hidden" id="fundAdjustmentModal">
+<div class="modal-overlay hidden" id="transactionModal">
 <div class="card modal-card">
-  <h2 id="fundAdjustmentTitle">Add Funds</h2>
 
-  <label>Name</label>
-  <input id="fundAdjustmentName" placeholder="Example: Birthday money">
+<div class="transaction-tabs" id="transactionTabs">
+<button class="tab-button active" data-transaction-tab="expense">Add Expense</button>
+<button class="tab-button" data-transaction-tab="funds">Add Funds</button>
+</div>
 
-  <label>Amount</label>
-  <input id="fundAdjustmentAmount" class="money-input" inputmode="decimal" placeholder="$0.00">
+<div id="expenseFormSection">
 
-  <label>Date</label>
-  <input id="fundAdjustmentDate" type="date">
+<h2 id="expenseFormTitle">Add Expense</h2>
 
-  <div class="modal-actions">
-    <button class="primary-button" id="saveFundAdjustmentButton">Add Funds</button>
-    <button class="secondary-button" id="cancelFundAdjustmentButton">Cancel</button>
-  </div>
+<label>Name of the Expense</label>
+<input id="expenseName">
+
+<label>Amount</label>
+<input id="expenseAmount" class="money-input" inputmode="decimal">
+
+<label id="expenseFundLabel">Use Money From</label>
+<select id="expenseFund">
+<option value="needs">Needs</option>
+<option value="fun">Fun Money</option>
+</select>
+
+<label>Category</label>
+<select id="expenseCategory">
+<option value="Groceries">Groceries</option>
+<option value="Gas">Gas</option>
+<option value="Dining">Dining</option>
+<option value="Bill">Bill</option>
+<option value="Shopping">Shopping</option>
+<option value="Entertainment">Entertainment</option>
+<option value="Transportation">Transportation</option>
+<option value="Medical">Medical</option>
+<option value="Other">Other</option>
+</select>
+
+<label>Date</label>
+<input id="expenseDate" type="date">
+
+<div class="modal-actions">
+<button class="primary-button" id="saveExpenseButton">Save</button>
+<button class="secondary-button" id="cancelExpenseButton">Cancel</button>
+</div>
+
+<button class="danger-button hidden" id="deleteExpenseButton" style="width:100%;margin-top:11px">
+Delete
+</button>
+
+</div>
+
+<div id="fundFormSection" class="hidden">
+
+<h2 id="fundAdjustmentTitle">Add Funds</h2>
+
+<label>Name</label>
+<input id="fundAdjustmentName">
+
+<label>Amount</label>
+<input id="fundAdjustmentAmount" class="money-input" inputmode="decimal">
+
+<label>Date</label>
+<input id="fundAdjustmentDate" type="date">
+
+<div class="modal-actions">
+<button class="primary-button" id="saveFundAdjustmentButton">Add Funds</button>
+<button class="secondary-button" id="cancelFundAdjustmentButton">Cancel</button>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -1612,89 +1706,144 @@ input[type=number]::-webkit-outer-spin-button{
 const SUPABASE_URL="https://jivygwszzlaxnhhvxxsg.supabase.co";
 const SUPABASE_KEY="sb_publishable_cZM-7AaU0xD6L_fMa_foOw_-Cjk2edj";
 
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const supabaseClient=window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
 let currentUser=null;
 let householdId=null;
 let currentProfile=null;
 let profileMap=new Map();
 
-let homeBudgetPlan=null;
-let preparedBudgetPlan=null;
-let preparingCurrentMonth=false;
-
 let activePanelIndex=2;
-let settingsSection="menu";
-
-let selectedTheme="cedar";
-let selectedFont="system";
-let selectedFontSize=16;
-let selectedAvatar="knight";
-let selectedSettingsAvatar="knight";
-
-let editingExpenseId=null;
-
-let moneyEditorKind=null;
-let moneyEditorId=null;
-
-let adjustmentFund="needs";
-
-let allocationUserEdited=false;
-let analyticsRange="month";
-
-let toastTimer=null;
 
 const panels=[
   "analyticsPanel",
   "expenseHistoryPanel",
   "homePanel",
+  "currentBudgetPanel",
   "monthlyBudgetPanel"
 ];
 
-const avatarNames=[
-  "knight",
-  "princess",
-  "dragon",
-  "fish",
-  "lion",
-  "turtle",
-  "bird"
-];
+let settingsSection="menu";
+
+let selectedTheme="cedar";
+let selectedFont="system";
+let selectedFontSize=16;
+
+let selectedNewPinLength=4;
+
+let moneyEditorKind=null;
+let moneyEditorId=null;
+
+let editingExpenseId=null;
+let transactionFund="needs";
+let activeTransactionTab="expense";
+
+let preparedBudgetPlan=null;
+let allocationUserEdited=false;
+
+let analyticsRange="month";
+let toastTimer=null;
 
 const themeData={
-  sandy:["#e8d9ad","#fff9e9","#4e351d","#a9b982"],
-  petals:["#aaaee0","#f7d7c8","#494e96","#eda5b5"],
-  harbor:["#9fb7be","#f3eadb","#263e4b","#d58f79"],
-  cedar:["#aebca5","#eee1c8","#304638","#c77f63"],
-  plum:["#b9a5b5","#f2e5cf","#51374e","#c7a24c"]
+  cedar:{
+    colors:["#aebca5","#eee1c8","#304638","#c77f63"],
+    bg:"#aebca5"
+  },
+  sandy:{
+    colors:["#e1cf99","#fff8e5","#422c18","#a9b982"],
+    bg:"#e1cf99"
+  },
+  petals:{
+    colors:["#aaaee0","#f7d7c8","#494e96","#eda5b5"],
+    bg:"#aaaee0"
+  },
+  harbor:{
+    colors:["#9fb7be","#f3eadb","#263e4b","#d58f79"],
+    bg:"#9fb7be"
+  },
+  plum:{
+    colors:["#b9a5b5","#f2e5cf","#51374e","#c7a24c"],
+    bg:"#b9a5b5"
+  }
 };
 
-const money=n=>Number(n||0).toLocaleString("en-US",{style:"currency",currency:"USD"});
+const analyticsColors=[
+  "#c77f63",
+  "#304638",
+  "#a2ad8f",
+  "#d5a557",
+  "#788da4",
+  "#b77f9a",
+  "#729174",
+  "#9c765e",
+  "#747474"
+];
 
-const dateOnly=d=>{
-  const x=new Date(d);
-  return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,"0")}-${String(x.getDate()).padStart(2,"0")}`;
-};
-
-const firstOfMonth=d=>new Date(d.getFullYear(),d.getMonth(),1);
-const addMonths=(d,n)=>new Date(d.getFullYear(),d.getMonth()+n,1);
-
-const weekStart=d=>{
-  const x=new Date(d);
-  x.setHours(0,0,0,0);
-  x.setDate(x.getDate()-x.getDay());
-  return x;
-};
-
-const escapeHtml=v=>{
-  const d=document.createElement("div");
-  d.textContent=v??"";
-  return d.innerHTML;
-};
+const money=n=>
+  Number(n||0).toLocaleString(
+    "en-US",
+    {
+      style:"currency",
+      currency:"USD"
+    }
+  );
 
 function parseMoney(v){
-  const n=Number(String(v??"").replace(/[^0-9.-]/g,""));
+  const n=Number(
+    String(v??"")
+      .replace(/[^0-9.-]/g,"")
+  );
+
   return Number.isFinite(n)?n:0;
+}
+
+function dateOnly(d){
+  const x=new Date(d);
+
+  return[
+    x.getFullYear(),
+    String(x.getMonth()+1).padStart(2,"0"),
+    String(x.getDate()).padStart(2,"0")
+  ].join("-");
+}
+
+function firstOfMonth(d){
+  return new Date(
+    d.getFullYear(),
+    d.getMonth(),
+    1
+  );
+}
+
+function addMonths(d,n){
+  return new Date(
+    d.getFullYear(),
+    d.getMonth()+n,
+    1
+  );
+}
+
+function weekStart(d){
+  const x=new Date(d);
+
+  x.setHours(0,0,0,0);
+  x.setDate(x.getDate()-x.getDay());
+
+  return x;
+}
+
+function activeBudgetMonth(){
+  /*
+  IMPORTANT:
+  Current budget follows the CALENDAR MONTH.
+
+  August date = August budget.
+  September budget does not become active until September.
+  */
+  return firstOfMonth(new Date());
 }
 
 function getBudgetWeekCount(monthDate){
@@ -1704,55 +1853,50 @@ function getBudgetWeekCount(monthDate){
   const first=new Date(y,m,1);
   const last=new Date(y,m+1,0);
 
-  let ws=weekStart(first);
+  let current=weekStart(first);
   const end=weekStart(last);
 
   let count=0;
 
-  while(ws<=end){
-    let days=0;
+  while(current<=end){
+    let daysInMonth=0;
 
     for(let i=0;i<7;i++){
-      const d=new Date(ws);
-      d.setDate(ws.getDate()+i);
+      const day=new Date(current);
+      day.setDate(current.getDate()+i);
 
-      if(d.getFullYear()===y && d.getMonth()===m){
-        days++;
+      if(
+        day.getFullYear()===y &&
+        day.getMonth()===m
+      ){
+        daysInMonth++;
       }
     }
 
-    if(days>=4){
+    if(daysInMonth>=4){
       count++;
     }
 
-    ws=new Date(ws);
-    ws.setDate(ws.getDate()+7);
+    current=new Date(current);
+    current.setDate(current.getDate()+7);
   }
 
   return count;
 }
 
-function budgetMonthForWeek(date=new Date()){
-  const ws=weekStart(date);
-  const counts=new Map();
-
-  for(let i=0;i<7;i++){
-    const d=new Date(ws);
-    d.setDate(ws.getDate()+i);
-
-    const key=`${d.getFullYear()}-${d.getMonth()}`;
-    counts.set(key,(counts.get(key)||0)+1);
-  }
-
-  const winner=[...counts.entries()].sort((a,b)=>b[1]-a[1])[0][0];
-  const [y,m]=winner.split("-").map(Number);
-
-  return new Date(y,m,1);
+function escapeHtml(v){
+  const d=document.createElement("div");
+  d.textContent=v??"";
+  return d.innerHTML;
 }
 
 function formatMoneyInput(el,negative=false){
   const n=Math.abs(parseMoney(el.value));
-  el.value=n?`${negative?"-":""}${money(n)}`:"";
+
+  el.value=
+    n
+      ?`${negative?"-":""}${money(n)}`
+      :"";
 }
 
 function bindMoneyInput(el,negative=false){
@@ -1760,113 +1904,50 @@ function bindMoneyInput(el,negative=false){
 
   el.dataset.moneyBound="1";
 
-  el.addEventListener("blur",()=>{
-    formatMoneyInput(el,negative);
-  });
+  el.addEventListener(
+    "blur",
+    ()=>formatMoneyInput(el,negative)
+  );
 }
 
 function showToast(message){
   const toast=document.getElementById("appToast");
 
   toast.textContent=message;
+
   toast.classList.remove("show");
 
-  requestAnimationFrame(()=>toast.classList.add("show"));
+  requestAnimationFrame(
+    ()=>toast.classList.add("show")
+  );
 
   clearTimeout(toastTimer);
 
-  toastTimer=setTimeout(()=>{
-    toast.classList.remove("show");
-  },1700);
-}
-
-function avatarSvg(name){
-  const common=`viewBox="0 0 64 64" aria-hidden="true"`;
-
-  if(name==="knight"){
-    return `<svg ${common}>
-      <path d="M18 27c0-13 6-20 14-20s14 7 14 20v22c-4 6-9 9-14 9s-10-3-14-9Z" fill="none" stroke="currentColor" stroke-width="4"/>
-      <path d="M16 28h32M22 28v15M29 28v15M36 28v15M43 28v15" stroke="currentColor" stroke-width="3.5"/>
-      <path d="M32 7V2l9 6" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round"/>
-    </svg>`;
-  }
-
-  if(name==="princess"){
-    return `<svg ${common}>
-      <path d="M18 22 23 8l9 9 9-9 5 14Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
-      <circle cx="32" cy="35" r="15" fill="none" stroke="currentColor" stroke-width="4"/>
-      <path d="M23 49c3 7 15 7 18 0M26 34h1M37 34h1" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-    </svg>`;
-  }
-
-  if(name==="dragon"){
-    return `<svg ${common}>
-      <path d="M12 47c4-20 15-33 32-34l-4 10 12-5-6 12 8 7-12 1c-3 12-12 19-26 18Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
-      <path d="M20 28 11 18M31 19 29 8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-      <circle cx="36" cy="30" r="2.5" fill="currentColor"/>
-    </svg>`;
-  }
-
-  if(name==="fish"){
-    return `<svg ${common}>
-      <path d="M11 32c10-14 27-14 39 0-12 14-29 14-39 0Z" fill="none" stroke="currentColor" stroke-width="4"/>
-      <path d="m49 32 11-10v20Z" fill="none" stroke="currentColor" stroke-width="4"/>
-      <circle cx="23" cy="28" r="2.5" fill="currentColor"/>
-    </svg>`;
-  }
-
-  if(name==="lion"){
-    return `<svg ${common}>
-      <circle cx="32" cy="32" r="23" fill="none" stroke="currentColor" stroke-width="4"/>
-      <circle cx="32" cy="34" r="14" fill="none" stroke="currentColor" stroke-width="4"/>
-      <circle cx="27" cy="31" r="2" fill="currentColor"/>
-      <circle cx="37" cy="31" r="2" fill="currentColor"/>
-      <path d="m28 39 4 3 4-3M32 42v5" stroke="currentColor" stroke-width="3" fill="none"/>
-    </svg>`;
-  }
-
-  if(name==="turtle"){
-    return `<svg ${common}>
-      <ellipse cx="30" cy="33" rx="18" ry="14" fill="none" stroke="currentColor" stroke-width="4"/>
-      <circle cx="52" cy="32" r="6" fill="none" stroke="currentColor" stroke-width="4"/>
-      <path d="M18 23 9 17M17 43 8 49M38 21l7-8M39 44l7 8M20 33h20M30 19v28" stroke="currentColor" stroke-width="3"/>
-    </svg>`;
-  }
-
-  return `<svg ${common}>
-    <path d="M12 44c6-19 17-29 32-25 7 2 10 7 11 12l-10-2c0 15-8 24-22 24-8 0-12-4-11-9Z" fill="none" stroke="currentColor" stroke-width="4"/>
-    <path d="m54 29 8 5-9 4" fill="none" stroke="currentColor" stroke-width="3"/>
-    <circle cx="44" cy="25" r="2.5" fill="currentColor"/>
-  </svg>`;
-}
-
-function renderAvatarGrid(id,selected,onSelect){
-  const box=document.getElementById(id);
-  box.innerHTML="";
-
-  avatarNames.forEach(name=>{
-    const button=document.createElement("button");
-
-    button.type="button";
-    button.className=`avatar-choice${name===selected?" selected":""}`;
-
-    button.innerHTML=
-      avatarSvg(name)+
-      `<span class="avatar-label">${name[0].toUpperCase()+name.slice(1)}</span>`;
-
-    button.onclick=()=>onSelect(name);
-
-    box.appendChild(button);
-  });
+  toastTimer=setTimeout(
+    ()=>toast.classList.remove("show"),
+    1700
+  );
 }
 
 function applyAppearance(){
-  document.body.className=`theme-${selectedTheme} font-${selectedFont}`;
+  document.body.className=
+    `theme-${selectedTheme} font-${selectedFont}`;
 
   document.documentElement.style.setProperty(
     "--font-size",
     `${selectedFontSize}px`
   );
+
+  const theme=
+    themeData[selectedTheme]||
+    themeData.cedar;
+
+  document
+    .getElementById("themeColorMeta")
+    .setAttribute(
+      "content",
+      theme.bg
+    );
 }
 
 function renderDateStrip(){
@@ -1874,64 +1955,165 @@ function renderDateStrip(){
   const ws=weekStart(now);
 
   document.getElementById("dateMonth").textContent=
-    now.toLocaleDateString("en-US",{month:"long"});
+    now.toLocaleDateString(
+      "en-US",
+      {month:"long"}
+    );
 
   const box=document.getElementById("dateDays");
   box.innerHTML="";
 
   for(let i=0;i<7;i++){
     const d=new Date(ws);
-    d.setDate(ws.getDate()+i);
+
+    d.setDate(
+      ws.getDate()+i
+    );
 
     const el=document.createElement("div");
 
-    el.className=`date-day${dateOnly(d)===dateOnly(now)?" today":""}`;
-    el.innerHTML=`<span>${d.getDate()}</span>`;
+    el.className=
+      `date-day${
+        dateOnly(d)===dateOnly(now)
+          ?" today"
+          :""
+      }`;
+
+    el.innerHTML=
+      `<span>${d.getDate()}</span>`;
 
     box.appendChild(el);
   }
 }
 
+function renderPinBoxes(containerId,length,onComplete){
+  const box=document.getElementById(containerId);
+
+  box.innerHTML="";
+
+  for(let i=0;i<length;i++){
+    const input=document.createElement("input");
+
+    input.className="pin-box";
+    input.type="password";
+    input.inputMode="numeric";
+    input.maxLength=1;
+    input.autocomplete="off";
+
+    input.addEventListener(
+      "input",
+      ()=>{
+        input.value=
+          input.value
+            .replace(/\D/g,"")
+            .slice(0,1);
+
+        if(
+          input.value &&
+          i<length-1
+        ){
+          box.children[i+1].focus();
+        }
+
+        if(
+          getPinFromBoxes(containerId).length===length
+        ){
+          onComplete?.();
+        }
+      }
+    );
+
+    input.addEventListener(
+      "keydown",
+      e=>{
+        if(
+          e.key==="Backspace" &&
+          !input.value &&
+          i>0
+        ){
+          box.children[i-1].focus();
+        }
+      }
+    );
+
+    box.appendChild(input);
+  }
+}
+
+function getPinFromBoxes(id){
+  return[...
+    document.querySelectorAll(
+      `#${id} .pin-box`
+    )
+  ]
+  .map(x=>x.value)
+  .join("");
+}
+
+function clearPinBoxes(id){
+  document
+    .querySelectorAll(`#${id} .pin-box`)
+    .forEach(x=>x.value="");
+
+  document
+    .querySelector(`#${id} .pin-box`)
+    ?.focus();
+}
+
 function panelMetrics(){
-  const panel=document.querySelector(".workspace-panel");
+  const panel=
+    document.querySelector(".workspace-panel");
 
   const width=
     panel?.getBoundingClientRect().width||
     window.innerWidth*.88;
 
   const gap=12;
-  const center=(window.innerWidth-width)/2;
 
   return{
     width,
     gap,
-    center,
-    step:width+gap
+    step:width+gap,
+    center:(window.innerWidth-width)/2
   };
 }
 
 function showPanel(index,animate=true){
-  index=Math.max(0,Math.min(panels.length-1,index));
-  activePanelIndex=index;
+  activePanelIndex=
+    Math.max(
+      0,
+      Math.min(
+        panels.length-1,
+        index
+      )
+    );
 
   if(window.innerWidth<=900){
     const m=panelMetrics();
-    const x=m.center-index*m.step;
 
-    const track=document.getElementById("mobileTrack");
+    const x=
+      m.center-
+      activePanelIndex*m.step;
+
+    const track=
+      document.getElementById("mobileTrack");
 
     track.style.transition=
       animate
         ?"transform .32s cubic-bezier(.2,.78,.22,1)"
         :"none";
 
-    track.style.transform=`translate3d(${x}px,0,0)`;
+    track.style.transform=
+      `translate3d(${x}px,0,0)`;
   }
 }
 
 function bindFluidSwipe(){
-  const area=document.getElementById("mainWorkspace");
-  const track=document.getElementById("mobileTrack");
+  const area=
+    document.getElementById("mainWorkspace");
+
+  const track=
+    document.getElementById("mobileTrack");
 
   let sx=0;
   let sy=0;
@@ -1939,58 +2121,101 @@ function bindFluidSwipe(){
   let axis=null;
   let dragging=false;
 
-  area.addEventListener("touchstart",e=>{
-    if(window.innerWidth>900||e.touches.length!==1)return;
+  area.addEventListener(
+    "touchstart",
+    e=>{
+      if(
+        window.innerWidth>900 ||
+        e.touches.length!==1
+      )return;
 
-    dragging=true;
-    axis=null;
+      dragging=true;
+      axis=null;
 
-    sx=e.touches[0].clientX;
-    sy=e.touches[0].clientY;
+      sx=e.touches[0].clientX;
+      sy=e.touches[0].clientY;
 
-    const m=panelMetrics();
-    baseX=m.center-activePanelIndex*m.step;
+      const m=panelMetrics();
 
-    track.style.transition="none";
-  },{passive:true});
+      baseX=
+        m.center-
+        activePanelIndex*m.step;
 
-  area.addEventListener("touchmove",e=>{
-    if(!dragging||window.innerWidth>900)return;
+      track.style.transition="none";
+    },
+    {passive:true}
+  );
 
-    const dx=e.touches[0].clientX-sx;
-    const dy=e.touches[0].clientY-sy;
+  area.addEventListener(
+    "touchmove",
+    e=>{
+      if(
+        !dragging ||
+        window.innerWidth>900
+      )return;
 
-    if(!axis&&Math.hypot(dx,dy)>7){
-      axis=Math.abs(dx)>Math.abs(dy)?"x":"y";
-    }
+      const dx=
+        e.touches[0].clientX-sx;
 
-    if(axis!=="x")return;
+      const dy=
+        e.touches[0].clientY-sy;
 
-    e.preventDefault();
+      if(
+        !axis &&
+        Math.hypot(dx,dy)>7
+      ){
+        axis=
+          Math.abs(dx)>Math.abs(dy)
+            ?"x"
+            :"y";
+      }
 
-    track.style.transform=`translate3d(${baseX+dx}px,0,0)`;
-  },{passive:false});
+      if(axis!=="x")return;
 
-  area.addEventListener("touchend",e=>{
-    if(!dragging)return;
+      e.preventDefault();
 
-    dragging=false;
+      track.style.transform=
+        `translate3d(${baseX+dx}px,0,0)`;
+    },
+    {passive:false}
+  );
 
-    if(axis!=="x"){
-      showPanel(activePanelIndex,true);
-      return;
-    }
+  area.addEventListener(
+    "touchend",
+    e=>{
+      if(!dragging)return;
 
-    const dx=e.changedTouches[0].clientX-sx;
+      dragging=false;
 
-    let target=activePanelIndex;
+      if(axis!=="x"){
+        showPanel(
+          activePanelIndex,
+          true
+        );
 
-    if(Math.abs(dx)>window.innerWidth*.18){
-      target+=dx<0?1:-1;
-    }
+        return;
+      }
 
-    showPanel(target,true);
-  },{passive:true});
+      const dx=
+        e.changedTouches[0].clientX-sx;
+
+      let target=
+        activePanelIndex;
+
+      if(
+        Math.abs(dx)>
+        window.innerWidth*.18
+      ){
+        target+=
+          dx<0
+            ?1
+            :-1;
+      }
+
+      showPanel(target,true);
+    },
+    {passive:true}
+  );
 }
 
 function openSettings(section="menu"){
@@ -1998,280 +2223,678 @@ function openSettings(section="menu"){
 
   renderSettingsSection();
 
-  const screen=document.getElementById("settingsScreen");
-
-  screen.classList.add("open");
+  document
+    .getElementById("settingsScreen")
+    .classList.add("open");
 }
 
 function closeSettings(){
-  const screen=document.getElementById("settingsScreen");
-
-  screen.classList.remove("open");
+  document
+    .getElementById("settingsScreen")
+    .classList.remove("open");
 }
 
 function bindSettingsSwipeBack(){
-  const screen=document.getElementById("settingsScreen");
+  const screen=
+    document.getElementById("settingsScreen");
 
   let sx=0;
   let sy=0;
   let active=false;
 
-  screen.addEventListener("touchstart",e=>{
-    if(e.touches.length!==1)return;
+  screen.addEventListener(
+    "touchstart",
+    e=>{
+      if(e.touches.length!==1)return;
 
-    sx=e.touches[0].clientX;
-    sy=e.touches[0].clientY;
+      sx=e.touches[0].clientX;
+      sy=e.touches[0].clientY;
 
-    active=sx<=35;
+      active=sx<=35;
+    },
+    {passive:true}
+  );
 
-    if(active){
-      screen.style.transition="none";
-    }
-  },{passive:true});
+  screen.addEventListener(
+    "touchend",
+    e=>{
+      if(!active)return;
 
-  screen.addEventListener("touchmove",e=>{
-    if(!active)return;
+      const dx=
+        e.changedTouches[0].clientX-sx;
 
-    const dx=e.touches[0].clientX-sx;
-    const dy=e.touches[0].clientY-sy;
+      const dy=
+        e.changedTouches[0].clientY-sy;
 
-    if(dx<=0||Math.abs(dy)>Math.abs(dx)){
-      return;
-    }
+      active=false;
 
-    e.preventDefault();
+      if(
+        dx<80 ||
+        Math.abs(dy)>Math.abs(dx)
+      )return;
 
-    screen.style.transform=`translate3d(${dx}px,0,0)`;
-  },{passive:false});
+      /*
+      Nested settings page:
+      swipe right = back to Settings menu.
 
-  screen.addEventListener("touchend",e=>{
-    if(!active)return;
-
-    const dx=e.changedTouches[0].clientX-sx;
-
-    screen.style.transition="transform .28s cubic-bezier(.2,.78,.22,1)";
-
-    if(dx>90){
-      screen.style.transform="translate3d(100%,0,0)";
-      screen.classList.remove("open");
-
-      setTimeout(()=>{
-        screen.style.transform="";
-        screen.style.transition="";
-      },300);
-    }else{
-      screen.style.transform="translate3d(0,0,0)";
-
-      setTimeout(()=>{
-        screen.style.transform="";
-        screen.style.transition="";
-      },300);
-    }
-
-    active=false;
-  },{passive:true});
+      Main Settings page:
+      swipe right = close Settings.
+      */
+      if(settingsSection!=="menu"){
+        settingsSection="menu";
+        renderSettingsSection();
+      }else{
+        closeSettings();
+      }
+    },
+    {passive:true}
+  );
 }
 
 async function loadHousehold(){
-  const {data,error}=await supabaseClient
-    .from("household_members")
-    .select("household_id")
-    .eq("user_id",currentUser.id)
-    .limit(1)
-    .maybeSingle();
+  const {data,error}=
+    await supabaseClient
+      .from("household_members")
+      .select("household_id")
+      .eq("user_id",currentUser.id)
+      .limit(1)
+      .maybeSingle();
 
   if(error)throw error;
 
-  householdId=data?.household_id||null;
+  householdId=
+    data?.household_id||null;
 }
 
 async function loadProfiles(){
-  const {data,error}=await supabaseClient
-    .from("profiles")
-    .select("*")
-    .eq("household_id",householdId)
-    .order("display_name");
+  const {data,error}=
+    await supabaseClient
+      .from("profiles")
+      .select("*")
+      .eq("household_id",householdId)
+      .order("created_at");
 
   if(error)throw error;
 
-  profileMap=new Map((data||[]).map(p=>[p.id,p]));
+  profileMap=
+    new Map(
+      (data||[])
+        .map(
+          profile=>[
+            profile.id,
+            profile
+          ]
+        )
+    );
 
   return data||[];
 }
 
 async function renderProfiles(){
-  const profiles=await loadProfiles();
+  const profiles=
+    await loadProfiles();
 
-  const box=document.getElementById("profileList");
+  const box=
+    document.getElementById("profileList");
+
   box.innerHTML="";
 
-  profiles.forEach(profile=>{
-    const row=document.createElement("div");
+  profiles.forEach(
+    profile=>{
+      const row=
+        document.createElement("div");
 
-    row.className="profile-row";
+      row.className="profile-row";
 
-    row.innerHTML=`
-      <div class="profile-avatar">${avatarSvg(profile.avatar||"knight")}</div>
-      <button class="primary-button profile-button">${escapeHtml(profile.display_name)}</button>
-    `;
+      row.innerHTML=`
+        <button class="primary-button profile-button">
+          ${escapeHtml(profile.display_name)}
+        </button>
+      `;
 
-    row.querySelector("button").onclick=()=>selectProfile(profile);
+      row
+        .querySelector("button")
+        .onclick=
+          ()=>selectProfile(profile);
 
-    box.appendChild(row);
-  });
+      box.appendChild(row);
+    }
+  );
 
-  document.getElementById("profileList").classList.remove("hidden");
-  document.getElementById("addProfileButton").classList.remove("hidden");
-  document.getElementById("addProfileForm").classList.add("hidden");
-  document.getElementById("pinScreen").classList.add("hidden");
+  document
+    .getElementById("profileList")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("addProfileButton")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("addProfileForm")
+    .classList.add("hidden");
+
+  document
+    .getElementById("pinScreen")
+    .classList.add("hidden");
 }
 
 function selectProfile(profile){
   currentProfile=profile;
 
-  document.getElementById("profileList").classList.add("hidden");
-  document.getElementById("addProfileButton").classList.add("hidden");
-  document.getElementById("pinScreen").classList.remove("hidden");
+  document
+    .getElementById("profileList")
+    .classList.add("hidden");
 
-  document.getElementById("pinProfileName").textContent=profile.display_name;
-  document.getElementById("profilePin").value="";
-  document.getElementById("profilePin").focus();
+  document
+    .getElementById("addProfileButton")
+    .classList.add("hidden");
+
+  document
+    .getElementById("pinScreen")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("pinProfileName")
+    .textContent=
+      `${profile.display_name}'s PIN`;
+
+  const length=
+    Number(profile.pin_length||4);
+
+  renderPinBoxes(
+    "profilePinBoxes",
+    length,
+    unlockProfile
+  );
+
+  setTimeout(
+    ()=>document
+      .querySelector("#profilePinBoxes .pin-box")
+      ?.focus(),
+    30
+  );
 }
 
 async function unlockProfile(){
-  const pin=document.getElementById("profilePin").value;
+  const pin=
+    getPinFromBoxes("profilePinBoxes");
 
-  const {data,error}=await supabaseClient.rpc(
-    "create_profile_session",
-    {
-      p_profile_id:currentProfile.id,
-      p_pin:pin,
-      p_session_minutes:1440
-    }
-  );
+  const required=
+    Number(
+      currentProfile.pin_length||4
+    );
+
+  if(pin.length!==required)return;
+
+  const {data,error}=
+    await supabaseClient.rpc(
+      "create_profile_session",
+      {
+        p_profile_id:
+          currentProfile.id,
+
+        p_pin:
+          pin,
+
+        p_session_minutes:
+          1440
+      }
+    );
 
   if(error){
-    document.getElementById("pinError").textContent=error.message;
+    const card=
+      document.getElementById("pinScreen");
+
+    card.classList.remove("shake");
+
+    void card.offsetWidth;
+
+    card.classList.add("shake");
+
+    const errorBox=
+      document.getElementById("pinError");
+
+    errorBox.textContent=
+      "Incorrect PIN.";
+
+    errorBox.classList.remove("hidden");
+
+    clearPinBoxes("profilePinBoxes");
+
     return;
   }
 
-  localStorage.setItem("profileSessionToken",data);
-  localStorage.setItem("profileId",currentProfile.id);
+  localStorage.setItem(
+    "profileSessionToken",
+    data
+  );
+
+  localStorage.setItem(
+    "profileId",
+    currentProfile.id
+  );
 
   await enterProfile();
 }
 
 async function loadProfileSettings(){
-  const {data,error}=await supabaseClient
-    .from("profiles")
-    .select("*")
-    .eq("id",currentProfile.id)
-    .single();
+  const {data,error}=
+    await supabaseClient
+      .from("profiles")
+      .select("*")
+      .eq("id",currentProfile.id)
+      .single();
 
   if(error)throw error;
 
   currentProfile=data;
 
-  selectedTheme=data.theme||"cedar";
-  selectedFont=data.font_family||"system";
-  selectedFontSize=Number(data.font_size||16);
-  selectedSettingsAvatar=data.avatar||"knight";
+  selectedTheme=
+    data.theme||"cedar";
+
+  selectedFont=
+    data.font_family||"system";
+
+  selectedFontSize=
+    Number(data.font_size||16);
 
   applyAppearance();
 }
 
-async function loadHomeBudget(){
-  const bm=dateOnly(budgetMonthForWeek(new Date()));
+async function ensureCurrentWeekDeposits(){
+  const month=
+    activeBudgetMonth();
 
-  const {data,error}=await supabaseClient
-    .from("budget_plans")
-    .select("*")
-    .eq("household_id",householdId)
-    .eq("budget_month",bm)
-    .maybeSingle();
+  const monthKey=
+    dateOnly(month);
 
-  if(error)throw error;
+  const ws=
+    dateOnly(weekStart(new Date()));
 
-  homeBudgetPlan=data||null;
+  const {data:plan,error:planError}=
+    await supabaseClient
+      .from("budget_plans")
+      .select("*")
+      .eq("household_id",householdId)
+      .eq("budget_month",monthKey)
+      .maybeSingle();
+
+  if(planError)throw planError;
+
+  if(!plan)return;
+
+  /*
+  Needs:
+  exactly one deposit per week.
+  */
+  const {error:needsError}=
+    await supabaseClient
+      .from("allowance_deposits")
+      .upsert(
+        {
+          household_id:householdId,
+          week_start:ws,
+          fund:"needs",
+          amount:Number(plan.weekly_needs||0)
+        },
+        {
+          onConflict:
+            "household_id,week_start,fund",
+          ignoreDuplicates:true
+        }
+      );
+
+  if(needsError)throw needsError;
+
+  /*
+  Fun Money:
+  MUST use allocation belonging to CURRENT CALENDAR MONTH.
+
+  August date -> August allocations.
+  */
+  const {data:allocations,error:allocationError}=
+    await supabaseClient
+      .from("budget_profile_allocations")
+      .select(
+        "profile_id,weekly_fun_amount,weekly_amount"
+      )
+      .eq("household_id",householdId)
+      .eq("budget_month",monthKey);
+
+  if(allocationError)throw allocationError;
+
+  for(const allocation of allocations||[]){
+    const amount=
+      Number(
+        allocation.weekly_fun_amount ??
+        allocation.weekly_amount ??
+        0
+      );
+
+    const {error}=
+      await supabaseClient
+        .from("profile_fun_deposits")
+        .upsert(
+          {
+            household_id:householdId,
+            profile_id:allocation.profile_id,
+            week_start:ws,
+            amount
+          },
+          {
+            onConflict:
+              "household_id,profile_id,week_start",
+            ignoreDuplicates:true
+          }
+        );
+
+    if(error)throw error;
+  }
+}
+
+async function loadCurrentBudget(){
+  const month=
+    activeBudgetMonth();
+
+  const monthKey=
+    dateOnly(month);
+
+  document
+    .getElementById("currentBudgetMonth")
+    .textContent=
+      month.toLocaleDateString(
+        "en-US",
+        {
+          month:"long",
+          year:"numeric"
+        }
+      );
+
+  const weeks=
+    getBudgetWeekCount(month);
+
+  const warning=
+    document.getElementById(
+      "currentFiveWeekWarning"
+    );
+
+  if(weeks===5){
+    warning.textContent=
+      `${month.toLocaleDateString("en-US",{month:"long"})} has 5 budget weeks.`;
+
+    warning.classList.remove("hidden");
+  }else{
+    warning.classList.add("hidden");
+  }
+
+  const [
+    {data:plan,error:planError},
+    {data:items,error:itemError},
+    {data:allocations,error:allocationError}
+  ]=
+    await Promise.all([
+      supabaseClient
+        .from("budget_plans")
+        .select("*")
+        .eq("household_id",householdId)
+        .eq("budget_month",monthKey)
+        .maybeSingle(),
+
+      supabaseClient
+        .from("budget_items")
+        .select("*")
+        .eq("household_id",householdId)
+        .eq("budget_month",monthKey),
+
+      supabaseClient
+        .from("budget_profile_allocations")
+        .select("*")
+        .eq("household_id",householdId)
+        .eq("budget_month",monthKey)
+    ]);
+
+  if(
+    planError||
+    itemError||
+    allocationError
+  ){
+    throw(
+      planError||
+      itemError||
+      allocationError
+    );
+  }
+
+  const box=
+    document.getElementById("currentBudgetSummary");
+
+  if(!plan){
+    box.innerHTML=
+      `<p class="subtext">No saved budget exists for this month.</p>`;
+
+    return;
+  }
+
+  const income=
+    (items||[])
+      .filter(x=>x.item_type==="income")
+      .reduce(
+        (sum,x)=>
+          sum+
+          Number(x.amount||0),
+        0
+      );
+
+  const monthlyBills=
+    (items||[])
+      .filter(x=>x.item_type==="monthly_bill")
+      .reduce(
+        (sum,x)=>
+          sum+
+          Math.abs(Number(x.amount||0)),
+        0
+      );
+
+  const weeklyBills=
+    (items||[])
+      .filter(x=>x.item_type==="weekly_bill")
+      .reduce(
+        (sum,x)=>
+          sum+
+          Math.abs(Number(x.amount||0)),
+        0
+      );
+
+  const rows=[];
+
+  rows.push(
+    ["Total Income",money(income)]
+  );
+
+  rows.push(
+    [
+      "Total Monthly Bills",
+      `-${money(monthlyBills)}`
+    ]
+  );
+
+  rows.push(
+    [
+      "Total Weekly Bills",
+      `-${money(weeklyBills)}/week`
+    ]
+  );
+
+  rows.push(
+    [
+      "Weekly Needs",
+      `${money(plan.weekly_needs)}/week`
+    ]
+  );
+
+  rows.push(
+    [
+      "Weekly Savings",
+      `${money(plan.weekly_savings)}/week`
+    ]
+  );
+
+  rows.push(
+    [
+      "Total Fun Money",
+      `${money(plan.weekly_fun)}/week`
+    ]
+  );
+
+  (allocations||[]).forEach(
+    allocation=>{
+      const profile=
+        profileMap.get(
+          allocation.profile_id
+        );
+
+      rows.push(
+        [
+          `${profile?.display_name||"Profile"}'s Fun Money`,
+          `${money(
+            allocation.weekly_fun_amount ??
+            allocation.weekly_amount ??
+            0
+          )}/week`
+        ]
+      );
+    }
+  );
+
+  box.innerHTML=
+    rows
+      .map(
+        ([name,value])=>`
+          <div class="budget-summary-row">
+            <span>${escapeHtml(name)}</span>
+            <strong>${escapeHtml(value)}</strong>
+          </div>
+        `
+      )
+      .join("");
 }
 
 async function determinePreparationMonth(){
-  await loadHomeBudget();
+  const current=
+    activeBudgetMonth();
 
-  if(!homeBudgetPlan){
-    preparingCurrentMonth=true;
-    return firstOfMonth(new Date());
-  }
-
-  preparingCurrentMonth=false;
-  return addMonths(firstOfMonth(new Date()),1);
-}
-
-async function loadPreparedBudget(){
-  const month=await determinePreparationMonth();
-
-  const {data,error}=await supabaseClient
-    .from("budget_plans")
-    .select("*")
-    .eq("household_id",householdId)
-    .eq("budget_month",dateOnly(month))
-    .maybeSingle();
+  const {data,error}=
+    await supabaseClient
+      .from("budget_plans")
+      .select("id")
+      .eq("household_id",householdId)
+      .eq("budget_month",dateOnly(current))
+      .maybeSingle();
 
   if(error)throw error;
 
-  preparedBudgetPlan=data||null;
+  /*
+  First-time user:
+  setup CURRENT month.
 
-  return month;
-}
-
-async function loadMoneyTable(table,listId,kind,negative=false){
-  const {data,error}=await supabaseClient
-    .from(table)
-    .select("*")
-    .eq("household_id",householdId)
-    .order("created_at");
-
-  if(error)throw error;
-
-  const box=document.getElementById(listId);
-  box.innerHTML="";
-
-  (data||[]).forEach(item=>{
-    const row=document.createElement("div");
-
-    row.className="saved-row";
-
-    row.innerHTML=`
-      <div class="saved-row-main">
-        <div class="saved-row-name">${escapeHtml(item.name)}</div>
-      </div>
-
-      <div class="saved-row-amount">
-        ${negative?"-":""}${money(Math.abs(Number(item.amount)||0))}
-      </div>
-
-      <button class="secondary-button small-button">Edit</button>
-    `;
-
-    row.querySelector("button").onclick=()=>{
-      openMoneyEditor(kind,item);
-    };
-
-    box.appendChild(row);
-  });
+  Established user:
+  prepare NEXT month.
+  */
+  return data
+    ?addMonths(current,1)
+    :current;
 }
 
 async function loadBudgetLists(){
   await Promise.all([
-    loadMoneyTable("income_sources","incomeList","income",false),
-    loadMoneyTable("bills","monthlyBillList","monthlyBill",true),
-    loadMoneyTable("weekly_bills","weeklyBillList","weeklyBill",true)
+    loadMoneyTable(
+      "income_sources",
+      "incomeList",
+      "income",
+      false
+    ),
+
+    loadMoneyTable(
+      "bills",
+      "monthlyBillList",
+      "monthlyBill",
+      true
+    ),
+
+    loadMoneyTable(
+      "weekly_bills",
+      "weeklyBillList",
+      "weeklyBill",
+      true
+    )
   ]);
 }
 
+async function loadMoneyTable(
+  table,
+  listId,
+  kind,
+  negative
+){
+  const {data,error}=
+    await supabaseClient
+      .from(table)
+      .select("*")
+      .eq("household_id",householdId)
+      .order("created_at");
+
+  if(error)throw error;
+
+  const box=
+    document.getElementById(listId);
+
+  box.innerHTML="";
+
+  (data||[]).forEach(
+    item=>{
+      const row=
+        document.createElement("div");
+
+      row.className="saved-row";
+
+      row.innerHTML=`
+        <div class="saved-row-main">
+          <div class="saved-row-name">
+            ${escapeHtml(item.name)}
+          </div>
+        </div>
+
+        <div class="saved-row-amount">
+          ${negative?"-":""}${money(Math.abs(Number(item.amount)||0))}
+        </div>
+
+        <button class="secondary-button small-button">
+          Edit
+        </button>
+      `;
+
+      row
+        .querySelector("button")
+        .onclick=
+          ()=>openMoneyEditor(
+            kind,
+            item
+          );
+
+      box.appendChild(row);
+    }
+  );
+}
+
 function tableForMoneyKind(kind){
-  if(kind==="income")return"income_sources";
-  if(kind==="monthlyBill")return"bills";
+  if(kind==="income"){
+    return"income_sources";
+  }
+
+  if(kind==="monthlyBill"){
+    return"bills";
+  }
+
   return"weekly_bills";
 }
 
@@ -2279,61 +2902,99 @@ function openMoneyEditor(kind,item=null){
   moneyEditorKind=kind;
   moneyEditorId=item?.id||null;
 
-  const negative=kind!=="income";
+  const negative=
+    kind!=="income";
 
-  document.getElementById("moneyEditorTitle").textContent=
-    item
-      ?"Edit Item"
-      :kind==="income"
-        ?"Add Income"
-        :kind==="monthlyBill"
-          ?"Add Monthly Bill"
-          :"Add Weekly Bill";
+  document
+    .getElementById("moneyEditorTitle")
+    .textContent=
+      item
+        ?"Edit Item"
+        :kind==="income"
+          ?"Add Income"
+          :kind==="monthlyBill"
+            ?"Add Monthly Bill"
+            :"Add Weekly Bill";
 
-  document.getElementById("moneyEditorName").value=item?.name||"";
+  document
+    .getElementById("moneyEditorName")
+    .value=
+      item?.name||"";
 
-  document.getElementById("moneyEditorAmount").value=
-    item
-      ?`${negative?"-":""}${money(Math.abs(Number(item.amount)||0))}`
-      :"";
+  document
+    .getElementById("moneyEditorAmount")
+    .value=
+      item
+        ?`${negative?"-":""}${money(Math.abs(Number(item.amount)||0))}`
+        :"";
 
-  document.getElementById("moneyEditorDeleteButton").classList.toggle(
-    "hidden",
-    !item
+  document
+    .getElementById("moneyEditorDeleteButton")
+    .classList.toggle(
+      "hidden",
+      !item
+    );
+
+  document
+    .getElementById("moneyEditorModal")
+    .classList.remove("hidden");
+
+  bindMoneyInput(
+    document.getElementById(
+      "moneyEditorAmount"
+    ),
+    negative
   );
+}
 
-  document.getElementById("moneyEditorModal").classList.remove("hidden");
+function closeMoneyEditor(){
+  document
+    .getElementById("moneyEditorModal")
+    .classList.add("hidden");
 
-  bindMoneyInput(document.getElementById("moneyEditorAmount"),negative);
+  moneyEditorKind=null;
+  moneyEditorId=null;
 }
 
 async function saveMoneyEditor(){
-  const name=document.getElementById("moneyEditorName").value.trim();
-  const amount=Math.abs(parseMoney(document.getElementById("moneyEditorAmount").value));
+  const name=
+    document
+      .getElementById("moneyEditorName")
+      .value
+      .trim();
 
-  if(!name){
-    alert("Enter a name.");
-    return;
-  }
+  const amount=
+    Math.abs(
+      parseMoney(
+        document
+          .getElementById("moneyEditorAmount")
+          .value
+      )
+    );
 
-  const table=tableForMoneyKind(moneyEditorKind);
+  if(!name)return;
 
-  let result;
+  const table=
+    tableForMoneyKind(
+      moneyEditorKind
+    );
 
-  if(moneyEditorId){
-    result=await supabaseClient
-      .from(table)
-      .update({name,amount})
-      .eq("id",moneyEditorId);
-  }else{
-    result=await supabaseClient
-      .from(table)
-      .insert({
-        household_id:householdId,
-        name,
-        amount
-      });
-  }
+  const result=
+    moneyEditorId
+      ?await supabaseClient
+        .from(table)
+        .update({name,amount})
+        .eq("id",moneyEditorId)
+
+      :await supabaseClient
+        .from(table)
+        .insert(
+          {
+            household_id:householdId,
+            name,
+            amount
+          }
+        );
 
   if(result.error){
     alert(result.error.message);
@@ -2343,9 +3004,10 @@ async function saveMoneyEditor(){
   closeMoneyEditor();
 
   await loadBudgetLists();
+
   updateBudgetCalculation();
 
-  showToast(moneyEditorId?"Changes saved":"Item added");
+  showToast("Saved");
 }
 
 async function deleteMoneyEditor(){
@@ -2353,12 +3015,16 @@ async function deleteMoneyEditor(){
 
   if(!confirm("Delete this item?"))return;
 
-  const table=tableForMoneyKind(moneyEditorKind);
+  const table=
+    tableForMoneyKind(
+      moneyEditorKind
+    );
 
-  const {error}=await supabaseClient
-    .from(table)
-    .delete()
-    .eq("id",moneyEditorId);
+  const {error}=
+    await supabaseClient
+      .from(table)
+      .delete()
+      .eq("id",moneyEditorId);
 
   if(error){
     alert(error.message);
@@ -2368,49 +3034,177 @@ async function deleteMoneyEditor(){
   closeMoneyEditor();
 
   await loadBudgetLists();
+
   updateBudgetCalculation();
 
-  showToast("Item deleted");
-}
-
-function closeMoneyEditor(){
-  document.getElementById("moneyEditorModal").classList.add("hidden");
-
-  moneyEditorKind=null;
-  moneyEditorId=null;
+  showToast("Deleted");
 }
 
 function totalSavedRows(id){
-  let total=0;
-
-  document.querySelectorAll(`#${id} .saved-row-amount`).forEach(el=>{
-    total+=Math.abs(parseMoney(el.textContent));
-  });
-
-  return total;
+  return[...
+    document.querySelectorAll(
+      `#${id} .saved-row-amount`
+    )
+  ]
+  .reduce(
+    (sum,el)=>
+      sum+
+      Math.abs(
+        parseMoney(el.textContent)
+      ),
+    0
+  );
 }
 
-function preparationMonthFromTitle(){
-  if(preparingCurrentMonth){
-    return firstOfMonth(new Date());
+async function openBudgetSetup(){
+  const month=
+    await determinePreparationMonth();
+
+  const monthKey=
+    dateOnly(month);
+
+  const current=
+    activeBudgetMonth();
+
+  const firstTime=
+    monthKey===dateOnly(current);
+
+  const {data,error}=
+    await supabaseClient
+      .from("budget_plans")
+      .select("*")
+      .eq("household_id",householdId)
+      .eq("budget_month",monthKey)
+      .maybeSingle();
+
+  if(error)throw error;
+
+  preparedBudgetPlan=data||null;
+
+  const weeks=
+    getBudgetWeekCount(month);
+
+  document
+    .getElementById("budgetSetupTitle")
+    .textContent=
+      firstTime
+        ?`Set Up Your ${month.toLocaleDateString("en-US",{month:"long",year:"numeric"})} Budget`
+        :`Prepare Your ${month.toLocaleDateString("en-US",{month:"long",year:"numeric"})} Budget`;
+
+  document
+    .getElementById("budgetSetupInstructions")
+    .textContent=
+      firstTime
+        ?"Because you are beginning during the current month, this first budget may be imperfect. Afterward, budgets are prepared one month in advance."
+        :`This budget contains ${weeks} budget weeks.`;
+
+  const warning=
+    document.getElementById("fiveWeekWarning");
+
+  if(weeks===5){
+    warning.textContent=
+      `${month.toLocaleDateString("en-US",{month:"long"})} contains 5 budget weeks. Your monthly Net will be divided across five weeks.`;
+
+    warning.classList.remove("hidden");
+  }else{
+    warning.classList.add("hidden");
   }
 
-  return addMonths(firstOfMonth(new Date()),1);
+  const prior=
+    addMonths(month,-1);
+
+  document
+    .getElementById("incomePeriodLabel")
+    .textContent=
+      firstTime
+        ?"Enter the income and bills you are using to fund this current month."
+        :`Income received during ${prior.toLocaleDateString("en-US",{month:"long",year:"numeric"})}.`;
+
+  document
+    .getElementById("weeklyNeeds")
+    .value=
+      preparedBudgetPlan?.weekly_needs
+        ?money(preparedBudgetPlan.weekly_needs)
+        :"";
+
+  document
+    .getElementById("weeklySavings")
+    .value=
+      preparedBudgetPlan?.weekly_savings
+        ?money(preparedBudgetPlan.weekly_savings)
+        :"";
+
+  bindMoneyInput(
+    document.getElementById("weeklyNeeds")
+  );
+
+  bindMoneyInput(
+    document.getElementById("weeklySavings")
+  );
+
+  await loadBudgetLists();
+
+  await renderProfileAllocations(month);
+
+  updateBudgetCalculation();
+}
+
+function preparationMonth(){
+  const title=
+    document
+      .getElementById("budgetSetupTitle")
+      .textContent;
+
+  const current=
+    activeBudgetMonth();
+
+  return title.startsWith("Set Up")
+    ?current
+    :addMonths(current,1);
 }
 
 function updateBudgetCalculation(){
-  const income=totalSavedRows("incomeList");
-  const monthlyBills=totalSavedRows("monthlyBillList");
-  const weeklyBills=totalSavedRows("weeklyBillList");
+  const income=
+    totalSavedRows("incomeList");
 
-  const needs=Math.abs(parseMoney(document.getElementById("weeklyNeeds").value));
-  const savings=Math.abs(parseMoney(document.getElementById("weeklySavings").value));
+  const monthlyBills=
+    totalSavedRows("monthlyBillList");
 
-  const month=preparationMonthFromTitle();
-  const weeks=getBudgetWeekCount(month);
+  const weeklyBills=
+    totalSavedRows("weeklyBillList");
 
-  const net=income-monthlyBills;
-  const weeklyTotal=weeks?net/weeks:0;
+  const needs=
+    Math.abs(
+      parseMoney(
+        document
+          .getElementById("weeklyNeeds")
+          .value
+      )
+    );
+
+  const savings=
+    Math.abs(
+      parseMoney(
+        document
+          .getElementById("weeklySavings")
+          .value
+      )
+    );
+
+  const month=
+    preparationMonth();
+
+  const weeks=
+    getBudgetWeekCount(month);
+
+  const net=
+    income-
+    monthlyBills;
+
+  const weeklyTotal=
+    weeks
+      ?net/weeks
+      :0;
 
   const funPool=
     weeklyTotal-
@@ -2447,289 +3241,408 @@ function updateBudgetCalculation(){
   };
 }
 
+/*
+Fun Money automatic split:
+
+1. Convert available pool to whole cents.
+2. Divide cents evenly.
+3. Any remainder cent(s) go to owner profile first.
+
+No fractional cent rounding.
+*/
 function autoSplitFunPool(pool){
-  const inputs=[...document.querySelectorAll(".allocation-input")];
+  const inputs=[...
+    document.querySelectorAll(
+      ".allocation-input"
+    )
+  ];
 
   if(!inputs.length)return;
 
-  const safe=Math.max(0,pool);
+  const availableCents=
+    Math.max(
+      0,
+      Math.floor(
+        Number(pool||0)*100+
+        0.0000001
+      )
+    );
 
-  const cents=Math.round(safe*100);
-  const base=Math.floor(cents/inputs.length);
-  let used=0;
+  const baseCents=
+    Math.floor(
+      availableCents/
+      inputs.length
+    );
 
-  inputs.forEach((input,index)=>{
-    const c=
-      index===inputs.length-1
-        ?cents-used
-        :base;
+  let remainder=
+    availableCents-
+    baseCents*inputs.length;
 
-    used+=c;
+  const ownerId=[...
+    profileMap.values()
+  ]
+  .find(
+    profile=>
+      profile.access_level==="owner"
+  )
+  ?.id;
 
-    input.value=money(c/100);
-  });
+  inputs.forEach(
+    input=>{
+      let cents=
+        baseCents;
+
+      if(
+        input.dataset.profileId===ownerId &&
+        remainder>0
+      ){
+        cents++;
+        remainder--;
+      }
+
+      input.value=
+        money(cents/100);
+    }
+  );
+
+  /*
+  More than two profiles can theoretically produce
+  more than one leftover cent.
+  Hand remaining cents out one-by-one.
+  */
+  for(
+    let i=0;
+    remainder>0 && i<inputs.length;
+    i++
+  ){
+    const input=
+      inputs[i];
+
+    const cents=
+      Math.round(
+        parseMoney(input.value)*100
+      )+1;
+
+    input.value=
+      money(cents/100);
+
+    remainder--;
+  }
 }
 
 function allocationTotal(){
-  return [...document.querySelectorAll(".allocation-input")]
-    .reduce((sum,input)=>sum+Math.abs(parseMoney(input.value)),0);
+  return[...
+    document.querySelectorAll(
+      ".allocation-input"
+    )
+  ]
+  .reduce(
+    (sum,input)=>
+      sum+
+      Math.abs(
+        parseMoney(input.value)
+      ),
+    0
+  );
 }
 
 function updateAllocationSummary(pool){
-  const assigned=allocationTotal();
-  const remaining=pool-assigned;
+  const assigned=
+    allocationTotal();
 
-  const el=document.getElementById("allocationSummary");
+  const unassigned=
+    pool-assigned;
 
-  el.textContent=
-    `Assigned: ${money(assigned)} · Unassigned: ${money(remaining)}`;
+  const box=
+    document.getElementById(
+      "allocationSummary"
+    );
 
-  el.classList.toggle("negative",remaining<-.005);
+  box.textContent=
+    `Assigned: ${money(assigned)} · Unassigned: ${money(unassigned)}`;
+
+  box.classList.toggle(
+    "negative",
+    unassigned<-.005
+  );
 }
 
 async function renderProfileAllocations(month){
-  const profiles=await loadProfiles();
+  const profiles=
+    await loadProfiles();
 
-  const {data,error}=await supabaseClient
-    .from("budget_profile_allocations")
-    .select("profile_id,weekly_fun_amount")
-    .eq("household_id",householdId)
-    .eq("budget_month",dateOnly(month));
+  const {data,error}=
+    await supabaseClient
+      .from("budget_profile_allocations")
+      .select(
+        "profile_id,weekly_fun_amount,weekly_amount"
+      )
+      .eq("household_id",householdId)
+      .eq("budget_month",dateOnly(month));
 
   if(error)throw error;
 
-  const map=new Map(
-    (data||[]).map(x=>[
-      x.profile_id,
-      Number(x.weekly_fun_amount)||0
-    ])
-  );
+  const allocationMap=
+    new Map(
+      (data||[])
+        .map(
+          row=>[
+            row.profile_id,
+            Number(
+              row.weekly_fun_amount ??
+              row.weekly_amount ??
+              0
+            )
+          ]
+        )
+    );
 
-  allocationUserEdited=Boolean(data?.length);
+  allocationUserEdited=
+    Boolean(data?.length);
 
-  const box=document.getElementById("profileAllocationList");
+  const box=
+    document.getElementById(
+      "profileAllocationList"
+    );
+
   box.innerHTML="";
 
-  profiles.forEach(profile=>{
-    const row=document.createElement("div");
+  profiles.forEach(
+    profile=>{
+      const row=
+        document.createElement("div");
 
-    row.className="allocation-row";
+      row.className=
+        "allocation-row";
 
-    row.innerHTML=`
-      <div class="allocation-name">${escapeHtml(profile.display_name)}</div>
-      <input
-        class="allocation-input money-input"
-        data-profile-id="${profile.id}"
-        inputmode="decimal"
-        value="${map.has(profile.id)?money(map.get(profile.id)):""}"
-      >
-    `;
+      row.innerHTML=`
+        <div class="allocation-name">
+          ${escapeHtml(profile.display_name)}
+        </div>
 
-    const input=row.querySelector("input");
+        <input
+          class="allocation-input money-input"
+          data-profile-id="${profile.id}"
+          inputmode="decimal"
+          value="${
+            allocationMap.has(profile.id)
+              ?money(allocationMap.get(profile.id))
+              :""
+          }"
+        >
+      `;
 
-    bindMoneyInput(input);
+      const input=
+        row.querySelector("input");
 
-    input.addEventListener("input",e=>{
-      if(e.isTrusted){
-        allocationUserEdited=true;
-      }
+      bindMoneyInput(input);
 
-      updateAllocationSummary(
-        updateBudgetCalculation().funPool
+      input.addEventListener(
+        "input",
+        e=>{
+          if(e.isTrusted){
+            allocationUserEdited=true;
+          }
+
+          const pool=
+            Number(
+              document
+                .getElementById("calcFunPool")
+                .textContent
+                .replace(/[^0-9.-]/g,"")
+            );
+
+          updateAllocationSummary(pool);
+        }
       );
-    });
 
-    box.appendChild(row);
-  });
+      box.appendChild(row);
+    }
+  );
 
   if(!data?.length){
     allocationUserEdited=false;
-    autoSplitFunPool(updateBudgetCalculation().funPool);
+    updateBudgetCalculation();
   }
-}
-
-async function openBudgetSetup(){
-  const month=await loadPreparedBudget();
-
-  const weeks=getBudgetWeekCount(month);
-
-  document.getElementById("budgetSetupTitle").textContent=
-    preparingCurrentMonth
-      ?`Set Up Your ${month.toLocaleDateString("en-US",{month:"long",year:"numeric"})} Budget`
-      :`Prepare Your ${month.toLocaleDateString("en-US",{month:"long",year:"numeric"})} Budget`;
-
-  document.getElementById("budgetSetupInstructions").textContent=
-    preparingCurrentMonth
-      ?"This is your first budget. Because you are starting during the current month, the results may be imperfect until the next budget month. After this, the app will prepare budgets one month in advance."
-      :`This budget will use ${weeks} Sunday-through-Saturday budget weeks.`;
-
-  const warning=document.getElementById("fiveWeekWarning");
-
-  if(weeks===5){
-    warning.textContent=
-      `${month.toLocaleDateString("en-US",{month:"long"})} contains 5 budget weeks. Your Net will be divided across five weeks, so the weekly allowance will be smaller than it would be in a four-week month.`;
-
-    warning.classList.remove("hidden");
-  }else{
-    warning.classList.add("hidden");
-  }
-
-  const prior=
-    preparingCurrentMonth
-      ?addMonths(month,-1)
-      :addMonths(month,-1);
-
-  document.getElementById("incomePeriodLabel").textContent=
-    preparingCurrentMonth
-      ?"For this first setup, enter the income and bills you are using to fund the current month."
-      :`Income received during ${prior.toLocaleDateString("en-US",{month:"long",year:"numeric"})}.`;
-
-  document.getElementById("weeklyNeeds").value=
-    preparedBudgetPlan?.weekly_needs
-      ?money(preparedBudgetPlan.weekly_needs)
-      :"";
-
-  document.getElementById("weeklySavings").value=
-    preparedBudgetPlan?.weekly_savings
-      ?money(preparedBudgetPlan.weekly_savings)
-      :"";
-
-  bindMoneyInput(document.getElementById("weeklyNeeds"));
-  bindMoneyInput(document.getElementById("weeklySavings"));
-
-  await loadBudgetLists();
-  await renderProfileAllocations(month);
-
-  updateBudgetCalculation();
 }
 
 async function ensureMonthlyBudget(month){
-  const monthKey=dateOnly(month);
+  const monthKey=
+    dateOnly(month);
 
-  const {data:existing,error}=await supabaseClient
-    .from("monthly_budgets")
-    .select("*")
-    .eq("household_id",householdId)
-    .eq("budget_month",monthKey)
-    .maybeSingle();
+  const {data,error}=
+    await supabaseClient
+      .from("monthly_budgets")
+      .select("*")
+      .eq("household_id",householdId)
+      .eq("budget_month",monthKey)
+      .maybeSingle();
 
   if(error)throw error;
 
-  if(existing){
-    return existing;
+  if(data)return data;
+
+  const end=
+    new Date(
+      month.getFullYear(),
+      month.getMonth()+1,
+      0
+    );
+
+  const result=
+    await supabaseClient
+      .from("monthly_budgets")
+      .insert(
+        {
+          household_id:householdId,
+          budget_month:monthKey,
+          effective_start:monthKey,
+          effective_end:dateOnly(end)
+        }
+      )
+      .select()
+      .single();
+
+  if(result.error){
+    throw result.error;
   }
 
-  const end=new Date(month.getFullYear(),month.getMonth()+1,0);
-
-  const {data,error:insertError}=await supabaseClient
-    .from("monthly_budgets")
-    .insert({
-      household_id:householdId,
-      budget_month:monthKey,
-      effective_start:monthKey,
-      effective_end:dateOnly(end)
-    })
-    .select()
-    .single();
-
-  if(insertError)throw insertError;
-
-  return data;
+  return result.data;
 }
 
-async function saveBudgetSnapshots(planId,month){
+async function saveBudgetSnapshots(
+  planId,
+  month
+){
   await supabaseClient
     .from("budget_items")
     .delete()
     .eq("budget_plan_id",planId);
 
-  const items=[];
+  const rows=[];
 
-  document.querySelectorAll("#incomeList .saved-row").forEach((row,index)=>{
-    items.push({
-      budget_plan_id:planId,
-      household_id:householdId,
-      budget_month:dateOnly(month),
-      item_type:"income",
-      name:row.querySelector(".saved-row-name").textContent,
-      amount:Math.abs(parseMoney(row.querySelector(".saved-row-amount").textContent)),
-      sort_order:index
-    });
-  });
+  function addRows(
+    listId,
+    type
+  ){
+    document
+      .querySelectorAll(
+        `#${listId} .saved-row`
+      )
+      .forEach(
+        (row,index)=>{
+          rows.push(
+            {
+              budget_plan_id:planId,
+              household_id:householdId,
+              budget_month:dateOnly(month),
+              item_type:type,
+              name:
+                row
+                  .querySelector(".saved-row-name")
+                  .textContent,
+              amount:
+                Math.abs(
+                  parseMoney(
+                    row
+                      .querySelector(".saved-row-amount")
+                      .textContent
+                  )
+                ),
+              sort_order:index
+            }
+          );
+        }
+      );
+  }
 
-  document.querySelectorAll("#monthlyBillList .saved-row").forEach((row,index)=>{
-    items.push({
-      budget_plan_id:planId,
-      household_id:householdId,
-      budget_month:dateOnly(month),
-      item_type:"monthly_bill",
-      name:row.querySelector(".saved-row-name").textContent,
-      amount:Math.abs(parseMoney(row.querySelector(".saved-row-amount").textContent)),
-      sort_order:index
-    });
-  });
+  addRows(
+    "incomeList",
+    "income"
+  );
 
-  document.querySelectorAll("#weeklyBillList .saved-row").forEach((row,index)=>{
-    items.push({
-      budget_plan_id:planId,
-      household_id:householdId,
-      budget_month:dateOnly(month),
-      item_type:"weekly_bill",
-      name:row.querySelector(".saved-row-name").textContent,
-      amount:Math.abs(parseMoney(row.querySelector(".saved-row-amount").textContent)),
-      sort_order:index
-    });
-  });
+  addRows(
+    "monthlyBillList",
+    "monthly_bill"
+  );
 
-  if(items.length){
-    const {error}=await supabaseClient
-      .from("budget_items")
-      .insert(items);
+  addRows(
+    "weeklyBillList",
+    "weekly_bill"
+  );
+
+  if(rows.length){
+    const {error}=
+      await supabaseClient
+        .from("budget_items")
+        .insert(rows);
 
     if(error)throw error;
   }
 }
 
 async function saveBudget(){
-  const calc=updateBudgetCalculation();
+  const calc=
+    updateBudgetCalculation();
 
   if(calc.funPool<0){
-    alert("This budget leaves a negative Fun Money pool.");
+    alert(
+      "This budget leaves a negative Fun Money pool."
+    );
+
     return;
   }
 
-  if(allocationTotal()>calc.funPool+.01){
-    alert("The profile allocations exceed the Fun Money pool.");
+  if(
+    allocationTotal()>
+    calc.funPool+.01
+  ){
+    alert(
+      "Profile allocations exceed the available Fun Money."
+    );
+
     return;
   }
 
-  const month=preparationMonthFromTitle();
-  const monthKey=dateOnly(month);
+  const month=
+    preparationMonth();
 
-  const {data:plan,error}=await supabaseClient
-    .from("budget_plans")
-    .upsert({
-      household_id:householdId,
-      budget_month:monthKey,
-      weekly_needs:calc.needs,
-      weekly_savings:calc.savings,
-      weekly_fun:calc.funPool,
-      calculation_mode:"hard",
-      preparation_completed:true,
-      updated_at:new Date().toISOString()
-    },{
-      onConflict:"household_id,budget_month"
-    })
-    .select()
-    .single();
+  const monthKey=
+    dateOnly(month);
+
+  const {data:plan,error}=
+    await supabaseClient
+      .from("budget_plans")
+      .upsert(
+        {
+          household_id:householdId,
+          budget_month:monthKey,
+          weekly_needs:calc.needs,
+          weekly_savings:calc.savings,
+          weekly_fun:calc.funPool,
+          calculation_mode:"hard",
+          preparation_completed:true,
+          updated_at:new Date().toISOString()
+        },
+        {
+          onConflict:
+            "household_id,budget_month"
+        }
+      )
+      .select()
+      .single();
 
   if(error){
-    alert(`Could not save budget: ${error.message}`);
+    alert(
+      `Could not save budget: ${error.message}`
+    );
+
     return;
   }
 
   try{
-    const monthlyBudget=await ensureMonthlyBudget(month);
+    const monthlyBudget=
+      await ensureMonthlyBudget(month);
 
     await supabaseClient
       .from("budget_profile_allocations")
@@ -2737,429 +3650,854 @@ async function saveBudget(){
       .eq("household_id",householdId)
       .eq("budget_month",monthKey);
 
-    const rows=[...document.querySelectorAll(".allocation-input")].map(input=>({
-      budget_id:monthlyBudget.id,
-      profile_id:input.dataset.profileId,
-      percentage:
-        calc.funPool>0
-          ?Math.round((Math.abs(parseMoney(input.value))/calc.funPool)*10000)/100
-          :0,
-      weekly_amount:Math.abs(parseMoney(input.value)),
-      household_id:householdId,
-      budget_month:monthKey,
-      weekly_fun_amount:Math.abs(parseMoney(input.value)),
-      updated_at:new Date().toISOString()
-    }));
+    const allocations=[...
+      document.querySelectorAll(
+        ".allocation-input"
+      )
+    ]
+    .map(
+      input=>{
+        const amount=
+          Math.abs(
+            parseMoney(input.value)
+          );
 
-    if(rows.length){
-      const {error:allocationError}=await supabaseClient
-        .from("budget_profile_allocations")
-        .insert(rows);
+        return{
+          /*
+          budget_id MUST reference
+          monthly_budgets.id,
+          not budget_plans.id.
+          */
+          budget_id:
+            monthlyBudget.id,
 
-      if(allocationError)throw allocationError;
+          profile_id:
+            input.dataset.profileId,
+
+          percentage:
+            calc.funPool>0
+              ?amount/calc.funPool*100
+              :0,
+
+          weekly_amount:
+            amount,
+
+          household_id:
+            householdId,
+
+          budget_month:
+            monthKey,
+
+          weekly_fun_amount:
+            amount,
+
+          updated_at:
+            new Date().toISOString()
+        };
+      }
+    );
+
+    if(allocations.length){
+      const {error:allocationError}=
+        await supabaseClient
+          .from("budget_profile_allocations")
+          .insert(allocations);
+
+      if(allocationError){
+        throw allocationError;
+      }
     }
 
-    await saveBudgetSnapshots(plan.id,month);
-
-    preparedBudgetPlan=plan;
+    await saveBudgetSnapshots(
+      plan.id,
+      month
+    );
 
     showToast("Budget saved");
 
-    await loadHomeBudget();
-    await calculateBalances();
-    await updateAnalytics();
-    await loadBudgetHistory();
+    await Promise.all([
+      loadCurrentBudget(),
+      calculateBalances(),
+      updateAnalytics(),
+      loadBudgetHistory()
+    ]);
 
   }catch(error){
-    alert(`Budget saved, but related budget data failed: ${error.message}`);
+    alert(
+      `Budget saved, but related data failed: ${error.message}`
+    );
   }
 }
 
 function expenseMeta(item){
-  const profile=profileMap.get(item.profile_id);
+  const profile=
+    profileMap.get(
+      item.profile_id
+    );
 
-  const fundText=
-    item.fund==="needs"
-      ?"Needs"
-      :`${profile?.display_name||"Unknown"} Fun Money`;
-
-  let actor="";
-
-  if(item.fund==="needs"){
-    actor=
-      profile
-        ?` · Added by ${profile.display_name}`
-        :item.profile_id
-          ?""
-          :" · Historical";
+  if(item.fund==="fun"){
+    return[
+      item.category||"Other",
+      `${profile?.display_name||"Unknown"} Fun Money`,
+      new Date(item.spent_at).toLocaleDateString()
+    ].join(" · ");
   }
 
-  return `${item.category||"Other"} · ${fundText}${actor} · ${new Date(item.spent_at).toLocaleDateString()}`;
+  const addedBy=
+    profile
+      ?`Added by ${profile.display_name}`
+      :"Historical";
+
+  return[
+    item.category||"Other",
+    "Needs",
+    addedBy,
+    new Date(item.spent_at).toLocaleDateString()
+  ].join(" · ");
 }
 
 async function loadExpenses(){
   await loadProfiles();
 
-  const {data,error}=await supabaseClient
-    .from("expenses")
-    .select("*")
-    .eq("household_id",householdId)
-    .order("spent_at",{ascending:false})
-    .limit(500);
+  const {data,error}=
+    await supabaseClient
+      .from("expenses")
+      .select("*")
+      .eq("household_id",householdId)
+      .order("spent_at",{ascending:false})
+      .limit(500);
 
   if(error)throw error;
 
-  const box=document.getElementById("transactions");
+  const box=
+    document.getElementById("transactions");
+
   box.innerHTML="";
 
   if(!data?.length){
-    box.innerHTML='<p class="subtext">No expenses yet.</p>';
+    box.innerHTML=
+      '<p class="subtext">No expenses yet.</p>';
+
     return;
   }
 
-  data.forEach(item=>{
-    const row=document.createElement("div");
+  data.forEach(
+    item=>{
+      const row=
+        document.createElement("div");
 
-    row.className="transaction";
+      row.className="transaction";
 
-    row.innerHTML=`
-      <div class="transaction-main">
-        <div class="transaction-name">${escapeHtml(item.description)}</div>
-        <div class="transaction-meta">${escapeHtml(expenseMeta(item))}</div>
-      </div>
+      row.innerHTML=`
+        <div class="transaction-main">
+          <div class="transaction-name">
+            ${escapeHtml(item.description)}
+          </div>
 
-      <div class="transaction-amount">-${money(item.amount)}</div>
+          <div class="transaction-meta">
+            ${escapeHtml(expenseMeta(item))}
+          </div>
+        </div>
 
-      <div class="transaction-actions">
-        <button class="secondary-button small-button edit">Edit</button>
-        <button class="danger-button small-button delete">Delete</button>
-      </div>
-    `;
+        <div class="transaction-amount">
+          -${money(item.amount)}
+        </div>
 
-    row.querySelector(".edit").onclick=()=>editExpense(item.id);
-    row.querySelector(".delete").onclick=()=>deleteExpense(item.id);
+        <button class="secondary-button small-button">
+          Edit
+        </button>
+      `;
 
-    box.appendChild(row);
-  });
+      row
+        .querySelector("button")
+        .onclick=
+          ()=>editExpense(item.id);
+
+      box.appendChild(row);
+    }
+  );
 }
 
-function openExpenseForm(fund="needs",expense=null,fromHome=false){
-  editingExpenseId=expense?.id||null;
+function setTransactionTab(tab){
+  activeTransactionTab=tab;
 
-  document.getElementById("expenseFormTitle").textContent=
-    expense?"Edit Expense":"Add Expense";
+  document
+    .querySelectorAll(
+      "[data-transaction-tab]"
+    )
+    .forEach(
+      button=>{
+        button.classList.toggle(
+          "active",
+          button.dataset.transactionTab===tab
+        );
+      }
+    );
 
-  document.getElementById("expenseName").value=expense?.description||"";
-  document.getElementById("expenseAmount").value=expense?.amount?money(expense.amount):"";
-  document.getElementById("expenseFund").value=expense?.fund||fund;
-  document.getElementById("expenseCategory").value=expense?.category||"Other";
-  document.getElementById("expenseDate").value=
-    expense?.spent_at
-      ?String(expense.spent_at).slice(0,10)
-      :dateOnly(new Date());
+  document
+    .getElementById("expenseFormSection")
+    .classList.toggle(
+      "hidden",
+      tab!=="expense"
+    );
 
-  document.getElementById("expenseFund").disabled=fromHome&&!expense;
-
-  document.getElementById("expenseFundLabel").classList.toggle(
-    "hidden",
-    fromHome&&!expense
-  );
-
-  document.getElementById("expenseFund").classList.toggle(
-    "hidden",
-    fromHome&&!expense
-  );
-
-  document.getElementById("expenseSheetOverlay").classList.remove("hidden");
-
-  bindMoneyInput(document.getElementById("expenseAmount"));
+  document
+    .getElementById("fundFormSection")
+    .classList.toggle(
+      "hidden",
+      tab!=="funds"
+    );
 }
 
-function closeExpenseForm(){
+function openTransactionModal(
+  fund="needs",
+  expense=null,
+  allowTabs=true
+){
+  transactionFund=
+    expense?.fund||fund;
+
+  editingExpenseId=
+    expense?.id||null;
+
+  document
+    .getElementById("transactionTabs")
+    .classList.toggle(
+      "hidden",
+      !allowTabs||
+      Boolean(expense)
+    );
+
+  document
+    .getElementById("expenseFormTitle")
+    .textContent=
+      expense
+        ?"Edit Expense"
+        :"Add Expense";
+
+  document
+    .getElementById("expenseName")
+    .value=
+      expense?.description||"";
+
+  document
+    .getElementById("expenseAmount")
+    .value=
+      expense?.amount
+        ?money(expense.amount)
+        :"";
+
+  document
+    .getElementById("expenseFund")
+    .value=
+      expense?.fund||fund;
+
+  document
+    .getElementById("expenseCategory")
+    .value=
+      expense?.category||"Other";
+
+  document
+    .getElementById("expenseDate")
+    .value=
+      expense?.spent_at
+        ?String(expense.spent_at).slice(0,10)
+        :dateOnly(new Date());
+
+  const lockFund=
+    allowTabs &&
+    !expense;
+
+  document
+    .getElementById("expenseFund")
+    .disabled=
+      lockFund;
+
+  document
+    .getElementById("expenseFund")
+    .classList.toggle(
+      "hidden",
+      lockFund
+    );
+
+  document
+    .getElementById("expenseFundLabel")
+    .classList.toggle(
+      "hidden",
+      lockFund
+    );
+
+  document
+    .getElementById("deleteExpenseButton")
+    .classList.toggle(
+      "hidden",
+      !expense
+    );
+
+  document
+    .getElementById("fundAdjustmentTitle")
+    .textContent=
+      fund==="needs"
+        ?"Add Funds to Needs"
+        :"Add Funds to Fun Money";
+
+  document
+    .getElementById("fundAdjustmentName")
+    .value="";
+
+  document
+    .getElementById("fundAdjustmentAmount")
+    .value="";
+
+  document
+    .getElementById("fundAdjustmentDate")
+    .value=
+      dateOnly(new Date());
+
+  setTransactionTab("expense");
+
+  document
+    .getElementById("transactionModal")
+    .classList.remove("hidden");
+
+  bindMoneyInput(
+    document.getElementById("expenseAmount")
+  );
+
+  bindMoneyInput(
+    document.getElementById("fundAdjustmentAmount")
+  );
+}
+
+function closeTransactionModal(){
   editingExpenseId=null;
 
-  document.getElementById("expenseSheetOverlay").classList.add("hidden");
+  document
+    .getElementById("transactionModal")
+    .classList.add("hidden");
 
-  document.getElementById("expenseFund").disabled=false;
+  document
+    .getElementById("expenseFund")
+    .disabled=false;
 }
 
 async function saveExpense(){
-  const description=document.getElementById("expenseName").value.trim();
-  const amount=Math.abs(parseMoney(document.getElementById("expenseAmount").value));
-  const fund=document.getElementById("expenseFund").value;
-  const category=document.getElementById("expenseCategory").value;
-  const date=document.getElementById("expenseDate").value;
+  const description=
+    document
+      .getElementById("expenseName")
+      .value
+      .trim();
 
-  if(!description||!amount||!date){
-    alert("Enter the expense name, amount, and date.");
-    return;
-  }
+  const amount=
+    Math.abs(
+      parseMoney(
+        document
+          .getElementById("expenseAmount")
+          .value
+      )
+    );
+
+  const fund=
+    document
+      .getElementById("expenseFund")
+      .value;
+
+  const category=
+    document
+      .getElementById("expenseCategory")
+      .value;
+
+  const date=
+    document
+      .getElementById("expenseDate")
+      .value;
+
+  if(
+    !description||
+    !amount||
+    !date
+  )return;
 
   const payload={
-    household_id:householdId,
-    user_id:currentUser.id,
-    profile_id:currentProfile.id,
+    household_id:
+      householdId,
+
+    user_id:
+      currentUser.id,
+
+    /*
+    Save profile_id for BOTH Needs and Fun Money.
+    Needs still uses one shared bucket.
+    profile_id only identifies who entered it.
+    */
+    profile_id:
+      currentProfile.id,
+
     amount,
     fund,
     description,
     category,
-    spent_at:`${date}T12:00:00`,
-    updated_at:new Date().toISOString()
+
+    spent_at:
+      `${date}T12:00:00`,
+
+    updated_at:
+      new Date().toISOString()
   };
 
   const result=
     editingExpenseId
-      ?await supabaseClient.from("expenses").update(payload).eq("id",editingExpenseId)
-      :await supabaseClient.from("expenses").insert(payload);
+
+      ?await supabaseClient
+        .from("expenses")
+        .update(payload)
+        .eq("id",editingExpenseId)
+
+      :await supabaseClient
+        .from("expenses")
+        .insert(payload);
 
   if(result.error){
     alert(result.error.message);
     return;
   }
 
-  closeExpenseForm();
+  closeTransactionModal();
 
-  await loadExpenses();
-  await calculateBalances();
-  await updateAnalytics();
+  await Promise.all([
+    loadExpenses(),
+    calculateBalances(),
+    updateAnalytics()
+  ]);
 
-  showToast(editingExpenseId?"Expense updated":"Expense saved");
+  showToast("Expense saved");
 }
 
 async function editExpense(id){
-  const {data,error}=await supabaseClient
-    .from("expenses")
-    .select("*")
-    .eq("id",id)
-    .single();
-
-  if(error)throw error;
-
-  openExpenseForm(data.fund,data,false);
-}
-
-async function deleteExpense(id){
-  if(!confirm("Delete this expense?"))return;
-
-  const {error}=await supabaseClient
-    .from("expenses")
-    .delete()
-    .eq("id",id);
+  const {data,error}=
+    await supabaseClient
+      .from("expenses")
+      .select("*")
+      .eq("id",id)
+      .single();
 
   if(error){
     alert(error.message);
     return;
   }
 
-  await loadExpenses();
-  await calculateBalances();
-  await updateAnalytics();
+  openTransactionModal(
+    data.fund,
+    data,
+    false
+  );
+}
+
+async function deleteExpense(){
+  if(!editingExpenseId)return;
+
+  if(!confirm("Delete this expense?"))return;
+
+  const {error}=
+    await supabaseClient
+      .from("expenses")
+      .delete()
+      .eq("id",editingExpenseId);
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  closeTransactionModal();
+
+  await Promise.all([
+    loadExpenses(),
+    calculateBalances(),
+    updateAnalytics()
+  ]);
 
   showToast("Expense deleted");
 }
 
-function openFundAdjustment(fund){
-  adjustmentFund=fund;
-
-  document.getElementById("fundAdjustmentTitle").textContent=
-    fund==="needs"
-      ?"Add Funds to Needs"
-      :"Add Funds to Fun Money";
-
-  document.getElementById("fundAdjustmentName").value="";
-  document.getElementById("fundAdjustmentAmount").value="";
-  document.getElementById("fundAdjustmentDate").value=dateOnly(new Date());
-
-  document.getElementById("fundAdjustmentModal").classList.remove("hidden");
-
-  bindMoneyInput(document.getElementById("fundAdjustmentAmount"));
-}
-
 async function saveFundAdjustment(){
-  const description=document.getElementById("fundAdjustmentName").value.trim();
-  const amount=Math.abs(parseMoney(document.getElementById("fundAdjustmentAmount").value));
-  const date=document.getElementById("fundAdjustmentDate").value;
+  const description=
+    document
+      .getElementById("fundAdjustmentName")
+      .value
+      .trim();
 
-  if(!description||!amount||!date){
-    alert("Enter a name, amount, and date.");
-    return;
-  }
+  const amount=
+    Math.abs(
+      parseMoney(
+        document
+          .getElementById("fundAdjustmentAmount")
+          .value
+      )
+    );
 
-  const {error}=await supabaseClient
-    .from("fund_adjustments")
-    .insert({
-      household_id:householdId,
-      profile_id:currentProfile.id,
-      fund:adjustmentFund,
-      amount,
-      description,
-      adjusted_at:`${date}T12:00:00`
-    });
+  const date=
+    document
+      .getElementById("fundAdjustmentDate")
+      .value;
+
+  if(
+    !description||
+    !amount||
+    !date
+  )return;
+
+  const {error}=
+    await supabaseClient
+      .from("fund_adjustments")
+      .insert(
+        {
+          household_id:
+            householdId,
+
+          profile_id:
+            currentProfile.id,
+
+          fund:
+            transactionFund,
+
+          amount,
+          description,
+
+          adjusted_at:
+            `${date}T12:00:00`
+        }
+      );
 
   if(error){
     alert(error.message);
     return;
   }
 
-  document.getElementById("fundAdjustmentModal").classList.add("hidden");
+  closeTransactionModal();
 
-  await calculateBalances();
-  await updateAnalytics();
+  await Promise.all([
+    calculateBalances(),
+    updateAnalytics()
+  ]);
 
   showToast("Funds added");
 }
 
 async function calculateBalances(){
-  await loadHomeBudget();
-
   const [
     {data:needsDeposits},
     {data:funDeposits},
     {data:expenses},
     {data:adjustments}
-  ]=await Promise.all([
-    supabaseClient
-      .from("allowance_deposits")
-      .select("amount")
-      .eq("household_id",householdId)
-      .eq("fund","needs"),
+  ]=
+    await Promise.all([
+      supabaseClient
+        .from("allowance_deposits")
+        .select("amount")
+        .eq("household_id",householdId)
+        .eq("fund","needs"),
 
-    supabaseClient
-      .from("profile_fun_deposits")
-      .select("amount")
-      .eq("household_id",householdId)
-      .eq("profile_id",currentProfile.id),
+      supabaseClient
+        .from("profile_fun_deposits")
+        .select("amount")
+        .eq("household_id",householdId)
+        .eq("profile_id",currentProfile.id),
 
-    supabaseClient
-      .from("expenses")
-      .select("amount,fund,profile_id")
-      .eq("household_id",householdId),
+      supabaseClient
+        .from("expenses")
+        .select("amount,fund,profile_id")
+        .eq("household_id",householdId),
 
-    supabaseClient
-      .from("fund_adjustments")
-      .select("amount,fund,profile_id")
-      .eq("household_id",householdId)
-  ]);
-
-  const needsDepositTotal=(needsDeposits||[]).reduce((s,x)=>s+Number(x.amount||0),0);
-
-  const funDepositTotal=(funDeposits||[]).reduce((s,x)=>s+Number(x.amount||0),0);
-
-  const needsExpenseTotal=(expenses||[])
-    .filter(x=>x.fund==="needs")
-    .reduce((s,x)=>s+Number(x.amount||0),0);
-
-  const funExpenseTotal=(expenses||[])
-    .filter(x=>x.fund==="fun"&&x.profile_id===currentProfile.id)
-    .reduce((s,x)=>s+Number(x.amount||0),0);
-
-  const needsAdjustmentTotal=(adjustments||[])
-    .filter(x=>x.fund==="needs")
-    .reduce((s,x)=>s+Number(x.amount||0),0);
-
-  const funAdjustmentTotal=(adjustments||[])
-    .filter(x=>x.fund==="fun"&&x.profile_id===currentProfile.id)
-    .reduce((s,x)=>s+Number(x.amount||0),0);
+      supabaseClient
+        .from("fund_adjustments")
+        .select("amount,fund,profile_id")
+        .eq("household_id",householdId)
+    ]);
 
   const needs=
-    needsDepositTotal+
-    needsAdjustmentTotal-
-    needsExpenseTotal;
+    (needsDeposits||[])
+      .reduce(
+        (s,x)=>s+Number(x.amount||0),
+        0
+      )
+    +
+    (adjustments||[])
+      .filter(x=>x.fund==="needs")
+      .reduce(
+        (s,x)=>s+Number(x.amount||0),
+        0
+      )
+    -
+    (expenses||[])
+      .filter(x=>x.fund==="needs")
+      .reduce(
+        (s,x)=>s+Number(x.amount||0),
+        0
+      );
 
   const fun=
-    funDepositTotal+
-    funAdjustmentTotal-
-    funExpenseTotal;
+    (funDeposits||[])
+      .reduce(
+        (s,x)=>s+Number(x.amount||0),
+        0
+      )
+    +
+    (adjustments||[])
+      .filter(
+        x=>
+          x.fund==="fun" &&
+          x.profile_id===currentProfile.id
+      )
+      .reduce(
+        (s,x)=>s+Number(x.amount||0),
+        0
+      )
+    -
+    (expenses||[])
+      .filter(
+        x=>
+          x.fund==="fun" &&
+          x.profile_id===currentProfile.id
+      )
+      .reduce(
+        (s,x)=>s+Number(x.amount||0),
+        0
+      );
 
-  document.getElementById("needsBalance").textContent=money(needs);
-  document.getElementById("funBalance").textContent=money(fun);
+  document
+    .getElementById("needsBalance")
+    .textContent=
+      money(needs);
 
-  document.getElementById("needsBalance").classList.toggle("negative",needs<0);
-  document.getElementById("funBalance").classList.toggle("negative",fun<0);
+  document
+    .getElementById("funBalance")
+    .textContent=
+      money(fun);
+
+  document
+    .getElementById("funProfileLabel")
+    .textContent=
+      `${currentProfile.display_name}'s Current Balance`;
+
+  document
+    .getElementById("needsBalance")
+    .classList.toggle(
+      "negative",
+      needs<0
+    );
+
+  document
+    .getElementById("funBalance")
+    .classList.toggle(
+      "negative",
+      fun<0
+    );
 
   await loadHomeExpenseLists();
 }
 
 async function loadHomeExpenseLists(){
-  const start=weekStart(new Date()).toISOString();
+  const start=
+    weekStart(new Date()).toISOString();
 
   const [
     {data:needs},
     {data:fun}
-  ]=await Promise.all([
-    supabaseClient
-      .from("expenses")
-      .select("description,amount")
-      .eq("household_id",householdId)
-      .eq("fund","needs")
-      .gte("spent_at",start)
-      .order("spent_at",{ascending:false})
-      .limit(5),
+  ]=
+    await Promise.all([
+      supabaseClient
+        .from("expenses")
+        .select("description,amount")
+        .eq("household_id",householdId)
+        .eq("fund","needs")
+        .gte("spent_at",start)
+        .order("spent_at",{ascending:false})
+        .limit(5),
 
-    supabaseClient
-      .from("expenses")
-      .select("description,amount")
-      .eq("household_id",householdId)
-      .eq("fund","fun")
-      .eq("profile_id",currentProfile.id)
-      .gte("spent_at",start)
-      .order("spent_at",{ascending:false})
-      .limit(5)
-  ]);
+      supabaseClient
+        .from("expenses")
+        .select("description,amount")
+        .eq("household_id",householdId)
+        .eq("fund","fun")
+        .eq("profile_id",currentProfile.id)
+        .gte("spent_at",start)
+        .order("spent_at",{ascending:false})
+        .limit(5)
+    ]);
 
-  renderHomeExpenseList("homeNeedsExpenses",needs);
-  renderHomeExpenseList("homeFunExpenses",fun);
+  renderHomeExpenseList(
+    "homeNeedsExpenses",
+    needs
+  );
+
+  renderHomeExpenseList(
+    "homeFunExpenses",
+    fun
+  );
 }
 
 function renderHomeExpenseList(id,items){
-  const box=document.getElementById(id);
+  const box=
+    document.getElementById(id);
 
   if(!items?.length){
-    box.innerHTML='<div class="empty-home-expenses">No expenses this week.</div>';
+    box.innerHTML=
+      '<div class="empty-home-expenses">No expenses this week.</div>';
+
     return;
   }
 
-  box.innerHTML=items.map(item=>`
-    <div class="home-expense">
-      <span class="home-expense-name">${escapeHtml(item.description)}</span>
-      <span class="home-expense-amount">-${money(item.amount)}</span>
-    </div>
-  `).join("");
+  box.innerHTML=
+    items
+      .map(
+        item=>`
+          <div class="home-expense">
+            <span class="home-expense-name">
+              ${escapeHtml(item.description)}
+            </span>
+
+            <span class="home-expense-amount">
+              -${money(item.amount)}
+            </span>
+          </div>
+        `
+      )
+      .join("");
+}
+
+function initializeAnalyticsControls(){
+  const now=new Date();
+
+  document
+    .getElementById("analyticsMonthInput")
+    .value=
+      `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+
+  const years=
+    document.getElementById(
+      "analyticsYearSelect"
+    );
+
+  years.innerHTML="";
+
+  for(
+    let y=now.getFullYear();
+    y>=2020;
+    y--
+  ){
+    const option=
+      document.createElement("option");
+
+    option.value=y;
+    option.textContent=y;
+
+    years.appendChild(option);
+  }
+
+  document
+    .getElementById("analyticsStartDate")
+    .value=
+      `${now.getFullYear()}-01-01`;
+
+  document
+    .getElementById("analyticsEndDate")
+    .value=
+      dateOnly(now);
 }
 
 function analyticsDates(){
   const now=new Date();
 
   if(analyticsRange==="month"){
-    const value=document.getElementById("analyticsMonthInput").value;
+    const value=
+      document
+        .getElementById("analyticsMonthInput")
+        .value;
 
-    const [y,m]=value.split("-").map(Number);
+    const [y,m]=
+      value
+        .split("-")
+        .map(Number);
 
     return{
-      start:new Date(y,m-1,1),
-      end:new Date(y,m,0,23,59,59,999),
-      label:new Date(y,m-1,1).toLocaleDateString("en-US",{month:"long",year:"numeric"})
+      start:
+        new Date(y,m-1,1),
+
+      end:
+        new Date(
+          y,
+          m,
+          0,
+          23,
+          59,
+          59,
+          999
+        ),
+
+      label:
+        new Date(y,m-1,1)
+          .toLocaleDateString(
+            "en-US",
+            {
+              month:"long",
+              year:"numeric"
+            }
+          )
     };
   }
 
   if(analyticsRange==="year"){
-    const year=Number(document.getElementById("analyticsYearSelect").value);
+    const year=
+      Number(
+        document
+          .getElementById("analyticsYearSelect")
+          .value
+      );
 
     return{
-      start:new Date(year,0,1),
-      end:new Date(year,11,31,23,59,59,999),
+      start:
+        new Date(year,0,1),
+
+      end:
+        new Date(
+          year,
+          11,
+          31,
+          23,
+          59,
+          59,
+          999
+        ),
+
       label:String(year)
     };
   }
 
   if(analyticsRange==="custom"){
-    const startValue=document.getElementById("analyticsStartDate").value;
-    const endValue=document.getElementById("analyticsEndDate").value;
+    const startValue=
+      document
+        .getElementById("analyticsStartDate")
+        .value;
+
+    const endValue=
+      document
+        .getElementById("analyticsEndDate")
+        .value;
 
     return{
-      start:new Date(`${startValue}T00:00:00`),
-      end:new Date(`${endValue}T23:59:59`),
-      label:`${new Date(`${startValue}T00:00:00`).toLocaleDateString()} – ${new Date(`${endValue}T00:00:00`).toLocaleDateString()}`
+      start:
+        new Date(
+          `${startValue}T00:00:00`
+        ),
+
+      end:
+        new Date(
+          `${endValue}T23:59:59`
+        ),
+
+      label:
+        `${new Date(`${startValue}T00:00:00`).toLocaleDateString()} – ${new Date(`${endValue}T00:00:00`).toLocaleDateString()}`
     };
   }
 
@@ -3171,229 +4509,328 @@ function analyticsDates(){
 }
 
 async function updateAnalytics(){
-  const range=analyticsDates();
+  const range=
+    analyticsDates();
 
   const [
     {data:expenses},
     {data:adjustments},
     {data:plans}
-  ]=await Promise.all([
-    supabaseClient
-      .from("expenses")
-      .select("*")
-      .eq("household_id",householdId),
+  ]=
+    await Promise.all([
+      supabaseClient
+        .from("expenses")
+        .select("*")
+        .eq("household_id",householdId),
 
-    supabaseClient
-      .from("fund_adjustments")
-      .select("*")
-      .eq("household_id",householdId),
+      supabaseClient
+        .from("fund_adjustments")
+        .select("*")
+        .eq("household_id",householdId),
 
-    supabaseClient
-      .from("budget_plans")
-      .select("*")
-      .eq("household_id",householdId)
-  ]);
+      supabaseClient
+        .from("budget_plans")
+        .select("*")
+        .eq("household_id",householdId)
+    ]);
 
-  const filtered=(expenses||[]).filter(x=>{
-    const d=new Date(x.spent_at);
-    return d>=range.start&&d<=range.end;
-  });
+  const filtered=
+    (expenses||[])
+      .filter(
+        item=>{
+          const d=
+            new Date(item.spent_at);
 
-  const adjustmentFiltered=(adjustments||[]).filter(x=>{
-    const d=new Date(x.adjusted_at);
-    return d>=range.start&&d<=range.end;
-  });
+          return(
+            d>=range.start &&
+            d<=range.end
+          );
+        }
+      );
 
-  const needs=filtered
-    .filter(x=>x.fund==="needs")
-    .reduce((s,x)=>s+Number(x.amount||0),0);
+  const filteredAdjustments=
+    (adjustments||[])
+      .filter(
+        item=>{
+          const d=
+            new Date(item.adjusted_at);
 
-  const fun=filtered
-    .filter(x=>x.fund==="fun")
-    .reduce((s,x)=>s+Number(x.amount||0),0);
+          return(
+            d>=range.start &&
+            d<=range.end
+          );
+        }
+      );
 
-  const total=needs+fun;
+  const needs=
+    filtered
+      .filter(x=>x.fund==="needs")
+      .reduce(
+        (s,x)=>s+Number(x.amount||0),
+        0
+      );
 
-  const addedFunds=adjustmentFiltered.reduce((s,x)=>s+Number(x.amount||0),0);
+  const fun=
+    filtered
+      .filter(x=>x.fund==="fun")
+      .reduce(
+        (s,x)=>s+Number(x.amount||0),
+        0
+      );
 
-  document.getElementById("analyticsPeriodLabel").textContent=range.label;
-  document.getElementById("analyticsTotal").textContent=money(total);
-  document.getElementById("analyticsNeeds").textContent=money(needs);
-  document.getElementById("analyticsFun").textContent=money(fun);
-  document.getElementById("analyticsAddedFunds").textContent=money(addedFunds);
+  const total=
+    needs+fun;
+
+  const addedFunds=
+    filteredAdjustments
+      .reduce(
+        (s,x)=>s+Number(x.amount||0),
+        0
+      );
+
+  document
+    .getElementById("analyticsPeriodLabel")
+    .textContent=
+      range.label;
+
+  document
+    .getElementById("analyticsTotal")
+    .textContent=
+      money(total);
+
+  document
+    .getElementById("analyticsNeeds")
+    .textContent=
+      money(needs);
+
+  document
+    .getElementById("analyticsFun")
+    .textContent=
+      money(fun);
+
+  document
+    .getElementById("analyticsAddedFunds")
+    .textContent=
+      money(addedFunds);
 
   const categories={};
 
-  filtered.forEach(x=>{
-    const key=x.category||"Other";
-    categories[key]=(categories[key]||0)+Number(x.amount||0);
-  });
+  filtered.forEach(
+    item=>{
+      const category=
+        item.category||"Other";
 
-  const entries=Object.entries(categories).sort((a,b)=>b[1]-a[1]);
+      categories[category]=
+        (categories[category]||0)+
+        Number(item.amount||0);
+    }
+  );
 
-  const categoryBox=document.getElementById("analyticsCategories");
+  const entries=
+    Object
+      .entries(categories)
+      .sort(
+        (a,b)=>b[1]-a[1]
+      );
+
+  const categoryBox=
+    document.getElementById(
+      "analyticsCategories"
+    );
+
+  const pie=
+    document.getElementById(
+      "analyticsPie"
+    );
 
   if(!entries.length){
-    categoryBox.textContent="No expenses.";
-    document.getElementById("analyticsPie").style.background=varEdge();
+    categoryBox.innerHTML=
+      '<p class="subtext">No expenses.</p>';
+
+    pie.style.background=
+      "var(--edge)";
   }else{
-    categoryBox.innerHTML=entries.map(([name,value])=>{
-      const pct=total?value/total*100:0;
-
-      return`
-        <div class="category-row">
-          <span>${escapeHtml(name)}</span>
-          <strong>${money(value)}</strong>
-          <strong>${pct.toFixed(1)}%</strong>
-        </div>
-      `;
-    }).join("");
-
-    const pieColors=[
-      "var(--accent)",
-      "var(--text)",
-      "var(--edge)",
-      "var(--muted)",
-      "#d6a75f",
-      "#8698b8",
-      "#b87f9b",
-      "#7e9c76",
-      "#a37861"
-    ];
-
     let running=0;
+    const pieSegments=[];
 
-    const segments=entries.map(([,value],index)=>{
-      const start=running;
-      running+=total?value/total*100:0;
+    categoryBox.innerHTML=
+      entries
+        .map(
+          ([name,value],index)=>{
+            const pct=
+              total
+                ?value/total*100
+                :0;
 
-      return `${pieColors[index%pieColors.length]} ${start}% ${running}%`;
-    });
+            const color=
+              analyticsColors[
+                index%
+                analyticsColors.length
+              ];
 
-    document.getElementById("analyticsPie").style.background=
-      `conic-gradient(${segments.join(",")})`;
+            const start=
+              running;
+
+            running+=pct;
+
+            pieSegments.push(
+              `${color} ${start}% ${running}%`
+            );
+
+            return`
+              <div class="category-row">
+                <div class="category-name">
+                  <span
+                    class="category-dot"
+                    style="background:${color}"
+                  ></span>
+
+                  <span class="category-name-text">
+                    ${escapeHtml(name)}
+                  </span>
+                </div>
+
+                <div class="category-money">
+                  ${money(value)}
+                </div>
+
+                <div class="category-percent">
+                  ${pct.toFixed(1)}%
+                </div>
+              </div>
+            `;
+          }
+        )
+        .join("");
+
+    pie.style.background=
+      `conic-gradient(${pieSegments.join(",")})`;
   }
 
   const profileTotals={};
 
   filtered
     .filter(x=>x.fund==="fun")
-    .forEach(x=>{
-      const name=profileMap.get(x.profile_id)?.display_name||"Unknown";
-      profileTotals[name]=(profileTotals[name]||0)+Number(x.amount||0);
-    });
+    .forEach(
+      item=>{
+        const name=
+          profileMap
+            .get(item.profile_id)
+            ?.display_name||
+          "Unknown";
 
-  const profileBox=document.getElementById("analyticsProfiles");
+        profileTotals[name]=
+          (profileTotals[name]||0)+
+          Number(item.amount||0);
+      }
+    );
 
-  const profileEntries=Object.entries(profileTotals).sort((a,b)=>b[1]-a[1]);
+  const profileBox=
+    document.getElementById(
+      "analyticsProfiles"
+    );
+
+  const profileEntries=
+    Object
+      .entries(profileTotals)
+      .sort(
+        (a,b)=>b[1]-a[1]
+      );
 
   profileBox.innerHTML=
     profileEntries.length
-      ?profileEntries.map(([name,value])=>`
-        <div class="calc-row">
-          <span>${escapeHtml(name)}</span>
-          <strong>${money(value)}</strong>
-        </div>
-      `).join("")
-      :"No Fun Money spending.";
+      ?profileEntries
+        .map(
+          ([name,value])=>`
+            <div class="calc-row">
+              <span>${escapeHtml(name)}</span>
+              <strong>${money(value)}</strong>
+            </div>
+          `
+        )
+        .join("")
+      :'<p class="subtext">No Fun Money spending.</p>';
 
   let savings=0;
 
-  (plans||[]).forEach(plan=>{
-    const d=new Date(`${plan.budget_month}T00:00:00`);
+  (plans||[])
+    .forEach(
+      plan=>{
+        const month=
+          new Date(
+            `${plan.budget_month}T00:00:00`
+          );
 
-    if(d>=range.start&&d<=range.end){
-      savings+=
-        Number(plan.weekly_savings||0)*
-        getBudgetWeekCount(d);
-    }
-  });
+        if(
+          month>=range.start &&
+          month<=range.end
+        ){
+          savings+=
+            Number(
+              plan.weekly_savings||0
+            )*
+            getBudgetWeekCount(month);
+        }
+      }
+    );
 
-  document.getElementById("analyticsSavings").textContent=money(savings);
+  document
+    .getElementById("analyticsSavings")
+    .textContent=
+      money(savings);
 }
 
-function varEdge(){
-  return getComputedStyle(document.documentElement).getPropertyValue("--edge");
-}
-
-async function loadBudgetHistory(){
-  const box=document.getElementById("budgetHistoryList");
-
-  const {data:plans,error}=await supabaseClient
-    .from("budget_plans")
-    .select("*")
-    .eq("household_id",householdId)
-    .order("budget_month",{ascending:false});
-
-  if(error){
-    box.innerHTML=`<p class="subtext">${escapeHtml(error.message)}</p>`;
-    return;
-  }
+function renderThemes(){
+  const box=
+    document.getElementById("themeGrid");
 
   box.innerHTML="";
 
-  for(const plan of plans||[]){
-    const {data:items}=await supabaseClient
-      .from("budget_items")
-      .select("*")
-      .eq("budget_plan_id",plan.id)
-      .order("sort_order");
+  Object
+    .entries(themeData)
+    .forEach(
+      ([name,data])=>{
+        const button=
+          document.createElement("button");
 
-    const monthDate=new Date(`${plan.budget_month}T00:00:00`);
-    const weeks=getBudgetWeekCount(monthDate);
+        button.className=
+          `theme-button${
+            name===selectedTheme
+              ?" selected"
+              :""
+          }`;
 
-    const income=(items||[])
-      .filter(x=>x.item_type==="income")
-      .reduce((s,x)=>s+Number(x.amount||0),0);
+        button.innerHTML=`
+          <strong>
+            ${name[0].toUpperCase()+name.slice(1)}
+          </strong>
 
-    const monthlyBills=(items||[])
-      .filter(x=>x.item_type==="monthly_bill")
-      .reduce((s,x)=>s+Number(x.amount||0),0);
+          <div class="swatches">
+            ${
+              data.colors
+                .map(
+                  color=>`
+                    <span
+                      class="swatch"
+                      style="background:${color}"
+                    ></span>
+                  `
+                )
+                .join("")
+            }
+          </div>
+        `;
 
-    const weeklyBills=(items||[])
-      .filter(x=>x.item_type==="weekly_bill")
-      .reduce((s,x)=>s+Number(x.amount||0),0);
+        button.onclick=
+          ()=>{
+            selectedTheme=name;
+            applyAppearance();
+            renderThemes();
+          };
 
-    const row=document.createElement("div");
-
-    row.className="card settings-card budget-history-row";
-
-    row.innerHTML=`
-      <button class="budget-history-button" type="button">
-        <strong>${monthDate.toLocaleDateString("en-US",{month:"long",year:"numeric"})}</strong>
-        <span>›</span>
-      </button>
-
-      <div class="budget-history-details hidden">
-        ${
-          items?.length
-            ?`
-              <div class="calc-row"><span>Monthly Income</span><strong>${money(income)}</strong></div>
-              <div class="calc-row"><span>Monthly Bills</span><strong>-${money(monthlyBills)}</strong></div>
-              <div class="calc-row"><span>Net</span><strong>${money(income-monthlyBills)}</strong></div>
-              <div class="calc-row"><span>Budget Weeks</span><strong>${weeks}</strong></div>
-              <div class="calc-row"><span>Weekly Bills</span><strong>-${money(weeklyBills)}</strong></div>
-            `
-            :`<p class="subtext">Detailed Income/Bill snapshots were not stored for this older budget.</p>`
-        }
-
-        <div class="calc-row"><span>Needs</span><strong>${money(plan.weekly_needs)}</strong></div>
-        <div class="calc-row"><span>Savings</span><strong>${money(plan.weekly_savings)}</strong></div>
-        <div class="calc-row"><span>Fun Money Pool</span><strong>${money(plan.weekly_fun)}</strong></div>
-      </div>
-    `;
-
-    const button=row.querySelector("button");
-    const details=row.querySelector(".budget-history-details");
-    const arrow=button.querySelector("span");
-
-    button.onclick=()=>{
-      const hidden=details.classList.toggle("hidden");
-      arrow.textContent=hidden?"›":"⌄";
-    };
-
-    box.appendChild(row);
-  }
+        box.appendChild(button);
+      }
+    );
 }
 
 function renderSettingsSection(){
@@ -3402,128 +4839,252 @@ function renderSettingsSection(){
     "appearanceSettings",
     "profileSettings",
     "budgetSettings"
-  ].forEach(id=>document.getElementById(id).classList.add("hidden"));
+  ]
+  .forEach(
+    id=>
+      document
+        .getElementById(id)
+        .classList.add("hidden")
+  );
 
-  document.getElementById("settingsProfileName").textContent=
-    currentProfile?.display_name||"";
+  document
+    .getElementById("settingsProfileName")
+    .textContent=
+      currentProfile?.display_name||"";
 
   if(settingsSection==="menu"){
-    document.getElementById("settingsTitle").textContent="Settings";
-    document.getElementById("settingsMenu").classList.remove("hidden");
+    document
+      .getElementById("settingsTitle")
+      .textContent=
+        "Settings";
+
+    document
+      .getElementById("settingsMenu")
+      .classList.remove("hidden");
+
     return;
   }
 
   if(settingsSection==="appearance"){
-    document.getElementById("settingsTitle").textContent="Appearance";
-    document.getElementById("appearanceSettings").classList.remove("hidden");
+    document
+      .getElementById("settingsTitle")
+      .textContent=
+        "Appearance";
+
+    document
+      .getElementById("appearanceSettings")
+      .classList.remove("hidden");
 
     renderThemes();
 
-    document.getElementById("fontFamilySelect").value=selectedFont;
-    document.getElementById("fontSizeRange").value=selectedFontSize;
-    document.getElementById("fontSizeLabel").textContent=`${selectedFontSize}px`;
+    document
+      .getElementById("fontFamilySelect")
+      .value=
+        selectedFont;
+
+    document
+      .getElementById("fontSizeRange")
+      .value=
+        selectedFontSize;
+
+    document
+      .getElementById("fontSizeLabel")
+      .textContent=
+        `${selectedFontSize}px`;
 
     return;
   }
 
   if(settingsSection==="profile"){
-    document.getElementById("settingsTitle").textContent="Profile";
-    document.getElementById("profileSettings").classList.remove("hidden");
+    document
+      .getElementById("settingsTitle")
+      .textContent=
+        "Profile";
 
-    renderAvatarGrid(
-      "settingsAvatarGrid",
-      selectedSettingsAvatar,
-      name=>{
-        selectedSettingsAvatar=name;
-        renderSettingsSection();
-      }
-    );
+    document
+      .getElementById("profileSettings")
+      .classList.remove("hidden");
 
-    document.getElementById("accountEmailDisplay").textContent=currentUser.email;
+    document
+      .getElementById("accountEmailDisplay")
+      .textContent=
+        currentUser.email;
 
     return;
   }
 
-  document.getElementById("settingsTitle").textContent="Budget Info";
-  document.getElementById("budgetSettings").classList.remove("hidden");
+  document
+    .getElementById("settingsTitle")
+    .textContent=
+      "Budget Info";
+
+  document
+    .getElementById("budgetSettings")
+    .classList.remove("hidden");
 
   loadBudgetHistory();
 }
 
-function renderThemes(){
-  const box=document.getElementById("themeGrid");
+async function loadBudgetHistory(){
+  const {data,error}=
+    await supabaseClient
+      .from("budget_plans")
+      .select("*")
+      .eq("household_id",householdId)
+      .order(
+        "budget_month",
+        {ascending:false}
+      );
+
+  const box=
+    document.getElementById(
+      "budgetHistoryList"
+    );
+
+  if(error){
+    box.textContent=
+      error.message;
+
+    return;
+  }
+
   box.innerHTML="";
 
-  Object.entries(themeData).forEach(([name,colors])=>{
-    const button=document.createElement("button");
+  for(const plan of data||[]){
+    const month=
+      new Date(
+        `${plan.budget_month}T00:00:00`
+      );
 
-    button.className=`theme-button${name===selectedTheme?" selected":""}`;
+    const details=
+      document.createElement("div");
 
-    button.innerHTML=`
-      <strong>${name[0].toUpperCase()+name.slice(1)}</strong>
-      <div class="swatches">
-        ${colors.map(c=>`<span class="swatch" style="background:${c}"></span>`).join("")}
+    details.className=
+      "card settings-card";
+
+    details.innerHTML=`
+      <button
+        type="button"
+        class="budget-history-toggle"
+        style="
+          width:100%;
+          padding:0;
+          background:none;
+          display:flex;
+          justify-content:space-between;
+          font-weight:900
+        "
+      >
+        <span>
+          ${month.toLocaleDateString("en-US",{month:"long",year:"numeric"})}
+        </span>
+
+        <span>›</span>
+      </button>
+
+      <div class="hidden budget-history-details" style="margin-top:13px">
+        <div class="calc-row">
+          <span>Budget Weeks</span>
+          <strong>${getBudgetWeekCount(month)}</strong>
+        </div>
+
+        <div class="calc-row">
+          <span>Needs / week</span>
+          <strong>${money(plan.weekly_needs)}</strong>
+        </div>
+
+        <div class="calc-row">
+          <span>Savings / week</span>
+          <strong>${money(plan.weekly_savings)}</strong>
+        </div>
+
+        <div class="calc-row">
+          <span>Fun Money / week</span>
+          <strong>${money(plan.weekly_fun)}</strong>
+        </div>
       </div>
     `;
 
-    button.onclick=()=>{
-      selectedTheme=name;
-      applyAppearance();
-      renderThemes();
-    };
+    const button=
+      details.querySelector(
+        ".budget-history-toggle"
+      );
 
-    box.appendChild(button);
-  });
+    const body=
+      details.querySelector(
+        ".budget-history-details"
+      );
+
+    const arrow=
+      button.querySelector(
+        "span:last-child"
+      );
+
+    button.onclick=
+      ()=>{
+        const hidden=
+          body.classList.toggle("hidden");
+
+        arrow.textContent=
+          hidden
+            ?"›"
+            :"⌄";
+      };
+
+    box.appendChild(details);
+  }
 }
 
-async function saveProfileSettings(fields){
-  const {error}=await supabaseClient.rpc(
-    "set_profile_settings",
-    {
-      p_profile_id:currentProfile.id,
-      p_avatar:fields.avatar??currentProfile.avatar??"knight",
-      p_calculation_mode:"hard",
-      p_font_size:fields.font_size??selectedFontSize,
-      p_font_family:fields.font_family??selectedFont,
-      p_theme:fields.theme??selectedTheme
-    }
-  );
+async function saveProfileAppearance(){
+  const {error}=
+    await supabaseClient.rpc(
+      "set_profile_settings",
+      {
+        p_profile_id:
+          currentProfile.id,
+
+        p_avatar:
+          currentProfile.avatar||
+          "knight",
+
+        p_calculation_mode:
+          "hard",
+
+        p_font_size:
+          selectedFontSize,
+
+        p_font_family:
+          selectedFont,
+
+        p_theme:
+          selectedTheme
+      }
+    );
 
   if(error){
     alert(error.message);
-    return false;
+    return;
   }
 
   await loadProfileSettings();
 
-  return true;
+  settingsSection="menu";
+
+  renderSettingsSection();
+
+  showToast("Appearance saved");
 }
 
 async function sendPasswordReset(email){
-  const redirectTo=`${location.origin}${location.pathname}`;
+  const redirectTo=
+    `${location.origin}${location.pathname}`;
 
-  const {error}=await supabaseClient.auth.resetPasswordForEmail(
-    email,
-    {redirectTo}
-  );
-
-  if(error)throw error;
-}
-
-async function sendPinResetLink(){
-  const url=new URL(location.href);
-
-  url.search="";
-  url.searchParams.set("pin-reset","1");
-  url.searchParams.set("profile",currentProfile.id);
-
-  const {error}=await supabaseClient.auth.signInWithOtp({
-    email:currentUser.email,
-    options:{
-      shouldCreateUser:false,
-      emailRedirectTo:url.toString()
-    }
-  });
+  const {error}=
+    await supabaseClient.auth
+      .resetPasswordForEmail(
+        email,
+        {redirectTo}
+      );
 
   if(error)throw error;
 }
@@ -3534,141 +5095,232 @@ function exportBudgetCsv(){
     .select("*")
     .eq("household_id",householdId)
     .order("budget_month")
-    .then(({data,error})=>{
-      if(error){
-        alert(error.message);
-        return;
+    .then(
+      ({data,error})=>{
+        if(error){
+          alert(error.message);
+          return;
+        }
+
+        const rows=[
+          [
+            "Budget Month",
+            "Budget Weeks",
+            "Weekly Needs",
+            "Weekly Savings",
+            "Weekly Fun Money"
+          ]
+        ];
+
+        (data||[])
+          .forEach(
+            plan=>{
+              const d=
+                new Date(
+                  `${plan.budget_month}T00:00:00`
+                );
+
+              rows.push(
+                [
+                  plan.budget_month,
+                  getBudgetWeekCount(d),
+                  plan.weekly_needs,
+                  plan.weekly_savings,
+                  plan.weekly_fun
+                ]
+              );
+            }
+          );
+
+        const csv=
+          rows
+            .map(
+              row=>
+                row
+                  .map(
+                    value=>
+                      `"${String(value).replaceAll('"','""')}"`
+                  )
+                  .join(",")
+            )
+            .join("\n");
+
+        const blob=
+          new Blob(
+            [csv],
+            {type:"text/csv"}
+          );
+
+        const url=
+          URL.createObjectURL(blob);
+
+        const a=
+          document.createElement("a");
+
+        a.href=url;
+        a.download=
+          "bicycle-budget-history.csv";
+
+        a.click();
+
+        URL.revokeObjectURL(url);
+
+        showToast("CSV created");
       }
-
-      const rows=[
-        [
-          "Budget Month",
-          "Budget Weeks",
-          "Weekly Needs",
-          "Weekly Savings",
-          "Weekly Fun Money"
-        ]
-      ];
-
-      (data||[]).forEach(plan=>{
-        const d=new Date(`${plan.budget_month}T00:00:00`);
-
-        rows.push([
-          plan.budget_month,
-          getBudgetWeekCount(d),
-          plan.weekly_needs,
-          plan.weekly_savings,
-          plan.weekly_fun
-        ]);
-      });
-
-      const csv=rows
-        .map(row=>row.map(value=>`"${String(value).replaceAll('"','""')}"`).join(","))
-        .join("\n");
-
-      const blob=new Blob([csv],{type:"text/csv"});
-      const url=URL.createObjectURL(blob);
-
-      const a=document.createElement("a");
-      a.href=url;
-      a.download="budget-history.csv";
-      a.click();
-
-      URL.revokeObjectURL(url);
-
-      showToast("CSV created");
-    });
+    );
 }
 
 async function enterProfile(){
   await loadProfileSettings();
   await loadProfiles();
 
-  document.getElementById("loginScreen").classList.add("hidden");
-  document.getElementById("profileScreen").classList.add("hidden");
-  document.getElementById("appScreen").classList.remove("hidden");
-  document.getElementById("settingsGear").classList.remove("hidden");
+  document
+    .getElementById("loginScreen")
+    .classList.add("hidden");
+
+  document
+    .getElementById("profileScreen")
+    .classList.add("hidden");
+
+  document
+    .getElementById("appScreen")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("settingsGear")
+    .classList.remove("hidden");
 
   renderDateStrip();
 
-  await openBudgetSetup();
-  await loadExpenses();
-  await calculateBalances();
+  /*
+  Create the current Sunday deposit from
+  CURRENT calendar month's budget.
+  */
+  await ensureCurrentWeekDeposits();
+
+  await Promise.all([
+    loadCurrentBudget(),
+    openBudgetSetup(),
+    loadExpenses(),
+    calculateBalances()
+  ]);
 
   initializeAnalyticsControls();
 
   await updateAnalytics();
 
-  requestAnimationFrame(()=>showPanel(2,false));
-}
+  /*
+  Always open exactly on HOME.
+  This runs after the mobile layout has rendered.
+  */
+  activePanelIndex=2;
 
-function initializeAnalyticsControls(){
-  const now=new Date();
-
-  document.getElementById("analyticsMonthInput").value=
-    `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
-
-  const yearSelect=document.getElementById("analyticsYearSelect");
-
-  yearSelect.innerHTML="";
-
-  for(let y=now.getFullYear();y>=2020;y--){
-    const option=document.createElement("option");
-    option.value=y;
-    option.textContent=y;
-    yearSelect.appendChild(option);
-  }
-
-  yearSelect.value=now.getFullYear();
-
-  document.getElementById("analyticsStartDate").value=`${now.getFullYear()}-01-01`;
-  document.getElementById("analyticsEndDate").value=dateOnly(now);
+  requestAnimationFrame(
+    ()=>{
+      requestAnimationFrame(
+        ()=>showPanel(2,false)
+      );
+    }
+  );
 }
 
 async function startApp(){
   await loadHousehold();
 
-  const token=localStorage.getItem("profileSessionToken");
-  const id=localStorage.getItem("profileId");
-
-  if(token&&id){
-    const {data}=await supabaseClient.rpc(
-      "validate_profile_session",
-      {p_session_token:token}
+  const token=
+    localStorage.getItem(
+      "profileSessionToken"
     );
 
+  const id=
+    localStorage.getItem(
+      "profileId"
+    );
+
+  if(token&&id){
+    const {data}=
+      await supabaseClient.rpc(
+        "validate_profile_session",
+        {
+          p_session_token:
+            token
+        }
+      );
+
     if(data===id){
-      const {data:profile}=await supabaseClient
-        .from("profiles")
-        .select("*")
-        .eq("id",id)
-        .single();
+      const {data:profile}=
+        await supabaseClient
+          .from("profiles")
+          .select("*")
+          .eq("id",id)
+          .single();
 
       if(profile){
         currentProfile=profile;
+
         await enterProfile();
+
         return;
       }
     }
   }
 
-  document.getElementById("loginScreen").classList.add("hidden");
-  document.getElementById("profileScreen").classList.remove("hidden");
+  document
+    .getElementById("loginScreen")
+    .classList.add("hidden");
+
+  document
+    .getElementById("profileScreen")
+    .classList.remove("hidden");
 
   await renderProfiles();
 }
 
 async function login(){
-  const email=document.getElementById("loginEmail").value.trim();
-  const password=document.getElementById("loginPassword").value;
+  const email=
+    document
+      .getElementById("loginEmail")
+      .value
+      .trim();
 
-  const {data,error}=await supabaseClient.auth.signInWithPassword({
-    email,
-    password
-  });
+  const password=
+    document
+      .getElementById("loginPassword")
+      .value;
+
+  const errorBox=
+    document.getElementById(
+      "loginError"
+    );
+
+  errorBox.classList.add("hidden");
+
+  const {data,error}=
+    await supabaseClient.auth
+      .signInWithPassword(
+        {
+          email,
+          password
+        }
+      );
 
   if(error){
-    document.getElementById("loginError").textContent=error.message;
+    errorBox.textContent=
+      "Incorrect email or password.";
+
+    errorBox.classList.remove("hidden");
+
+    const card=
+      document.getElementById(
+        "loginCard"
+      );
+
+    card.classList.remove("shake");
+
+    void card.offsetWidth;
+
+    card.classList.add("shake");
+
     return;
   }
 
@@ -3678,322 +5330,730 @@ async function login(){
 }
 
 async function logout(){
-  localStorage.removeItem("profileSessionToken");
-  localStorage.removeItem("profileId");
+  localStorage.removeItem(
+    "profileSessionToken"
+  );
+
+  localStorage.removeItem(
+    "profileId"
+  );
 
   await supabaseClient.auth.signOut();
 
   location.reload();
 }
 
-document.getElementById("loginButton").onclick=login;
+document
+  .getElementById("passwordToggle")
+  .onclick=
+    ()=>{
+      const input=
+        document.getElementById(
+          "loginPassword"
+        );
 
-document.getElementById("loginEmail").addEventListener("keydown",e=>{
-  if(e.key==="Enter"){
-    document.getElementById("loginPassword").focus();
-  }
-});
+      const showing=
+        input.type==="text";
 
-document.getElementById("loginPassword").addEventListener("keydown",e=>{
-  if(e.key==="Enter")login();
-});
+      input.type=
+        showing
+          ?"password"
+          :"text";
 
-document.getElementById("profilePin").addEventListener("keydown",e=>{
-  if(e.key==="Enter")unlockProfile();
-});
+      document
+        .getElementById("passwordToggle")
+        .textContent=
+          showing
+            ?"Show"
+            :"Hide";
+    };
 
-document.getElementById("unlockProfileButton").onclick=unlockProfile;
-document.getElementById("cancelPinButton").onclick=renderProfiles;
-document.getElementById("profileLogoutButton").onclick=logout;
+document
+  .getElementById("loginButton")
+  .onclick=
+    login;
 
-document.getElementById("addProfileButton").onclick=()=>{
-  document.getElementById("profileList").classList.add("hidden");
-  document.getElementById("addProfileButton").classList.add("hidden");
-  document.getElementById("addProfileForm").classList.remove("hidden");
-
-  selectedAvatar="knight";
-
-  renderAvatarGrid(
-    "avatarGrid",
-    selectedAvatar,
-    name=>{
-      selectedAvatar=name;
-
-      renderAvatarGrid(
-        "avatarGrid",
-        selectedAvatar,
-        arguments.callee
-      );
-    }
-  );
-};
-
-document.getElementById("cancelProfileButton").onclick=renderProfiles;
-
-document.getElementById("saveProfileButton").onclick=async()=>{
-  const name=document.getElementById("newProfileName").value.trim();
-  const pin=document.getElementById("newProfilePin").value;
-
-  if(!name||!/^[0-9]{4}$/.test(pin)){
-    alert("Enter a name and exactly four PIN digits.");
-    return;
-  }
-
-  const {error}=await supabaseClient.rpc(
-    "create_profile",
-    {
-      p_household_id:householdId,
-      p_display_name:name,
-      p_pin:pin
-    }
-  );
-
-  if(error){
-    alert(error.message);
-    return;
-  }
-
-  const profiles=await loadProfiles();
-  const created=[...profiles].reverse().find(p=>p.display_name===name);
-
-  if(created){
-    await supabaseClient.rpc(
-      "set_profile_settings",
-      {
-        p_profile_id:created.id,
-        p_avatar:selectedAvatar,
-        p_calculation_mode:"hard",
-        p_font_size:16,
-        p_font_family:"system",
-        p_theme:"cedar"
+document
+  .getElementById("loginEmail")
+  .addEventListener(
+    "keydown",
+    e=>{
+      if(e.key==="Enter"){
+        document
+          .getElementById("loginPassword")
+          .focus();
       }
-    );
-  }
+    }
+  );
 
-  showToast("Profile created");
+document
+  .getElementById("loginPassword")
+  .addEventListener(
+    "keydown",
+    e=>{
+      if(e.key==="Enter"){
+        login();
+      }
+    }
+  );
 
-  await renderProfiles();
-};
+document
+  .getElementById("unlockProfileButton")
+  .onclick=
+    unlockProfile;
 
-document.getElementById("settingsGear").onclick=()=>openSettings("menu");
+document
+  .getElementById("cancelPinButton")
+  .onclick=
+    renderProfiles;
 
-document.getElementById("settingsBackButton").onclick=()=>{
-  if(settingsSection!=="menu"){
-    settingsSection="menu";
-    renderSettingsSection();
-  }else{
-    closeSettings();
-  }
-};
+document
+  .getElementById("profileLogoutButton")
+  .onclick=
+    logout;
 
-document.querySelectorAll("[data-settings-section]").forEach(button=>{
-  button.onclick=()=>{
-    settingsSection=button.dataset.settingsSection;
-    renderSettingsSection();
-  };
-});
+document
+  .querySelectorAll(
+    "#newPinLengthChoice button"
+  )
+  .forEach(
+    button=>{
+      button.onclick=
+        ()=>{
+          selectedNewPinLength=
+            Number(
+              button.dataset.pinLength
+            );
 
-document.getElementById("settingsSwitchProfileButton").onclick=async()=>{
-  localStorage.removeItem("profileSessionToken");
-  localStorage.removeItem("profileId");
+          document
+            .querySelectorAll(
+              "#newPinLengthChoice button"
+            )
+            .forEach(
+              x=>
+                x.classList.toggle(
+                  "selected",
+                  x===button
+                )
+            );
 
-  closeSettings();
+          renderPinBoxes(
+            "newProfilePinBoxes",
+            selectedNewPinLength
+          );
+        };
+    }
+  );
 
-  document.getElementById("appScreen").classList.add("hidden");
-  document.getElementById("profileScreen").classList.remove("hidden");
-  document.getElementById("settingsGear").classList.add("hidden");
+document
+  .getElementById("addProfileButton")
+  .onclick=
+    ()=>{
+      document
+        .getElementById("profileList")
+        .classList.add("hidden");
 
-  await renderProfiles();
-};
+      document
+        .getElementById("addProfileButton")
+        .classList.add("hidden");
 
-document.getElementById("settingsLogoutButton").onclick=logout;
+      document
+        .getElementById("addProfileForm")
+        .classList.remove("hidden");
 
-document.getElementById("saveAppearanceButton").onclick=async()=>{
-  selectedFont=document.getElementById("fontFamilySelect").value;
-  selectedFontSize=Number(document.getElementById("fontSizeRange").value);
+      selectedNewPinLength=4;
 
-  if(await saveProfileSettings({
-    theme:selectedTheme,
-    font_family:selectedFont,
-    font_size:selectedFontSize
-  })){
-    settingsSection="menu";
-    renderSettingsSection();
-    showToast("Appearance saved");
-  }
-};
+      renderPinBoxes(
+        "newProfilePinBoxes",
+        4
+      );
+    };
 
-document.getElementById("fontFamilySelect").onchange=e=>{
-  selectedFont=e.target.value;
-  applyAppearance();
-};
+document
+  .getElementById("cancelProfileButton")
+  .onclick=
+    renderProfiles;
 
-document.getElementById("fontSizeRange").oninput=e=>{
-  selectedFontSize=Number(e.target.value);
+document
+  .getElementById("saveProfileButton")
+  .onclick=
+    async()=>{
+      const name=
+        document
+          .getElementById("newProfileName")
+          .value
+          .trim();
 
-  document.getElementById("fontSizeLabel").textContent=`${selectedFontSize}px`;
+      const pin=
+        getPinFromBoxes(
+          "newProfilePinBoxes"
+        );
 
-  applyAppearance();
-};
+      if(
+        !name||
+        pin.length!==selectedNewPinLength
+      ){
+        return;
+      }
 
-document.getElementById("saveAvatarButton").onclick=async()=>{
-  if(await saveProfileSettings({
-    avatar:selectedSettingsAvatar
-  })){
-    settingsSection="menu";
-    renderSettingsSection();
-    showToast("Profile picture saved");
-  }
-};
+      const {error}=
+        await supabaseClient.rpc(
+          "create_profile",
+          {
+            p_household_id:
+              householdId,
 
-document.getElementById("forgotPasswordButton").onclick=async()=>{
-  const email=document.getElementById("loginEmail").value.trim();
+            p_display_name:
+              name,
 
-  if(!email){
-    alert("Enter your account email first.");
-    return;
-  }
+            p_pin:
+              pin
+          }
+        );
 
-  try{
-    await sendPasswordReset(email);
-    showToast("Reset email sent");
-  }catch(error){
-    alert(error.message);
-  }
-};
+      if(error){
+        alert(error.message);
+        return;
+      }
 
-document.getElementById("resetPasswordSettingsButton").onclick=async()=>{
-  try{
-    await sendPasswordReset(currentUser.email);
-    document.getElementById("securityMessage").textContent="Password reset email sent.";
-  }catch(error){
-    alert(error.message);
-  }
-};
+      /*
+      Newly created profiles should use Cedar.
+      */
+      const profiles=
+        await loadProfiles();
 
-document.getElementById("resetPinEmailButton").onclick=async()=>{
-  try{
-    await sendPinResetLink();
-    document.getElementById("securityMessage").textContent="PIN reset email sent.";
-  }catch(error){
-    alert(error.message);
-  }
-};
+      const created=[...
+        profiles
+      ]
+      .reverse()
+      .find(
+        profile=>
+          profile.display_name===name
+      );
 
-document.getElementById("addIncomeButton").onclick=()=>openMoneyEditor("income");
-document.getElementById("addMonthlyBillButton").onclick=()=>openMoneyEditor("monthlyBill");
-document.getElementById("addWeeklyBillButton").onclick=()=>openMoneyEditor("weeklyBill");
+      if(created){
+        await supabaseClient
+          .from("profiles")
+          .update(
+            {
+              pin_length:
+                selectedNewPinLength
+            }
+          )
+          .eq("id",created.id);
 
-document.getElementById("moneyEditorSaveButton").onclick=saveMoneyEditor;
-document.getElementById("moneyEditorDeleteButton").onclick=deleteMoneyEditor;
-document.getElementById("moneyEditorCancelButton").onclick=closeMoneyEditor;
+        await supabaseClient.rpc(
+          "set_profile_settings",
+          {
+            p_profile_id:
+              created.id,
 
-document.getElementById("saveBudgetButton").onclick=saveBudget;
+            p_avatar:
+              created.avatar||
+              "knight",
 
-document.getElementById("viewPreviousBudgetsButton").onclick=()=>{
-  openSettings("budget");
-};
+            p_calculation_mode:
+              "hard",
 
-document.getElementById("budgetHelpButton").onclick=()=>{
-  document.getElementById("budgetHelpModal").classList.remove("hidden");
-};
+            p_font_size:
+              16,
 
-document.getElementById("closeBudgetHelp").onclick=()=>{
-  document.getElementById("budgetHelpModal").classList.add("hidden");
-};
+            p_font_family:
+              "system",
 
-document.getElementById("budgetHelpModal").onclick=e=>{
-  if(e.target.id==="budgetHelpModal"){
-    e.currentTarget.classList.add("hidden");
-  }
-};
+            p_theme:
+              "cedar"
+          }
+        );
+      }
 
-document.getElementById("addExpenseButton").onclick=()=>{
-  openExpenseForm("needs",null,false);
-};
+      showToast("Profile created");
 
-document.getElementById("needsFundCard").onclick=e=>{
-  if(e.target.closest("[data-add-fund]"))return;
-  openExpenseForm("needs",null,true);
-};
+      await renderProfiles();
+    };
 
-document.getElementById("funFundCard").onclick=e=>{
-  if(e.target.closest("[data-add-fund]"))return;
-  openExpenseForm("fun",null,true);
-};
+document
+  .getElementById("settingsGear")
+  .onclick=
+    ()=>openSettings("menu");
 
-document.querySelectorAll("[data-add-fund]").forEach(button=>{
-  button.onclick=e=>{
-    e.stopPropagation();
-    openFundAdjustment(button.dataset.addFund);
-  };
-});
+document
+  .getElementById("settingsBackButton")
+  .onclick=
+    ()=>{
+      if(settingsSection!=="menu"){
+        settingsSection="menu";
+        renderSettingsSection();
+      }else{
+        closeSettings();
+      }
+    };
 
-document.getElementById("saveExpenseButton").onclick=saveExpense;
-document.getElementById("cancelExpenseButton").onclick=closeExpenseForm;
+document
+  .querySelectorAll(
+    "[data-settings-section]"
+  )
+  .forEach(
+    button=>{
+      button.onclick=
+        ()=>{
+          settingsSection=
+            button.dataset.settingsSection;
 
-document.getElementById("expenseSheetOverlay").onclick=e=>{
-  if(e.target.id==="expenseSheetOverlay"){
-    closeExpenseForm();
-  }
-};
+          renderSettingsSection();
+        };
+    }
+  );
 
-document.getElementById("saveFundAdjustmentButton").onclick=saveFundAdjustment;
+document
+  .getElementById("settingsSwitchProfileButton")
+  .onclick=
+    async()=>{
+      localStorage.removeItem(
+        "profileSessionToken"
+      );
 
-document.getElementById("cancelFundAdjustmentButton").onclick=()=>{
-  document.getElementById("fundAdjustmentModal").classList.add("hidden");
-};
+      localStorage.removeItem(
+        "profileId"
+      );
 
-document.getElementById("fundAdjustmentModal").onclick=e=>{
-  if(e.target.id==="fundAdjustmentModal"){
-    e.currentTarget.classList.add("hidden");
-  }
-};
+      closeSettings();
 
-document.getElementById("weeklyNeeds").addEventListener("input",updateBudgetCalculation);
-document.getElementById("weeklySavings").addEventListener("input",updateBudgetCalculation);
+      document
+        .getElementById("appScreen")
+        .classList.add("hidden");
 
-document.querySelectorAll("#analyticsRangeButtons button").forEach(button=>{
-  button.onclick=async()=>{
-    analyticsRange=button.dataset.range;
+      document
+        .getElementById("profileScreen")
+        .classList.remove("hidden");
 
-    document.querySelectorAll("#analyticsRangeButtons button").forEach(x=>{
-      x.classList.toggle("selected",x===button);
-    });
+      document
+        .getElementById("settingsGear")
+        .classList.add("hidden");
 
-    document.getElementById("analyticsMonthControls").classList.toggle("hidden",analyticsRange!=="month");
-    document.getElementById("analyticsYearControls").classList.toggle("hidden",analyticsRange!=="year");
-    document.getElementById("analyticsCustomControls").classList.toggle("hidden",analyticsRange!=="custom");
+      await renderProfiles();
+    };
 
-    await updateAnalytics();
-  };
-});
+document
+  .getElementById("settingsLogoutButton")
+  .onclick=
+    logout;
+
+document
+  .getElementById("fontFamilySelect")
+  .onchange=
+    e=>{
+      selectedFont=
+        e.target.value;
+
+      applyAppearance();
+    };
+
+document
+  .getElementById("fontSizeRange")
+  .oninput=
+    e=>{
+      selectedFontSize=
+        Number(e.target.value);
+
+      document
+        .getElementById("fontSizeLabel")
+        .textContent=
+          `${selectedFontSize}px`;
+
+      applyAppearance();
+    };
+
+document
+  .getElementById("saveAppearanceButton")
+  .onclick=
+    saveProfileAppearance;
+
+document
+  .getElementById("forgotPasswordButton")
+  .onclick=
+    async()=>{
+      const email=
+        document
+          .getElementById("loginEmail")
+          .value
+          .trim();
+
+      if(!email){
+        alert(
+          "Enter your account email first."
+        );
+
+        return;
+      }
+
+      try{
+        await sendPasswordReset(email);
+
+        showToast(
+          "Reset email sent"
+        );
+      }catch(error){
+        alert(error.message);
+      }
+    };
+
+document
+  .getElementById("resetPasswordSettingsButton")
+  .onclick=
+    async()=>{
+      try{
+        await sendPasswordReset(
+          currentUser.email
+        );
+
+        document
+          .getElementById("securityMessage")
+          .textContent=
+            "Password reset email sent.";
+      }catch(error){
+        alert(error.message);
+      }
+    };
+
+document
+  .getElementById("resetPinEmailButton")
+  .onclick=
+    async()=>{
+      const url=
+        new URL(location.href);
+
+      url.search="";
+
+      url.searchParams.set(
+        "pin-reset",
+        "1"
+      );
+
+      url.searchParams.set(
+        "profile",
+        currentProfile.id
+      );
+
+      const {error}=
+        await supabaseClient.auth
+          .signInWithOtp(
+            {
+              email:
+                currentUser.email,
+
+              options:{
+                shouldCreateUser:false,
+                emailRedirectTo:
+                  url.toString()
+              }
+            }
+          );
+
+      if(error){
+        alert(error.message);
+        return;
+      }
+
+      document
+        .getElementById("securityMessage")
+        .textContent=
+          "PIN reset email sent.";
+    };
+
+document
+  .getElementById("addIncomeButton")
+  .onclick=
+    ()=>openMoneyEditor("income");
+
+document
+  .getElementById("addMonthlyBillButton")
+  .onclick=
+    ()=>openMoneyEditor("monthlyBill");
+
+document
+  .getElementById("addWeeklyBillButton")
+  .onclick=
+    ()=>openMoneyEditor("weeklyBill");
+
+document
+  .getElementById("moneyEditorSaveButton")
+  .onclick=
+    saveMoneyEditor;
+
+document
+  .getElementById("moneyEditorDeleteButton")
+  .onclick=
+    deleteMoneyEditor;
+
+document
+  .getElementById("moneyEditorCancelButton")
+  .onclick=
+    closeMoneyEditor;
+
+document
+  .getElementById("saveBudgetButton")
+  .onclick=
+    saveBudget;
+
+document
+  .getElementById("viewPreviousBudgetsButton")
+  .onclick=
+    ()=>openSettings("budget");
+
+document
+  .getElementById("budgetHelpButton")
+  .onclick=
+    ()=>{
+      document
+        .getElementById("budgetHelpModal")
+        .classList.remove("hidden");
+    };
+
+document
+  .getElementById("closeBudgetHelp")
+  .onclick=
+    ()=>{
+      document
+        .getElementById("budgetHelpModal")
+        .classList.add("hidden");
+    };
+
+document
+  .getElementById("budgetHelpModal")
+  .onclick=
+    e=>{
+      if(
+        e.target.id==="budgetHelpModal"
+      ){
+        e.currentTarget
+          .classList.add("hidden");
+      }
+    };
+
+document
+  .getElementById("moneyEditorModal")
+  .onclick=
+    e=>{
+      if(
+        e.target.id==="moneyEditorModal"
+      ){
+        closeMoneyEditor();
+      }
+    };
+
+document
+  .getElementById("addExpenseButton")
+  .onclick=
+    ()=>{
+      openTransactionModal(
+        "needs",
+        null,
+        false
+      );
+    };
+
+document
+  .getElementById("needsFundCard")
+  .onclick=
+    ()=>{
+      openTransactionModal(
+        "needs",
+        null,
+        true
+      );
+    };
+
+document
+  .getElementById("funFundCard")
+  .onclick=
+    ()=>{
+      openTransactionModal(
+        "fun",
+        null,
+        true
+      );
+    };
+
+document
+  .querySelectorAll(
+    "[data-transaction-tab]"
+  )
+  .forEach(
+    button=>{
+      button.onclick=
+        ()=>{
+          setTransactionTab(
+            button.dataset.transactionTab
+          );
+        };
+    }
+  );
+
+document
+  .getElementById("saveExpenseButton")
+  .onclick=
+    saveExpense;
+
+document
+  .getElementById("deleteExpenseButton")
+  .onclick=
+    deleteExpense;
+
+document
+  .getElementById("cancelExpenseButton")
+  .onclick=
+    closeTransactionModal;
+
+document
+  .getElementById("saveFundAdjustmentButton")
+  .onclick=
+    saveFundAdjustment;
+
+document
+  .getElementById("cancelFundAdjustmentButton")
+  .onclick=
+    closeTransactionModal;
+
+document
+  .getElementById("transactionModal")
+  .onclick=
+    e=>{
+      if(
+        e.target.id==="transactionModal"
+      ){
+        closeTransactionModal();
+      }
+    };
+
+document
+  .getElementById("weeklyNeeds")
+  .addEventListener(
+    "input",
+    updateBudgetCalculation
+  );
+
+document
+  .getElementById("weeklySavings")
+  .addEventListener(
+    "input",
+    updateBudgetCalculation
+  );
+
+document
+  .querySelectorAll(
+    "#analyticsRangeButtons button"
+  )
+  .forEach(
+    button=>{
+      button.onclick=
+        async()=>{
+          analyticsRange=
+            button.dataset.range;
+
+          document
+            .querySelectorAll(
+              "#analyticsRangeButtons button"
+            )
+            .forEach(
+              x=>
+                x.classList.toggle(
+                  "selected",
+                  x===button
+                )
+            );
+
+          document
+            .getElementById("analyticsMonthControls")
+            .classList.toggle(
+              "hidden",
+              analyticsRange!=="month"
+            );
+
+          document
+            .getElementById("analyticsYearControls")
+            .classList.toggle(
+              "hidden",
+              analyticsRange!=="year"
+            );
+
+          document
+            .getElementById("analyticsCustomControls")
+            .classList.toggle(
+              "hidden",
+              analyticsRange!=="custom"
+            );
+
+          await updateAnalytics();
+        };
+    }
+  );
 
 [
   "analyticsMonthInput",
   "analyticsYearSelect",
   "analyticsStartDate",
   "analyticsEndDate"
-].forEach(id=>{
-  document.getElementById(id).addEventListener("change",updateAnalytics);
-});
+]
+.forEach(
+  id=>{
+    document
+      .getElementById(id)
+      .addEventListener(
+        "change",
+        updateAnalytics
+      );
+  }
+);
 
-document.getElementById("exportBudgetCsvButton").onclick=exportBudgetCsv;
+document
+  .getElementById("exportBudgetCsvButton")
+  .onclick=
+    exportBudgetCsv;
 
 bindFluidSwipe();
 bindSettingsSwipeBack();
 
-supabaseClient.auth.onAuthStateChange(async(event,session)=>{
-  if(session?.user){
-    currentUser=session.user;
+window.addEventListener(
+  "resize",
+  ()=>{
+    if(
+      !document
+        .getElementById("appScreen")
+        .classList.contains("hidden")
+    ){
+      showPanel(
+        activePanelIndex,
+        false
+      );
+    }
   }
-});
+);
+
+supabaseClient.auth
+  .onAuthStateChange(
+    async(event,session)=>{
+      if(session?.user){
+        currentUser=session.user;
+      }
+    }
+  );
 
 (async()=>{
-  const {data:{session}}=await supabaseClient.auth.getSession();
+  renderPinBoxes(
+    "newProfilePinBoxes",
+    4
+  );
+
+  const {
+    data:{session}
+  }=
+    await supabaseClient.auth
+      .getSession();
 
   if(session?.user){
     currentUser=session.user;
+
     await startApp();
   }
 })();
