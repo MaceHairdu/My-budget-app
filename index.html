@@ -267,53 +267,20 @@ top:15px;
 right:17px
 }
 #mainWorkspace{
-width:100%;
-height:100vh;
-padding:20px;
-overflow-x:hidden;
-overflow-y:auto;
-scrollbar-width:thin;
-scrollbar-color:var(--edge) color-mix(in srgb,var(--panel) 75%,var(--bg))
-}
-#mainWorkspace::-webkit-scrollbar{
-width:10px;
-height:10px
-}
-#mainWorkspace::-webkit-scrollbar-track{
-background:color-mix(in srgb,var(--panel) 75%,var(--bg))
-}
-#mainWorkspace::-webkit-scrollbar-thumb{
-background:var(--edge);
-border:2px solid color-mix(in srgb,var(--panel) 75%,var(--bg));
-border-radius:99px
+width:100%;height:100vh;padding:12px;overflow:hidden
 }
 .mobile-track{
-width:100%;
-min-width:0;
-height:auto;
-display:grid;
-grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-grid-template-areas:
-"analytics expenses"
-"home current"
-"prepare prepare";
-gap:20px;
-align-items:start
+width:100%;height:100%;min-width:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px
 }
-#analyticsPanel{grid-area:analytics}
-#expenseHistoryPanel{grid-area:expenses}
-#homePanel{grid-area:home}
-#currentBudgetPanel{grid-area:current}
-#monthlyBudgetPanel{grid-area:prepare}
 .workspace-panel{
-width:100%;
-min-width:0;
-height:min(78vh,760px);
-min-height:560px
+width:100%;min-width:0;height:calc(100vh - 24px);min-height:0
 }
-#monthlyBudgetPanel{
-height:min(88vh,900px)
-}
+.workspace-panel .panel-inner{padding:16px}
+.workspace-panel .screen-title{font-size:clamp(20px,1.65vw,28px)}
+.workspace-panel .saved-row{grid-template-columns:minmax(0,1fr) 78px auto;gap:6px;padding:8px}
+.workspace-panel .saved-row-amount{width:78px;font-size:.84em}
+.workspace-panel .transaction{grid-template-columns:minmax(0,1fr) 74px auto;gap:6px}
+.workspace-panel .small-button{padding:6px 7px}
 .date-strip{
 max-width:390px;
 margin:4px auto 21px;
@@ -742,19 +709,7 @@ touch-action:pan-y
 .settings-shell.open{
 transform:translate3d(0,0,0)
 }
-.settings{
-width:100%;
-max-width:760px;
-height:100%;
-margin:auto;
-padding:76px 20px 36px;
-overflow-y:auto;
-overflow-x:hidden;
-overscroll-behavior:contain;
-touch-action:pan-y;
-scrollbar-width:thin;
-scrollbar-color:var(--edge) color-mix(in srgb,var(--panel) 75%,var(--bg))
-}
+.settings{width:100%;max-width:760px;height:100%;margin:auto;overflow:hidden;position:relative}
 .settings-back{
 position:absolute;
 z-index:10;
@@ -784,6 +739,22 @@ box-shadow:
 0 6px 0 var(--edge);
 text-align:left
 }
+.settings-stage{position:relative;width:100%;height:100%;overflow:hidden}
+.settings-view{position:absolute;inset:0;padding:76px 20px 36px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;touch-action:pan-y;will-change:transform;transition:transform .32s cubic-bezier(.2,.78,.22,1);scrollbar-width:thin;scrollbar-color:var(--edge) color-mix(in srgb,var(--panel) 75%,var(--bg))}
+#settingsMenuView{transform:translate3d(0,0,0)}
+#settingsDetailView{transform:translate3d(100%,0,0)}
+.settings-shell.detail-open #settingsMenuView{transform:translate3d(-28%,0,0)}
+.settings-shell.detail-open #settingsDetailView{transform:translate3d(0,0,0)}
+.settings-view.dragging{transition:none!important}
+.settings-page-title{margin:0 0 8px;font-size:2em}
+.settings-page-profile{margin-bottom:28px}
+.settings-switch-profile-list{display:flex;flex-direction:column;gap:10px}
+.settings-switch-pin{margin-top:18px}
+.heading-with-info{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.heading-with-info h3{margin-bottom:0}
+.month-stepper{width:100%;min-width:0;display:grid;grid-template-columns:42px minmax(0,1fr) 42px;align-items:center;gap:7px}
+.month-stepper button{height:42px;padding:0}.month-stepper-label{min-width:0;text-align:center;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.negative-budget-warning{margin:12px 0;padding:13px;border-radius:12px;background:color-mix(in srgb,var(--danger-bg) 78%,var(--panel));color:var(--danger);box-shadow:inset 0 0 0 1px var(--danger-edge);line-height:1.4}
 .theme-grid{
 display:grid;
 grid-template-columns:1fr 1fr;
@@ -1071,11 +1042,9 @@ grid-template-columns:1fr
 </head>
 <body class="theme-cedar font-system">
 <button class="icon-well settings-gear hidden" id="settingsGear" aria-label="Settings">
-<svg viewBox="0 0 24 24">
-<circle cx="12" cy="12" r="3.2"></circle>
-<path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"></path>
-<path d="m5.3 5.3 2.1 2.1m9.2 9.2 2.1 2.1m0-13.4-2.1 2.1m-9.2 9.2-2.1 2.1"></path>
-<path d="M8.6 4.1 9.8 6M14.2 18l1.2 1.9M4.1 15.4 6 14.2M18 9.8l1.9-1.2M4.1 8.6 6 9.8M18 14.2l1.9 1.2M8.6 19.9 9.8 18M14.2 6l1.2-1.9"></path>
+<svg viewBox="0 0 24 24" aria-hidden="true">
+<path d="M9.7 2h4.6l.55 2.25c.5.18.98.42 1.42.7l2.15-1.02 3.25 3.25-1.02 2.15c.28.44.52.92.7 1.42L23.6 11.3v4.6l-2.25.55c-.18.5-.42.98-.7 1.42l1.02 2.15-3.25 3.25-2.15-1.02c-.44.28-.92.52-1.42.7L14.3 25.2H9.7l-.55-2.25a8.7 8.7 0 0 1-1.42-.7l-2.15 1.02-3.25-3.25 1.02-2.15a8.7 8.7 0 0 1-.7-1.42L.4 15.9v-4.6l2.25-.55c.18-.5.42-.98.7-1.42L2.33 7.18l3.25-3.25 2.15 1.02c.44-.28.92-.52 1.42-.7L9.7 2Z" transform="scale(.88) translate(1.7,-1.6)"></path>
+<circle cx="12" cy="12" r="3.1"></circle>
 </svg>
 </button>
 <section class="login" id="loginScreen">
@@ -1150,7 +1119,11 @@ Log Out
 <button class="secondary-button small-button" data-range="custom">Custom</button>
 </div>
 <div class="analytics-month-wrap" id="analyticsMonthControls">
-<input id="analyticsMonthInput" type="month">
+<div class="month-stepper">
+<button class="secondary-button" id="analyticsPrevMonth" aria-label="Previous month">‹</button>
+<div class="month-stepper-label" id="analyticsMonthLabel">August 2026</div>
+<button class="secondary-button" id="analyticsNextMonth" aria-label="Next month">›</button>
+</div>
 </div>
 <div class="analytics-month-wrap hidden" id="analyticsYearControls">
 <select id="analyticsYearSelect"></select>
@@ -1198,8 +1171,9 @@ Dollar values below show how much Fun Money each profile spent during the select
 <div id="analyticsProfiles"></div>
 </div>
 <div class="card" style="padding:18px">
-<h3 style="margin-top:0">Savings Allocated</h3>
+<h3 style="margin-top:0">Amount Budgeted for Savings</h3>
 <div class="balance" id="analyticsSavings">$0.00</div>
+<div class="subtext" id="analyticsSavingsRange"></div>
 </div>
 </div>
 </div>
@@ -1292,7 +1266,11 @@ View Previous Months' Budgets
 <div class="calc-row"><span>Weekly Savings</span><strong id="calcWeeklySavings">-$0.00</strong></div>
 <div class="calc-row calc-total"><span>Fun Money Pool</span><strong id="calcFunPool">$0.00</strong></div>
 </div>
+<div class="heading-with-info">
 <h3>Fun Money Allocation</h3>
+<button class="info-icon hidden" id="funAllocationInfoButton" type="button" aria-label="About Fun Money Allocation">i</button>
+</div>
+<div id="negativeFunWarning" class="negative-budget-warning hidden"></div>
 <div id="profileAllocationList"></div>
 <div class="subtext" id="allocationSummary" style="margin-top:10px"></div>
 <button class="primary-button" id="saveBudgetButton" style="width:100%;margin-top:18px">
@@ -1304,106 +1282,38 @@ Save Budget
 </main>
 </section>
 <section class="settings-shell" id="settingsScreen">
-<button class="icon-well settings-back" id="settingsBackButton" aria-label="Back">
-<svg viewBox="0 0 24 24">
-<path d="M15.5 4.5 8 12l7.5 7.5"></path>
-</svg>
-</button>
-<div class="settings">
-<h1 class="settings-title" id="settingsTitle">Settings</h1>
-<div class="settings-profile-name subtext" id="settingsProfileName"></div>
+<button class="icon-well settings-back" id="settingsBackButton" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15.5 4.5 8 12l7.5 7.5"></path></svg></button>
+<div class="settings"><div class="settings-stage" id="settingsStage">
+<div class="settings-view" id="settingsMenuView">
+<h1 class="settings-page-title">Settings</h1><div class="settings-page-profile subtext" id="settingsMenuProfileName"></div>
 <div id="settingsMenu">
-<button class="folder-button" data-settings-section="appearance">
-<span>Appearance</span><span>›</span>
-</button>
-<button class="folder-button" data-settings-section="profile">
-<span>Profile</span><span>›</span>
-</button>
-<button class="folder-button" data-settings-section="budget">
-<span>Budget Info</span><span>›</span>
-</button>
-<button class="folder-button" id="settingsSwitchProfileButton">
-<span>Switch Profile</span><span>›</span>
-</button>
-<button class="danger-button" id="settingsLogoutButton" style="width:100%;margin-top:5px">
-Log Out
-</button>
-</div>
+<button class="folder-button" data-settings-section="appearance"><span>Appearance</span><span>›</span></button>
+<button class="folder-button" data-settings-section="profile"><span>Profile</span><span>›</span></button>
+<button class="folder-button" data-settings-section="budget"><span>Budget Info</span><span>›</span></button>
+<button class="folder-button" id="settingsSwitchProfileButton"><span>Switch Profile</span><span>›</span></button>
+<button class="danger-button" id="settingsLogoutButton" style="width:100%;margin-top:5px">Log Out</button>
+</div></div>
+<div class="settings-view" id="settingsDetailView">
+<h1 class="settings-page-title" id="settingsTitle">Settings</h1><div class="settings-page-profile subtext" id="settingsProfileName"></div>
 <div id="appearanceSettings" class="hidden">
-<div class="card settings-card">
-<h2>Theme</h2>
-<div class="theme-grid" id="themeGrid"></div>
+<div class="card settings-card"><h2>Theme</h2><div class="theme-grid" id="themeGrid"></div></div>
+<div class="card settings-card"><h2>Font</h2><label>Font Style</label><select id="fontFamilySelect"><option value="system">Clean</option><option value="rounded">Rounded</option><option value="serif">Book</option><option value="mono">Monospace</option><option value="pixel">Pixel</option></select><label>Font Size</label><div class="range-row"><input id="fontSizeRange" type="range" min="12" max="22" step="1"><strong id="fontSizeLabel">16px</strong></div><button class="primary-button" id="saveAppearanceButton" style="width:100%;margin-top:15px">Save Appearance</button></div>
 </div>
-<div class="card settings-card">
-<h2>Font</h2>
-<label>Font Style</label>
-<select id="fontFamilySelect">
-<option value="system">Clean</option>
-<option value="rounded">Rounded</option>
-<option value="serif">Book</option>
-<option value="mono">Monospace</option>
-<option value="pixel">Pixel</option>
-</select>
-<label>Font Size</label>
-<div class="range-row">
-<input id="fontSizeRange" type="range" min="12" max="22" step="1">
-<strong id="fontSizeLabel">16px</strong>
-</div>
-<button class="primary-button" id="saveAppearanceButton" style="width:100%;margin-top:15px">
-Save Appearance
-</button>
-</div>
-</div>
-<div id="profileSettings" class="hidden">
-<div class="card settings-card">
-<h2>Security</h2>
-<p class="subtext">
-Security emails are sent only to the email address used for this account.
-</p>
-<div id="accountEmailDisplay" style="font-weight:900;overflow-wrap:anywhere"></div>
-<button class="secondary-button" id="resetPinEmailButton" style="width:100%;margin-top:14px">
-Email Me a PIN Reset Link
-</button>
-<button class="secondary-button" id="resetPasswordSettingsButton" style="width:100%;margin-top:10px">
-Email Me a Password Reset Link
-</button>
-<div id="securityMessage" class="subtext" style="margin-top:12px"></div>
-</div>
-</div>
-<div id="budgetSettings" class="hidden">
-<div class="card settings-card">
-<h2>Budget Info</h2>
-<p class="subtext">
-Saved monthly budgets are stored here.
-</p>
-<div id="budgetHistoryList"></div>
-<button class="secondary-button" id="exportBudgetCsvButton" style="width:100%;margin-top:14px">
-Export Budget History as CSV
-</button>
-</div>
-</div>
-</div>
+<div id="profileSettings" class="hidden"><div class="card settings-card"><h2>Security</h2><p class="subtext">Security emails are sent only to the email address used for this account.</p><div id="accountEmailDisplay" style="font-weight:900;overflow-wrap:anywhere"></div><button class="secondary-button" id="resetPinEmailButton" style="width:100%;margin-top:14px">Email Me a PIN Reset Link</button><button class="secondary-button" id="resetPasswordSettingsButton" style="width:100%;margin-top:10px">Email Me a Password Reset Link</button><div id="securityMessage" class="subtext" style="margin-top:12px"></div></div></div>
+<div id="budgetSettings" class="hidden"><div class="card settings-card"><h2>Budget Info</h2><p class="subtext">Saved monthly budgets are stored here.</p><div id="budgetHistoryList"></div><button class="secondary-button" id="exportBudgetCsvButton" style="width:100%;margin-top:14px">Export Budget History as CSV</button></div></div>
+<div id="switchProfileSettings" class="hidden"><div class="card settings-card"><h2>Switch Profile</h2><div class="settings-switch-profile-list" id="settingsProfileList"></div><div class="settings-switch-pin hidden" id="settingsSwitchPinArea"><h3 id="settingsSwitchPinName"></h3><div class="pin-boxes" id="settingsSwitchPinBoxes"></div><div id="settingsSwitchPinError" class="login-error hidden"></div></div></div></div>
+</div></div></div>
 </section>
 <div class="modal-overlay hidden" id="budgetHelpModal">
 <div class="card modal-card">
 <h2>How to Fill Out the Budget</h2>
-<p>
-Input all income deposited into your bank account during the month being used to prepare this budget.
-</p>
-<p>
-Then input all monthly bills that were paid.
-</p>
-<p>
-The app subtracts Monthly Bills from Monthly Income to determine Net. Net is divided by the actual number of budget weeks in the month being prepared.
-</p>
-<p>
-Weekly Bills, Needs, and Savings are then subtracted from the Weekly Total. What remains becomes the Fun Money pool.
-</p>
+<div id="budgetHelpCopy"></div>
 <button class="secondary-button" id="closeBudgetHelp" style="width:100%;margin-top:10px">
 Close
 </button>
 </div>
 </div>
+<div class="modal-overlay hidden" id="funAllocationInfoModal"><div class="card modal-card"><h2>Fun Money Allocation</h2><p>Below, choose how you want to divide the remaining Fun Money among your family members’ profiles. For convenience, the app has divided it as evenly as possible. You can adjust the amounts before saving the budget.</p><button class="secondary-button" id="closeFunAllocationInfo" style="width:100%;margin-top:10px">Close</button></div></div>
 <div class="modal-overlay hidden" id="moneyEditorModal">
 <div class="card modal-card">
 <h2 id="moneyEditorTitle">Edit Item</h2>
@@ -1507,6 +1417,8 @@ let activeTransactionTab="expense";
 let preparedBudgetPlan=null;
 let allocationUserEdited=false;
 let analyticsRange="month";
+let analyticsMonthCursor=firstOfMonth(new Date());
+let settingsSwitchTarget=null;
 let toastTimer=null;
 const themeData={
 cedar:{
@@ -1585,6 +1497,12 @@ x.setDate(x.getDate()-x.getDay());
 return x;
 }
 function activeBudgetMonth(){
+/*
+IMPORTANT:
+Current budget follows the CALENDAR MONTH.
+August date = August budget.
+September budget does not become active until September.
+*/
 return firstOfMonth(new Date());
 }
 function getBudgetWeekCount(monthDate){
@@ -1878,56 +1796,39 @@ showPanel(target,true);
 {passive:true}
 );
 }
-function openSettings(section="menu"){
-settingsSection=section;
-renderSettingsSection();
-document
-.getElementById("settingsScreen")
-.classList.add("open");
+function setSettingsDetail(section,animate=true){
+settingsSection=section;renderSettingsSection();
+const shell=document.getElementById("settingsScreen");
+const menu=document.getElementById("settingsMenuView"),detail=document.getElementById("settingsDetailView");
+menu.classList.remove("dragging");detail.classList.remove("dragging");
+if(!animate){menu.style.transition="none";detail.style.transition="none"}else{menu.style.transition="";detail.style.transition=""}
+shell.classList.add("detail-open");
+if(!animate)requestAnimationFrame(()=>{menu.style.transition="";detail.style.transition=""});
 }
-function closeSettings(){
-document
-.getElementById("settingsScreen")
-.classList.remove("open");
-}
-function bindSettingsSwipeBack(){
-const screen=
-document.getElementById("settingsScreen");
-let sx=0;
-let sy=0;
-let active=false;
-screen.addEventListener(
-"touchstart",
-e=>{
-if(e.touches.length!==1)return;
-sx=e.touches[0].clientX;
-sy=e.touches[0].clientY;
-active=sx<=35;
-},
-{passive:true}
-);
-screen.addEventListener(
-"touchend",
-e=>{
-if(!active)return;
-const dx=
-e.changedTouches[0].clientX-sx;
-const dy=
-e.changedTouches[0].clientY-sy;
-active=false;
-if(
-dx<80 ||
-Math.abs(dy)>Math.abs(dx)
-)return;
+function settingsBack(animate=true){
+const shell=document.getElementById("settingsScreen");
 if(settingsSection!=="menu"){
-settingsSection="menu";
-renderSettingsSection();
-}else{
+const menu=document.getElementById("settingsMenuView"),detail=document.getElementById("settingsDetailView");
+menu.style.transition=animate?"":"none";detail.style.transition=animate?"":"none";
+shell.classList.remove("detail-open");settingsSection="menu";settingsSwitchTarget=null;
+setTimeout(()=>{if(settingsSection==="menu")renderSettingsSection()},animate?330:0);
+return;
+}
 closeSettings();
 }
-},
-{passive:true}
-);
+function openSettings(section="menu"){
+settingsSection="menu";renderSettingsSection();
+const shell=document.getElementById("settingsScreen");shell.classList.remove("detail-open");shell.classList.add("open");
+if(section!=="menu")requestAnimationFrame(()=>setSettingsDetail(section,true));
+}
+function closeSettings(){document.getElementById("settingsScreen").classList.remove("open","detail-open");settingsSection="menu";}
+function bindSettingsSwipeBack(){
+const screen=document.getElementById("settingsScreen"),menu=document.getElementById("settingsMenuView"),detail=document.getElementById("settingsDetailView");
+let sx=0,sy=0,active=false,axis=null,dx=0;
+screen.addEventListener("touchstart",e=>{if(e.touches.length!==1)return;sx=e.touches[0].clientX;sy=e.touches[0].clientY;active=sx<=32;axis=null;dx=0},{passive:true});
+screen.addEventListener("touchmove",e=>{if(!active)return;dx=Math.max(0,e.touches[0].clientX-sx);const dy=e.touches[0].clientY-sy;if(!axis&&Math.hypot(dx,dy)>7)axis=Math.abs(dx)>Math.abs(dy)?"x":"y";if(axis!=="x")return;e.preventDefault();const w=window.innerWidth,progress=Math.min(1,dx/w);if(settingsSection!=="menu"){menu.classList.add("dragging");detail.classList.add("dragging");detail.style.transform=`translate3d(${progress*100}%,0,0)`;menu.style.transform=`translate3d(${-28+progress*28}%,0,0)`;}else{screen.style.transition="none";screen.style.transform=`translate3d(${dx}px,0,0)`;}},{passive:false});
+screen.addEventListener("touchend",()=>{if(!active)return;active=false;if(axis!=="x"){resetSettingsDrag();return}const complete=dx>window.innerWidth*.28;if(settingsSection!=="menu"){menu.classList.remove("dragging");detail.classList.remove("dragging");menu.style.transform="";detail.style.transform="";if(complete)settingsBack(true);}else{screen.style.transition="";screen.style.transform="";if(complete)closeSettings();}axis=null;dx=0},{passive:true});
+function resetSettingsDrag(){menu.classList.remove("dragging");detail.classList.remove("dragging");menu.style.transform="";detail.style.transform="";screen.style.transition="";screen.style.transform="";axis=null;dx=0}
 }
 async function loadHousehold(){
 const {data,error}=
@@ -2103,6 +2004,10 @@ await supabaseClient
 .maybeSingle();
 if(planError)throw planError;
 if(!plan)return;
+/*
+Needs:
+exactly one deposit per week.
+*/
 const {error:needsError}=
 await supabaseClient
 .from("allowance_deposits")
@@ -2120,6 +2025,11 @@ ignoreDuplicates:true
 }
 );
 if(needsError)throw needsError;
+/*
+Fun Money:
+MUST use allocation belonging to CURRENT CALENDAR MONTH.
+August date -> August allocations.
+*/
 const {data:allocations,error:allocationError}=
 await supabaseClient
 .from("budget_profile_allocations")
@@ -2252,21 +2162,10 @@ Math.abs(Number(x.amount||0)),
 0
 );
 const rows=[];
-rows.push(
-["Total Income",money(income)]
-);
-rows.push(
-[
-"Total Monthly Bills",
-`-${money(monthlyBills)}`
-]
-);
-rows.push(
-[
-"Total Weekly Bills",
-`-${money(weeklyBills)}/week`
-]
-);
+const hasSnapshotItems=Boolean((items||[]).length);
+rows.push(["Total Income",hasSnapshotItems?money(income):"Historical details unavailable"]);
+rows.push(["Total Monthly Bills",hasSnapshotItems?`-${money(monthlyBills)}`:"Historical details unavailable"]);
+rows.push(["Total Weekly Bills",hasSnapshotItems?`-${money(weeklyBills)}/week`:"Historical details unavailable"]);
 rows.push(
 [
 "Weekly Needs",
@@ -2326,6 +2225,12 @@ await supabaseClient
 .eq("budget_month",dateOnly(current))
 .maybeSingle();
 if(error)throw error;
+/*
+First-time user:
+setup CURRENT month.
+Established user:
+prepare NEXT month.
+*/
 return data
 ?addMonths(current,1)
 :current;
@@ -2564,7 +2469,8 @@ document
 .textContent=
 firstTime
 ?"Because you are beginning during the current month, this first budget may be imperfect. Afterward, budgets are prepared one month in advance."
-:`This budget contains ${weeks} budget weeks.`;
+:`This budget is being prepared for ${month.toLocaleDateString("en-US",{month:"long",year:"numeric"})}.`;
+updateBudgetHelpCopy(month);
 const warning=
 document.getElementById("fiveWeekWarning");
 if(weeks===5){
@@ -2603,6 +2509,11 @@ document.getElementById("weeklySavings")
 await loadBudgetLists();
 await renderProfileAllocations(month);
 updateBudgetCalculation();
+}
+function updateBudgetHelpCopy(budgetMonth){
+const incomeMonth=addMonths(budgetMonth,-2),billMonth=addMonths(budgetMonth,-1);
+const x=incomeMonth.toLocaleDateString("en-US",{month:"long"}),y=billMonth.toLocaleDateString("en-US",{month:"long"}),z=budgetMonth.toLocaleDateString("en-US",{month:"long"});
+document.getElementById("budgetHelpCopy").innerHTML=`<p>This budget is designed to give you time to prepare for the coming month. To do this, you will input all the income you earned in the previous month (<strong>${x}</strong>), all the bills you paid throughout that month and on the first of this month (<strong>${x} and ${y}</strong>), and the budget that is set will be for the next month (<strong>${z}</strong>).</p><p>Once you’ve input all the income and bills, you will then input the dollar value you wish to allow yourself each week for the coming month for <strong>Needs</strong>, such as groceries and gas.</p><p>Then you will input the dollar value you wish to add to your savings each week.</p><p>Once your monthly bills, weekly bills, weekly Needs, and weekly Savings have been deducted from the income available for the budget, the remaining amount will be considered your <strong>Fun Money</strong>. Fun Money is designated for wants as opposed to necessities, such as going out to eat or buying a soda on a whim.</p><p>If your Fun Money calculation is negative, this means the expenses and allowances entered are greater than the money available. Reduce Needs and/or Savings, or review your bills and income, until Fun Money becomes zero or a positive number. If the numbers are correct and the budget remains negative, the app will show the weekly shortfall and allow you to save the negative budget after confirming it.</p>`;
 }
 function preparationMonth(){
 const title=
@@ -2663,9 +2574,9 @@ document.getElementById("calcWeeklyBills").textContent=`-${money(weeklyBills)}`;
 document.getElementById("calcWeeklyNeeds").textContent=`-${money(needs)}`;
 document.getElementById("calcWeeklySavings").textContent=`-${money(savings)}`;
 document.getElementById("calcFunPool").textContent=money(funPool);
-if(!allocationUserEdited){
-autoSplitFunPool(funPool);
-}
+const neg=document.getElementById("negativeFunWarning"),saveBtn=document.getElementById("saveBudgetButton");
+if(funPool<0){neg.innerHTML=`<strong>Your Fun Money is negative.</strong><br>The amount allocated to bills, Needs, Savings, and other required expenses is greater than the money available for this budget. This budget is short by <strong>${money(Math.abs(funPool))} per week</strong>. Reduce one or more allocations until Fun Money reaches $0.00 or more. If these numbers are correct, you may still save the negative budget.`;neg.classList.remove("hidden");saveBtn.textContent="Save Negative Budget";}else{neg.classList.add("hidden");saveBtn.textContent="Save Budget";}
+if(!allocationUserEdited){autoSplitFunPool(funPool);}
 updateAllocationSummary(funPool);
 return{
 income,
@@ -2679,6 +2590,13 @@ weeklyTotal,
 funPool
 };
 }
+/*
+Fun Money automatic split:
+1. Convert available pool to whole cents.
+2. Divide cents evenly.
+3. Any remainder cent(s) go to owner profile first.
+No fractional cent rounding.
+*/
 function autoSplitFunPool(pool){
 const inputs=[...
 document.querySelectorAll(
@@ -2725,6 +2643,11 @@ input.value=
 money(cents/100);
 }
 );
+/*
+More than two profiles can theoretically produce
+more than one leftover cent.
+Hand remaining cents out one-by-one.
+*/
 for(
 let i=0;
 remainder>0 && i<inputs.length;
@@ -2804,6 +2727,7 @@ const box=
 document.getElementById(
 "profileAllocationList"
 );
+document.getElementById("funAllocationInfoButton").classList.toggle("hidden",profiles.length<2);
 box.innerHTML="";
 profiles.forEach(
 profile=>{
@@ -2956,13 +2880,11 @@ async function saveBudget(){
 const calc=
 updateBudgetCalculation();
 if(calc.funPool<0){
-alert(
-"This budget leaves a negative Fun Money pool."
-);
-return;
+const ok=confirm(`This budget is short by ${money(Math.abs(calc.funPool))} per week. Saving it means the budget records a real shortfall. Save this negative budget anyway?`);
+if(!ok)return;
 }
 if(
-allocationTotal()>
+calc.funPool>=0 && allocationTotal()>
 calc.funPool+.01
 ){
 alert(
@@ -3016,6 +2938,10 @@ Math.abs(
 parseMoney(input.value)
 );
 return{
+/*
+budget_id MUST reference
+monthly_budgets.id.
+*/
 budget_id:
 monthlyBudget.id,
 profile_id:
@@ -3309,6 +3235,11 @@ household_id:
 householdId,
 user_id:
 currentUser.id,
+/*
+Save profile_id for BOTH Needs and Fun Money.
+Needs still uses one shared bucket.
+profile_id only identifies who entered it.
+*/
 profile_id:
 currentProfile.id,
 amount,
@@ -3589,122 +3520,19 @@ ${escapeHtml(item.description)}
 )
 .join("");
 }
+function renderAnalyticsMonthLabel(){document.getElementById("analyticsMonthLabel").textContent=analyticsMonthCursor.toLocaleDateString("en-US",{month:"long",year:"numeric"});}
 function initializeAnalyticsControls(){
-const now=new Date();
-document
-.getElementById("analyticsMonthInput")
-.value=
-`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
-const years=
-document.getElementById(
-"analyticsYearSelect"
-);
-years.innerHTML="";
-for(
-let y=now.getFullYear();
-y>=2020;
-y--
-){
-const option=
-document.createElement("option");
-option.value=y;
-option.textContent=y;
-years.appendChild(option);
-}
-document
-.getElementById("analyticsStartDate")
-.value=
-`${now.getFullYear()}-01-01`;
-document
-.getElementById("analyticsEndDate")
-.value=
-dateOnly(now);
+const now=new Date();analyticsMonthCursor=firstOfMonth(now);renderAnalyticsMonthLabel();
+const years=document.getElementById("analyticsYearSelect");years.innerHTML="";for(let y=now.getFullYear();y>=2020;y--){const option=document.createElement("option");option.value=y;option.textContent=y;years.appendChild(option)}
+document.getElementById("analyticsStartDate").value=`${now.getFullYear()}-01-01`;document.getElementById("analyticsEndDate").value=dateOnly(now);
 }
 function analyticsDates(){
-if(analyticsRange==="month"){
-const value=
-document
-.getElementById("analyticsMonthInput")
-.value;
-const [y,m]=
-value
-.split("-")
-.map(Number);
-return{
-start:
-new Date(y,m-1,1),
-end:
-new Date(
-y,
-m,
-0,
-23,
-59,
-59,
-999
-),
-label:
-new Date(y,m-1,1)
-.toLocaleDateString(
-"en-US",
-{
-month:"long",
-year:"numeric"
+if(analyticsRange==="month"){const y=analyticsMonthCursor.getFullYear(),m=analyticsMonthCursor.getMonth();return{start:new Date(y,m,1),end:new Date(y,m+1,0,23,59,59,999),label:analyticsMonthCursor.toLocaleDateString("en-US",{month:"long",year:"numeric"})}}
+if(analyticsRange==="year"){const year=Number(document.getElementById("analyticsYearSelect").value);return{start:new Date(year,0,1),end:new Date(year,11,31,23,59,59,999),label:String(year)}}
+if(analyticsRange==="custom"){const a=document.getElementById("analyticsStartDate").value,b=document.getElementById("analyticsEndDate").value;return{start:new Date(`${a}T00:00:00`),end:new Date(`${b}T23:59:59`),label:`${new Date(`${a}T00:00:00`).toLocaleDateString()} – ${new Date(`${b}T00:00:00`).toLocaleDateString()}`}}
+return{start:new Date(2000,0,1),end:new Date(2100,0,1),label:"All Time"};
 }
-)
-};
-}
-if(analyticsRange==="year"){
-const year=
-Number(
-document
-.getElementById("analyticsYearSelect")
-.value
-);
-return{
-start:
-new Date(year,0,1),
-end:
-new Date(
-year,
-11,
-31,
-23,
-59,
-59,
-999
-),
-label:String(year)
-};
-}
-if(analyticsRange==="custom"){
-const startValue=
-document
-.getElementById("analyticsStartDate")
-.value;
-const endValue=
-document
-.getElementById("analyticsEndDate")
-.value;
-return{
-start:
-new Date(
-`${startValue}T00:00:00`
-),
-end:
-new Date(
-`${endValue}T23:59:59`
-),
-label:
-`${new Date(`${startValue}T00:00:00`).toLocaleDateString()} – ${new Date(`${endValue}T00:00:00`).toLocaleDateString()}`
-};
-}
-return{
-start:new Date(2000,0,1),
-end:new Date(2100,0,1),
-label:"All Time"
-};
-}
+function formatAnalyticsDateRange(start,end){return `${start.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})} – ${end.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}`}
 async function updateAnalytics(){
 const range=
 analyticsDates();
@@ -3931,6 +3759,8 @@ document
 .getElementById("analyticsSavings")
 .textContent=
 money(savings);
+const savingsRange=document.getElementById("analyticsSavingsRange");
+if(analyticsRange==="all"){const planDates=(plans||[]).map(p=>new Date(`${p.budget_month}T00:00:00`)).sort((a,b)=>a-b);if(planDates.length){const first=planDates[0],last=planDates[planDates.length-1],end=new Date(last.getFullYear(),last.getMonth()+1,0);savingsRange.textContent=formatAnalyticsDateRange(first,end);}else{savingsRange.textContent="No saved budgets in this period.";}}else{savingsRange.textContent=formatAnalyticsDateRange(range.start,range.end);}
 }
 function renderThemes(){
 const box=
@@ -3978,78 +3808,17 @@ box.appendChild(button);
 );
 }
 function renderSettingsSection(){
-[
-"settingsMenu",
-"appearanceSettings",
-"profileSettings",
-"budgetSettings"
-]
-.forEach(
-id=>
-document
-.getElementById(id)
-.classList.add("hidden")
-);
-document
-.getElementById("settingsProfileName")
-.textContent=
-currentProfile?.display_name||"";
-if(settingsSection==="menu"){
-document
-.getElementById("settingsTitle")
-.textContent=
-"Settings";
-document
-.getElementById("settingsMenu")
-.classList.remove("hidden");
-return;
+["appearanceSettings","profileSettings","budgetSettings","switchProfileSettings"].forEach(id=>document.getElementById(id).classList.add("hidden"));
+document.getElementById("settingsMenuProfileName").textContent=currentProfile?.display_name||"";document.getElementById("settingsProfileName").textContent=currentProfile?.display_name||"";
+if(settingsSection==="menu")return;
+if(settingsSection==="appearance"){document.getElementById("settingsTitle").textContent="Appearance";document.getElementById("appearanceSettings").classList.remove("hidden");renderThemes();document.getElementById("fontFamilySelect").value=selectedFont;document.getElementById("fontSizeRange").value=selectedFontSize;document.getElementById("fontSizeLabel").textContent=`${selectedFontSize}px`;return}
+if(settingsSection==="profile"){document.getElementById("settingsTitle").textContent="Profile";document.getElementById("profileSettings").classList.remove("hidden");document.getElementById("accountEmailDisplay").textContent=currentUser.email;return}
+if(settingsSection==="budget"){document.getElementById("settingsTitle").textContent="Budget Info";document.getElementById("budgetSettings").classList.remove("hidden");loadBudgetHistory();return}
+if(settingsSection==="switch"){document.getElementById("settingsTitle").textContent="Switch Profile";document.getElementById("switchProfileSettings").classList.remove("hidden");renderSettingsProfileList();}
 }
-if(settingsSection==="appearance"){
-document
-.getElementById("settingsTitle")
-.textContent=
-"Appearance";
-document
-.getElementById("appearanceSettings")
-.classList.remove("hidden");
-renderThemes();
-document
-.getElementById("fontFamilySelect")
-.value=
-selectedFont;
-document
-.getElementById("fontSizeRange")
-.value=
-selectedFontSize;
-document
-.getElementById("fontSizeLabel")
-.textContent=
-`${selectedFontSize}px`;
-return;
-}
-if(settingsSection==="profile"){
-document
-.getElementById("settingsTitle")
-.textContent=
-"Profile";
-document
-.getElementById("profileSettings")
-.classList.remove("hidden");
-document
-.getElementById("accountEmailDisplay")
-.textContent=
-currentUser.email;
-return;
-}
-document
-.getElementById("settingsTitle")
-.textContent=
-"Budget Info";
-document
-.getElementById("budgetSettings")
-.classList.remove("hidden");
-loadBudgetHistory();
-}
+async function renderSettingsProfileList(){const profiles=await loadProfiles(),box=document.getElementById("settingsProfileList");box.innerHTML="";document.getElementById("settingsSwitchPinArea").classList.add("hidden");profiles.forEach(profile=>{const b=document.createElement("button");b.className="secondary-button";b.textContent=profile.display_name;b.onclick=()=>selectSettingsProfile(profile);box.appendChild(b)})}
+function selectSettingsProfile(profile){settingsSwitchTarget=profile;document.getElementById("settingsSwitchPinName").textContent=`Enter ${profile.display_name}'s PIN`;document.getElementById("settingsSwitchPinArea").classList.remove("hidden");document.getElementById("settingsSwitchPinError").classList.add("hidden");renderPinBoxes("settingsSwitchPinBoxes",Number(profile.pin_length||4),submitSettingsProfilePin);setTimeout(()=>document.querySelector("#settingsSwitchPinBoxes .pin-box")?.focus(),30)}
+async function submitSettingsProfilePin(){if(!settingsSwitchTarget)return;const pin=getPinFromBoxes("settingsSwitchPinBoxes"),required=Number(settingsSwitchTarget.pin_length||4);if(pin.length!==required)return;const {data,error}=await supabaseClient.rpc("create_profile_session",{p_profile_id:settingsSwitchTarget.id,p_pin:pin,p_session_minutes:1440});if(error){const e=document.getElementById("settingsSwitchPinError");e.textContent="Incorrect PIN.";e.classList.remove("hidden");clearPinBoxes("settingsSwitchPinBoxes");return}localStorage.setItem("profileSessionToken",data);localStorage.setItem("profileId",settingsSwitchTarget.id);currentProfile=settingsSwitchTarget;closeSettings();await enterProfile();showToast(`Switched to ${currentProfile.display_name}`)}
 async function loadBudgetHistory(){
 const {data,error}=
 await supabaseClient
@@ -4249,6 +4018,7 @@ showToast("CSV created");
 }
 );
 }
+function recenterHomeImmediately(){if(window.innerWidth>900)return;activePanelIndex=2;const track=document.getElementById("mobileTrack");track.style.transition="none";requestAnimationFrame(()=>requestAnimationFrame(()=>showPanel(2,false)));}
 async function enterProfile(){
 await loadProfileSettings();
 await loadProfiles();
@@ -4265,6 +4035,10 @@ document
 .getElementById("settingsGear")
 .classList.remove("hidden");
 renderDateStrip();
+/*
+Create the current Sunday deposit from
+CURRENT calendar month's budget.
+*/
 await ensureCurrentWeekDeposits();
 await Promise.all([
 loadCurrentBudget(),
@@ -4274,14 +4048,11 @@ calculateBalances()
 ]);
 initializeAnalyticsControls();
 await updateAnalytics();
-activePanelIndex=2;
-requestAnimationFrame(
-()=>{
-requestAnimationFrame(
-()=>showPanel(2,false)
-);
-}
-);
+/*
+Always open exactly on HOME.
+This runs after the mobile layout has rendered.
+*/
+recenterHomeImmediately();
 }
 async function startApp(){
 await loadHousehold();
@@ -4520,6 +4291,9 @@ if(error){
 alert(error.message);
 return;
 }
+/*
+Newly created profiles should use Cedar.
+*/
 const profiles=
 await loadProfiles();
 const created=[...
@@ -4568,51 +4342,19 @@ document
 ()=>openSettings("menu");
 document
 .getElementById("settingsBackButton")
-.onclick=
-()=>{
-if(settingsSection!=="menu"){
-settingsSection="menu";
-renderSettingsSection();
-}else{
-closeSettings();
-}
-};
+.onclick=()=>settingsBack(true);
 document
 .querySelectorAll(
 "[data-settings-section]"
 )
 .forEach(
 button=>{
-button.onclick=
-()=>{
-settingsSection=
-button.dataset.settingsSection;
-renderSettingsSection();
-};
+button.onclick=()=>setSettingsDetail(button.dataset.settingsSection,true);
 }
 );
 document
 .getElementById("settingsSwitchProfileButton")
-.onclick=
-async()=>{
-localStorage.removeItem(
-"profileSessionToken"
-);
-localStorage.removeItem(
-"profileId"
-);
-closeSettings();
-document
-.getElementById("appScreen")
-.classList.add("hidden");
-document
-.getElementById("profileScreen")
-.classList.remove("hidden");
-document
-.getElementById("settingsGear")
-.classList.add("hidden");
-await renderProfiles();
-};
+.onclick=()=>setSettingsDetail("switch",true);
 document
 .getElementById("settingsLogoutButton")
 .onclick=
@@ -4750,6 +4492,15 @@ document
 .getElementById("viewPreviousBudgetsButton")
 .onclick=
 ()=>openSettings("budget");
+document
+.getElementById("funAllocationInfoButton")
+.onclick=()=>document.getElementById("funAllocationInfoModal").classList.remove("hidden");
+document
+.getElementById("closeFunAllocationInfo")
+.onclick=()=>document.getElementById("funAllocationInfoModal").classList.add("hidden");
+document
+.getElementById("funAllocationInfoModal")
+.onclick=e=>{if(e.target.id==="funAllocationInfoModal")e.currentTarget.classList.add("hidden")};
 document
 .getElementById("budgetHelpButton")
 .onclick=
@@ -4916,8 +4667,9 @@ await updateAnalytics();
 };
 }
 );
+document.getElementById("analyticsPrevMonth").onclick=async()=>{analyticsMonthCursor=addMonths(analyticsMonthCursor,-1);renderAnalyticsMonthLabel();await updateAnalytics()};
+document.getElementById("analyticsNextMonth").onclick=async()=>{analyticsMonthCursor=addMonths(analyticsMonthCursor,1);renderAnalyticsMonthLabel();await updateAnalytics()};
 [
-"analyticsMonthInput",
 "analyticsYearSelect",
 "analyticsStartDate",
 "analyticsEndDate"
@@ -4938,6 +4690,8 @@ document
 exportBudgetCsv;
 bindFluidSwipe();
 bindSettingsSwipeBack();
+window.addEventListener("pageshow",()=>{if(!document.getElementById("appScreen").classList.contains("hidden"))recenterHomeImmediately()});
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&!document.getElementById("appScreen").classList.contains("hidden"))recenterHomeImmediately()});
 window.addEventListener(
 "resize",
 ()=>{
