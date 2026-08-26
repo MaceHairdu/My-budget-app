@@ -260,12 +260,7 @@ stroke-width:2.4;
 stroke-linecap:round;
 stroke-linejoin:round
 }
-.settings-gear{
-position:fixed;
-z-index:500;
-top:15px;
-right:17px
-}
+.settings-gear{position:fixed;z-index:500;top:15px;right:17px;width:42px;height:42px;padding:5px;background:transparent!important;box-shadow:none!important;border-radius:0!important;color:var(--text)}.settings-gear svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 #mainWorkspace{
 width:100%;height:100vh;padding:12px;overflow:hidden
 }
@@ -276,7 +271,7 @@ width:100%;height:100%;min-width:0;display:grid;grid-template-columns:repeat(5,m
 width:100%;min-width:0;height:calc(100vh - 24px);min-height:0
 }
 .workspace-panel .panel-inner{padding:16px}
-.workspace-panel .screen-title{font-size:clamp(20px,1.65vw,28px)}
+.workspace-panel .screen-title{font-size:clamp(22px,1.8vw,30px)}
 .workspace-panel .saved-row{grid-template-columns:minmax(0,1fr) 78px auto;gap:6px;padding:8px}
 .workspace-panel .saved-row-amount{width:78px;font-size:.84em}
 .workspace-panel .transaction{grid-template-columns:minmax(0,1fr) 74px auto;gap:6px}
@@ -740,13 +735,13 @@ box-shadow:
 text-align:left
 }
 .settings-stage{position:relative;width:100%;height:100%;overflow:hidden}
-.settings-view{position:absolute;inset:0;padding:76px 20px 36px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;touch-action:pan-y;will-change:transform;transition:transform .32s cubic-bezier(.2,.78,.22,1);scrollbar-width:thin;scrollbar-color:var(--edge) color-mix(in srgb,var(--panel) 75%,var(--bg))}
+.settings-view{position:absolute;inset:0;padding:62px 20px 36px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;touch-action:pan-y;will-change:transform;transition:transform .32s cubic-bezier(.2,.78,.22,1);scrollbar-width:thin;scrollbar-color:var(--edge) color-mix(in srgb,var(--panel) 75%,var(--bg))}
 #settingsMenuView{transform:translate3d(0,0,0)}
 #settingsDetailView{transform:translate3d(100%,0,0)}
-.settings-shell.detail-open #settingsMenuView{transform:translate3d(-28%,0,0)}
+.settings-shell.detail-open #settingsMenuView{transform:translate3d(-100%,0,0)}
 .settings-shell.detail-open #settingsDetailView{transform:translate3d(0,0,0)}
 .settings-view.dragging{transition:none!important}
-.settings-page-title{margin:0 0 8px;font-size:2em}
+.settings-page-title{margin:0 0 8px;font-size:2.15em}
 .settings-page-profile{margin-bottom:28px}
 .settings-switch-profile-list{display:flex;flex-direction:column;gap:10px}
 .settings-switch-pin{margin-top:18px}
@@ -884,6 +879,7 @@ font-weight:900
 padding:8px 0;
 border-bottom:1px solid color-mix(in srgb,var(--edge) 55%,transparent)
 }
+.category-button{border:0;background:transparent;color:inherit;text-align:inherit;cursor:pointer}.category-button:active{opacity:.7}
 .category-name{
 min-width:0;
 display:flex;
@@ -976,17 +972,9 @@ height:calc(100dvh - 34px);
 margin-top:8px;
 border-radius:19px
 }
-.workspace-panel .panel-inner{
-padding:59px 15px 25px
-}
-.home-panel .panel-inner{
-padding-top:55px;
-overflow:hidden
-}
-.screen-title{
-font-size:30px;
-margin-bottom:20px
-}
+.workspace-panel .panel-inner{padding:42px 15px 25px}
+.home-panel .panel-inner{padding-top:42px;overflow:hidden}
+.screen-title{font-size:34px;margin-bottom:18px}
 .settings-gear{
 top:12px;
 right:12px
@@ -1041,12 +1029,7 @@ grid-template-columns:1fr
 </style>
 </head>
 <body class="theme-cedar font-system">
-<button class="icon-well settings-gear hidden" id="settingsGear" aria-label="Settings">
-<svg viewBox="0 0 24 24" aria-hidden="true">
-<path d="M9.7 2h4.6l.55 2.25c.5.18.98.42 1.42.7l2.15-1.02 3.25 3.25-1.02 2.15c.28.44.52.92.7 1.42L23.6 11.3v4.6l-2.25.55c-.18.5-.42.98-.7 1.42l1.02 2.15-3.25 3.25-2.15-1.02c-.44.28-.92.52-1.42.7L14.3 25.2H9.7l-.55-2.25a8.7 8.7 0 0 1-1.42-.7l-2.15 1.02-3.25-3.25 1.02-2.15a8.7 8.7 0 0 1-.7-1.42L.4 15.9v-4.6l2.25-.55c.18-.5.42-.98.7-1.42L2.33 7.18l3.25-3.25 2.15 1.02c.44-.28.92-.52 1.42-.7L9.7 2Z" transform="scale(.88) translate(1.7,-1.6)"></path>
-<circle cx="12" cy="12" r="3.1"></circle>
-</svg>
-</button>
+<button class="settings-gear hidden" id="settingsGear" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2Z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
 <section class="login" id="loginScreen">
 <div class="card" id="loginCard">
 <h1>Bicycle Budget</h1>
@@ -1384,6 +1367,7 @@ Delete
 </div>
 </div>
 </div>
+<div class="modal-overlay hidden" id="categoryHistoryModal"><div class="card modal-card"><h2 id="categoryHistoryTitle">Category Expenses</h2><div class="subtext" id="categoryHistoryRange" style="margin-bottom:12px"></div><div id="categoryHistoryList"></div><button class="secondary-button" id="closeCategoryHistory" style="width:100%;margin-top:16px">Close</button></div></div>
 <div class="toast" id="appToast">Saved</div>
 <script>
 const SUPABASE_URL="https://jivygwszzlaxnhhvxxsg.supabase.co";
@@ -1417,6 +1401,7 @@ let activeTransactionTab="expense";
 let preparedBudgetPlan=null;
 let allocationUserEdited=false;
 let analyticsRange="month";
+let analyticsFilteredExpenses=[];
 let analyticsMonthCursor=firstOfMonth(new Date());
 let settingsSwitchTarget=null;
 let toastTimer=null;
@@ -1826,7 +1811,7 @@ function bindSettingsSwipeBack(){
 const screen=document.getElementById("settingsScreen"),menu=document.getElementById("settingsMenuView"),detail=document.getElementById("settingsDetailView");
 let sx=0,sy=0,active=false,axis=null,dx=0;
 screen.addEventListener("touchstart",e=>{if(e.touches.length!==1)return;sx=e.touches[0].clientX;sy=e.touches[0].clientY;active=sx<=32;axis=null;dx=0},{passive:true});
-screen.addEventListener("touchmove",e=>{if(!active)return;dx=Math.max(0,e.touches[0].clientX-sx);const dy=e.touches[0].clientY-sy;if(!axis&&Math.hypot(dx,dy)>7)axis=Math.abs(dx)>Math.abs(dy)?"x":"y";if(axis!=="x")return;e.preventDefault();const w=window.innerWidth,progress=Math.min(1,dx/w);if(settingsSection!=="menu"){menu.classList.add("dragging");detail.classList.add("dragging");detail.style.transform=`translate3d(${progress*100}%,0,0)`;menu.style.transform=`translate3d(${-28+progress*28}%,0,0)`;}else{screen.style.transition="none";screen.style.transform=`translate3d(${dx}px,0,0)`;}},{passive:false});
+screen.addEventListener("touchmove",e=>{if(!active)return;dx=Math.max(0,e.touches[0].clientX-sx);const dy=e.touches[0].clientY-sy;if(!axis&&Math.hypot(dx,dy)>7)axis=Math.abs(dx)>Math.abs(dy)?"x":"y";if(axis!=="x")return;e.preventDefault();const w=window.innerWidth,progress=Math.min(1,dx/w);if(settingsSection!=="menu"){menu.classList.add("dragging");detail.classList.add("dragging");detail.style.transform=`translate3d(${progress*100}%,0,0)`;menu.style.transform=`translate3d(${-100+progress*100}%,0,0)`;}else{screen.style.transition="none";screen.style.transform=`translate3d(${dx}px,0,0)`;}},{passive:false});
 screen.addEventListener("touchend",()=>{if(!active)return;active=false;if(axis!=="x"){resetSettingsDrag();return}const complete=dx>window.innerWidth*.28;if(settingsSection!=="menu"){menu.classList.remove("dragging");detail.classList.remove("dragging");menu.style.transform="";detail.style.transform="";if(complete)settingsBack(true);}else{screen.style.transition="";screen.style.transform="";if(complete)closeSettings();}axis=null;dx=0},{passive:true});
 function resetSettingsDrag(){menu.classList.remove("dragging");detail.classList.remove("dragging");menu.style.transform="";detail.style.transform="";screen.style.transition="";screen.style.transform="";axis=null;dx=0}
 }
@@ -3567,6 +3552,7 @@ d<=range.end
 );
 }
 );
+analyticsFilteredExpenses=filtered;
 const filteredAdjustments=
 (adjustments||[])
 .filter(
@@ -3673,7 +3659,7 @@ pieSegments.push(
 `${color} ${start}% ${running}%`
 );
 return`
-<div class="category-row">
+<button class="category-row category-button" data-category="${encodeURIComponent(name)}" type="button">
 <div class="category-name">
 <span
 class="category-dot"
@@ -3689,11 +3675,12 @@ ${money(value)}
 <div class="category-percent">
 ${pct.toFixed(1)}%
 </div>
-</div>
+</button>
 `;
 }
 )
 .join("");
+categoryBox.querySelectorAll(".category-button").forEach(b=>b.onclick=()=>openCategoryHistory(decodeURIComponent(b.dataset.category)));
 pie.style.background=
 `conic-gradient(${pieSegments.join(",")})`;
 }
@@ -3762,6 +3749,8 @@ money(savings);
 const savingsRange=document.getElementById("analyticsSavingsRange");
 if(analyticsRange==="all"){const planDates=(plans||[]).map(p=>new Date(`${p.budget_month}T00:00:00`)).sort((a,b)=>a-b);if(planDates.length){const first=planDates[0],last=planDates[planDates.length-1],end=new Date(last.getFullYear(),last.getMonth()+1,0);savingsRange.textContent=formatAnalyticsDateRange(first,end);}else{savingsRange.textContent="No saved budgets in this period.";}}else{savingsRange.textContent=formatAnalyticsDateRange(range.start,range.end);}
 }
+function openCategoryHistory(category){const range=analyticsDates(),items=analyticsFilteredExpenses.filter(x=>(x.category||"Other")===category).sort((a,b)=>new Date(b.spent_at)-new Date(a.spent_at));document.getElementById("categoryHistoryTitle").textContent=category;document.getElementById("categoryHistoryRange").textContent=formatAnalyticsDateRange(range.start,range.end);const box=document.getElementById("categoryHistoryList");box.innerHTML=items.length?items.map(x=>`<div class="transaction"><div class="transaction-main"><div class="transaction-name">${escapeHtml(x.description)}</div><div class="transaction-meta">${escapeHtml(expenseMeta(x))}</div></div><div class="transaction-amount">-${money(x.amount)}</div></div>`).join(""):'<p class="subtext">No expenses in this category for this period.</p>';document.getElementById("categoryHistoryModal").classList.remove("hidden")}
+function closeCategoryHistory(){document.getElementById("categoryHistoryModal").classList.add("hidden")}
 function renderThemes(){
 const box=
 document.getElementById("themeGrid");
@@ -4684,6 +4673,7 @@ updateAnalytics
 );
 }
 );
+document.getElementById("closeCategoryHistory").onclick=closeCategoryHistory;document.getElementById("categoryHistoryModal").onclick=e=>{if(e.target.id==="categoryHistoryModal")closeCategoryHistory()};
 document
 .getElementById("exportBudgetCsvButton")
 .onclick=
