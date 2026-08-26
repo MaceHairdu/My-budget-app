@@ -7,6 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Bicycle Budget">
+<link rel="apple-touch-icon" href="bicycle-budget-icon.png">
+<link rel="icon" type="image/png" href="bicycle-budget-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
 <title>Bicycle Budget</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -977,7 +980,7 @@ border-radius:19px
 .screen-title{font-size:34px;margin-bottom:18px}
 .settings-gear{
 top:12px;
-right:12px
+right:28px
 }
 .settings-back{
 top:12px;
@@ -1025,6 +1028,20 @@ font-size:.82em
 .custom-date-grid{
 grid-template-columns:1fr
 }
+}
+
+@media(min-width:901px){
+.mobile-track{grid-template-columns:1.15fr 1.15fr .9fr 1fr 1.2fr;gap:8px}
+#analyticsPanel .pie-layout{grid-template-columns:1fr;gap:10px}
+#analyticsPanel .pie-chart{width:138px;max-width:75%}
+#analyticsPanel .card{overflow:hidden}
+#analyticsPanel .category-head,#analyticsPanel .category-row{grid-template-columns:minmax(0,1fr) 62px 40px;gap:4px}
+#analyticsPanel .category-head{font-size:.62em}
+#analyticsPanel .category-row{font-size:.73em}
+#analyticsPanel .category-money,#analyticsPanel .category-percent{font-size:1em}
+#analyticsPanel .category-name-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#analyticsPanel .analytics-controls{gap:4px}
+#analyticsPanel .analytics-controls button{padding:6px 5px;font-size:.68em}
 }
 </style>
 </head>
@@ -1801,12 +1818,25 @@ return;
 }
 closeSettings();
 }
+function resetSettingsState(){
+const shell=document.getElementById("settingsScreen"),menu=document.getElementById("settingsMenuView"),detail=document.getElementById("settingsDetailView");
+shell.classList.remove("detail-open");shell.style.transform="";
+menu.classList.remove("dragging");detail.classList.remove("dragging");
+menu.style.transform="";detail.style.transform="";menu.style.transition="";detail.style.transition="";
+settingsSection="menu";settingsSwitchTarget=null;renderSettingsSection();
+}
 function openSettings(section="menu"){
-settingsSection="menu";renderSettingsSection();
-const shell=document.getElementById("settingsScreen");shell.classList.remove("detail-open");shell.classList.add("open");
+resetSettingsState();
+const shell=document.getElementById("settingsScreen");shell.classList.add("open");
 if(section!=="menu")requestAnimationFrame(()=>setSettingsDetail(section,true));
 }
-function closeSettings(){document.getElementById("settingsScreen").classList.remove("open","detail-open");settingsSection="menu";}
+function closeSettings(){
+const shell=document.getElementById("settingsScreen");shell.classList.remove("open","detail-open");
+const menu=document.getElementById("settingsMenuView"),detail=document.getElementById("settingsDetailView");
+shell.style.transform="";menu.style.transform="";detail.style.transform="";
+menu.classList.remove("dragging");detail.classList.remove("dragging");
+settingsSection="menu";settingsSwitchTarget=null;
+}
 function bindSettingsSwipeBack(){
 const screen=document.getElementById("settingsScreen"),menu=document.getElementById("settingsMenuView"),detail=document.getElementById("settingsDetailView");
 let sx=0,sy=0,active=false,axis=null,dx=0;
@@ -1905,12 +1935,9 @@ renderPinBoxes(
 length,
 unlockProfile
 );
-setTimeout(
-()=>document
-.querySelector("#profilePinBoxes .pin-box")
-?.focus(),
-30
-);
+const firstPin=document.querySelector("#profilePinBoxes .pin-box");
+firstPin?.focus({preventScroll:true});
+setTimeout(()=>firstPin?.focus({preventScroll:true}),60);
 }
 async function unlockProfile(){
 const pin=
@@ -3806,7 +3833,7 @@ if(settingsSection==="budget"){document.getElementById("settingsTitle").textCont
 if(settingsSection==="switch"){document.getElementById("settingsTitle").textContent="Switch Profile";document.getElementById("switchProfileSettings").classList.remove("hidden");renderSettingsProfileList();}
 }
 async function renderSettingsProfileList(){const profiles=await loadProfiles(),box=document.getElementById("settingsProfileList");box.innerHTML="";document.getElementById("settingsSwitchPinArea").classList.add("hidden");profiles.forEach(profile=>{const b=document.createElement("button");b.className="secondary-button";b.textContent=profile.display_name;b.onclick=()=>selectSettingsProfile(profile);box.appendChild(b)})}
-function selectSettingsProfile(profile){settingsSwitchTarget=profile;document.getElementById("settingsSwitchPinName").textContent=`Enter ${profile.display_name}'s PIN`;document.getElementById("settingsSwitchPinArea").classList.remove("hidden");document.getElementById("settingsSwitchPinError").classList.add("hidden");renderPinBoxes("settingsSwitchPinBoxes",Number(profile.pin_length||4),submitSettingsProfilePin);setTimeout(()=>document.querySelector("#settingsSwitchPinBoxes .pin-box")?.focus(),30)}
+function selectSettingsProfile(profile){settingsSwitchTarget=profile;document.getElementById("settingsSwitchPinName").textContent=`Enter ${profile.display_name}'s PIN`;document.getElementById("settingsSwitchPinArea").classList.remove("hidden");document.getElementById("settingsSwitchPinError").classList.add("hidden");renderPinBoxes("settingsSwitchPinBoxes",Number(profile.pin_length||4),submitSettingsProfilePin);const firstPin=document.querySelector("#settingsSwitchPinBoxes .pin-box");firstPin?.focus({preventScroll:true});setTimeout(()=>firstPin?.focus({preventScroll:true}),60)}
 async function submitSettingsProfilePin(){if(!settingsSwitchTarget)return;const pin=getPinFromBoxes("settingsSwitchPinBoxes"),required=Number(settingsSwitchTarget.pin_length||4);if(pin.length!==required)return;const {data,error}=await supabaseClient.rpc("create_profile_session",{p_profile_id:settingsSwitchTarget.id,p_pin:pin,p_session_minutes:1440});if(error){const e=document.getElementById("settingsSwitchPinError");e.textContent="Incorrect PIN.";e.classList.remove("hidden");clearPinBoxes("settingsSwitchPinBoxes");return}localStorage.setItem("profileSessionToken",data);localStorage.setItem("profileId",settingsSwitchTarget.id);currentProfile=settingsSwitchTarget;closeSettings();await enterProfile();showToast(`Switched to ${currentProfile.display_name}`)}
 async function loadBudgetHistory(){
 const {data,error}=
