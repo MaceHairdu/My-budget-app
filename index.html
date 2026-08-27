@@ -7,9 +7,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Bicycle Budget">
-<link rel="apple-touch-icon" href="bicycle-budget-icon.png">
-<link rel="icon" type="image/png" href="bicycle-budget-icon.png">
-<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=5">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=5">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v=5">
+<link rel="manifest" href="manifest.webmanifest?v=5">
 <title>Bicycle Budget</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1043,6 +1044,20 @@ grid-template-columns:1fr
 #analyticsPanel .analytics-controls{gap:4px}
 #analyticsPanel .analytics-controls button{padding:6px 5px;font-size:.68em}
 }
+
+/* 2026-08-26 UI refinements */
+.info-icon{padding:0;background:transparent!important;color:inherit;box-shadow:none!important;appearance:none}
+body.theme-cedar .date-day.today::before{background:radial-gradient(circle at 50% 50%,#8a493d 0 48%,#783b32 49% 57%,#653027 58% 66%,var(--panel) 72%);box-shadow:inset 4px 4px 7px rgba(43,16,12,.38),inset -2px -2px 4px rgba(255,255,255,.12)}
+body.theme-cedar .date-day.today span{color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.35)}
+.history-header-actions{display:flex;gap:7px;align-items:center}.expense-filter-summary{margin:-7px 0 12px;padding:7px 9px;border-radius:8px;background:color-mix(in srgb,var(--accent) 16%,transparent)}
+.saved-row{grid-template-columns:minmax(0,1fr) 110px;cursor:pointer;transition:transform .08s ease,background .12s ease}.saved-row:active,.transaction.clickable:active{transform:translateY(2px)}
+.transaction{grid-template-columns:minmax(0,1fr) 100px}.transaction.clickable{cursor:pointer;border-radius:8px;padding-left:5px;padding-right:5px}.transaction.clickable:hover,.saved-row:hover{background:color-mix(in srgb,var(--edge) 13%,transparent)}
+.history-date-separator{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin:12px 0 3px;color:var(--muted);font-size:.68em;font-weight:900}.history-date-separator::before,.history-date-separator::after{content:"";height:1px;background:color-mix(in srgb,var(--text) 42%,transparent)}
+.home-funds{height:calc(100% - 92px);min-height:0}.fund-card{position:relative;flex:1;min-height:0!important;max-height:none!important;overflow:hidden}.fund-label{border:0;background:transparent;padding:0;color:inherit;cursor:pointer}.home-expenses{flex:1;min-height:0;overflow-y:auto;pointer-events:auto;padding-right:3px;scrollbar-width:thin;scrollbar-color:var(--edge) transparent}.home-expenses::-webkit-scrollbar{width:6px}.home-expenses::-webkit-scrollbar-thumb{background:var(--edge);border-radius:99px}.home-day-group{display:grid;grid-template-columns:46px minmax(0,1fr);gap:8px;padding:8px 0;border-top:1px solid color-mix(in srgb,var(--text) 30%,transparent)}.home-day-date{display:flex;flex-direction:column;align-items:flex-start;color:var(--muted);font-size:.72em;line-height:1.2}.home-day-date strong{color:var(--text);font-size:1.02em}.home-day-items{min-width:0}.home-expense{border:0;padding:3px 0;font-size:.78em}.home-expense-name{padding-right:6px}.fund-expand-backdrop{position:fixed;inset:0;z-index:1650;background:rgba(20,25,20,.55);backdrop-filter:blur(3px);animation:fadeIn .22s ease}.fund-card.expanded{position:fixed!important;z-index:1700;left:5vw;top:max(54px,env(safe-area-inset-top));width:90vw;height:calc(100dvh - max(78px,env(safe-area-inset-top) + 56px));max-height:none!important;animation:fundLift .3s cubic-bezier(.18,.8,.22,1);box-shadow:0 0 0 1px var(--edge),0 14px 0 var(--edge),0 30px 70px rgba(0,0,0,.35)}.fund-card.expanded .home-expenses{font-size:1.08em}.fund-expand-close{position:absolute;right:12px;top:10px;width:34px;height:34px;border-radius:50%;background:color-mix(in srgb,var(--panel) 82%,var(--edge));box-shadow:0 0 0 1px var(--edge);font-size:22px;line-height:1;color:var(--text)}.fund-card.expanded .fund-expand-close{display:block!important}@keyframes fundLift{from{opacity:.7;transform:translateY(38px) scale(.86)}to{opacity:1;transform:none}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.category-history-item{cursor:pointer;border-radius:8px;padding-left:7px;padding-right:7px}.category-history-item:hover{background:color-mix(in srgb,var(--edge) 13%,transparent)}
+.analytics-month-nav{width:100%;min-width:0;display:grid;grid-template-columns:42px minmax(0,1fr) 42px;gap:8px;align-items:center;margin-bottom:12px}.analytics-month-nav strong{text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.savings-range-buttons{margin-bottom:10px}.savings-analytics-card .balance{margin-top:12px}
+@media(max-width:900px){.workspace-panel .panel-inner{padding:27px 15px 22px}.home-panel .panel-inner{padding-top:25px}.screen-title{font-size:36px;line-height:1;margin-bottom:14px}.settings-gear{right:31px}.date-strip{margin-top:0;margin-bottom:13px}.home-funds{height:calc(100% - 74px);gap:12px}.fund-card{padding:13px}.fund-period{margin-top:1px}.balance{margin:5px 0 2px}.saved-row{grid-template-columns:minmax(0,1fr) 91px}.transaction{grid-template-columns:minmax(0,1fr) 82px}}
+@media(min-width:901px){#analyticsPanel .pie-layout{display:block!important}#analyticsPanel .pie-chart{width:150px;max-width:80%;margin:8px auto 16px}#analyticsPanel .category-head,#analyticsPanel .category-row{grid-template-columns:minmax(0,1fr) 64px 40px!important;gap:4px!important}#analyticsPanel .category-row{font-size:.71em!important}#analyticsPanel .category-head{font-size:.61em!important}#analyticsPanel .analytics-grid>.card{min-width:0;overflow:hidden}.home-funds{height:calc(100% - 105px)}}
 </style>
 </head>
 <body class="theme-cedar font-system">
@@ -1170,8 +1185,12 @@ Dollar values below show how much Fun Money each profile spent during the select
 </p>
 <div id="analyticsProfiles"></div>
 </div>
-<div class="card" style="padding:18px">
-<h3 style="margin-top:0">Amount Budgeted for Savings</h3>
+<div class="card savings-analytics-card" style="padding:18px">
+<h3 style="margin-top:0">Total Saved</h3>
+<div class="analytics-controls savings-range-buttons" id="savingsRangeButtons"><button class="secondary-button small-button selected" data-savings-range="month">Month</button><button class="secondary-button small-button" data-savings-range="year">Year</button><button class="secondary-button small-button" data-savings-range="custom">Custom</button></div>
+<div class="analytics-month-nav" id="savingsMonthControls"><button class="secondary-button small-button" id="savingsPrevMonth" type="button">‹</button><strong id="savingsMonthLabel"></strong><button class="secondary-button small-button" id="savingsNextMonth" type="button">›</button></div>
+<div class="analytics-month-wrap hidden" id="savingsYearControls"><select id="savingsYearSelect"></select></div>
+<div class="custom-date-grid hidden" id="savingsCustomControls"><input id="savingsStartDate" type="date"><input id="savingsEndDate" type="date"></div>
 <div class="balance" id="analyticsSavings">$0.00</div>
 <div class="subtext" id="analyticsSavingsRange"></div>
 </div>
@@ -1182,8 +1201,9 @@ Dollar values below show how much Fun Money each profile spent during the select
 <div class="panel-inner">
 <div class="panel-header">
 <h1 class="screen-title">Expense History</h1>
-<button class="primary-button small-button" id="addExpenseButton">+ Expense</button>
+<div class="history-header-actions"><button class="secondary-button small-button" id="expenseFilterButton">Filter</button><button class="primary-button small-button" id="addExpenseButton">+ Expense</button></div>
 </div>
+<div class="subtext expense-filter-summary hidden" id="expenseFilterSummary"></div>
 <div id="transactions"></div>
 </div>
 </section>
@@ -1195,13 +1215,15 @@ Dollar values below show how much Fun Money each profile spent during the select
 </div>
 <div class="home-funds">
 <div class="card fund-card" id="needsFundCard">
-<div class="fund-label">Needs</div>
+<button class="fund-label fund-expand-trigger" type="button" data-fund-card="needsFundCard">Needs</button>
+<button class="fund-expand-close hidden" type="button" aria-label="Collapse Needs">×</button>
 <div class="fund-period">Current Balance</div>
 <div class="balance" id="needsBalance">$0.00</div>
 <div class="home-expenses" id="homeNeedsExpenses"></div>
 </div>
 <div class="card fund-card" id="funFundCard">
-<div class="fund-label">Fun Money</div>
+<button class="fund-label fund-expand-trigger" type="button" data-fund-card="funFundCard">Fun Money</button>
+<button class="fund-expand-close hidden" type="button" aria-label="Collapse Fun Money">×</button>
 <div class="fund-period" id="funProfileLabel">Current Balance</div>
 <div class="balance" id="funBalance">$0.00</div>
 <div class="home-expenses" id="homeFunExpenses"></div>
@@ -1240,6 +1262,7 @@ View Previous Months' Budgets
 + Add Income
 </button>
 <h3>Monthly Bills</h3>
+<p class="subtext" id="monthlyBillPeriodLabel"></p>
 <div class="saved-list" id="monthlyBillList"></div>
 <button class="secondary-button" id="addMonthlyBillButton" style="width:100%;margin-top:10px">
 + Add Monthly Bill
@@ -1323,11 +1346,9 @@ Close
 <input id="moneyEditorAmount" class="money-input" inputmode="decimal">
 <div class="modal-actions">
 <button class="primary-button" id="moneyEditorSaveButton">Save</button>
-<button class="secondary-button" id="moneyEditorCancelButton">Cancel</button>
+<button class="danger-button hidden" id="moneyEditorDeleteButton">Delete</button>
 </div>
-<button class="danger-button hidden" id="moneyEditorDeleteButton" style="width:100%;margin-top:11px">
-Delete
-</button>
+<button class="secondary-button" id="moneyEditorCancelButton" style="width:100%;margin-top:11px">Cancel</button>
 </div>
 </div>
 <div class="modal-overlay hidden" id="transactionModal">
@@ -1363,11 +1384,9 @@ Delete
 <input id="expenseDate" type="date">
 <div class="modal-actions">
 <button class="primary-button" id="saveExpenseButton">Save</button>
-<button class="secondary-button" id="cancelExpenseButton">Cancel</button>
+<button class="danger-button hidden" id="deleteExpenseButton">Delete</button>
 </div>
-<button class="danger-button hidden" id="deleteExpenseButton" style="width:100%;margin-top:11px">
-Delete
-</button>
+<button class="secondary-button" id="cancelExpenseButton" style="width:100%;margin-top:11px">Cancel</button>
 </div>
 <div id="fundFormSection" class="hidden">
 <h2 id="fundAdjustmentTitle">Add Funds</h2>
@@ -1384,6 +1403,8 @@ Delete
 </div>
 </div>
 </div>
+<div class="modal-overlay hidden" id="expenseFilterModal"><div class="card modal-card"><h2>Filter Expense History</h2><label>Expense / Profile</label><select id="expenseFilterType"></select><label>Category</label><select id="expenseFilterCategory"><option value="all">All Categories</option><option>Groceries</option><option>Gas</option><option>Dining</option><option>Bill</option><option>Shopping</option><option>Entertainment</option><option>Transportation</option><option>Medical</option><option>Other</option></select><label>Date Filter</label><select id="expenseFilterDateMode"><option value="all">All Dates</option><option value="date">Exact Date</option><option value="month">Month</option><option value="custom">Custom Date Range</option></select><div id="expenseFilterExactWrap" class="hidden"><label>Date</label><input id="expenseFilterExactDate" type="date"></div><div id="expenseFilterMonthWrap" class="hidden"><label>Month</label><input id="expenseFilterMonth" type="month"></div><div id="expenseFilterCustomWrap" class="custom-date-grid hidden"><div><label>Start</label><input id="expenseFilterStart" type="date"></div><div><label>End</label><input id="expenseFilterEnd" type="date"></div></div><div class="modal-actions"><button class="primary-button" id="applyExpenseFilters">Apply Filters</button><button class="secondary-button" id="clearExpenseFilters">Clear</button></div><button class="secondary-button" id="closeExpenseFilters" style="width:100%;margin-top:11px">Cancel</button></div></div>
+<div class="fund-expand-backdrop hidden" id="fundExpandBackdrop"></div>
 <div class="modal-overlay hidden" id="categoryHistoryModal"><div class="card modal-card"><h2 id="categoryHistoryTitle">Category Expenses</h2><div class="subtext" id="categoryHistoryRange" style="margin-bottom:12px"></div><div id="categoryHistoryList"></div><button class="secondary-button" id="closeCategoryHistory" style="width:100%;margin-top:16px">Close</button></div></div>
 <div class="toast" id="appToast">Saved</div>
 <script>
@@ -1420,6 +1441,10 @@ let allocationUserEdited=false;
 let analyticsRange="month";
 let analyticsFilteredExpenses=[];
 let analyticsMonthCursor=firstOfMonth(new Date());
+let allExpenseHistory=[];
+let expenseFilters={type:"all",category:"all",dateMode:"all",exactDate:"",month:"",start:"",end:""};
+let savingsRange="month";
+let savingsMonthCursor=addMonths(firstOfMonth(new Date()),-1);
 let settingsSwitchTarget=null;
 let toastTimer=null;
 const themeData={
@@ -1507,6 +1532,8 @@ September budget does not become active until September.
 */
 return firstOfMonth(new Date());
 }
+function getBudgetWeeks(monthDate){
+const y=monthDate.getFullYear(),m=monthDate.getMonth(),first=new Date(y,m,1),last=new Date(y,m+1,0);let current=weekStart(first),end=weekStart(last),weeks=[];while(current<=end){let days=0;for(let i=0;i<7;i++){const d=new Date(current);d.setDate(current.getDate()+i);if(d.getFullYear()===y&&d.getMonth()===m)days++}if(days>=4)weeks.push(new Date(current));current=new Date(current);current.setDate(current.getDate()+7)}return weeks}
 function getBudgetWeekCount(monthDate){
 const y=monthDate.getFullYear();
 const m=monthDate.getMonth();
@@ -2037,6 +2064,8 @@ ignoreDuplicates:true
 }
 );
 if(needsError)throw needsError;
+const {error:savingsError}=await supabaseClient.from("allowance_deposits").upsert({household_id:householdId,week_start:ws,fund:"savings",amount:Number(plan.weekly_savings||0)},{onConflict:"household_id,week_start,fund",ignoreDuplicates:true});
+if(savingsError)throw savingsError;
 /*
 Fun Money:
 MUST use allocation belonging to CURRENT CALENDAR MONTH.
@@ -2077,6 +2106,7 @@ ignoreDuplicates:true
 if(error)throw error;
 }
 }
+async function ensureSavingsHistory(){const {data:plans,error}=await supabaseClient.from("budget_plans").select("budget_month,weekly_savings").eq("household_id",householdId);if(error)throw error;const currentWeek=weekStart(new Date());for(const plan of plans||[]){const month=new Date(`${plan.budget_month}T00:00:00`),amount=Number(plan.weekly_savings||0);for(const ws of getBudgetWeeks(month)){if(ws>currentWeek)continue;const {error:e}=await supabaseClient.from("allowance_deposits").upsert({household_id:householdId,week_start:dateOnly(ws),fund:"savings",amount},{onConflict:"household_id,week_start,fund",ignoreDuplicates:true});if(e)throw e}}}
 async function loadCurrentBudget(){
 const month=
 activeBudgetMonth();
@@ -2290,26 +2320,8 @@ item=>{
 const row=
 document.createElement("div");
 row.className="saved-row";
-row.innerHTML=`
-<div class="saved-row-main">
-<div class="saved-row-name">
-${escapeHtml(item.name)}
-</div>
-</div>
-<div class="saved-row-amount">
-${negative?"-":""}${money(Math.abs(Number(item.amount)||0))}
-</div>
-<button class="secondary-button small-button">
-Edit
-</button>
-`;
-row
-.querySelector("button")
-.onclick=
-()=>openMoneyEditor(
-kind,
-item
-);
+row.innerHTML=`<div class="saved-row-main"><div class="saved-row-name">${escapeHtml(item.name)}</div></div><div class="saved-row-amount">${negative?"-":""}${money(Math.abs(Number(item.amount)||0))}</div>`;
+row.onclick=()=>openMoneyEditor(kind,item);
 box.appendChild(row);
 }
 );
@@ -2492,14 +2504,9 @@ warning.classList.remove("hidden");
 }else{
 warning.classList.add("hidden");
 }
-const prior=
-addMonths(month,-1);
-document
-.getElementById("incomePeriodLabel")
-.textContent=
-firstTime
-?"Enter the income and bills you are using to fund this current month."
-:`Income received during ${prior.toLocaleDateString("en-US",{month:"long",year:"numeric"})}.`;
+const incomeMonth=addMonths(month,-2),billFirstMonth=addMonths(month,-1);
+document.getElementById("incomePeriodLabel").textContent=`Income received during ${incomeMonth.toLocaleDateString("en-US",{month:"long",year:"numeric"})}.`;
+document.getElementById("monthlyBillPeriodLabel").textContent=`Bills paid during ${incomeMonth.toLocaleDateString("en-US",{month:"long",year:"numeric"})} and ${billFirstMonth.toLocaleDateString("en-US",{month:"long"})} 1st.`;
 document
 .getElementById("weeklyNeeds")
 .value=
@@ -3030,53 +3037,19 @@ addedBy,
 new Date(item.spent_at).toLocaleDateString()
 ].join(" · ");
 }
-async function loadExpenses(){
-await loadProfiles();
-const {data,error}=
-await supabaseClient
-.from("expenses")
-.select("*")
-.eq("household_id",householdId)
-.order("spent_at",{ascending:false})
-.limit(500);
-if(error)throw error;
-const box=
-document.getElementById("transactions");
-box.innerHTML="";
-if(!data?.length){
-box.innerHTML=
-'<p class="subtext">No expenses yet.</p>';
-return;
-}
-data.forEach(
-item=>{
-const row=
-document.createElement("div");
-row.className="transaction";
-row.innerHTML=`
-<div class="transaction-main">
-<div class="transaction-name">
-${escapeHtml(item.description)}
-</div>
-<div class="transaction-meta">
-${escapeHtml(expenseMeta(item))}
-</div>
-</div>
-<div class="transaction-amount">
--${money(item.amount)}
-</div>
-<button class="secondary-button small-button">
-Edit
-</button>
-`;
-row
-.querySelector("button")
-.onclick=
-()=>editExpense(item.id);
-box.appendChild(row);
-}
-);
-}
+function expenseDateKey(item){return String(item.spent_at||"").slice(0,10)}
+function prettyHistoryDate(key){const d=new Date(`${key}T12:00:00`);return d.toLocaleDateString("en-US",{weekday:"long",month:"numeric",day:"numeric",year:"2-digit"})}
+function applyExpenseFiltersToItems(items){return (items||[]).filter(item=>{const t=expenseFilters.type||"all";if(t!=="all"){if(t==="needs"&&item.fund!=="needs")return false;if(t==="fun"&&item.fund!=="fun")return false;if(t.startsWith("fun:")){const id=t.slice(4);if(item.fund!=="fun"||item.profile_id!==id)return false}if(t.startsWith("allprofile:")){if(item.profile_id!==t.slice(11))return false}if(t.startsWith("needsprofile:")){if(item.fund!=="needs"||item.profile_id!==t.slice(13))return false}}if(expenseFilters.category!=="all"&&(item.category||"Other")!==expenseFilters.category)return false;const k=expenseDateKey(item);if(expenseFilters.dateMode==="date"&&expenseFilters.exactDate&&k!==expenseFilters.exactDate)return false;if(expenseFilters.dateMode==="month"&&expenseFilters.month&&!k.startsWith(expenseFilters.month))return false;if(expenseFilters.dateMode==="custom"){if(expenseFilters.start&&k<expenseFilters.start)return false;if(expenseFilters.end&&k>expenseFilters.end)return false}return true})}
+function renderExpenseHistory(items){const box=document.getElementById("transactions");box.innerHTML="";if(!items?.length){box.innerHTML='<p class="subtext">No expenses match these filters.</p>';return}let last="";items.forEach(item=>{const key=expenseDateKey(item);if(key!==last){const sep=document.createElement("div");sep.className="history-date-separator";sep.textContent=prettyHistoryDate(key);box.appendChild(sep);last=key}const row=document.createElement("div");row.className="transaction clickable";row.innerHTML=`<div class="transaction-main"><div class="transaction-name">${escapeHtml(item.description)}</div><div class="transaction-meta">${escapeHtml(expenseMeta(item))}</div></div><div class="transaction-amount">-${money(item.amount)}</div>`;row.onclick=()=>editExpense(item.id);box.appendChild(row)})}
+function expenseFilterSummaryText(){const parts=[];const t=expenseFilters.type;if(t&&t!=="all"){if(t==="needs")parts.push("Needs");else if(t==="fun")parts.push("Fun Money");else{const [kind,id]=t.split(":");const name=profileMap.get(id)?.display_name||"Profile";parts.push(kind==="fun"?`${name} Fun Money`:kind==="needsprofile"?`Needs entered by ${name}`:`All inputs by ${name}`)}}if(expenseFilters.category!=="all")parts.push(expenseFilters.category);if(expenseFilters.dateMode==="date"&&expenseFilters.exactDate)parts.push(expenseFilters.exactDate);if(expenseFilters.dateMode==="month"&&expenseFilters.month)parts.push(expenseFilters.month);if(expenseFilters.dateMode==="custom")parts.push(`${expenseFilters.start||"…"} to ${expenseFilters.end||"…"}`);return parts.join(" · ")}
+function refreshExpenseHistory(){renderExpenseHistory(applyExpenseFiltersToItems(allExpenseHistory));const el=document.getElementById("expenseFilterSummary"),txt=expenseFilterSummaryText();el.textContent=txt?`Filtered: ${txt}`:"";el.classList.toggle("hidden",!txt)}
+function renderExpenseFilterTypeOptions(){const select=document.getElementById("expenseFilterType");let html='<option value="all">All Expenses</option><option value="needs">Needs</option><option value="fun">All Fun Money</option>';for(const p of profileMap.values()){const n=escapeHtml(p.display_name);html+=`<option value="fun:${p.id}">${n} Fun Money</option><option value="allprofile:${p.id}">All inputs by ${n}</option><option value="needsprofile:${p.id}">Needs input by ${n}</option>`}select.innerHTML=html;select.value=expenseFilters.type||"all"}
+function updateExpenseFilterDateFields(){const m=document.getElementById("expenseFilterDateMode").value;document.getElementById("expenseFilterExactWrap").classList.toggle("hidden",m!=="date");document.getElementById("expenseFilterMonthWrap").classList.toggle("hidden",m!=="month");document.getElementById("expenseFilterCustomWrap").classList.toggle("hidden",m!=="custom")}
+function openExpenseFilters(){renderExpenseFilterTypeOptions();document.getElementById("expenseFilterCategory").value=expenseFilters.category;document.getElementById("expenseFilterDateMode").value=expenseFilters.dateMode;document.getElementById("expenseFilterExactDate").value=expenseFilters.exactDate;document.getElementById("expenseFilterMonth").value=expenseFilters.month;document.getElementById("expenseFilterStart").value=expenseFilters.start;document.getElementById("expenseFilterEnd").value=expenseFilters.end;updateExpenseFilterDateFields();document.getElementById("expenseFilterModal").classList.remove("hidden")}
+function closeExpenseFilters(){document.getElementById("expenseFilterModal").classList.add("hidden")}
+function applyExpenseFilterForm(){expenseFilters={type:document.getElementById("expenseFilterType").value,category:document.getElementById("expenseFilterCategory").value,dateMode:document.getElementById("expenseFilterDateMode").value,exactDate:document.getElementById("expenseFilterExactDate").value,month:document.getElementById("expenseFilterMonth").value,start:document.getElementById("expenseFilterStart").value,end:document.getElementById("expenseFilterEnd").value};closeExpenseFilters();refreshExpenseHistory()}
+function clearExpenseFilterForm(){expenseFilters={type:"all",category:"all",dateMode:"all",exactDate:"",month:"",start:"",end:""};closeExpenseFilters();refreshExpenseHistory()}
+async function loadExpenses(){await loadProfiles();const {data,error}=await supabaseClient.from("expenses").select("*").eq("household_id",householdId).order("spent_at",{ascending:false}).limit(1000);if(error)throw error;allExpenseHistory=data||[];refreshExpenseHistory()}
 function setTransactionTab(tab){
 activeTransactionTab=tab;
 document
@@ -3473,65 +3446,10 @@ fun<0
 );
 await loadHomeExpenseLists();
 }
-async function loadHomeExpenseLists(){
-const start=
-weekStart(new Date()).toISOString();
-const [
-{data:needs},
-{data:fun}
-]=
-await Promise.all([
-supabaseClient
-.from("expenses")
-.select("description,amount")
-.eq("household_id",householdId)
-.eq("fund","needs")
-.gte("spent_at",start)
-.order("spent_at",{ascending:false})
-.limit(5),
-supabaseClient
-.from("expenses")
-.select("description,amount")
-.eq("household_id",householdId)
-.eq("fund","fun")
-.eq("profile_id",currentProfile.id)
-.gte("spent_at",start)
-.order("spent_at",{ascending:false})
-.limit(5)
-]);
-renderHomeExpenseList(
-"homeNeedsExpenses",
-needs
-);
-renderHomeExpenseList(
-"homeFunExpenses",
-fun
-);
-}
-function renderHomeExpenseList(id,items){
-const box=
-document.getElementById(id);
-if(!items?.length){
-box.innerHTML=
-'<div class="empty-home-expenses">No expenses this week.</div>';
-return;
-}
-box.innerHTML=
-items
-.map(
-item=>`
-<div class="home-expense">
-<span class="home-expense-name">
-${escapeHtml(item.description)}
-</span>
-<span class="home-expense-amount">
--${money(item.amount)}
-</span>
-</div>
-`
-)
-.join("");
-}
+async function loadHomeExpenseLists(){const start=weekStart(new Date()).toISOString();const [{data:needs},{data:fun}]=await Promise.all([supabaseClient.from("expenses").select("description,amount,spent_at").eq("household_id",householdId).eq("fund","needs").gte("spent_at",start).order("spent_at",{ascending:true}),supabaseClient.from("expenses").select("description,amount,spent_at").eq("household_id",householdId).eq("fund","fun").eq("profile_id",currentProfile.id).gte("spent_at",start).order("spent_at",{ascending:true})]);renderHomeExpenseList("homeNeedsExpenses",needs);renderHomeExpenseList("homeFunExpenses",fun)}
+function renderHomeExpenseList(id,items){const box=document.getElementById(id);if(!items?.length){box.innerHTML='<div class="empty-home-expenses">No expenses this week.</div>';return}const groups=new Map();for(const item of items){const key=expenseDateKey(item);if(!groups.has(key))groups.set(key,[]);groups.get(key).push(item)}box.innerHTML=[...groups.entries()].map(([key,list])=>{const d=new Date(`${key}T12:00:00`),day=d.toLocaleDateString("en-US",{weekday:"short"}),md=d.toLocaleDateString("en-US",{month:"numeric",day:"numeric"});return `<div class="home-day-group"><div class="home-day-date"><strong>${day}</strong><span>${md}</span></div><div class="home-day-items">${list.map(item=>`<div class="home-expense"><span class="home-expense-name">${escapeHtml(item.description)}</span><span class="home-expense-amount">-${money(item.amount)}</span></div>`).join("")}</div></div>`}).join("")}
+function expandFundCard(id){const card=document.getElementById(id);if(!card||card.classList.contains("expanded"))return;document.getElementById("fundExpandBackdrop").classList.remove("hidden");card.classList.add("expanded");card.querySelector(".fund-expand-close")?.classList.remove("hidden");}
+function collapseFundCards(){document.querySelectorAll(".fund-card.expanded").forEach(card=>{card.classList.remove("expanded");card.querySelector(".fund-expand-close")?.classList.add("hidden")});document.getElementById("fundExpandBackdrop").classList.add("hidden")}
 function renderAnalyticsMonthLabel(){document.getElementById("analyticsMonthLabel").textContent=analyticsMonthCursor.toLocaleDateString("en-US",{month:"long",year:"numeric"});}
 function initializeAnalyticsControls(){
 const now=new Date();analyticsMonthCursor=firstOfMonth(now);renderAnalyticsMonthLabel();
@@ -3749,34 +3667,13 @@ profileEntries.length
 )
 .join("")
 :'<p class="subtext">No Fun Money spending.</p>';
-let savings=0;
-(plans||[])
-.forEach(
-plan=>{
-const month=
-new Date(
-`${plan.budget_month}T00:00:00`
-);
-if(
-month>=range.start &&
-month<=range.end
-){
-savings+=
-Number(
-plan.weekly_savings||0
-)*
-getBudgetWeekCount(month);
+await updateSavingsAnalytics();
 }
-}
-);
-document
-.getElementById("analyticsSavings")
-.textContent=
-money(savings);
-const savingsRange=document.getElementById("analyticsSavingsRange");
-if(analyticsRange==="all"){const planDates=(plans||[]).map(p=>new Date(`${p.budget_month}T00:00:00`)).sort((a,b)=>a-b);if(planDates.length){const first=planDates[0],last=planDates[planDates.length-1],end=new Date(last.getFullYear(),last.getMonth()+1,0);savingsRange.textContent=formatAnalyticsDateRange(first,end);}else{savingsRange.textContent="No saved budgets in this period.";}}else{savingsRange.textContent=formatAnalyticsDateRange(range.start,range.end);}
-}
-function openCategoryHistory(category){const range=analyticsDates(),items=analyticsFilteredExpenses.filter(x=>(x.category||"Other")===category).sort((a,b)=>new Date(b.spent_at)-new Date(a.spent_at));document.getElementById("categoryHistoryTitle").textContent=category;document.getElementById("categoryHistoryRange").textContent=formatAnalyticsDateRange(range.start,range.end);const box=document.getElementById("categoryHistoryList");box.innerHTML=items.length?items.map(x=>`<div class="transaction"><div class="transaction-main"><div class="transaction-name">${escapeHtml(x.description)}</div><div class="transaction-meta">${escapeHtml(expenseMeta(x))}</div></div><div class="transaction-amount">-${money(x.amount)}</div></div>`).join(""):'<p class="subtext">No expenses in this category for this period.</p>';document.getElementById("categoryHistoryModal").classList.remove("hidden")}
+function renderSavingsMonthLabel(){document.getElementById("savingsMonthLabel").textContent=savingsMonthCursor.toLocaleDateString("en-US",{month:"long",year:"numeric"})}
+function savingsDates(){if(savingsRange==="month"){const y=savingsMonthCursor.getFullYear(),m=savingsMonthCursor.getMonth();return{start:new Date(y,m,1),end:new Date(y,m+1,0,23,59,59,999)}}if(savingsRange==="year"){const y=Number(document.getElementById("savingsYearSelect").value);return{start:new Date(y,0,1),end:new Date(y,11,31,23,59,59,999)}}const a=document.getElementById("savingsStartDate").value,b=document.getElementById("savingsEndDate").value;return{start:new Date(`${a}T00:00:00`),end:new Date(`${b}T23:59:59`)}}
+async function updateSavingsAnalytics(){const range=savingsDates();const {data,error}=await supabaseClient.from("allowance_deposits").select("amount,week_start").eq("household_id",householdId).eq("fund","savings");if(error)return;const total=(data||[]).filter(x=>{const d=new Date(`${x.week_start}T12:00:00`);return d>=range.start&&d<=range.end}).reduce((sum,x)=>sum+Number(x.amount||0),0);document.getElementById("analyticsSavings").textContent=money(total);document.getElementById("analyticsSavingsRange").textContent=formatAnalyticsDateRange(range.start,range.end)}
+function initializeSavingsControls(){const now=new Date(),years=document.getElementById("savingsYearSelect");savingsMonthCursor=addMonths(firstOfMonth(now),-1);renderSavingsMonthLabel();years.innerHTML="";for(let y=now.getFullYear();y>=2020;y--){const o=document.createElement("option");o.value=y;o.textContent=y;years.appendChild(o)}const prev=addMonths(firstOfMonth(now),-1);document.getElementById("savingsStartDate").value=`${prev.getFullYear()}-01-01`;document.getElementById("savingsEndDate").value=dateOnly(now)}
+function openCategoryHistory(category){const range=analyticsDates(),items=analyticsFilteredExpenses.filter(x=>(x.category||"Other")===category).sort((a,b)=>new Date(b.spent_at)-new Date(a.spent_at));document.getElementById("categoryHistoryTitle").textContent=category;document.getElementById("categoryHistoryRange").textContent=formatAnalyticsDateRange(range.start,range.end);const box=document.getElementById("categoryHistoryList");box.innerHTML=items.length?items.map(x=>`<div class="transaction category-history-item" data-expense-id="${x.id}"><div class="transaction-main"><div class="transaction-name">${escapeHtml(x.description)}</div><div class="transaction-meta">${escapeHtml(expenseMeta(x))}</div></div><div class="transaction-amount">-${money(x.amount)}</div></div>`).join(""):'<p class="subtext">No expenses in this category for this period.</p>';box.querySelectorAll("[data-expense-id]").forEach(row=>row.onclick=()=>{closeCategoryHistory();editExpense(row.dataset.expenseId)});document.getElementById("categoryHistoryModal").classList.remove("hidden")}
 function closeCategoryHistory(){document.getElementById("categoryHistoryModal").classList.add("hidden")}
 function renderThemes(){
 const box=
@@ -4056,6 +3953,7 @@ Create the current Sunday deposit from
 CURRENT calendar month's budget.
 */
 await ensureCurrentWeekDeposits();
+await ensureSavingsHistory();
 await Promise.all([
 loadCurrentBudget(),
 openBudgetSetup(),
@@ -4063,6 +3961,7 @@ loadExpenses(),
 calculateBalances()
 ]);
 initializeAnalyticsControls();
+initializeSavingsControls();
 await updateAnalytics();
 /*
 Always open exactly on HOME.
@@ -4554,6 +4453,15 @@ e.target.id==="moneyEditorModal"
 closeMoneyEditor();
 }
 };
+document.getElementById("expenseFilterButton").onclick=openExpenseFilters;
+document.getElementById("expenseFilterDateMode").onchange=updateExpenseFilterDateFields;
+document.getElementById("applyExpenseFilters").onclick=applyExpenseFilterForm;
+document.getElementById("clearExpenseFilters").onclick=clearExpenseFilterForm;
+document.getElementById("closeExpenseFilters").onclick=closeExpenseFilters;
+document.getElementById("expenseFilterModal").onclick=e=>{if(e.target.id==="expenseFilterModal")closeExpenseFilters()};
+document.querySelectorAll(".fund-expand-trigger").forEach(b=>b.onclick=e=>{e.stopPropagation();expandFundCard(b.dataset.fundCard)});
+document.querySelectorAll(".fund-expand-close").forEach(b=>b.onclick=e=>{e.stopPropagation();collapseFundCards()});
+document.getElementById("fundExpandBackdrop").onclick=collapseFundCards;
 document
 .getElementById("addExpenseButton")
 .onclick=
@@ -4564,26 +4472,8 @@ null,
 false
 );
 };
-document
-.getElementById("needsFundCard")
-.onclick=
-()=>{
-openTransactionModal(
-"needs",
-null,
-true
-);
-};
-document
-.getElementById("funFundCard")
-.onclick=
-()=>{
-openTransactionModal(
-"fun",
-null,
-true
-);
-};
+document.getElementById("needsFundCard").onclick=e=>{if(e.target.closest(".fund-expand-trigger,.fund-expand-close,.home-expenses")||e.currentTarget.classList.contains("expanded"))return;openTransactionModal("needs",null,true);};
+document.getElementById("funFundCard").onclick=e=>{if(e.target.closest(".fund-expand-trigger,.fund-expand-close,.home-expenses")||e.currentTarget.classList.contains("expanded"))return;openTransactionModal("fun",null,true);};
 document
 .querySelectorAll(
 "[data-transaction-tab]"
@@ -4701,6 +4591,10 @@ updateAnalytics
 }
 );
 document.getElementById("closeCategoryHistory").onclick=closeCategoryHistory;document.getElementById("categoryHistoryModal").onclick=e=>{if(e.target.id==="categoryHistoryModal")closeCategoryHistory()};
+document.querySelectorAll("[data-savings-range]").forEach(button=>button.onclick=async()=>{savingsRange=button.dataset.savingsRange;document.querySelectorAll("[data-savings-range]").forEach(x=>x.classList.toggle("selected",x===button));document.getElementById("savingsMonthControls").classList.toggle("hidden",savingsRange!=="month");document.getElementById("savingsYearControls").classList.toggle("hidden",savingsRange!=="year");document.getElementById("savingsCustomControls").classList.toggle("hidden",savingsRange!=="custom");await updateSavingsAnalytics()});
+document.getElementById("savingsPrevMonth").onclick=async()=>{savingsMonthCursor=addMonths(savingsMonthCursor,-1);renderSavingsMonthLabel();await updateSavingsAnalytics()};
+document.getElementById("savingsNextMonth").onclick=async()=>{savingsMonthCursor=addMonths(savingsMonthCursor,1);renderSavingsMonthLabel();await updateSavingsAnalytics()};
+["savingsYearSelect","savingsStartDate","savingsEndDate"].forEach(id=>document.getElementById(id).addEventListener("change",updateSavingsAnalytics));
 document
 .getElementById("exportBudgetCsvButton")
 .onclick=
