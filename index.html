@@ -5,12 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta id="themeColorMeta" name="theme-color" content="#aebca5">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Bicycle Budget">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=5">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=5">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v=5">
-<link rel="manifest" href="manifest.webmanifest?v=5">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=6">
+<link rel="apple-touch-icon-precomposed" sizes="180x180" href="./apple-touch-icon.png?v=6">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png?v=6">
+<link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png?v=6">
+<link rel="manifest" href="./manifest.webmanifest?v=6">
 <title>Bicycle Budget</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1058,6 +1059,16 @@ body.theme-cedar .date-day.today span{color:#fff;text-shadow:0 1px 1px rgba(0,0,
 .analytics-month-nav{width:100%;min-width:0;display:grid;grid-template-columns:42px minmax(0,1fr) 42px;gap:8px;align-items:center;margin-bottom:12px}.analytics-month-nav strong{text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.savings-range-buttons{margin-bottom:10px}.savings-analytics-card .balance{margin-top:12px}
 @media(max-width:900px){.workspace-panel .panel-inner{padding:27px 15px 22px}.home-panel .panel-inner{padding-top:25px}.screen-title{font-size:36px;line-height:1;margin-bottom:14px}.settings-gear{right:31px}.date-strip{margin-top:0;margin-bottom:13px}.home-funds{height:calc(100% - 74px);gap:12px}.fund-card{padding:13px}.fund-period{margin-top:1px}.balance{margin:5px 0 2px}.saved-row{grid-template-columns:minmax(0,1fr) 91px}.transaction{grid-template-columns:minmax(0,1fr) 82px}}
 @media(min-width:901px){#analyticsPanel .pie-layout{display:block!important}#analyticsPanel .pie-chart{width:150px;max-width:80%;margin:8px auto 16px}#analyticsPanel .category-head,#analyticsPanel .category-row{grid-template-columns:minmax(0,1fr) 64px 40px!important;gap:4px!important}#analyticsPanel .category-row{font-size:.71em!important}#analyticsPanel .category-head{font-size:.61em!important}#analyticsPanel .analytics-grid>.card{min-width:0;overflow:hidden}.home-funds{height:calc(100% - 105px)}}
+
+/* v4 mobile chrome + history header fixes */
+@media(max-width:900px){
+body{padding-top:env(safe-area-inset-top)}
+#mainWorkspace{height:calc(100dvh - env(safe-area-inset-top))}
+.settings-gear{top:10px;right:18px}
+#expenseHistoryPanel .panel-header{padding-right:48px;align-items:flex-start}
+#expenseHistoryPanel .history-header-actions{display:grid;grid-template-columns:1fr 1fr;width:148px;gap:6px}
+#expenseHistoryPanel .history-header-actions button{width:100%;min-width:0;height:34px;padding:6px 7px;font-size:.72em;line-height:1}
+}
 </style>
 </head>
 <body class="theme-cedar font-system">
@@ -1602,15 +1613,8 @@ document.documentElement.style.setProperty(
 "--font-size",
 `${selectedFontSize}px`
 );
-const theme=
-themeData[selectedTheme]||
-themeData.cedar;
-document
-.getElementById("themeColorMeta")
-.setAttribute(
-"content",
-theme.bg
-);
+/* Keep browser/standalone chrome neutral. The app background itself follows the selected palette. */
+document.getElementById("themeColorMeta").setAttribute("content","#f4efe4");
 }
 function renderDateStrip(){
 const now=new Date();
@@ -3948,12 +3952,8 @@ document
 .getElementById("settingsGear")
 .classList.remove("hidden");
 renderDateStrip();
-/*
-Create the current Sunday deposit from
-CURRENT calendar month's budget.
-*/
-await ensureCurrentWeekDeposits();
-await ensureSavingsHistory();
+/* Core app data must load even if an optional analytics/backfill task fails. */
+try{await ensureCurrentWeekDeposits()}catch(error){console.error("Current-week deposit sync failed",error)}
 await Promise.all([
 loadCurrentBudget(),
 openBudgetSetup(),
@@ -3963,6 +3963,8 @@ calculateBalances()
 initializeAnalyticsControls();
 initializeSavingsControls();
 await updateAnalytics();
+/* Savings-history backfill is secondary and must never block the app. */
+ensureSavingsHistory().then(()=>updateSavingsAnalytics()).catch(error=>console.error("Savings history sync failed",error));
 /*
 Always open exactly on HOME.
 This runs after the mobile layout has rendered.
@@ -4419,7 +4421,8 @@ document
 document
 .getElementById("budgetHelpButton")
 .onclick=
-()=>{
+async()=>{
+if(!document.getElementById("budgetHelpCopy").innerHTML.trim()){try{await openBudgetSetup()}catch(error){console.error("Budget help setup failed",error)}}
 document
 .getElementById("budgetHelpModal")
 .classList.remove("hidden");
