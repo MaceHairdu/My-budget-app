@@ -1069,6 +1069,33 @@ body{padding-top:env(safe-area-inset-top)}
 #expenseHistoryPanel .history-header-actions{display:grid;grid-template-columns:1fr 1fr;width:148px;gap:6px}
 #expenseHistoryPanel .history-header-actions button{width:100%;min-width:0;height:34px;padding:6px 7px;font-size:.72em;line-height:1}
 }
+
+/* =========================================================
+   V5 — SETTINGS GEAR SAFE-AREA / DESKTOP POSITION FIX
+   ========================================================= */
+#settingsGear,
+.settings-gear {
+  position: fixed !important;
+  z-index: 1400 !important;
+  margin: 0 !important;
+}
+
+@media (max-width: 900px) {
+  #settingsGear,
+  .settings-gear {
+    top: calc(env(safe-area-inset-top, 0px) + 12px) !important;
+    right: 14px !important;
+  }
+}
+
+@media (min-width: 901px) {
+  #settingsGear,
+  .settings-gear {
+    top: 18px !important;
+    right: 18px !important;
+  }
+}
+
 </style>
 </head>
 <body class="theme-cedar font-system">
