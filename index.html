@@ -1070,29 +1070,38 @@ body{padding-top:env(safe-area-inset-top)}
 #expenseHistoryPanel .history-header-actions button{width:100%;min-width:0;height:34px;padding:6px 7px;font-size:.72em;line-height:1}
 }
 
-/* =========================================================
-   V5 — SETTINGS GEAR SAFE-AREA / DESKTOP POSITION FIX
-   ========================================================= */
-#settingsGear,
-.settings-gear {
-  position: fixed !important;
-  z-index: 1400 !important;
-  margin: 0 !important;
+/* v5 settings gear positioning fix */
+.settings-gear{
+  margin:0!important;
 }
 
-@media (max-width: 900px) {
-  #settingsGear,
-  .settings-gear {
-    top: calc(env(safe-area-inset-top, 0px) + 12px) !important;
-    right: 14px !important;
+@media(max-width:900px){
+  .settings-gear{
+    position:fixed!important;
+    top:calc(env(safe-area-inset-top, 0px) + 10px)!important;
+    right:14px!important;
+    width:38px!important;
+    height:38px!important;
+    z-index:2500!important;
+  }
+
+  /* Leave the top-right corner clear for the settings control. */
+  .workspace-panel .panel-inner{
+    padding-top:34px!important;
+  }
+  .home-panel .panel-inner{
+    padding-top:34px!important;
   }
 }
 
-@media (min-width: 901px) {
-  #settingsGear,
-  .settings-gear {
-    top: 18px !important;
-    right: 18px !important;
+@media(min-width:901px){
+  .settings-gear{
+    position:fixed!important;
+    top:5px!important;
+    right:10px!important;
+    width:32px!important;
+    height:32px!important;
+    z-index:2500!important;
   }
 }
 
