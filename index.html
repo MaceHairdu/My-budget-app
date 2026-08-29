@@ -7,11 +7,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Bicycle Budget">
-<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=6">
-<link rel="apple-touch-icon-precomposed" sizes="180x180" href="./apple-touch-icon.png?v=6">
-<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png?v=6">
-<link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png?v=6">
-<link rel="manifest" href="./manifest.webmanifest?v=6">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v6.png">
+<link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon-v6.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192-v6.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512-v6.png">
+<link rel="manifest" href="manifest-v6.webmanifest">
+<link rel="shortcut icon" href="icon-192-v6.png">
 <title>Bicycle Budget</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1105,6 +1106,63 @@ body{padding-top:env(safe-area-inset-top)}
   }
 }
 
+
+/* v6 mobile layout, home cards, settings navigation, and controls */
+.category-hint{margin-top:-8px;margin-bottom:10px}
+.settings-detail-back{display:inline-flex;align-items:center;width:auto;margin:0 0 14px;padding:8px 13px}
+.current-budget-nav{display:grid;grid-template-columns:40px minmax(0,1fr) 40px;gap:8px;align-items:center;margin-bottom:8px}.current-budget-nav .subtext{text-align:center;font-size:.92em}
+.fund-card{cursor:pointer}
+.fund-card .home-expenses{pointer-events:none!important}
+.fund-card:active{transform:translateY(2px)}
+
+@media(max-width:900px){
+  html,body{height:100dvh;padding:0!important}
+  body{padding-top:0!important}
+  #mainWorkspace{height:100dvh!important;padding:0!important}
+  .mobile-track{height:100dvh!important}
+  .workspace-panel{
+    height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 16px)!important;
+    margin-top:calc(env(safe-area-inset-top,0px) + 8px)!important;
+    margin-bottom:calc(env(safe-area-inset-bottom,0px) + 8px)!important;
+  }
+  .workspace-panel .panel-inner{
+    padding:34px 15px calc(34px + env(safe-area-inset-bottom,0px))!important;
+  }
+  .home-panel .panel-inner{
+    padding:34px 15px calc(16px + env(safe-area-inset-bottom,0px))!important;
+    overflow:hidden!important;
+  }
+  .settings-gear{
+    top:calc(env(safe-area-inset-top,0px) + 18px)!important;
+    right:38px!important;
+    width:36px!important;
+    height:36px!important;
+  }
+  #expenseHistoryPanel .panel-header{padding-right:50px!important}
+  #expenseHistoryPanel .history-header-actions{
+    display:grid!important;
+    grid-template-columns:64px 96px!important;
+    width:166px!important;
+    gap:6px!important;
+  }
+  #expenseHistoryPanel .history-header-actions button{height:36px!important;line-height:1!important;padding:6px 8px!important;white-space:nowrap!important}
+  #expenseHistoryPanel #addExpenseButton{width:96px!important;min-width:96px!important}
+  .settings-shell{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+  .settings-back{top:calc(env(safe-area-inset-top,0px) + 12px)!important;left:16px!important}
+  .settings{height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))!important}
+}
+@media(min-width:901px){
+  .settings-gear{right:20px!important;top:14px!important}
+}
+
+
+/* v7 expense-history activity cleanup */
+#expenseHistoryPanel .transaction{border-bottom:0!important;border-radius:0!important;padding-left:5px;padding-right:5px}
+#expenseHistoryPanel .transaction.same-day-follow{border-top:1px solid color-mix(in srgb,var(--text) 30%,transparent)!important}
+#expenseHistoryPanel .transaction.adjustment-row{cursor:default}
+#expenseHistoryPanel .transaction.adjustment-row:hover{background:transparent}
+.transaction-amount.positive,.home-expense-amount.positive{font-weight:1000}
+
 </style>
 </head>
 <body class="theme-cedar font-system">
@@ -1262,15 +1320,13 @@ Dollar values below show how much Fun Money each profile spent during the select
 </div>
 <div class="home-funds">
 <div class="card fund-card" id="needsFundCard">
-<button class="fund-label fund-expand-trigger" type="button" data-fund-card="needsFundCard">Needs</button>
-<button class="fund-expand-close hidden" type="button" aria-label="Collapse Needs">×</button>
+<div class="fund-label">Needs</div>
 <div class="fund-period">Current Balance</div>
 <div class="balance" id="needsBalance">$0.00</div>
 <div class="home-expenses" id="homeNeedsExpenses"></div>
 </div>
 <div class="card fund-card" id="funFundCard">
-<button class="fund-label fund-expand-trigger" type="button" data-fund-card="funFundCard">Fun Money</button>
-<button class="fund-expand-close hidden" type="button" aria-label="Collapse Fun Money">×</button>
+<div class="fund-label">Fun Money</div>
 <div class="fund-period" id="funProfileLabel">Current Balance</div>
 <div class="balance" id="funBalance">$0.00</div>
 <div class="home-expenses" id="homeFunExpenses"></div>
@@ -1281,7 +1337,7 @@ Dollar values below show how much Fun Money each profile spent during the select
 <section class="panel workspace-panel" id="currentBudgetPanel">
 <div class="panel-inner">
 <h1 class="screen-title">Current Budget</h1>
-<div class="subtext" id="currentBudgetMonth"></div>
+<div class="current-budget-nav"><button class="secondary-button small-button" id="currentBudgetPrev" type="button">‹</button><div class="subtext" id="currentBudgetMonth"></div><button class="secondary-button small-button" id="currentBudgetNext" type="button">›</button></div>
 <div class="warning-note hidden" id="currentFiveWeekWarning"></div>
 <div class="card" style="padding:17px;margin-top:16px">
 <div class="budget-summary" id="currentBudgetSummary"></div>
@@ -1364,6 +1420,7 @@ Save Budget
 <button class="danger-button" id="settingsLogoutButton" style="width:100%;margin-top:5px">Log Out</button>
 </div></div>
 <div class="settings-view" id="settingsDetailView">
+<button class="settings-detail-back secondary-button" id="settingsDetailBackButton" type="button">‹ Settings</button>
 <h1 class="settings-page-title" id="settingsTitle">Settings</h1><div class="settings-page-profile subtext" id="settingsProfileName"></div>
 <div id="appearanceSettings" class="hidden">
 <div class="card settings-card"><h2>Theme</h2><div class="theme-grid" id="themeGrid"></div></div>
@@ -1416,17 +1473,9 @@ Close
 <option value="fun">Fun Money</option>
 </select>
 <label>Category</label>
-<select id="expenseCategory">
-<option value="Groceries">Groceries</option>
-<option value="Gas">Gas</option>
-<option value="Dining">Dining</option>
-<option value="Bill">Bill</option>
-<option value="Shopping">Shopping</option>
-<option value="Entertainment">Entertainment</option>
-<option value="Transportation">Transportation</option>
-<option value="Medical">Medical</option>
-<option value="Other">Other</option>
-</select>
+<input id="expenseCategory" list="expenseCategoryOptions" autocomplete="off" placeholder="Choose or type a new category">
+<datalist id="expenseCategoryOptions"></datalist>
+<div class="subtext category-hint">Type a new category name to create it.</div>
 <label>Date</label>
 <input id="expenseDate" type="date">
 <div class="modal-actions">
@@ -1451,7 +1500,7 @@ Close
 </div>
 </div>
 <div class="modal-overlay hidden" id="expenseFilterModal"><div class="card modal-card"><h2>Filter Expense History</h2><label>Expense / Profile</label><select id="expenseFilterType"></select><label>Category</label><select id="expenseFilterCategory"><option value="all">All Categories</option><option>Groceries</option><option>Gas</option><option>Dining</option><option>Bill</option><option>Shopping</option><option>Entertainment</option><option>Transportation</option><option>Medical</option><option>Other</option></select><label>Date Filter</label><select id="expenseFilterDateMode"><option value="all">All Dates</option><option value="date">Exact Date</option><option value="month">Month</option><option value="custom">Custom Date Range</option></select><div id="expenseFilterExactWrap" class="hidden"><label>Date</label><input id="expenseFilterExactDate" type="date"></div><div id="expenseFilterMonthWrap" class="hidden"><label>Month</label><input id="expenseFilterMonth" type="month"></div><div id="expenseFilterCustomWrap" class="custom-date-grid hidden"><div><label>Start</label><input id="expenseFilterStart" type="date"></div><div><label>End</label><input id="expenseFilterEnd" type="date"></div></div><div class="modal-actions"><button class="primary-button" id="applyExpenseFilters">Apply Filters</button><button class="secondary-button" id="clearExpenseFilters">Clear</button></div><button class="secondary-button" id="closeExpenseFilters" style="width:100%;margin-top:11px">Cancel</button></div></div>
-<div class="fund-expand-backdrop hidden" id="fundExpandBackdrop"></div>
+
 <div class="modal-overlay hidden" id="categoryHistoryModal"><div class="card modal-card"><h2 id="categoryHistoryTitle">Category Expenses</h2><div class="subtext" id="categoryHistoryRange" style="margin-bottom:12px"></div><div id="categoryHistoryList"></div><button class="secondary-button" id="closeCategoryHistory" style="width:100%;margin-top:16px">Close</button></div></div>
 <div class="toast" id="appToast">Saved</div>
 <script>
@@ -1466,6 +1515,7 @@ let householdId=null;
 let currentProfile=null;
 let profileMap=new Map();
 let activePanelIndex=2;
+let currentBudgetMonthCursor=firstOfMonth(new Date());
 const panels=[
 "analyticsPanel",
 "expenseHistoryPanel",
@@ -1492,6 +1542,7 @@ let allExpenseHistory=[];
 let expenseFilters={type:"all",category:"all",dateMode:"all",exactDate:"",month:"",start:"",end:""};
 let savingsRange="month";
 let savingsMonthCursor=addMonths(firstOfMonth(new Date()),-1);
+const HISTORICAL_BUDGETS={"2026-02-01":{"income":[["Mason's income",3248.37],["Kasey's income",2162.84]],"monthlyBills":[["Mortgage + home insurance",1676.91],["Student Loans",208.1],["Car Insurance (Progressive)",173.0],["Discover (Kasey's Credit Card)",11.13],["Trash",35.0],["Electric bill from previous month",51.0],["Internet",59.9],["Phone bill from previous month",89.28],["Spotify",18.14],["Apple",0.99],["Netflix",8.9],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.0]],"weeklyBills":[],"weekly_needs":300,"weekly_savings":250,"weekly_fun":154.4764097,"perPersonFun":77.23820483,"savedTotal":1000},"2026-03-01":{"income":[["Mason's income",3248.37],["Kasey's income",2162.84]],"monthlyBills":[["Mortgage + home insurance",1878.26],["Student Loans",208.1],["Car Insurance (Progressive)",173.0],["Discover (Kasey's Credit Card)",11.13],["Trash",35.0],["Electric bill from previous month",288.19],["Internet",59.9],["Phone bill from previous month",89.3],["Spotify",18.14],["Apple",0.99],["Netflix",8.9],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.0]],"weeklyBills":[],"weekly_needs":300,"weekly_savings":200,"weekly_fun":103.5420023,"perPersonFun":51.77100115,"savedTotal":800},"2026-04-01":{"income":[["Mason's income",3243.76],["Kasey's income",1886.48]],"monthlyBills":[["Mortgage + home insurance",1880.36],["Student Loans",208.1],["Car Insurance (Progressive)",173.64],["Discover (Kasey's Credit Card)",11.13],["Trash",35.0],["Electric bill from previous month",420.16],["Internet",58.63],["Phone bill from previous month",84.18],["Spotify",18.14],["Apple",0.99],["Netflix",8.9],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.0]],"weeklyBills":[],"weekly_needs":300,"weekly_savings":200,"weekly_fun":9.344073648,"perPersonFun":4.672036824,"savedTotal":1000},"2026-05-01":{"income":[["Mason's income",3243.76],["Kasey's income",2058.45]],"monthlyBills":[["Mortgage + home insurance",1882.47],["Student Loans",208.1],["Car Insurance (Progressive)",173.64],["Discover (Kasey's Credit Card)",11.13],["Trash",35.0],["Electric bill from previous month",206.09],["Internet",58.63],["Phone bill from previous month",89.24],["Spotify",20.27],["Apple",1.98],["Netflix",8.9],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.56]],"weeklyBills":[["Childcare",100]],"weekly_needs":300,"weekly_savings":100,"weekly_fun":95.69390104,"perPersonFun":47.84695052,"savedTotal":400},"2026-06-01":{"income":[["Mason's income",3326.25],["Kasey's income",2299.01],["Mason's CC cash back",65.27]],"monthlyBills":[["Mortgage + home insurance",1884.62],["Student Loans",208.1],["Car Insurance (Progressive)",173.64],["Discover (Kasey's Credit Card)",11.13],["Trash",35.0],["Electric bill from previous month",210.56],["Internet",58.63],["Phone bill from previous month",89.22],["Spotify",20.27],["Apple",1.98],["Netflix",8.9],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.56]],"weeklyBills":[["Childcare",100]],"weekly_needs":300,"weekly_savings":200,"weekly_fun":83.54660529,"perPersonFun":41.77330265,"savedTotal":800},"2026-07-01":{"income":[["Mason's income",3326.24],["Kasey's income",2191.16],["Mason's CC cash back",13.21]],"monthlyBills":[["Mortgage + home insurance",1886.78],["Student Loans",208.1],["Car Insurance (Progressive)",173.64],["Discover (Kasey's Credit Card)",11.13],["Trash",35.0],["Electric bill from previous month",210.26],["Internet",58.63],["Phone bill from previous month",96.76],["Spotify",20.27],["Apple",1.98],["Netflix",10.01],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.56]],"weeklyBills":[["Childcare",100]],"weekly_needs":250,"weekly_savings":200,"weekly_fun":94.32220944,"perPersonFun":47.16110472,"savedTotal":1000},"2026-08-01":{"income":[["Mason's income",3326.25],["Kasey's income",2152.91],["Mason's CC cash back",16.79]],"monthlyBills":[["Mortgage + home insurance",1888.97],["Student Loans",208.1],["Car Insurance (Progressive)",173.64],["Discover (Kasey's Credit Card)",10.66],["Trash",35.0],["Electric bill from previous month",237.42],["Internet",58.63],["Phone bill from previous month",96.76],["Spotify",20.27],["Apple",1.98],["Netflix",10.01],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.56]],"weeklyBills":[["Childcare",100]],"weekly_needs":250,"weekly_savings":200,"weekly_fun":79.69850403,"perPersonFun":39.84925201,"savedTotal":800},"2026-09-01":{"income":[["Mason's income",4989.37],["Kasey's income",2254.95],["Mason's CC cash back",14.41]],"monthlyBills":[["Mortgage + home insurance",1891.17],["Student Loans",208.1],["Car Insurance (Progressive)",173.64],["Discover (Kasey's Credit Card)",10.66],["Trash",35.0],["Electric bill from previous month",327.84],["Internet",58.63],["Phone bill from previous month",96.8],["Spotify",20.27],["Apple",1.98],["Netflix",10.01],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.56]],"weeklyBills":[["Childcare",100]],"weekly_needs":275,"weekly_savings":400,"weekly_fun":106.232,"perPersonFun":53.116,"savedTotal":2000}};
 let settingsSwitchTarget=null;
 let toastTimer=null;
 const themeData={
@@ -2148,153 +2199,77 @@ if(error)throw error;
 }
 async function ensureSavingsHistory(){const {data:plans,error}=await supabaseClient.from("budget_plans").select("budget_month,weekly_savings").eq("household_id",householdId);if(error)throw error;const currentWeek=weekStart(new Date());for(const plan of plans||[]){const month=new Date(`${plan.budget_month}T00:00:00`),amount=Number(plan.weekly_savings||0);for(const ws of getBudgetWeeks(month)){if(ws>currentWeek)continue;const {error:e}=await supabaseClient.from("allowance_deposits").upsert({household_id:householdId,week_start:dateOnly(ws),fund:"savings",amount},{onConflict:"household_id,week_start,fund",ignoreDuplicates:true});if(e)throw e}}}
 async function loadCurrentBudget(){
-const month=
-activeBudgetMonth();
-const monthKey=
-dateOnly(month);
-document
-.getElementById("currentBudgetMonth")
-.textContent=
-month.toLocaleDateString(
-"en-US",
-{
-month:"long",
-year:"numeric"
-}
-);
-const weeks=
-getBudgetWeekCount(month);
-const warning=
-document.getElementById(
-"currentFiveWeekWarning"
-);
-if(weeks===5){
-warning.textContent=
-`${month.toLocaleDateString("en-US",{month:"long"})} has 5 budget weeks.`;
-warning.classList.remove("hidden");
-}else{
-warning.classList.add("hidden");
-}
-const [
-{data:plan,error:planError},
-{data:items,error:itemError},
-{data:allocations,error:allocationError}
-]=
-await Promise.all([
-supabaseClient
-.from("budget_plans")
-.select("*")
-.eq("household_id",householdId)
-.eq("budget_month",monthKey)
-.maybeSingle(),
-supabaseClient
-.from("budget_items")
-.select("*")
-.eq("household_id",householdId)
-.eq("budget_month",monthKey),
-supabaseClient
-.from("budget_profile_allocations")
-.select("*")
-.eq("household_id",householdId)
-.eq("budget_month",monthKey)
+const month=currentBudgetMonthCursor||activeBudgetMonth();
+const monthKey=dateOnly(month);
+document.getElementById("currentBudgetMonth").textContent=month.toLocaleDateString("en-US",{month:"long",year:"numeric"});
+const weeks=getBudgetWeekCount(month);
+const warning=document.getElementById("currentFiveWeekWarning");
+if(weeks===5){warning.textContent=`${month.toLocaleDateString("en-US",{month:"long"})} has 5 budget weeks.`;warning.classList.remove("hidden")}else warning.classList.add("hidden");
+
+const historical=HISTORICAL_BUDGETS[monthKey]||null;
+const [{data:dbPlan,error:planError},{data:dbItems,error:itemError},{data:allocations,error:allocationError}]=await Promise.all([
+supabaseClient.from("budget_plans").select("*").eq("household_id",householdId).eq("budget_month",monthKey).maybeSingle(),
+supabaseClient.from("budget_items").select("*").eq("household_id",householdId).eq("budget_month",monthKey),
+supabaseClient.from("budget_profile_allocations").select("*").eq("household_id",householdId).eq("budget_month",monthKey)
 ]);
-if(
-planError||
-itemError||
-allocationError
-){
-throw(
-planError||
-itemError||
-allocationError
-);
-}
-const box=
-document.getElementById("currentBudgetSummary");
-if(!plan){
-box.innerHTML=
-`<p class="subtext">No saved budget exists for this month.</p>`;
+if(planError||itemError||allocationError)throw(planError||itemError||allocationError);
+
+if(!dbPlan&&!historical){
+document.getElementById("currentBudgetSummary").innerHTML=`<p class="subtext">No saved budget exists for this month.</p>`;
 return;
 }
-const income=
-(items||[])
-.filter(x=>x.item_type==="income")
-.reduce(
-(sum,x)=>
-sum+
-Number(x.amount||0),
-0
-);
-const monthlyBills=
-(items||[])
-.filter(x=>x.item_type==="monthly_bill")
-.reduce(
-(sum,x)=>
-sum+
-Math.abs(Number(x.amount||0)),
-0
-);
-const weeklyBills=
-(items||[])
-.filter(x=>x.item_type==="weekly_bill")
-.reduce(
-(sum,x)=>
-sum+
-Math.abs(Number(x.amount||0)),
-0
-);
-const rows=[];
-const hasSnapshotItems=Boolean((items||[]).length);
-rows.push(["Total Income",hasSnapshotItems?money(income):"Historical details unavailable"]);
-rows.push(["Total Monthly Bills",hasSnapshotItems?`-${money(monthlyBills)}`:"Historical details unavailable"]);
-rows.push(["Total Weekly Bills",hasSnapshotItems?`-${money(weeklyBills)}/week`:"Historical details unavailable"]);
-rows.push(
-[
-"Weekly Needs",
-`${money(plan.weekly_needs)}/week`
-]
-);
-rows.push(
-[
-"Weekly Savings",
-`${money(plan.weekly_savings)}/week`
-]
-);
-rows.push(
-[
-"Total Fun Money",
-`${money(plan.weekly_fun)}/week`
-]
-);
-(allocations||[]).forEach(
-allocation=>{
-const profile=
-profileMap.get(
-allocation.profile_id
-);
-rows.push(
-[
-`${profile?.display_name||"Profile"}'s Fun Money`,
-`${money(
-allocation.weekly_fun_amount ??
-allocation.weekly_amount ??
-0
-)}/week`
-]
-);
+
+const plan=dbPlan||historical;
+let incomeItems=(dbItems||[]).filter(x=>x.item_type==="income").map(x=>[x.name,Math.abs(Number(x.amount||0))]);
+let monthlyBillItems=(dbItems||[]).filter(x=>x.item_type==="monthly_bill").map(x=>[x.name,Math.abs(Number(x.amount||0))]);
+let weeklyBillItems=(dbItems||[]).filter(x=>x.item_type==="weekly_bill").map(x=>[x.name,Math.abs(Number(x.amount||0))]);
+if(!incomeItems.length&&historical)incomeItems=historical.income;
+if(!monthlyBillItems.length&&historical)monthlyBillItems=historical.monthlyBills;
+if(!weeklyBillItems.length&&historical)weeklyBillItems=historical.weeklyBills;
+
+const income=incomeItems.reduce((s,x)=>s+Number(x[1]||0),0);
+const monthlyBills=monthlyBillItems.reduce((s,x)=>s+Number(x[1]||0),0);
+const weeklyBills=weeklyBillItems.reduce((s,x)=>s+Number(x[1]||0),0);
+const weeklyNeeds=Number(plan.weekly_needs||0);
+const weeklySavings=Number(plan.weekly_savings||0);
+const weeklyFun=Number(plan.weekly_fun||0);
+const rows=[
+["Total Income",money(income)],
+["Total Monthly Bills",`-${money(monthlyBills)}`],
+["Total Weekly Bills",`-${money(weeklyBills)}/week`],
+["Weekly Needs",`${money(weeklyNeeds)}/week`],
+["Weekly Savings",`${money(weeklySavings)}/week`],
+["Total Fun Money",`${money(weeklyFun)}/week`],
+["Planned Needs This Month",money(weeklyNeeds*weeks)],
+["Planned Savings This Month",money(weeklySavings*weeks)],
+["Planned Fun Money This Month",money(weeklyFun*weeks)]
+];
+
+const allocationRows=[];
+if((allocations||[]).length){
+for(const allocation of allocations){
+const profile=profileMap.get(allocation.profile_id);
+allocationRows.push([`${profile?.display_name||"Profile"}'s Fun Money`,`${money(allocation.weekly_fun_amount??allocation.weekly_amount??0)}/week`]);
 }
-);
-box.innerHTML=
-rows
-.map(
-([name,value])=>`
-<div class="budget-summary-row">
-<span>${escapeHtml(name)}</span>
-<strong>${escapeHtml(value)}</strong>
-</div>
-`
-)
-.join("");
+}else if(historical){
+const names=[...profileMap.values()].map(p=>p.display_name);
+if(names.length>=2){
+allocationRows.push([`${names[0]}'s Fun Money`,`${money(historical.perPersonFun)}/week`],[`${names[1]}'s Fun Money`,`${money(historical.perPersonFun)}/week`]);
+}else{
+allocationRows.push(["Each person's Fun Money",`${money(historical.perPersonFun)}/week`]);
+}
+}
+rows.push(...allocationRows);
+
+const detailSection=(title,list,isBill=false,weekly=false)=>list.length?`
+<div style="margin-top:16px"><strong>${escapeHtml(title)}</strong></div>
+${list.map(([name,amount])=>`<div class="budget-summary-row"><span>${escapeHtml(name)}</span><strong>${isBill?"-":""}${money(amount)}${weekly?"/week":""}</strong></div>`).join("")}`:"";
+
+const box=document.getElementById("currentBudgetSummary");
+box.innerHTML=rows.map(([name,value])=>`<div class="budget-summary-row"><span>${escapeHtml(name)}</span><strong>${escapeHtml(value)}</strong></div>`).join("")
++detailSection("Income",incomeItems,false,false)
++detailSection("Monthly Bills",monthlyBillItems,true,false)
++detailSection("Weekly Bills",weeklyBillItems,true,true);
 }
 async function determinePreparationMonth(){
 const current=
@@ -3055,41 +3030,57 @@ alert(
 }
 }
 function expenseMeta(item){
-const profile=
-profileMap.get(
-item.profile_id
-);
+const profile=profileMap.get(item.profile_id);
+if(item.activity_type==="adjustment"){
+const addedBy=profile?`Added by ${profile.display_name}`:"Added funds";
+return [item.fund==="fun"?`${profile?.display_name||"Profile"} Fun Money`:"Needs",addedBy,new Date(item.spent_at).toLocaleDateString()].join(" · ");
+}
 if(item.fund==="fun"){
-return[
-item.category||"Other",
-`${profile?.display_name||"Unknown"} Fun Money`,
-new Date(item.spent_at).toLocaleDateString()
-].join(" · ");
+return[item.category||"Other",`${profile?.display_name||"Unknown"} Fun Money`,new Date(item.spent_at).toLocaleDateString()].join(" · ");
 }
-const addedBy=
-profile
-?`Added by ${profile.display_name}`
-:"Historical";
-return[
-item.category||"Other",
-"Needs",
-addedBy,
-new Date(item.spent_at).toLocaleDateString()
-].join(" · ");
+const addedBy=profile?`Added by ${profile.display_name}`:"Historical";
+return[item.category||"Other","Needs",addedBy,new Date(item.spent_at).toLocaleDateString()].join(" · ");
 }
-function expenseDateKey(item){return String(item.spent_at||"").slice(0,10)}
+function expenseDateKey(item){return String(item.spent_at||item.adjusted_at||"").slice(0,10)}
 function prettyHistoryDate(key){const d=new Date(`${key}T12:00:00`);return d.toLocaleDateString("en-US",{weekday:"long",month:"numeric",day:"numeric",year:"2-digit"})}
 function applyExpenseFiltersToItems(items){return (items||[]).filter(item=>{const t=expenseFilters.type||"all";if(t!=="all"){if(t==="needs"&&item.fund!=="needs")return false;if(t==="fun"&&item.fund!=="fun")return false;if(t.startsWith("fun:")){const id=t.slice(4);if(item.fund!=="fun"||item.profile_id!==id)return false}if(t.startsWith("allprofile:")){if(item.profile_id!==t.slice(11))return false}if(t.startsWith("needsprofile:")){if(item.fund!=="needs"||item.profile_id!==t.slice(13))return false}}if(expenseFilters.category!=="all"&&(item.category||"Other")!==expenseFilters.category)return false;const k=expenseDateKey(item);if(expenseFilters.dateMode==="date"&&expenseFilters.exactDate&&k!==expenseFilters.exactDate)return false;if(expenseFilters.dateMode==="month"&&expenseFilters.month&&!k.startsWith(expenseFilters.month))return false;if(expenseFilters.dateMode==="custom"){if(expenseFilters.start&&k<expenseFilters.start)return false;if(expenseFilters.end&&k>expenseFilters.end)return false}return true})}
-function renderExpenseHistory(items){const box=document.getElementById("transactions");box.innerHTML="";if(!items?.length){box.innerHTML='<p class="subtext">No expenses match these filters.</p>';return}let last="";items.forEach(item=>{const key=expenseDateKey(item);if(key!==last){const sep=document.createElement("div");sep.className="history-date-separator";sep.textContent=prettyHistoryDate(key);box.appendChild(sep);last=key}const row=document.createElement("div");row.className="transaction clickable";row.innerHTML=`<div class="transaction-main"><div class="transaction-name">${escapeHtml(item.description)}</div><div class="transaction-meta">${escapeHtml(expenseMeta(item))}</div></div><div class="transaction-amount">-${money(item.amount)}</div>`;row.onclick=()=>editExpense(item.id);box.appendChild(row)})}
+function renderExpenseHistory(items){
+const box=document.getElementById("transactions");box.innerHTML="";
+if(!items?.length){box.innerHTML='<p class="subtext">No activity matches these filters.</p>';return}
+let last="";
+items.forEach(item=>{
+const key=expenseDateKey(item),sameDay=key===last;
+if(!sameDay){const sep=document.createElement("div");sep.className="history-date-separator";sep.textContent=prettyHistoryDate(key);box.appendChild(sep)}
+const isAdjustment=item.activity_type==="adjustment";
+const row=document.createElement("div");
+row.className=`transaction ${isAdjustment?"adjustment-row":"clickable"} ${sameDay?"same-day-follow":""}`;
+row.innerHTML=`<div class="transaction-main"><div class="transaction-name">${escapeHtml(item.description)}</div><div class="transaction-meta">${escapeHtml(expenseMeta(item))}</div></div><div class="transaction-amount ${isAdjustment?"positive":""}">${isAdjustment?"+":"-"}${money(item.amount)}</div>`;
+if(!isAdjustment)row.onclick=()=>editExpense(item.id);
+box.appendChild(row);last=key;
+});
+}
 function expenseFilterSummaryText(){const parts=[];const t=expenseFilters.type;if(t&&t!=="all"){if(t==="needs")parts.push("Needs");else if(t==="fun")parts.push("Fun Money");else{const [kind,id]=t.split(":");const name=profileMap.get(id)?.display_name||"Profile";parts.push(kind==="fun"?`${name} Fun Money`:kind==="needsprofile"?`Needs entered by ${name}`:`All inputs by ${name}`)}}if(expenseFilters.category!=="all")parts.push(expenseFilters.category);if(expenseFilters.dateMode==="date"&&expenseFilters.exactDate)parts.push(expenseFilters.exactDate);if(expenseFilters.dateMode==="month"&&expenseFilters.month)parts.push(expenseFilters.month);if(expenseFilters.dateMode==="custom")parts.push(`${expenseFilters.start||"…"} to ${expenseFilters.end||"…"}`);return parts.join(" · ")}
 function refreshExpenseHistory(){renderExpenseHistory(applyExpenseFiltersToItems(allExpenseHistory));const el=document.getElementById("expenseFilterSummary"),txt=expenseFilterSummaryText();el.textContent=txt?`Filtered: ${txt}`:"";el.classList.toggle("hidden",!txt)}
-function renderExpenseFilterTypeOptions(){const select=document.getElementById("expenseFilterType");let html='<option value="all">All Expenses</option><option value="needs">Needs</option><option value="fun">All Fun Money</option>';for(const p of profileMap.values()){const n=escapeHtml(p.display_name);html+=`<option value="fun:${p.id}">${n} Fun Money</option><option value="allprofile:${p.id}">All inputs by ${n}</option><option value="needsprofile:${p.id}">Needs input by ${n}</option>`}select.innerHTML=html;select.value=expenseFilters.type||"all"}
+function renderExpenseFilterTypeOptions(){const select=document.getElementById("expenseFilterType");let html='<option value="all">All Activity</option><option value="needs">Needs</option><option value="fun">All Fun Money</option>';for(const p of profileMap.values()){const n=escapeHtml(p.display_name);html+=`<option value="fun:${p.id}">${n} Fun Money</option><option value="allprofile:${p.id}">All inputs by ${n}</option><option value="needsprofile:${p.id}">Needs input by ${n}</option>`}select.innerHTML=html;select.value=expenseFilters.type||"all"}
 function updateExpenseFilterDateFields(){const m=document.getElementById("expenseFilterDateMode").value;document.getElementById("expenseFilterExactWrap").classList.toggle("hidden",m!=="date");document.getElementById("expenseFilterMonthWrap").classList.toggle("hidden",m!=="month");document.getElementById("expenseFilterCustomWrap").classList.toggle("hidden",m!=="custom")}
-function openExpenseFilters(){renderExpenseFilterTypeOptions();document.getElementById("expenseFilterCategory").value=expenseFilters.category;document.getElementById("expenseFilterDateMode").value=expenseFilters.dateMode;document.getElementById("expenseFilterExactDate").value=expenseFilters.exactDate;document.getElementById("expenseFilterMonth").value=expenseFilters.month;document.getElementById("expenseFilterStart").value=expenseFilters.start;document.getElementById("expenseFilterEnd").value=expenseFilters.end;updateExpenseFilterDateFields();document.getElementById("expenseFilterModal").classList.remove("hidden")}
+function getKnownCategories(){const defaults=["Groceries","Gas","Dining","Bill","Shopping","Entertainment","Transportation","Medical","Other"];const custom=(allExpenseHistory||[]).filter(x=>x.activity_type!=="adjustment").map(x=>(x.category||"").trim()).filter(Boolean);return [...new Set([...defaults,...custom])].sort((a,b)=>a.localeCompare(b))}
+function refreshCategoryControls(){const cats=getKnownCategories();const list=document.getElementById("expenseCategoryOptions");if(list)list.innerHTML=cats.map(c=>`<option value="${escapeHtml(c)}"></option>`).join("");const filter=document.getElementById("expenseFilterCategory");if(filter){const keep=filter.value||expenseFilters.category||"all";filter.innerHTML='<option value="all">All Categories</option><option value="Added Funds">Added Funds</option>'+cats.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");filter.value=(cats.includes(keep)||keep==="all"||keep==="Added Funds")?keep:"all"}}
+function openExpenseFilters(){renderExpenseFilterTypeOptions();refreshCategoryControls();document.getElementById("expenseFilterCategory").value=expenseFilters.category;document.getElementById("expenseFilterDateMode").value=expenseFilters.dateMode;document.getElementById("expenseFilterExactDate").value=expenseFilters.exactDate;document.getElementById("expenseFilterMonth").value=expenseFilters.month;document.getElementById("expenseFilterStart").value=expenseFilters.start;document.getElementById("expenseFilterEnd").value=expenseFilters.end;updateExpenseFilterDateFields();document.getElementById("expenseFilterModal").classList.remove("hidden")}
 function closeExpenseFilters(){document.getElementById("expenseFilterModal").classList.add("hidden")}
 function applyExpenseFilterForm(){expenseFilters={type:document.getElementById("expenseFilterType").value,category:document.getElementById("expenseFilterCategory").value,dateMode:document.getElementById("expenseFilterDateMode").value,exactDate:document.getElementById("expenseFilterExactDate").value,month:document.getElementById("expenseFilterMonth").value,start:document.getElementById("expenseFilterStart").value,end:document.getElementById("expenseFilterEnd").value};closeExpenseFilters();refreshExpenseHistory()}
 function clearExpenseFilterForm(){expenseFilters={type:"all",category:"all",dateMode:"all",exactDate:"",month:"",start:"",end:""};closeExpenseFilters();refreshExpenseHistory()}
-async function loadExpenses(){await loadProfiles();const {data,error}=await supabaseClient.from("expenses").select("*").eq("household_id",householdId).order("spent_at",{ascending:false}).limit(1000);if(error)throw error;allExpenseHistory=data||[];refreshExpenseHistory()}
+async function loadExpenses(){
+await loadProfiles();
+const [{data:expenses,error:expenseError},{data:adjustments,error:adjustmentError}]=await Promise.all([
+supabaseClient.from("expenses").select("*").eq("household_id",householdId).order("spent_at",{ascending:false}).limit(1000),
+supabaseClient.from("fund_adjustments").select("*").eq("household_id",householdId).order("adjusted_at",{ascending:false}).limit(1000)
+]);
+if(expenseError||adjustmentError)throw(expenseError||adjustmentError);
+const expenseActivities=(expenses||[]).map(x=>({...x,activity_type:"expense"}));
+const adjustmentActivities=(adjustments||[]).map(x=>({...x,id:`adjustment:${x.id}`,activity_type:"adjustment",category:"Added Funds",spent_at:x.adjusted_at}));
+allExpenseHistory=[...expenseActivities,...adjustmentActivities].sort((a,b)=>new Date(b.spent_at)-new Date(a.spent_at));
+refreshCategoryControls();refreshExpenseHistory();
+}
 function setTransactionTab(tab){
 activeTransactionTab=tab;
 document
@@ -3122,6 +3113,7 @@ fund="needs",
 expense=null,
 allowTabs=true
 ){
+refreshCategoryControls();
 transactionFund=
 expense?.fund||fund;
 editingExpenseId=
@@ -3245,7 +3237,7 @@ document
 const category=
 document
 .getElementById("expenseCategory")
-.value;
+.value.trim()||"Other";
 const date=
 document
 .getElementById("expenseDate")
@@ -3380,6 +3372,7 @@ return;
 }
 closeTransactionModal();
 await Promise.all([
+loadExpenses(),
 calculateBalances(),
 updateAnalytics()
 ]);
@@ -3486,8 +3479,25 @@ fun<0
 );
 await loadHomeExpenseLists();
 }
-async function loadHomeExpenseLists(){const start=weekStart(new Date()).toISOString();const [{data:needs},{data:fun}]=await Promise.all([supabaseClient.from("expenses").select("description,amount,spent_at").eq("household_id",householdId).eq("fund","needs").gte("spent_at",start).order("spent_at",{ascending:true}),supabaseClient.from("expenses").select("description,amount,spent_at").eq("household_id",householdId).eq("fund","fun").eq("profile_id",currentProfile.id).gte("spent_at",start).order("spent_at",{ascending:true})]);renderHomeExpenseList("homeNeedsExpenses",needs);renderHomeExpenseList("homeFunExpenses",fun)}
-function renderHomeExpenseList(id,items){const box=document.getElementById(id);if(!items?.length){box.innerHTML='<div class="empty-home-expenses">No expenses this week.</div>';return}const groups=new Map();for(const item of items){const key=expenseDateKey(item);if(!groups.has(key))groups.set(key,[]);groups.get(key).push(item)}box.innerHTML=[...groups.entries()].map(([key,list])=>{const d=new Date(`${key}T12:00:00`),day=d.toLocaleDateString("en-US",{weekday:"short"}),md=d.toLocaleDateString("en-US",{month:"numeric",day:"numeric"});return `<div class="home-day-group"><div class="home-day-date"><strong>${day}</strong><span>${md}</span></div><div class="home-day-items">${list.map(item=>`<div class="home-expense"><span class="home-expense-name">${escapeHtml(item.description)}</span><span class="home-expense-amount">-${money(item.amount)}</span></div>`).join("")}</div></div>`}).join("")}
+async function loadHomeExpenseLists(){
+const start=weekStart(new Date()).toISOString();
+const [{data:needsExpenses},{data:funExpenses},{data:adjustments,error:adjustmentError}]=await Promise.all([
+supabaseClient.from("expenses").select("description,amount,spent_at").eq("household_id",householdId).eq("fund","needs").gte("spent_at",start).order("spent_at",{ascending:true}),
+supabaseClient.from("expenses").select("description,amount,spent_at").eq("household_id",householdId).eq("fund","fun").eq("profile_id",currentProfile.id).gte("spent_at",start).order("spent_at",{ascending:true}),
+supabaseClient.from("fund_adjustments").select("description,amount,adjusted_at,fund,profile_id").eq("household_id",householdId).gte("adjusted_at",start).order("adjusted_at",{ascending:true})
+]);
+if(adjustmentError)throw adjustmentError;
+const needs=[...(needsExpenses||[]).map(x=>({...x,activity_type:"expense"}),),...(adjustments||[]).filter(x=>x.fund==="needs").map(x=>({...x,spent_at:x.adjusted_at,activity_type:"adjustment"}))].sort((a,b)=>new Date(a.spent_at)-new Date(b.spent_at));
+const fun=[...(funExpenses||[]).map(x=>({...x,activity_type:"expense"})),...(adjustments||[]).filter(x=>x.fund==="fun"&&x.profile_id===currentProfile.id).map(x=>({...x,spent_at:x.adjusted_at,activity_type:"adjustment"}))].sort((a,b)=>new Date(a.spent_at)-new Date(b.spent_at));
+renderHomeExpenseList("homeNeedsExpenses",needs);renderHomeExpenseList("homeFunExpenses",fun);
+}
+function renderHomeExpenseList(id,items){
+const box=document.getElementById(id);
+if(!items?.length){box.innerHTML='<div class="empty-home-expenses">No activity this week.</div>';return}
+const groups=new Map();
+for(const item of items){const key=expenseDateKey(item);if(!groups.has(key))groups.set(key,[]);groups.get(key).push(item)}
+box.innerHTML=[...groups.entries()].map(([key,list])=>{const d=new Date(`${key}T12:00:00`),day=d.toLocaleDateString("en-US",{weekday:"short"}),md=d.toLocaleDateString("en-US",{month:"numeric",day:"numeric"});return `<div class="home-day-group"><div class="home-day-date"><strong>${day}</strong><span>${md}</span></div><div class="home-day-items">${list.map(item=>{const positive=item.activity_type==="adjustment";return `<div class="home-expense"><span class="home-expense-name">${escapeHtml(item.description)}</span><span class="home-expense-amount ${positive?"positive":""}">${positive?"+":"-"}${money(item.amount)}</span></div>`}).join("")}</div></div>`}).join("");
+}
 function expandFundCard(id){const card=document.getElementById(id);if(!card||card.classList.contains("expanded"))return;document.getElementById("fundExpandBackdrop").classList.remove("hidden");card.classList.add("expanded");card.querySelector(".fund-expand-close")?.classList.remove("hidden");}
 function collapseFundCards(){document.querySelectorAll(".fund-card.expanded").forEach(card=>{card.classList.remove("expanded");card.querySelector(".fund-expand-close")?.classList.add("hidden")});document.getElementById("fundExpandBackdrop").classList.add("hidden")}
 function renderAnalyticsMonthLabel(){document.getElementById("analyticsMonthLabel").textContent=analyticsMonthCursor.toLocaleDateString("en-US",{month:"long",year:"numeric"});}
@@ -3711,7 +3721,25 @@ await updateSavingsAnalytics();
 }
 function renderSavingsMonthLabel(){document.getElementById("savingsMonthLabel").textContent=savingsMonthCursor.toLocaleDateString("en-US",{month:"long",year:"numeric"})}
 function savingsDates(){if(savingsRange==="month"){const y=savingsMonthCursor.getFullYear(),m=savingsMonthCursor.getMonth();return{start:new Date(y,m,1),end:new Date(y,m+1,0,23,59,59,999)}}if(savingsRange==="year"){const y=Number(document.getElementById("savingsYearSelect").value);return{start:new Date(y,0,1),end:new Date(y,11,31,23,59,59,999)}}const a=document.getElementById("savingsStartDate").value,b=document.getElementById("savingsEndDate").value;return{start:new Date(`${a}T00:00:00`),end:new Date(`${b}T23:59:59`)}}
-async function updateSavingsAnalytics(){const range=savingsDates();const {data,error}=await supabaseClient.from("allowance_deposits").select("amount,week_start").eq("household_id",householdId).eq("fund","savings");if(error)return;const total=(data||[]).filter(x=>{const d=new Date(`${x.week_start}T12:00:00`);return d>=range.start&&d<=range.end}).reduce((sum,x)=>sum+Number(x.amount||0),0);document.getElementById("analyticsSavings").textContent=money(total);document.getElementById("analyticsSavingsRange").textContent=formatAnalyticsDateRange(range.start,range.end)}
+async function updateSavingsAnalytics(){
+const range=savingsDates();
+const {data,error}=await supabaseClient.from("budget_plans").select("budget_month,weekly_savings").eq("household_id",householdId);
+if(error){console.error("Total Saved load failed",error);return}
+const byMonth=new Map((data||[]).map(p=>[String(p.budget_month).slice(0,10),{budget_month:String(p.budget_month).slice(0,10),weekly_savings:Number(p.weekly_savings||0)}]));
+for(const [key,h] of Object.entries(HISTORICAL_BUDGETS)){if(!byMonth.has(key))byMonth.set(key,{budget_month:key,weekly_savings:Number(h.weekly_savings||0)})}
+let total=0;const now=new Date();
+for(const plan of byMonth.values()){
+const month=new Date(`${plan.budget_month}T12:00:00`), historical=HISTORICAL_BUDGETS[plan.budget_month];
+const amount=Number(historical?.weekly_savings??plan.weekly_savings??0);
+for(const ws of getBudgetWeeks(month)){
+const d=new Date(ws);
+if(d>now)continue;
+if(d>=range.start&&d<=range.end)total+=amount;
+}
+}
+document.getElementById("analyticsSavings").textContent=money(total);
+document.getElementById("analyticsSavingsRange").textContent=formatAnalyticsDateRange(range.start,range.end);
+}
 function initializeSavingsControls(){const now=new Date(),years=document.getElementById("savingsYearSelect");savingsMonthCursor=addMonths(firstOfMonth(now),-1);renderSavingsMonthLabel();years.innerHTML="";for(let y=now.getFullYear();y>=2020;y--){const o=document.createElement("option");o.value=y;o.textContent=y;years.appendChild(o)}const prev=addMonths(firstOfMonth(now),-1);document.getElementById("savingsStartDate").value=`${prev.getFullYear()}-01-01`;document.getElementById("savingsEndDate").value=dateOnly(now)}
 function openCategoryHistory(category){const range=analyticsDates(),items=analyticsFilteredExpenses.filter(x=>(x.category||"Other")===category).sort((a,b)=>new Date(b.spent_at)-new Date(a.spent_at));document.getElementById("categoryHistoryTitle").textContent=category;document.getElementById("categoryHistoryRange").textContent=formatAnalyticsDateRange(range.start,range.end);const box=document.getElementById("categoryHistoryList");box.innerHTML=items.length?items.map(x=>`<div class="transaction category-history-item" data-expense-id="${x.id}"><div class="transaction-main"><div class="transaction-name">${escapeHtml(x.description)}</div><div class="transaction-meta">${escapeHtml(expenseMeta(x))}</div></div><div class="transaction-amount">-${money(x.amount)}</div></div>`).join(""):'<p class="subtext">No expenses in this category for this period.</p>';box.querySelectorAll("[data-expense-id]").forEach(row=>row.onclick=()=>{closeCategoryHistory();editExpense(row.dataset.expenseId)});document.getElementById("categoryHistoryModal").classList.remove("hidden")}
 function closeCategoryHistory(){document.getElementById("categoryHistoryModal").classList.add("hidden")}
@@ -4296,6 +4324,7 @@ document
 document
 .getElementById("settingsBackButton")
 .onclick=()=>settingsBack(true);
+document.getElementById("settingsDetailBackButton").onclick=()=>settingsBack(true);
 document
 .querySelectorAll(
 "[data-settings-section]"
@@ -4454,6 +4483,8 @@ document
 document
 .getElementById("funAllocationInfoModal")
 .onclick=e=>{if(e.target.id==="funAllocationInfoModal")e.currentTarget.classList.add("hidden")};
+document.getElementById("currentBudgetPrev").onclick=async()=>{currentBudgetMonthCursor=addMonths(currentBudgetMonthCursor,-1);await loadCurrentBudget()};
+document.getElementById("currentBudgetNext").onclick=async()=>{const next=addMonths(currentBudgetMonthCursor,1),now=activeBudgetMonth();if(next>now)return;currentBudgetMonthCursor=next;await loadCurrentBudget()};
 document
 .getElementById("budgetHelpButton")
 .onclick=
@@ -4498,9 +4529,6 @@ document.getElementById("applyExpenseFilters").onclick=applyExpenseFilterForm;
 document.getElementById("clearExpenseFilters").onclick=clearExpenseFilterForm;
 document.getElementById("closeExpenseFilters").onclick=closeExpenseFilters;
 document.getElementById("expenseFilterModal").onclick=e=>{if(e.target.id==="expenseFilterModal")closeExpenseFilters()};
-document.querySelectorAll(".fund-expand-trigger").forEach(b=>b.onclick=e=>{e.stopPropagation();expandFundCard(b.dataset.fundCard)});
-document.querySelectorAll(".fund-expand-close").forEach(b=>b.onclick=e=>{e.stopPropagation();collapseFundCards()});
-document.getElementById("fundExpandBackdrop").onclick=collapseFundCards;
 document
 .getElementById("addExpenseButton")
 .onclick=
@@ -4511,8 +4539,8 @@ null,
 false
 );
 };
-document.getElementById("needsFundCard").onclick=e=>{if(e.target.closest(".fund-expand-trigger,.fund-expand-close,.home-expenses")||e.currentTarget.classList.contains("expanded"))return;openTransactionModal("needs",null,true);};
-document.getElementById("funFundCard").onclick=e=>{if(e.target.closest(".fund-expand-trigger,.fund-expand-close,.home-expenses")||e.currentTarget.classList.contains("expanded"))return;openTransactionModal("fun",null,true);};
+document.getElementById("needsFundCard").onclick=()=>openTransactionModal("needs",null,true);
+document.getElementById("funFundCard").onclick=()=>openTransactionModal("fun",null,true);
 document
 .querySelectorAll(
 "[data-transaction-tab]"
