@@ -1304,6 +1304,38 @@ body{padding-top:env(safe-area-inset-top)}
   }
 }
 
+
+/* v12 weekly history, settings, added funds, and palette refinements */
+body:not(.theme-cedar) .date-day.today::before{
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      color-mix(in srgb,var(--accent-edge) 88%,var(--text)) 0 48%,
+      color-mix(in srgb,var(--accent-edge) 78%,var(--text)) 49% 57%,
+      color-mix(in srgb,var(--accent-edge) 66%,var(--text)) 58% 66%,
+      var(--panel) 72%
+    )!important;
+  box-shadow:
+    inset 4px 4px 7px rgba(0,0,0,.26),
+    inset -2px -2px 4px rgba(255,255,255,.12)!important;
+}
+body:not(.theme-cedar) .date-day.today span{
+  color:var(--panel)!important;
+  text-shadow:0 1px 1px rgba(0,0,0,.32);
+}
+.week-history-amount{
+  display:flex;
+  align-items:baseline;
+  justify-content:flex-end;
+  gap:5px;
+}
+.week-history-value-label{
+  color:var(--muted);
+  font-size:.72em;
+  font-weight:800;
+}
+.adjustment-row.clickable{cursor:pointer}
+
 </style>
 </head>
 <body class="theme-cedar font-system">
@@ -1559,6 +1591,7 @@ Save Budget
 <section class="settings-shell" id="settingsScreen">
 <div class="settings"><div class="settings-stage" id="settingsStage">
 <div class="settings-view" id="settingsMenuView">
+<button class="settings-detail-back secondary-button" id="settingsMainBackButton" type="button">Back</button>
 <h1 class="settings-page-title">Settings</h1><div class="settings-page-profile subtext" id="settingsMenuProfileName"></div>
 <div id="settingsMenu">
 <button class="folder-button" data-settings-section="appearance"><span>Appearance</span><span>›</span></button>
@@ -1661,8 +1694,9 @@ Close
 <input id="fundAdjustmentDate" type="date">
 <div class="modal-actions">
 <button class="primary-button" id="saveFundAdjustmentButton">Add Funds</button>
-<button class="secondary-button" id="cancelFundAdjustmentButton">Cancel</button>
+<button class="danger-button hidden" id="deleteFundAdjustmentButton">Delete</button>
 </div>
+<button class="secondary-button" id="cancelFundAdjustmentButton" style="width:100%;margin-top:11px">Cancel</button>
 </div>
 </div>
 </div>
@@ -1673,6 +1707,7 @@ Close
 <script>
 const SUPABASE_URL="https://jivygwszzlaxnhhvxxsg.supabase.co";
 const SUPABASE_KEY="sb_publishable_cZM-7AaU0xD6L_fMa_foOw_-Cjk2edj";
+const LEGACY_SOFT_BUDGET_HOUSEHOLD_ID="867756f0-0daf-41a8-96e5-48f50e395c2a";
 const supabaseClient=window.supabase.createClient(
 SUPABASE_URL,
 SUPABASE_KEY
@@ -1698,6 +1733,7 @@ let selectedNewPinLength=4;
 let moneyEditorKind=null;
 let moneyEditorId=null;
 let editingExpenseId=null;
+let editingAdjustmentId=null;
 let transactionFund="needs";
 let activeTransactionTab="expense";
 let preparedBudgetPlan=null;
@@ -2346,11 +2382,57 @@ const {data:plan,error:planError}=await supabaseClient
 if(planError)throw planError;
 if(!plan)return;
 
-/*
-The current week may begin in the previous calendar month.
-Use an updating upsert so a deposit created under the previous
-month's budget is corrected to the budget actually owning this week.
-*/
+const [{data:profiles,error:profilesError},{data:allocations,error:allocationError}]=await Promise.all([
+supabaseClient.from("profiles").select("id,display_name").eq("household_id",householdId).order("created_at"),
+supabaseClient.from("budget_profile_allocations").select("id,profile_id,weekly_fun_amount,weekly_amount").eq("household_id",householdId).eq("budget_month",monthKey)
+]);
+if(profilesError||allocationError)throw(profilesError||allocationError);
+
+const poolCents=Math.max(0,Math.floor(Number(plan.weekly_fun||0)*100+0.0000001));
+let normalized=(allocations||[]).map(row=>({
+...row,
+amount:Number(row.weekly_fun_amount??row.weekly_amount??0)
+}));
+
+const allocationCents=normalized.map(x=>Math.round(x.amount*100));
+const assignedBefore=allocationCents.reduce((s,x)=>s+x,0);
+const nearlyEqual=allocationCents.length>1 &&
+(Math.max(...allocationCents)-Math.min(...allocationCents)<=1);
+const needsEqualRepair=
+normalized.length!==profiles.length ||
+!normalized.length ||
+(assignedBefore>poolCents && nearlyEqual);
+
+if(needsEqualRepair){
+const eachCents=profiles.length?Math.floor(poolCents/profiles.length):0;
+normalized=(profiles||[]).map(profile=>{
+const existing=(allocations||[]).find(a=>a.profile_id===profile.id);
+return{
+id:existing?.id||null,
+profile_id:profile.id,
+amount:eachCents/100
+};
+});
+}
+
+for(const allocation of normalized){
+if(!allocation.id)continue;
+const {error:updateError}=await supabaseClient
+.from("budget_profile_allocations")
+.update({
+weekly_fun_amount:allocation.amount,
+weekly_amount:allocation.amount,
+updated_at:new Date().toISOString()
+})
+.eq("id",allocation.id);
+if(updateError)throw updateError;
+}
+
+const assignedCents=normalized.reduce((sum,x)=>sum+Math.round(Number(x.amount||0)*100),0);
+const leftoverFunCents=Math.max(0,poolCents-assignedCents);
+const savingsAmount=
+(Math.round(Number(plan.weekly_savings||0)*100)+leftoverFunCents)/100;
+
 const {error:needsError}=await supabaseClient
 .from("allowance_deposits")
 .upsert({
@@ -2369,67 +2451,48 @@ const {error:savingsError}=await supabaseClient
 household_id:householdId,
 week_start:ws,
 fund:"savings",
-amount:Number(plan.weekly_savings||0)
+amount:savingsAmount
 },{
 onConflict:"household_id,week_start,fund"
 });
 if(savingsError)throw savingsError;
 
-const {data:allocations,error:allocationError}=await supabaseClient
-.from("budget_profile_allocations")
-.select("id,profile_id,weekly_fun_amount,weekly_amount")
+async function writeFunDeposit(profileId,amount){
+const {data:existing,error:readError}=await supabaseClient
+.from("profile_fun_deposits")
+.select("id")
 .eq("household_id",householdId)
-.eq("budget_month",monthKey);
-if(allocationError)throw allocationError;
+.eq("profile_id",profileId)
+.eq("week_start",ws)
+.maybeSingle();
+if(readError)throw readError;
 
-let normalized=(allocations||[]).map(row=>({
-...row,
-amount:Number(row.weekly_fun_amount??row.weekly_amount??0)
-}));
-
-/*
-If an older save rounded an even split upward so the profile
-allocations exceed the available Fun Money by a cent, repair the
-split by flooring each equal share to whole cents.
-Example: $69.69 / 2 => $34.84 + $34.84, leaving $0.01 unassigned.
-*/
-if(normalized.length>1){
-const poolCents=Math.max(0,Math.floor(Number(plan.weekly_fun||0)*100+0.0000001));
-const assignedCents=normalized.reduce((s,x)=>s+Math.round(x.amount*100),0);
-const values=normalized.map(x=>Math.round(x.amount*100));
-const nearlyEqual=Math.max(...values)-Math.min(...values)<=1;
-if(nearlyEqual&&assignedCents>poolCents){
-const each=Math.floor(poolCents/normalized.length)/100;
-normalized=normalized.map(x=>({...x,amount:each}));
-for(const allocation of normalized){
-const {error:updateError}=await supabaseClient
-.from("budget_profile_allocations")
-.update({
-weekly_fun_amount:allocation.amount,
-weekly_amount:allocation.amount,
-updated_at:new Date().toISOString()
-})
-.eq("id",allocation.id);
-if(updateError)throw updateError;
-}
-}
-}
-
-for(const allocation of normalized){
+if(existing?.id){
 const {error}=await supabaseClient
 .from("profile_fun_deposits")
-.upsert({
+.update({amount})
+.eq("id",existing.id);
+if(error)throw error;
+}else{
+const {error}=await supabaseClient
+.from("profile_fun_deposits")
+.insert({
 household_id:householdId,
-profile_id:allocation.profile_id,
+profile_id:profileId,
 week_start:ws,
-amount:allocation.amount
-},{
-onConflict:"household_id,profile_id,week_start"
+amount
 });
 if(error)throw error;
 }
 }
-async function ensureSavingsHistory(){const {data:plans,error}=await supabaseClient.from("budget_plans").select("budget_month,weekly_savings").eq("household_id",householdId);if(error)throw error;const currentWeek=weekStart(new Date());for(const plan of plans||[]){const month=new Date(`${plan.budget_month}T00:00:00`),amount=Number(plan.weekly_savings||0);for(const ws of getBudgetWeeks(month)){if(ws>currentWeek)continue;const {error:e}=await supabaseClient.from("allowance_deposits").upsert({household_id:householdId,week_start:dateOnly(ws),fund:"savings",amount},{onConflict:"household_id,week_start,fund",ignoreDuplicates:true});if(e)throw e}}}
+
+for(const allocation of normalized){
+await writeFunDeposit(allocation.profile_id,allocation.amount);
+}
+}
+async function ensureSavingsHistory(){
+return;
+}
 async function loadCurrentBudget(){
 const month=currentBudgetMonthCursor||activeBudgetMonth();
 const monthKey=dateOnly(month);
@@ -2437,9 +2500,13 @@ document.getElementById("currentBudgetMonth").textContent=month.toLocaleDateStri
 const weeks=getBudgetWeekCount(month);
 const warning=document.getElementById("currentFiveWeekWarning");
 const historical=HISTORICAL_BUDGETS[monthKey]||null;
-const historicalLegacy=Boolean(historical&&historical.calculation_mode==="average_4_345");
+const historicalLegacy=Boolean(
+historical &&
+historical.calculation_mode==="average_4_345" &&
+householdId===LEGACY_SOFT_BUDGET_HOUSEHOLD_ID
+);
 if(historicalLegacy){
-warning.textContent="Historical budget: this month used the old 4.345 average-weeks calculation. It is preserved as originally budgeted and is not recalculated using Hard Budget weeks.";
+warning.textContent="Historical budget: this month used the old Soft Budget (4.345 average weeks). It is preserved exactly as it was originally budgeted.";
 warning.classList.remove("hidden");
 }else if(weeks===5){
 warning.textContent=`${month.toLocaleDateString("en-US",{month:"long"})} has 5 budget weeks.`;
@@ -2475,7 +2542,6 @@ const weeklyFun=Number(plan.weekly_fun||0);
 const calculationMode=historical?.calculation_mode||plan.calculation_mode||(monthKey<"2026-09-01"?"average_4_345":"hard");
 const monthlyMultiplier=calculationMode==="average_4_345"?4.345:weeks;
 const rows=[
-["Calculation Method",calculationMode==="average_4_345"?"Historical · 4.345 average weeks":"Hard Budget · actual budget weeks"],
 ["Total Income",money(income)],
 ["Total Monthly Bills",`-${money(monthlyBills)}`],
 ["Total Weekly Bills",`-${money(weeklyBills)}/week`],
@@ -2496,9 +2562,23 @@ allocationRows.push([`${names[0]}'s Fun Money`,`${money(historical.perPersonFun)
 allocationRows.push(["Each person's Fun Money",`${money(historical.perPersonFun)}/week`]);
 }
 }else if((allocations||[]).length){
-for(const allocation of allocations){
+let displayAllocations=(allocations||[]).map(a=>({
+...a,
+displayAmount:Number(a.weekly_fun_amount??a.weekly_amount??0)
+}));
+if(displayAllocations.length>1){
+const poolCents=Math.max(0,Math.floor(weeklyFun*100+0.0000001));
+const vals=displayAllocations.map(a=>Math.round(a.displayAmount*100));
+const sum=vals.reduce((s,x)=>s+x,0);
+const nearlyEqual=Math.max(...vals)-Math.min(...vals)<=1;
+if(sum>poolCents&&nearlyEqual){
+const each=Math.floor(poolCents/displayAllocations.length)/100;
+displayAllocations=displayAllocations.map(a=>({...a,displayAmount:each}));
+}
+}
+for(const allocation of displayAllocations){
 const profile=profileMap.get(allocation.profile_id);
-allocationRows.push([`${profile?.display_name||"Profile"}'s Fun Money`,`${money(allocation.weekly_fun_amount??allocation.weekly_amount??0)}/week`]);
+allocationRows.push([`${profile?.display_name||"Profile"}'s Fun Money`,`${money(allocation.displayAmount)}/week`]);
 }
 }else if(historical){
 const names=[...profileMap.values()].map(p=>p.display_name);
@@ -2540,6 +2620,27 @@ prepare NEXT month.
 return data
 ?addMonths(current,1)
 :current;
+}
+function preparationIncomeResetKey(month){
+return `bicycleBudgetIncomeReset:${householdId}:${dateOnly(month)}`;
+}
+async function resetIncomeAmountsForNewPreparationMonth(month){
+const key=preparationIncomeResetKey(month);
+if(localStorage.getItem(key)==="1")return;
+const {data:plan}=await supabaseClient
+.from("budget_plans")
+.select("preparation_completed")
+.eq("household_id",householdId)
+.eq("budget_month",dateOnly(month))
+.maybeSingle();
+if(!plan?.preparation_completed){
+const {error}=await supabaseClient
+.from("income_sources")
+.update({amount:0})
+.eq("household_id",householdId);
+if(error)throw error;
+}
+localStorage.setItem(key,"1");
 }
 async function loadBudgetLists(){
 await Promise.all([
@@ -2584,7 +2685,9 @@ item=>{
 const row=
 document.createElement("div");
 row.className="saved-row";
-row.innerHTML=`<div class="saved-row-main"><div class="saved-row-name">${escapeHtml(item.name)}</div></div><div class="saved-row-amount">${negative?"-":""}${money(Math.abs(Number(item.amount)||0))}</div>`;
+const amountValue=Math.abs(Number(item.amount)||0);
+const amountText=(kind==="income"&&amountValue===0)?"$____":`${negative?"-":""}${money(amountValue)}`;
+row.innerHTML=`<div class="saved-row-main"><div class="saved-row-name">${escapeHtml(item.name)}</div></div><div class="saved-row-amount">${amountText}</div>`;
 row.onclick=()=>openMoneyEditor(kind,item);
 box.appendChild(row);
 }
@@ -2789,6 +2892,7 @@ document.getElementById("weeklyNeeds")
 bindMoneyInput(
 document.getElementById("weeklySavings")
 );
+await resetIncomeAmountsForNewPreparationMonth(month);
 await loadBudgetLists();
 await renderProfileAllocations(month);
 updateBudgetCalculation();
@@ -3175,17 +3279,19 @@ return;
 try{
 const monthlyBudget=
 await ensureMonthlyBudget(month);
-const allocations=[...
-document.querySelectorAll(
-".allocation-input"
-)
-]
-.map(
-input=>{
-const amount=
-Math.abs(
-parseMoney(input.value)
-);
+let allocationInputs=[...
+document.querySelectorAll(".allocation-input")
+];
+let allocationAmounts=allocationInputs.map(input=>Math.abs(parseMoney(input.value)));
+if(!allocationUserEdited && allocationAmounts.length>1 && calc.funPool>=0){
+const poolCents=Math.max(0,Math.floor(calc.funPool*100+0.0000001));
+const each=Math.floor(poolCents/allocationAmounts.length)/100;
+allocationAmounts=allocationAmounts.map(()=>each);
+allocationInputs.forEach((input,index)=>{input.value=money(allocationAmounts[index])});
+}
+const allocations=allocationInputs.map(
+(input,index)=>{
+const amount=allocationAmounts[index];
 return{
 /*
 budget_id MUST reference
@@ -3273,9 +3379,9 @@ const key=expenseDateKey(item),sameDay=key===last;
 if(!sameDay){const sep=document.createElement("div");sep.className="history-date-separator";sep.textContent=prettyHistoryDate(key);box.appendChild(sep)}
 const isAdjustment=item.activity_type==="adjustment";
 const row=document.createElement("div");
-row.className=`transaction ${isAdjustment?"adjustment-row":"clickable"} ${sameDay?"same-day-follow":""}`;
+row.className=`transaction clickable ${isAdjustment?"adjustment-row":""} ${sameDay?"same-day-follow":""}`;
 row.innerHTML=`<div class="transaction-main"><div class="transaction-name">${escapeHtml(item.description)}</div><div class="transaction-meta">${escapeHtml(expenseMeta(item))}</div></div><div class="transaction-amount ${isAdjustment?"positive":""}">${isAdjustment?"+":"-"}${money(item.amount)}</div>`;
-if(!isAdjustment)row.onclick=()=>editExpense(item.id);
+row.onclick=()=>isAdjustment?editFundAdjustment(item):editExpense(item.id);
 box.appendChild(row);last=key;
 });
 }
@@ -3401,7 +3507,7 @@ supabaseClient.from("fund_adjustments").select("*").eq("household_id",householdI
 ]);
 if(expenseError||adjustmentError)throw(expenseError||adjustmentError);
 const expenseActivities=(expenses||[]).map(x=>({...x,activity_type:"expense"}));
-const adjustmentActivities=(adjustments||[]).map(x=>({...x,id:`adjustment:${x.id}`,activity_type:"adjustment",category:"Added Funds",spent_at:x.adjusted_at}));
+const adjustmentActivities=(adjustments||[]).map(x=>({...x,source_id:x.id,id:`adjustment:${x.id}`,activity_type:"adjustment",category:"Added Funds",spent_at:x.adjusted_at}));
 allExpenseHistory=[...expenseActivities,...adjustmentActivities].sort((a,b)=>new Date(b.spent_at)-new Date(a.spent_at));
 refreshCategoryControls();
 refreshExpenseHistory();
@@ -3444,6 +3550,7 @@ transactionFund=
 expense?.fund||fund;
 editingExpenseId=
 expense?.id||null;
+editingAdjustmentId=null;
 document
 .getElementById("transactionTabs")
 .classList.toggle(
@@ -3513,6 +3620,8 @@ fund==="needs"
 document
 .getElementById("fundAdjustmentName")
 .value="";
+document.getElementById("saveFundAdjustmentButton").textContent="Add Funds";
+document.getElementById("deleteFundAdjustmentButton").classList.add("hidden");
 document
 .getElementById("fundAdjustmentAmount")
 .value="";
@@ -3533,6 +3642,7 @@ document.getElementById("fundAdjustmentAmount")
 }
 function closeTransactionModal(){
 editingExpenseId=null;
+editingAdjustmentId=null;
 closeInlineCategoryAdder(false);
 document
 .getElementById("transactionModal")
@@ -3653,6 +3763,22 @@ await calculateBalances();
 await updateAnalytics();
 showToast("Expense deleted");
 }
+function editFundAdjustment(item){
+editingExpenseId=null;
+editingAdjustmentId=item.source_id||String(item.id||"").replace(/^adjustment:/,"");
+transactionFund=item.fund||"needs";
+document.getElementById("transactionTabs").classList.add("hidden");
+document.getElementById("expenseFormSection").classList.add("hidden");
+document.getElementById("fundFormSection").classList.remove("hidden");
+document.getElementById("fundAdjustmentTitle").textContent="Edit Added Funds";
+document.getElementById("fundAdjustmentName").value=item.description||"";
+document.getElementById("fundAdjustmentAmount").value=money(item.amount||0);
+document.getElementById("fundAdjustmentDate").value=String(item.adjusted_at||item.spent_at||"").slice(0,10);
+document.getElementById("saveFundAdjustmentButton").textContent="Save";
+document.getElementById("deleteFundAdjustmentButton").classList.remove("hidden");
+document.getElementById("transactionModal").classList.remove("hidden");
+bindMoneyInput(document.getElementById("fundAdjustmentAmount"));
+}
 async function saveFundAdjustment(){
 const description=
 document
@@ -3676,23 +3802,46 @@ if(
 !amount||
 !date
 )return;
-const {error}=
-await supabaseClient
+let result;
+if(editingAdjustmentId){
+result=await supabaseClient
 .from("fund_adjustments")
-.insert(
-{
-household_id:
-householdId,
-profile_id:
-currentProfile.id,
-fund:
-transactionFund,
+.update({
+fund:transactionFund,
 amount,
 description,
-adjusted_at:
-`${date}T12:00:00`
+adjusted_at:`${date}T12:00:00`
+})
+.eq("id",editingAdjustmentId);
+}else{
+result=await supabaseClient
+.from("fund_adjustments")
+.insert({
+household_id:householdId,
+profile_id:currentProfile.id,
+fund:transactionFund,
+amount,
+description,
+adjusted_at:`${date}T12:00:00`
+});
 }
-);
+if(result.error){
+alert(result.error.message);
+return;
+}
+closeTransactionModal();
+await loadExpenses();
+await calculateBalances();
+await updateAnalytics();
+showToast("Funds added");
+}
+async function deleteFundAdjustment(){
+if(!editingAdjustmentId)return;
+if(!confirm("Delete these added funds?"))return;
+const {error}=await supabaseClient
+.from("fund_adjustments")
+.delete()
+.eq("id",editingAdjustmentId);
 if(error){
 alert(error.message);
 return;
@@ -3701,7 +3850,7 @@ closeTransactionModal();
 await loadExpenses();
 await calculateBalances();
 await updateAnalytics();
-showToast("Funds added");
+showToast("Added funds deleted");
 }
 async function calculateBalances(){
 const [
@@ -3919,7 +4068,7 @@ list.innerHTML=rows.map(row=>`
 ${escapeHtml(formatWeekRange(row.week_start,row.week_end))}
 <div class="subtext">Weekly deposit: ${money(row.weekly_deposit)}</div>
 </div>
-<div class="week-history-amount">${money(row.starting_balance)}</div>
+<div class="week-history-amount"><span class="week-history-value-label">Starting Value:</span> ${money(row.starting_balance)}</div>
 </div>`).join("");
 }
 document.getElementById("weeklyBalanceHistoryModal").classList.remove("hidden");
@@ -4170,20 +4319,39 @@ return{start:new Date(`${a}T00:00:00`),end:new Date(`${b}T23:59:59`)};
 }
 async function updateSavingsAnalytics(){
 const range=savingsDates();
-const {data,error}=await supabaseClient.from("budget_plans").select("budget_month,weekly_savings").eq("household_id",householdId);
-if(error){console.error("Total Saved load failed",error);return}
-const byMonth=new Map((data||[]).map(p=>[String(p.budget_month).slice(0,10),{budget_month:String(p.budget_month).slice(0,10),weekly_savings:Number(p.weekly_savings||0)}]));
-for(const [key,h] of Object.entries(HISTORICAL_BUDGETS)){if(!byMonth.has(key))byMonth.set(key,{budget_month:key,weekly_savings:Number(h.weekly_savings||0)})}
-let total=0;const now=new Date();
-for(const plan of byMonth.values()){
-const month=new Date(`${plan.budget_month}T12:00:00`), historical=HISTORICAL_BUDGETS[plan.budget_month];
-const amount=Number(historical?.weekly_savings??plan.weekly_savings??0);
-for(const ws of getBudgetWeeks(month)){
-const d=new Date(ws);
-if(d>now)continue;
-if(d>=range.start&&d<=range.end)total+=amount;
+let total=0;
+
+if(householdId===LEGACY_SOFT_BUDGET_HOUSEHOLD_ID){
+for(const [monthKey,historical] of Object.entries(HISTORICAL_BUDGETS)){
+if(historical.calculation_mode!=="average_4_345")continue;
+const month=new Date(`${monthKey}T12:00:00`);
+const monthEnd=new Date(month.getFullYear(),month.getMonth()+1,0,23,59,59,999);
+if(monthEnd>=range.start&&month<=range.end){
+total+=Number(historical.savedTotal||0);
 }
 }
+}
+
+const hardStart=new Date(Math.max(
+range.start.getTime(),
+new Date(2026,7,30,0,0,0,0).getTime()
+));
+const {data:deposits,error}=await supabaseClient
+.from("allowance_deposits")
+.select("amount,week_start")
+.eq("household_id",householdId)
+.eq("fund","savings");
+if(error){
+console.error("Total Saved load failed",error);
+return;
+}
+for(const row of deposits||[]){
+const d=parseLocalDate(row.week_start);
+if(d>=hardStart&&d<=range.end){
+total+=Number(row.amount||0);
+}
+}
+
 document.getElementById("analyticsSavings").textContent=money(total);
 document.getElementById("analyticsSavingsRange").textContent=formatAnalyticsDateRange(range.start,range.end);
 }
@@ -4263,20 +4431,18 @@ async function renderSettingsProfileList(){const profiles=await loadProfiles(),b
 function selectSettingsProfile(profile){settingsSwitchTarget=profile;document.getElementById("settingsSwitchPinName").textContent=`Enter ${profile.display_name}'s PIN`;document.getElementById("settingsSwitchPinArea").classList.remove("hidden");document.getElementById("settingsSwitchPinError").classList.add("hidden");renderPinBoxes("settingsSwitchPinBoxes",Number(profile.pin_length||4),submitSettingsProfilePin);const firstPin=document.querySelector("#settingsSwitchPinBoxes .pin-box");firstPin?.focus({preventScroll:true});setTimeout(()=>firstPin?.focus({preventScroll:true}),60)}
 async function submitSettingsProfilePin(){if(!settingsSwitchTarget)return;const pin=getPinFromBoxes("settingsSwitchPinBoxes"),required=Number(settingsSwitchTarget.pin_length||4);if(pin.length!==required)return;const {data,error}=await supabaseClient.rpc("create_profile_session",{p_profile_id:settingsSwitchTarget.id,p_pin:pin,p_session_minutes:1440});if(error){const e=document.getElementById("settingsSwitchPinError");e.textContent="Incorrect PIN.";e.classList.remove("hidden");clearPinBoxes("settingsSwitchPinBoxes");return}localStorage.setItem("profileSessionToken",data);localStorage.setItem("profileId",settingsSwitchTarget.id);currentProfile=settingsSwitchTarget;closeSettings();await enterProfile();showToast(`Switched to ${currentProfile.display_name}`)}
 async function loadBudgetHistory(){
-const [{data:plans,error:planError},{data:allocations,error:allocationError}]=await Promise.all([
-supabaseClient
-.from("budget_plans")
-.select("*")
-.eq("household_id",householdId)
-.order("budget_month",{ascending:false}),
-supabaseClient
-.from("budget_profile_allocations")
-.select("budget_month,profile_id,weekly_fun_amount,weekly_amount")
-.eq("household_id",householdId)
+const [
+{data:plans,error:planError},
+{data:allocations,error:allocationError},
+{data:items,error:itemError}
+]=await Promise.all([
+supabaseClient.from("budget_plans").select("*").eq("household_id",householdId).order("budget_month",{ascending:false}),
+supabaseClient.from("budget_profile_allocations").select("*").eq("household_id",householdId),
+supabaseClient.from("budget_items").select("*").eq("household_id",householdId)
 ]);
 const box=document.getElementById("budgetHistoryList");
-if(planError||allocationError){
-box.textContent=(planError||allocationError).message;
+if(planError||allocationError||itemError){
+box.textContent=(planError||allocationError||itemError).message;
 return;
 }
 
@@ -4286,30 +4452,67 @@ const key=String(row.budget_month||"").slice(0,10);
 if(!allocationByMonth.has(key))allocationByMonth.set(key,[]);
 allocationByMonth.get(key).push(row);
 }
+const itemsByMonth=new Map();
+for(const row of items||[]){
+const key=String(row.budget_month||"").slice(0,10);
+if(!itemsByMonth.has(key))itemsByMonth.set(key,[]);
+itemsByMonth.get(key).push(row);
+}
 
 box.innerHTML="";
 for(const plan of plans||[]){
 const monthKey=String(plan.budget_month).slice(0,10);
 const month=new Date(`${monthKey}T00:00:00`);
 const historical=HISTORICAL_BUDGETS[monthKey]||null;
-const mode=historical?.calculation_mode||plan.calculation_mode||(monthKey<"2026-09-01"?"average_4_345":"hard");
-const monthAllocations=allocationByMonth.get(monthKey)||[];
+const legacySoft=Boolean(
+historical?.calculation_mode==="average_4_345" &&
+householdId===LEGACY_SOFT_BUDGET_HOUSEHOLD_ID
+);
+const monthItems=itemsByMonth.get(monthKey)||[];
+let incomeItems=monthItems.filter(x=>x.item_type==="income").map(x=>[x.name,Math.abs(Number(x.amount||0))]);
+let monthlyBillItems=monthItems.filter(x=>x.item_type==="monthly_bill").map(x=>[x.name,Math.abs(Number(x.amount||0))]);
+let weeklyBillItems=monthItems.filter(x=>x.item_type==="weekly_bill").map(x=>[x.name,Math.abs(Number(x.amount||0))]);
+if(!incomeItems.length&&historical)incomeItems=historical.income||[];
+if(!monthlyBillItems.length&&historical)monthlyBillItems=historical.monthlyBills||[];
+if(!weeklyBillItems.length&&historical)weeklyBillItems=historical.weeklyBills||[];
+
+const incomeTotal=incomeItems.reduce((s,x)=>s+Number(x[1]||0),0);
+const monthlyBillTotal=monthlyBillItems.reduce((s,x)=>s+Number(x[1]||0),0);
+const weeklyBillTotal=weeklyBillItems.reduce((s,x)=>s+Number(x[1]||0),0);
+const weeklyNeeds=Number(plan.weekly_needs||historical?.weekly_needs||0);
+const weeklySavings=Number(plan.weekly_savings||historical?.weekly_savings||0);
+const weeklyFun=Number(plan.weekly_fun||historical?.weekly_fun||0);
+
+let monthAllocations=(allocationByMonth.get(monthKey)||[]).map(a=>({
+...a,
+displayAmount:Number(a.weekly_fun_amount??a.weekly_amount??0)
+}));
+if(monthAllocations.length>1){
+const poolCents=Math.max(0,Math.floor(weeklyFun*100+0.0000001));
+const vals=monthAllocations.map(a=>Math.round(a.displayAmount*100));
+const sum=vals.reduce((s,x)=>s+x,0);
+if(sum>poolCents && Math.max(...vals)-Math.min(...vals)<=1){
+const each=Math.floor(poolCents/monthAllocations.length)/100;
+monthAllocations=monthAllocations.map(a=>({...a,displayAmount:each}));
+}
+}
 
 let splitRows=[];
-if(monthAllocations.length){
-splitRows=monthAllocations.map(allocation=>{
-const profile=profileMap.get(allocation.profile_id);
-const amount=Number(allocation.weekly_fun_amount??allocation.weekly_amount??0);
-return `<div class="calc-row"><span>${escapeHtml(profile?.display_name||"Profile")} Fun Money</span><strong>${money(amount)}/week</strong></div>`;
-});
-}else if(historical?.perPersonFun!=null){
+if(legacySoft&&historical?.perPersonFun!=null){
 const names=[...profileMap.values()].map(p=>p.display_name);
-if(names.length){
-splitRows=names.map(name=>`<div class="calc-row"><span>${escapeHtml(name)} Fun Money</span><strong>${money(historical.perPersonFun)}/week</strong></div>`);
-}else{
-splitRows=[`<div class="calc-row"><span>Each profile</span><strong>${money(historical.perPersonFun)}/week</strong></div>`];
+splitRows=(names.length?names:["Each profile"]).map(name=>
+`<div class="budget-summary-row"><span>${escapeHtml(name)} Fun Money</span><strong>${money(historical.perPersonFun)}/week</strong></div>`
+);
+}else if(monthAllocations.length){
+splitRows=monthAllocations.map(a=>{
+const profile=profileMap.get(a.profile_id);
+return `<div class="budget-summary-row"><span>${escapeHtml(profile?.display_name||"Profile")} Fun Money</span><strong>${money(a.displayAmount)}/week</strong></div>`;
+});
 }
-}
+
+const detailList=(title,list,isBill=false,weekly=false)=>list.length?`
+<div style="margin-top:16px"><strong>${escapeHtml(title)}</strong></div>
+${list.map(([name,amount])=>`<div class="budget-summary-row"><span>${escapeHtml(name)}</span><strong>${isBill?"-":""}${money(amount)}${weekly?"/week":""}</strong></div>`).join("")}`:"";
 
 const details=document.createElement("div");
 details.className="card settings-card";
@@ -4319,12 +4522,17 @@ details.innerHTML=`
 <span>›</span>
 </button>
 <div class="hidden budget-history-details" style="margin-top:13px">
-<div class="calc-row"><span>Calculation</span><strong>${mode==="average_4_345"?"4.345 average":"Hard Budget"}</strong></div>
-<div class="calc-row"><span>Budget Weeks</span><strong>${mode==="average_4_345"?"Historical 4.345":getBudgetWeekCount(month)}</strong></div>
-<div class="calc-row"><span>Needs / week</span><strong>${money(plan.weekly_needs)}</strong></div>
-<div class="calc-row"><span>Savings / week</span><strong>${money(plan.weekly_savings)}</strong></div>
-<div class="calc-row"><span>Total Fun Money / week</span><strong>${money(plan.weekly_fun)}</strong></div>
-${splitRows.length?`<div style="margin-top:10px;padding-top:9px;border-top:1px solid color-mix(in srgb,var(--edge) 55%,transparent)"><strong>Fun Money Split</strong>${splitRows.join("")}</div>`:""}
+${legacySoft?'<div class="legacy-budget-note">Historical Soft Budget · 4.345 average weeks</div>':""}
+<div class="budget-summary-row"><span>Total Income</span><strong>${money(incomeTotal)}</strong></div>
+<div class="budget-summary-row"><span>Total Monthly Bills</span><strong>-${money(monthlyBillTotal)}</strong></div>
+<div class="budget-summary-row"><span>Total Weekly Bills</span><strong>-${money(weeklyBillTotal)}/week</strong></div>
+<div class="budget-summary-row"><span>Weekly Needs</span><strong>${money(weeklyNeeds)}/week</strong></div>
+<div class="budget-summary-row"><span>Weekly Savings</span><strong>${money(weeklySavings)}/week</strong></div>
+<div class="budget-summary-row"><span>Total Fun Money</span><strong>${money(weeklyFun)}/week</strong></div>
+${splitRows.length?`<div style="margin-top:14px"><strong>Fun Money Split</strong>${splitRows.join("")}</div>`:""}
+${detailList("Income",incomeItems,false,false)}
+${detailList("Monthly Bills",monthlyBillItems,true,false)}
+${detailList("Weekly Bills",weeklyBillItems,true,true)}
 </div>
 `;
 const button=details.querySelector(".budget-history-toggle");
@@ -4787,6 +4995,7 @@ document
 .onclick=
 ()=>openSettings("menu");
 document.getElementById("settingsDetailBackButton").onclick=()=>settingsBack(true);
+document.getElementById("settingsMainBackButton").onclick=closeSettings;
 document
 .querySelectorAll(
 "[data-settings-section]"
@@ -5056,6 +5265,7 @@ document
 .getElementById("saveFundAdjustmentButton")
 .onclick=
 saveFundAdjustment;
+document.getElementById("deleteFundAdjustmentButton").onclick=deleteFundAdjustment;
 document
 .getElementById("cancelFundAdjustmentButton")
 .onclick=
