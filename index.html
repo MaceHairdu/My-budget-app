@@ -711,12 +711,7 @@ touch-action:pan-y
 transform:translate3d(0,0,0)
 }
 .settings{width:100%;max-width:760px;height:100%;margin:auto;overflow:hidden;position:relative}
-.settings-back{
-position:absolute;
-z-index:10;
-top:15px;
-left:17px
-}
+.settings-back{display:none!important}
 .settings-title{
 margin:0 0 8px;
 font-size:2em
@@ -1287,6 +1282,28 @@ body{padding-top:env(safe-area-inset-top)}
   .home-expenses{max-height:none!important}
 }
 
+
+/* v11 iPhone safe-area corrections */
+@media(max-width:900px){
+  .login{
+    padding-top:calc(env(safe-area-inset-top,0px) + 28px)!important;
+    padding-bottom:calc(env(safe-area-inset-bottom,0px) + 24px)!important;
+  }
+  .modal-overlay{
+    padding-top:calc(env(safe-area-inset-top,0px) + 16px)!important;
+    padding-bottom:calc(env(safe-area-inset-bottom,0px) + 16px)!important;
+  }
+  .modal-card{
+    max-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 32px)!important;
+  }
+  #budgetHelpModal{
+    align-items:flex-start!important;
+  }
+  #budgetHelpModal .modal-card{
+    margin-top:0!important;
+  }
+}
+
 </style>
 </head>
 <body class="theme-cedar font-system">
@@ -1540,7 +1557,6 @@ Save Budget
 </main>
 </section>
 <section class="settings-shell" id="settingsScreen">
-<button class="icon-well settings-back" id="settingsBackButton" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15.5 4.5 8 12l7.5 7.5"></path></svg></button>
 <div class="settings"><div class="settings-stage" id="settingsStage">
 <div class="settings-view" id="settingsMenuView">
 <h1 class="settings-page-title">Settings</h1><div class="settings-page-profile subtext" id="settingsMenuProfileName"></div>
@@ -1552,7 +1568,7 @@ Save Budget
 <button class="danger-button" id="settingsLogoutButton" style="width:100%;margin-top:5px">Log Out</button>
 </div></div>
 <div class="settings-view" id="settingsDetailView">
-<button class="settings-detail-back secondary-button" id="settingsDetailBackButton" type="button">‹ Settings</button>
+<button class="settings-detail-back secondary-button" id="settingsDetailBackButton" type="button">Back</button>
 <h1 class="settings-page-title" id="settingsTitle">Settings</h1><div class="settings-page-profile subtext" id="settingsProfileName"></div>
 <div id="appearanceSettings" class="hidden">
 <div class="card settings-card"><h2>Theme</h2><div class="theme-grid" id="themeGrid"></div></div>
@@ -1758,6 +1774,20 @@ String(x.getMonth()+1).padStart(2,"0"),
 String(x.getDate()).padStart(2,"0")
 ].join("-");
 }
+function parseLocalDate(value){
+if(value instanceof Date)return new Date(value);
+const raw=String(value||"").slice(0,10);
+const match=raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+if(match){
+return new Date(
+Number(match[1]),
+Number(match[2])-1,
+Number(match[3]),
+0,0,0,0
+);
+}
+return new Date(value);
+}
 function firstOfMonth(d){
 return new Date(
 d.getFullYear(),
@@ -1778,14 +1808,19 @@ x.setHours(0,0,0,0);
 x.setDate(x.getDate()-x.getDay());
 return x;
 }
-function activeBudgetMonth(){
+function budgetMonthForWeek(date=new Date()){
+const ws=weekStart(date);
 /*
-IMPORTANT:
-Current budget follows the CALENDAR MONTH.
-August date = August budget.
-September budget does not become active until September.
+A Sunday-Saturday budget week belongs to whichever month contains
+at least 4 of its 7 days. The Wednesday of that week is always in
+that majority month, so it is the authoritative month marker.
 */
-return firstOfMonth(new Date());
+const middle=new Date(ws);
+middle.setDate(ws.getDate()+3);
+return firstOfMonth(middle);
+}
+function activeBudgetMonth(){
+return budgetMonthForWeek(new Date());
 }
 function getBudgetWeeks(monthDate){
 const y=monthDate.getFullYear(),m=monthDate.getMonth(),first=new Date(y,m,1),last=new Date(y,m+1,0);let current=weekStart(first),end=weekStart(last),weeks=[];while(current<=end){let days=0;for(let i=0;i<7;i++){const d=new Date(current);d.setDate(current.getDate()+i);if(d.getFullYear()===y&&d.getMonth()===m)days++}if(days>=4)weeks.push(new Date(current));current=new Date(current);current.setDate(current.getDate()+7)}return weeks}
@@ -1864,7 +1899,7 @@ function renderDateStrip(){
 const now=new Date();
 const ws=weekStart(now);
 document.getElementById("dateMonth").textContent=
-now.toLocaleDateString(
+activeBudgetMonth().toLocaleDateString(
 "en-US",
 {month:"long"}
 );
@@ -2298,14 +2333,11 @@ Number(data.font_size||16);
 applyAppearance();
 }
 async function ensureCurrentWeekDeposits(){
-const month=
-activeBudgetMonth();
-const monthKey=
-dateOnly(month);
-const ws=
-dateOnly(weekStart(new Date()));
-const {data:plan,error:planError}=
-await supabaseClient
+const month=activeBudgetMonth();
+const monthKey=dateOnly(month);
+const ws=dateOnly(weekStart(new Date()));
+
+const {data:plan,error:planError}=await supabaseClient
 .from("budget_plans")
 .select("*")
 .eq("household_id",householdId)
@@ -2313,66 +2345,87 @@ await supabaseClient
 .maybeSingle();
 if(planError)throw planError;
 if(!plan)return;
+
 /*
-Needs:
-exactly one deposit per week.
+The current week may begin in the previous calendar month.
+Use an updating upsert so a deposit created under the previous
+month's budget is corrected to the budget actually owning this week.
 */
-const {error:needsError}=
-await supabaseClient
+const {error:needsError}=await supabaseClient
 .from("allowance_deposits")
-.upsert(
-{
+.upsert({
 household_id:householdId,
 week_start:ws,
 fund:"needs",
 amount:Number(plan.weekly_needs||0)
-},
-{
-onConflict:
-"household_id,week_start,fund",
-ignoreDuplicates:true
-}
-);
+},{
+onConflict:"household_id,week_start,fund"
+});
 if(needsError)throw needsError;
-const {error:savingsError}=await supabaseClient.from("allowance_deposits").upsert({household_id:householdId,week_start:ws,fund:"savings",amount:Number(plan.weekly_savings||0)},{onConflict:"household_id,week_start,fund",ignoreDuplicates:true});
+
+const {error:savingsError}=await supabaseClient
+.from("allowance_deposits")
+.upsert({
+household_id:householdId,
+week_start:ws,
+fund:"savings",
+amount:Number(plan.weekly_savings||0)
+},{
+onConflict:"household_id,week_start,fund"
+});
 if(savingsError)throw savingsError;
-/*
-Fun Money:
-MUST use allocation belonging to CURRENT CALENDAR MONTH.
-August date -> August allocations.
-*/
-const {data:allocations,error:allocationError}=
-await supabaseClient
+
+const {data:allocations,error:allocationError}=await supabaseClient
 .from("budget_profile_allocations")
-.select(
-"profile_id,weekly_fun_amount,weekly_amount"
-)
+.select("id,profile_id,weekly_fun_amount,weekly_amount")
 .eq("household_id",householdId)
 .eq("budget_month",monthKey);
 if(allocationError)throw allocationError;
-for(const allocation of allocations||[]){
-const amount=
-Number(
-allocation.weekly_fun_amount ??
-allocation.weekly_amount ??
-0
-);
-const {error}=
-await supabaseClient
+
+let normalized=(allocations||[]).map(row=>({
+...row,
+amount:Number(row.weekly_fun_amount??row.weekly_amount??0)
+}));
+
+/*
+If an older save rounded an even split upward so the profile
+allocations exceed the available Fun Money by a cent, repair the
+split by flooring each equal share to whole cents.
+Example: $69.69 / 2 => $34.84 + $34.84, leaving $0.01 unassigned.
+*/
+if(normalized.length>1){
+const poolCents=Math.max(0,Math.floor(Number(plan.weekly_fun||0)*100+0.0000001));
+const assignedCents=normalized.reduce((s,x)=>s+Math.round(x.amount*100),0);
+const values=normalized.map(x=>Math.round(x.amount*100));
+const nearlyEqual=Math.max(...values)-Math.min(...values)<=1;
+if(nearlyEqual&&assignedCents>poolCents){
+const each=Math.floor(poolCents/normalized.length)/100;
+normalized=normalized.map(x=>({...x,amount:each}));
+for(const allocation of normalized){
+const {error:updateError}=await supabaseClient
+.from("budget_profile_allocations")
+.update({
+weekly_fun_amount:allocation.amount,
+weekly_amount:allocation.amount,
+updated_at:new Date().toISOString()
+})
+.eq("id",allocation.id);
+if(updateError)throw updateError;
+}
+}
+}
+
+for(const allocation of normalized){
+const {error}=await supabaseClient
 .from("profile_fun_deposits")
-.upsert(
-{
+.upsert({
 household_id:householdId,
 profile_id:allocation.profile_id,
 week_start:ws,
-amount
-},
-{
-onConflict:
-"household_id,profile_id,week_start",
-ignoreDuplicates:true
-}
-);
+amount:allocation.amount
+},{
+onConflict:"household_id,profile_id,week_start"
+});
 if(error)throw error;
 }
 }
@@ -3179,9 +3232,14 @@ plan.id,
 month
 );
 showToast("Budget saved");
+if(dateOnly(month)===dateOnly(activeBudgetMonth())){
+await ensureCurrentWeekDeposits();
+}
+currentBudgetMonthCursor=activeBudgetMonth();
+await loadExpenses();
+await calculateBalances();
 await Promise.all([
 loadCurrentBudget(),
-calculateBalances(),
 updateAnalytics(),
 loadBudgetHistory()
 ]);
@@ -3345,7 +3403,9 @@ if(expenseError||adjustmentError)throw(expenseError||adjustmentError);
 const expenseActivities=(expenses||[]).map(x=>({...x,activity_type:"expense"}));
 const adjustmentActivities=(adjustments||[]).map(x=>({...x,id:`adjustment:${x.id}`,activity_type:"adjustment",category:"Added Funds",spent_at:x.adjusted_at}));
 allExpenseHistory=[...expenseActivities,...adjustmentActivities].sort((a,b)=>new Date(b.spent_at)-new Date(a.spent_at));
-refreshCategoryControls();refreshExpenseHistory();
+refreshCategoryControls();
+refreshExpenseHistory();
+renderHomeActivityFromHistory();
 }
 function setTransactionTab(tab){
 activeTransactionTab=tab;
@@ -3553,11 +3613,9 @@ alert(result.error.message);
 return;
 }
 closeTransactionModal();
-await Promise.all([
-loadExpenses(),
-calculateBalances(),
-updateAnalytics()
-]);
+await loadExpenses();
+await calculateBalances();
+await updateAnalytics();
 showToast("Expense saved");
 }
 async function editExpense(id){
@@ -3590,11 +3648,9 @@ alert(error.message);
 return;
 }
 closeTransactionModal();
-await Promise.all([
-loadExpenses(),
-calculateBalances(),
-updateAnalytics()
-]);
+await loadExpenses();
+await calculateBalances();
+await updateAnalytics();
 showToast("Expense deleted");
 }
 async function saveFundAdjustment(){
@@ -3642,11 +3698,9 @@ alert(error.message);
 return;
 }
 closeTransactionModal();
-await Promise.all([
-loadExpenses(),
-calculateBalances(),
-updateAnalytics()
-]);
+await loadExpenses();
+await calculateBalances();
+await updateAnalytics();
 showToast("Funds added");
 }
 async function calculateBalances(){
@@ -3718,12 +3772,52 @@ adjustments||[]
 );
 
 const currentWeekKey=dateOnly(weekStart(new Date()));
-const needsCurrent=weeklyBalanceHistoryCache.needs.find(x=>x.week_start===currentWeekKey);
-const funCurrent=weeklyBalanceHistoryCache.fun.find(x=>x.week_start===currentWeekKey);
-document.getElementById("needsWeekStartBalance").textContent=money(needsCurrent?.starting_balance||0);
-document.getElementById("funWeekStartBalance").textContent=money(funCurrent?.starting_balance||0);
 
-await loadHomeExpenseLists();
+const weekExpensesNeeds=(expenses||[])
+.filter(x=>x.fund==="needs"&&String(x.spent_at||"").slice(0,10)>=currentWeekKey)
+.reduce((s,x)=>s+Number(x.amount||0),0);
+const weekAdjustmentsNeeds=(adjustments||[])
+.filter(x=>x.fund==="needs"&&String(x.adjusted_at||"").slice(0,10)>=currentWeekKey)
+.reduce((s,x)=>s+Number(x.amount||0),0);
+
+const weekExpensesFun=(expenses||[])
+.filter(x=>x.fund==="fun"&&x.profile_id===currentProfile.id&&String(x.spent_at||"").slice(0,10)>=currentWeekKey)
+.reduce((s,x)=>s+Number(x.amount||0),0);
+const weekAdjustmentsFun=(adjustments||[])
+.filter(x=>x.fund==="fun"&&x.profile_id===currentProfile.id&&String(x.adjusted_at||"").slice(0,10)>=currentWeekKey)
+.reduce((s,x)=>s+Number(x.amount||0),0);
+
+/*
+Current balance = week-start balance - expenses + manual added funds.
+Therefore:
+week-start balance = current balance + expenses - manual added funds.
+This includes the automatic weekly allocation but excludes later
+manual Add Funds activity, exactly matching the displayed definition.
+*/
+const needsStart=needs+weekExpensesNeeds-weekAdjustmentsNeeds;
+const funStart=fun+weekExpensesFun-weekAdjustmentsFun;
+
+function replaceCurrentHistoryRow(rows,startAmount){
+const index=rows.findIndex(x=>x.week_start===currentWeekKey);
+if(index>=0)rows[index].starting_balance=startAmount;
+else{
+const end=new Date(weekStart(new Date()));
+end.setDate(end.getDate()+6);
+rows.unshift({
+week_start:currentWeekKey,
+week_end:dateOnly(end),
+starting_balance:startAmount,
+weekly_deposit:0
+});
+}
+}
+replaceCurrentHistoryRow(weeklyBalanceHistoryCache.needs,needsStart);
+replaceCurrentHistoryRow(weeklyBalanceHistoryCache.fun,funStart);
+
+document.getElementById("needsWeekStartBalance").textContent=money(needsStart);
+document.getElementById("funWeekStartBalance").textContent=money(funStart);
+
+renderHomeActivityFromHistory();
 }
 
 function buildWeeklyStartingBalanceHistory(fund,deposits,expenses,adjustments){
@@ -3769,7 +3863,7 @@ const priorExpenses=(expenses||[])
 .filter(e=>{
 if(e.fund!==fund)return false;
 if(fund==="fun"&&e.profile_id!==currentProfile.id)return false;
-return new Date(e.spent_at)<wsDate;
+return String(e.spent_at||"").slice(0,10)<wsKey;
 })
 .reduce((sum,e)=>sum+Number(e.amount||0),0);
 
@@ -3777,7 +3871,7 @@ const priorAdjustments=(adjustments||[])
 .filter(a=>{
 if(a.fund!==fund)return false;
 if(fund==="fun"&&a.profile_id!==currentProfile.id)return false;
-return new Date(a.adjusted_at)<wsDate;
+return String(a.adjusted_at||"").slice(0,10)<wsKey;
 })
 .reduce((sum,a)=>sum+Number(a.amount||0),0);
 
@@ -3834,17 +3928,24 @@ document.getElementById("weeklyBalanceHistoryModal").classList.remove("hidden");
 function closeWeeklyBalanceHistory(){
 document.getElementById("weeklyBalanceHistoryModal").classList.add("hidden");
 }
+function renderHomeActivityFromHistory(){
+if(!currentProfile)return;
+const weekKey=dateOnly(weekStart(new Date()));
+
+const needs=(allExpenseHistory||[])
+.filter(item=>item.fund==="needs"&&expenseDateKey(item)>=weekKey)
+.sort((a,b)=>String(a.spent_at).localeCompare(String(b.spent_at)));
+
+const fun=(allExpenseHistory||[])
+.filter(item=>item.fund==="fun"&&item.profile_id===currentProfile.id&&expenseDateKey(item)>=weekKey)
+.sort((a,b)=>String(a.spent_at).localeCompare(String(b.spent_at)));
+
+renderHomeExpenseList("homeNeedsExpenses",needs);
+renderHomeExpenseList("homeFunExpenses",fun);
+}
+
 async function loadHomeExpenseLists(){
-const start=weekStart(new Date()).toISOString();
-const [{data:needsExpenses},{data:funExpenses},{data:adjustments,error:adjustmentError}]=await Promise.all([
-supabaseClient.from("expenses").select("description,amount,spent_at").eq("household_id",householdId).eq("fund","needs").gte("spent_at",start).order("spent_at",{ascending:true}),
-supabaseClient.from("expenses").select("description,amount,spent_at").eq("household_id",householdId).eq("fund","fun").eq("profile_id",currentProfile.id).gte("spent_at",start).order("spent_at",{ascending:true}),
-supabaseClient.from("fund_adjustments").select("description,amount,adjusted_at,fund,profile_id").eq("household_id",householdId).gte("adjusted_at",start).order("adjusted_at",{ascending:true})
-]);
-if(adjustmentError)throw adjustmentError;
-const needs=[...(needsExpenses||[]).map(x=>({...x,activity_type:"expense"}),),...(adjustments||[]).filter(x=>x.fund==="needs").map(x=>({...x,spent_at:x.adjusted_at,activity_type:"adjustment"}))].sort((a,b)=>new Date(a.spent_at)-new Date(b.spent_at));
-const fun=[...(funExpenses||[]).map(x=>({...x,activity_type:"expense"})),...(adjustments||[]).filter(x=>x.fund==="fun"&&x.profile_id===currentProfile.id).map(x=>({...x,spent_at:x.adjusted_at,activity_type:"adjustment"}))].sort((a,b)=>new Date(a.spent_at)-new Date(b.spent_at));
-renderHomeExpenseList("homeNeedsExpenses",needs);renderHomeExpenseList("homeFunExpenses",fun);
+renderHomeActivityFromHistory();
 }
 function renderHomeExpenseList(id,items){
 const box=document.getElementById(id);
@@ -3869,52 +3970,31 @@ return{start:new Date(2000,0,1),end:new Date(2100,0,1),label:"All Time"};
 }
 function formatAnalyticsDateRange(start,end){return `${start.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})} – ${end.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}`}
 async function updateAnalytics(){
-const range=
-analyticsDates();
-const [
-{data:expenses},
-{data:adjustments},
-{data:plans}
-]=
-await Promise.all([
-supabaseClient
-.from("expenses")
-.select("*")
-.eq("household_id",householdId),
-supabaseClient
-.from("fund_adjustments")
-.select("*")
-.eq("household_id",householdId),
-supabaseClient
-.from("budget_plans")
-.select("*")
-.eq("household_id",householdId)
-]);
-const filtered=
-(expenses||[])
-.filter(
-item=>{
-const d=
-new Date(item.spent_at);
-return(
-d>=range.start &&
-d<=range.end
-);
-}
-);
+const range=analyticsDates();
+
+/*
+Expense History is the canonical activity source. It already contains
+both expenses and manually Added Funds, so Analytics is calculated
+from the same successfully-loaded records instead of issuing a second
+independent expense query.
+*/
+const expenseItems=(allExpenseHistory||[]).filter(x=>x.activity_type!=="adjustment");
+const adjustmentItems=(allExpenseHistory||[]).filter(x=>x.activity_type==="adjustment");
+
+const filtered=expenseItems.filter(item=>{
+const key=expenseDateKey(item);
+const startKey=dateOnly(range.start);
+const endKey=dateOnly(range.end);
+return key>=startKey&&key<=endKey;
+});
 analyticsFilteredExpenses=filtered;
-const filteredAdjustments=
-(adjustments||[])
-.filter(
-item=>{
-const d=
-new Date(item.adjusted_at);
-return(
-d>=range.start &&
-d<=range.end
-);
-}
-);
+
+const filteredAdjustments=adjustmentItems.filter(item=>{
+const key=expenseDateKey(item);
+const startKey=dateOnly(range.start);
+const endKey=dateOnly(range.end);
+return key>=startKey&&key<=endKey;
+});
 const needs=
 filtered
 .filter(x=>x.fund==="needs")
@@ -4075,7 +4155,19 @@ profileEntries.length
 await updateSavingsAnalytics();
 }
 function renderSavingsMonthLabel(){document.getElementById("savingsMonthLabel").textContent=savingsMonthCursor.toLocaleDateString("en-US",{month:"long",year:"numeric"})}
-function savingsDates(){if(savingsRange==="month"){const y=savingsMonthCursor.getFullYear(),m=savingsMonthCursor.getMonth();return{start:new Date(y,m,1),end:new Date(y,m+1,0,23,59,59,999)}}if(savingsRange==="year"){const y=Number(document.getElementById("savingsYearSelect").value);return{start:new Date(y,0,1),end:new Date(y,11,31,23,59,59,999)}}const a=document.getElementById("savingsStartDate").value,b=document.getElementById("savingsEndDate").value;return{start:new Date(`${a}T00:00:00`),end:new Date(`${b}T23:59:59`)}}
+function savingsDates(){
+if(savingsRange==="month"){
+const y=savingsMonthCursor.getFullYear(),m=savingsMonthCursor.getMonth();
+return{start:new Date(y,m,1),end:new Date(y,m+1,0,23,59,59,999)};
+}
+if(savingsRange==="year"){
+const raw=Number(document.getElementById("savingsYearSelect").value);
+const y=Number.isFinite(raw)&&raw>=2000?raw:new Date().getFullYear();
+return{start:new Date(y,0,1),end:new Date(y,11,31,23,59,59,999)};
+}
+const a=document.getElementById("savingsStartDate").value,b=document.getElementById("savingsEndDate").value;
+return{start:new Date(`${a}T00:00:00`),end:new Date(`${b}T23:59:59`)};
+}
 async function updateSavingsAnalytics(){
 const range=savingsDates();
 const {data,error}=await supabaseClient.from("budget_plans").select("budget_month,weekly_savings").eq("household_id",householdId);
@@ -4095,7 +4187,22 @@ if(d>=range.start&&d<=range.end)total+=amount;
 document.getElementById("analyticsSavings").textContent=money(total);
 document.getElementById("analyticsSavingsRange").textContent=formatAnalyticsDateRange(range.start,range.end);
 }
-function initializeSavingsControls(){const now=new Date(),years=document.getElementById("savingsYearSelect");savingsMonthCursor=addMonths(firstOfMonth(now),-1);renderSavingsMonthLabel();years.innerHTML="";for(let y=now.getFullYear();y>=2020;y--){const o=document.createElement("option");o.value=y;o.textContent=y;years.appendChild(o)}const prev=addMonths(firstOfMonth(now),-1);document.getElementById("savingsStartDate").value=`${prev.getFullYear()}-01-01`;document.getElementById("savingsEndDate").value=dateOnly(now)}
+function initializeSavingsControls(){
+const now=new Date(),years=document.getElementById("savingsYearSelect");
+savingsMonthCursor=addMonths(firstOfMonth(now),-1);
+renderSavingsMonthLabel();
+years.innerHTML="";
+for(let y=now.getFullYear();y>=2020;y--){
+const o=document.createElement("option");
+o.value=String(y);
+o.textContent=String(y);
+years.appendChild(o);
+}
+years.value=String(now.getFullYear());
+const prev=addMonths(firstOfMonth(now),-1);
+document.getElementById("savingsStartDate").value=`${prev.getFullYear()}-01-01`;
+document.getElementById("savingsEndDate").value=dateOnly(now);
+}
 function openCategoryHistory(category){const range=analyticsDates(),items=analyticsFilteredExpenses.filter(x=>(x.category||"Other")===category).sort((a,b)=>new Date(b.spent_at)-new Date(a.spent_at));document.getElementById("categoryHistoryTitle").textContent=category;document.getElementById("categoryHistoryRange").textContent=formatAnalyticsDateRange(range.start,range.end);const box=document.getElementById("categoryHistoryList");box.innerHTML=items.length?items.map(x=>`<div class="transaction category-history-item" data-expense-id="${x.id}"><div class="transaction-main"><div class="transaction-name">${escapeHtml(x.description)}</div><div class="transaction-meta">${escapeHtml(expenseMeta(x))}</div></div><div class="transaction-amount">-${money(x.amount)}</div></div>`).join(""):'<p class="subtext">No expenses in this category for this period.</p>';box.querySelectorAll("[data-expense-id]").forEach(row=>row.onclick=()=>{closeCategoryHistory();editExpense(row.dataset.expenseId)});document.getElementById("categoryHistoryModal").classList.remove("hidden")}
 function closeCategoryHistory(){document.getElementById("categoryHistoryModal").classList.add("hidden")}
 function renderThemes(){
@@ -4156,91 +4263,76 @@ async function renderSettingsProfileList(){const profiles=await loadProfiles(),b
 function selectSettingsProfile(profile){settingsSwitchTarget=profile;document.getElementById("settingsSwitchPinName").textContent=`Enter ${profile.display_name}'s PIN`;document.getElementById("settingsSwitchPinArea").classList.remove("hidden");document.getElementById("settingsSwitchPinError").classList.add("hidden");renderPinBoxes("settingsSwitchPinBoxes",Number(profile.pin_length||4),submitSettingsProfilePin);const firstPin=document.querySelector("#settingsSwitchPinBoxes .pin-box");firstPin?.focus({preventScroll:true});setTimeout(()=>firstPin?.focus({preventScroll:true}),60)}
 async function submitSettingsProfilePin(){if(!settingsSwitchTarget)return;const pin=getPinFromBoxes("settingsSwitchPinBoxes"),required=Number(settingsSwitchTarget.pin_length||4);if(pin.length!==required)return;const {data,error}=await supabaseClient.rpc("create_profile_session",{p_profile_id:settingsSwitchTarget.id,p_pin:pin,p_session_minutes:1440});if(error){const e=document.getElementById("settingsSwitchPinError");e.textContent="Incorrect PIN.";e.classList.remove("hidden");clearPinBoxes("settingsSwitchPinBoxes");return}localStorage.setItem("profileSessionToken",data);localStorage.setItem("profileId",settingsSwitchTarget.id);currentProfile=settingsSwitchTarget;closeSettings();await enterProfile();showToast(`Switched to ${currentProfile.display_name}`)}
 async function loadBudgetHistory(){
-const {data,error}=
-await supabaseClient
+const [{data:plans,error:planError},{data:allocations,error:allocationError}]=await Promise.all([
+supabaseClient
 .from("budget_plans")
 .select("*")
 .eq("household_id",householdId)
-.order(
-"budget_month",
-{ascending:false}
-);
-const box=
-document.getElementById(
-"budgetHistoryList"
-);
-if(error){
-box.textContent=
-error.message;
+.order("budget_month",{ascending:false}),
+supabaseClient
+.from("budget_profile_allocations")
+.select("budget_month,profile_id,weekly_fun_amount,weekly_amount")
+.eq("household_id",householdId)
+]);
+const box=document.getElementById("budgetHistoryList");
+if(planError||allocationError){
+box.textContent=(planError||allocationError).message;
 return;
 }
+
+const allocationByMonth=new Map();
+for(const row of allocations||[]){
+const key=String(row.budget_month||"").slice(0,10);
+if(!allocationByMonth.has(key))allocationByMonth.set(key,[]);
+allocationByMonth.get(key).push(row);
+}
+
 box.innerHTML="";
-for(const plan of data||[]){
-const month=
-new Date(
-`${plan.budget_month}T00:00:00`
-);
-const details=
-document.createElement("div");
-details.className=
-"card settings-card";
+for(const plan of plans||[]){
+const monthKey=String(plan.budget_month).slice(0,10);
+const month=new Date(`${monthKey}T00:00:00`);
+const historical=HISTORICAL_BUDGETS[monthKey]||null;
+const mode=historical?.calculation_mode||plan.calculation_mode||(monthKey<"2026-09-01"?"average_4_345":"hard");
+const monthAllocations=allocationByMonth.get(monthKey)||[];
+
+let splitRows=[];
+if(monthAllocations.length){
+splitRows=monthAllocations.map(allocation=>{
+const profile=profileMap.get(allocation.profile_id);
+const amount=Number(allocation.weekly_fun_amount??allocation.weekly_amount??0);
+return `<div class="calc-row"><span>${escapeHtml(profile?.display_name||"Profile")} Fun Money</span><strong>${money(amount)}/week</strong></div>`;
+});
+}else if(historical?.perPersonFun!=null){
+const names=[...profileMap.values()].map(p=>p.display_name);
+if(names.length){
+splitRows=names.map(name=>`<div class="calc-row"><span>${escapeHtml(name)} Fun Money</span><strong>${money(historical.perPersonFun)}/week</strong></div>`);
+}else{
+splitRows=[`<div class="calc-row"><span>Each profile</span><strong>${money(historical.perPersonFun)}/week</strong></div>`];
+}
+}
+
+const details=document.createElement("div");
+details.className="card settings-card";
 details.innerHTML=`
-<button
-type="button"
-class="budget-history-toggle"
-style="
-width:100%;
-padding:0;
-background:none;
-display:flex;
-justify-content:space-between;
-font-weight:900
-"
->
-<span>
-${month.toLocaleDateString("en-US",{month:"long",year:"numeric"})}
-</span>
+<button type="button" class="budget-history-toggle" style="width:100%;padding:0;background:none;display:flex;justify-content:space-between;font-weight:900">
+<span>${month.toLocaleDateString("en-US",{month:"long",year:"numeric"})}</span>
 <span>›</span>
 </button>
 <div class="hidden budget-history-details" style="margin-top:13px">
-<div class="calc-row">
-<span>Budget Weeks</span>
-<strong>${getBudgetWeekCount(month)}</strong>
-</div>
-<div class="calc-row">
-<span>Needs / week</span>
-<strong>${money(plan.weekly_needs)}</strong>
-</div>
-<div class="calc-row">
-<span>Savings / week</span>
-<strong>${money(plan.weekly_savings)}</strong>
-</div>
-<div class="calc-row">
-<span>Fun Money / week</span>
-<strong>${money(plan.weekly_fun)}</strong>
-</div>
+<div class="calc-row"><span>Calculation</span><strong>${mode==="average_4_345"?"4.345 average":"Hard Budget"}</strong></div>
+<div class="calc-row"><span>Budget Weeks</span><strong>${mode==="average_4_345"?"Historical 4.345":getBudgetWeekCount(month)}</strong></div>
+<div class="calc-row"><span>Needs / week</span><strong>${money(plan.weekly_needs)}</strong></div>
+<div class="calc-row"><span>Savings / week</span><strong>${money(plan.weekly_savings)}</strong></div>
+<div class="calc-row"><span>Total Fun Money / week</span><strong>${money(plan.weekly_fun)}</strong></div>
+${splitRows.length?`<div style="margin-top:10px;padding-top:9px;border-top:1px solid color-mix(in srgb,var(--edge) 55%,transparent)"><strong>Fun Money Split</strong>${splitRows.join("")}</div>`:""}
 </div>
 `;
-const button=
-details.querySelector(
-".budget-history-toggle"
-);
-const body=
-details.querySelector(
-".budget-history-details"
-);
-const arrow=
-button.querySelector(
-"span:last-child"
-);
-button.onclick=
-()=>{
-const hidden=
-body.classList.toggle("hidden");
-arrow.textContent=
-hidden
-?"›"
-:"⌄";
+const button=details.querySelector(".budget-history-toggle");
+const body=details.querySelector(".budget-history-details");
+const arrow=button.querySelector("span:last-child");
+button.onclick=()=>{
+const hidden=body.classList.toggle("hidden");
+arrow.textContent=hidden?"›":"⌄";
 };
 box.appendChild(details);
 }
@@ -4371,17 +4463,26 @@ document
 .getElementById("settingsGear")
 .classList.remove("hidden");
 renderDateStrip();
+currentBudgetMonthCursor=activeBudgetMonth();
 /* Core app data must load even if an optional analytics/backfill task fails. */
 try{await ensureCurrentWeekDeposits()}catch(error){console.error("Current-week deposit sync failed",error)}
 await Promise.all([
 loadCurrentBudget(),
 openBudgetSetup(),
-loadExpenses(),
-calculateBalances()
+loadExpenses()
 ]);
+try{
+await calculateBalances();
+}catch(error){
+console.error("Home balances/activity failed to load",error);
+}
 initializeAnalyticsControls();
 initializeSavingsControls();
+try{
 await updateAnalytics();
+}catch(error){
+console.error("Analytics failed to load",error);
+}
 /* Savings-history backfill is secondary and must never block the app. */
 ensureSavingsHistory().then(()=>updateSavingsAnalytics()).catch(error=>console.error("Savings history sync failed",error));
 /*
@@ -4685,9 +4786,6 @@ document
 .getElementById("settingsGear")
 .onclick=
 ()=>openSettings("menu");
-document
-.getElementById("settingsBackButton")
-.onclick=()=>settingsBack(true);
 document.getElementById("settingsDetailBackButton").onclick=()=>settingsBack(true);
 document
 .querySelectorAll(
@@ -4903,15 +5001,19 @@ null,
 false
 );
 };
-document.getElementById("needsFundCard").onclick=()=>openTransactionModal("needs",null,true);
-document.getElementById("funFundCard").onclick=()=>openTransactionModal("fun",null,true);
+function bindFundCardTap(cardId,fund){
+const card=document.getElementById(cardId);
+card.onclick=null;
+card.addEventListener("click",event=>{
+if(event.target.closest(".week-start-balance"))return;
+openTransactionModal(fund,null,true);
+},true);
+}
+bindFundCardTap("needsFundCard","needs");
+bindFundCardTap("funFundCard","fun");
 
-["homeNeedsExpenses","homeFunExpenses"].forEach(id=>{
-const box=document.getElementById(id);
-box.addEventListener("click",e=>e.stopPropagation());
-box.addEventListener("pointerdown",e=>e.stopPropagation());
-});
-
+document.getElementById("needsWeekStartButton").onpointerdown=e=>e.stopPropagation();
+document.getElementById("funWeekStartButton").onpointerdown=e=>e.stopPropagation();
 document.getElementById("needsWeekStartButton").onclick=e=>{
 e.stopPropagation();
 openWeeklyBalanceHistory("needs");
@@ -5048,7 +5150,7 @@ document.getElementById("savingsNextMonth").onclick=async()=>{savingsMonthCursor
 document
 .getElementById("exportBudgetCsvButton")
 .onclick=
-exportBudgetCsv; 
+exportBudgetCsv;
 bindFluidSwipe();
 bindSettingsSwipeBack();
 window.addEventListener("pageshow",()=>{if(!document.getElementById("appScreen").classList.contains("hidden"))recenterHomeImmediately()});
