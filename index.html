@@ -7,12 +7,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Bicycle Budget">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-v6.png">
-<link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon-v6.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192-v6.png">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512-v6.png">
-<link rel="manifest" href="manifest-v6.webmanifest">
-<link rel="shortcut icon" href="icon-192-v6.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v8.png">
+<link rel="apple-touch-icon-precomposed" sizes="180x180" href="./apple-touch-icon-v8.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v8.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./icon-512-v8.png">
+<link rel="manifest" href="./manifest-v8.webmanifest">
+<link rel="shortcut icon" href="./icon-192-v8.png">
 <title>Bicycle Budget</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1163,6 +1163,130 @@ body{padding-top:env(safe-area-inset-top)}
 #expenseHistoryPanel .transaction.adjustment-row:hover{background:transparent}
 .transaction-amount.positive,.home-expense-amount.positive{font-weight:1000}
 
+
+/* v8 mobile viewport, category picker, settings-state, and legacy-budget refinements */
+.category-add-inline{
+  margin-top:10px;
+  padding:12px;
+  border-radius:12px;
+  background:color-mix(in srgb,var(--edge) 14%,transparent);
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--edge) 58%,transparent);
+}
+.category-add-inline .modal-actions{margin-top:8px}
+.legacy-budget-note{
+  margin:8px 0 12px;
+  padding:10px 12px;
+  border-radius:10px;
+  background:color-mix(in srgb,var(--accent) 12%,transparent);
+  color:var(--muted);
+  font-size:.82em;
+  font-weight:800;
+}
+@media(max-width:900px){
+  html,body,#mainWorkspace,.mobile-track{
+    height:100lvh!important;
+    min-height:100lvh!important;
+  }
+  .workspace-panel{
+    height:calc(100lvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 6px)!important;
+    margin-top:calc(env(safe-area-inset-top,0px) + 4px)!important;
+    margin-bottom:2px!important;
+  }
+  .workspace-panel .panel-inner{
+    padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))!important;
+  }
+  .home-panel .panel-inner{
+    padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))!important;
+  }
+  .settings{
+    height:calc(100lvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))!important;
+  }
+}
+
+
+/* v9 Home activity scrolling + weekly starting-balance history */
+.home-expenses{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  pointer-events:auto!important;
+  touch-action:pan-y!important;
+  padding-right:4px;
+}
+.fund-card .home-expenses{pointer-events:auto!important}
+.home-expenses::-webkit-scrollbar{width:5px}
+.home-expenses::-webkit-scrollbar-thumb{
+  background:color-mix(in srgb,var(--edge) 75%,transparent);
+  border-radius:0;
+}
+.week-start-balance{
+  width:100%;
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  padding:5px 2px 7px;
+  margin:0;
+  box-shadow:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:4px 7px;
+  font-size:.72em;
+  font-weight:800;
+  cursor:pointer;
+}
+.week-start-balance strong{
+  color:var(--text);
+  font-size:1.02em;
+}
+.week-start-balance span{
+  color:var(--muted);
+  font-size:.92em;
+  text-decoration:underline;
+  text-underline-offset:2px;
+}
+.weekly-balance-history-card{
+  max-height:min(78dvh,720px);
+  display:flex;
+  flex-direction:column;
+}
+.weekly-balance-history-list{
+  min-height:0;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  margin-top:12px;
+}
+.week-history-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:14px;
+  padding:12px 2px;
+  border-top:1px solid color-mix(in srgb,var(--edge) 55%,transparent);
+}
+.week-history-row:first-child{border-top:0}
+.week-history-dates{
+  min-width:0;
+  font-weight:900;
+}
+.week-history-dates .subtext{
+  margin-top:2px;
+  font-size:.78em;
+}
+.week-history-amount{
+  font-weight:900;
+  white-space:nowrap;
+}
+@media(max-width:900px){
+  .home-funds{min-height:0!important}
+  .fund-card{min-height:0!important}
+  .home-expenses{max-height:none!important}
+}
+
 </style>
 </head>
 <body class="theme-cedar font-system">
@@ -1323,12 +1447,20 @@ Dollar values below show how much Fun Money each profile spent during the select
 <div class="fund-label">Needs</div>
 <div class="fund-period">Current Balance</div>
 <div class="balance" id="needsBalance">$0.00</div>
+<button class="week-start-balance" id="needsWeekStartButton" type="button">
+Started week with <strong id="needsWeekStartBalance">$0.00</strong>
+<span>View history ›</span>
+</button>
 <div class="home-expenses" id="homeNeedsExpenses"></div>
 </div>
 <div class="card fund-card" id="funFundCard">
 <div class="fund-label">Fun Money</div>
 <div class="fund-period" id="funProfileLabel">Current Balance</div>
 <div class="balance" id="funBalance">$0.00</div>
+<button class="week-start-balance" id="funWeekStartButton" type="button">
+Started week with <strong id="funWeekStartBalance">$0.00</strong>
+<span>View history ›</span>
+</button>
 <div class="home-expenses" id="homeFunExpenses"></div>
 </div>
 </div>
@@ -1431,6 +1563,18 @@ Save Budget
 <div id="switchProfileSettings" class="hidden"><div class="card settings-card"><h2>Switch Profile</h2><div class="settings-switch-profile-list" id="settingsProfileList"></div><div class="settings-switch-pin hidden" id="settingsSwitchPinArea"><h3 id="settingsSwitchPinName"></h3><div class="pin-boxes" id="settingsSwitchPinBoxes"></div><div id="settingsSwitchPinError" class="login-error hidden"></div></div></div></div>
 </div></div></div>
 </section>
+<div class="modal-overlay hidden" id="weeklyBalanceHistoryModal">
+<div class="card modal-card weekly-balance-history-card">
+<div class="modal-header">
+<div>
+<h2 id="weeklyBalanceHistoryTitle">Weekly Balance History</h2>
+<div class="subtext" id="weeklyBalanceHistorySubtitle"></div>
+</div>
+<button class="icon-button" id="closeWeeklyBalanceHistory" type="button" aria-label="Close">×</button>
+</div>
+<div class="weekly-balance-history-list" id="weeklyBalanceHistoryList"></div>
+</div>
+</div>
 <div class="modal-overlay hidden" id="budgetHelpModal">
 <div class="card modal-card">
 <h2>How to Fill Out the Budget</h2>
@@ -1473,9 +1617,16 @@ Close
 <option value="fun">Fun Money</option>
 </select>
 <label>Category</label>
-<input id="expenseCategory" list="expenseCategoryOptions" autocomplete="off" placeholder="Choose or type a new category">
-<datalist id="expenseCategoryOptions"></datalist>
-<div class="subtext category-hint">Type a new category name to create it.</div>
+<select id="expenseCategory"></select>
+<div class="category-add-inline hidden" id="categoryAddInline">
+<label for="newExpenseCategory">New Category</label>
+<input id="newExpenseCategory" autocomplete="off" maxlength="60" placeholder="Category name">
+<div class="modal-actions">
+<button class="primary-button" id="saveNewCategoryButton" type="button">Add Category</button>
+<button class="secondary-button" id="cancelNewCategoryButton" type="button">Cancel</button>
+</div>
+<div class="subtext" id="categorySaveMessage" style="margin-top:8px"></div>
+</div>
 <label>Date</label>
 <input id="expenseDate" type="date">
 <div class="modal-actions">
@@ -1539,11 +1690,17 @@ let analyticsRange="month";
 let analyticsFilteredExpenses=[];
 let analyticsMonthCursor=firstOfMonth(new Date());
 let allExpenseHistory=[];
+let householdCategories=[];
+let weeklyBalanceHistoryCache={needs:[],fun:[]};
+let categoryTableAvailable=true;
 let expenseFilters={type:"all",category:"all",dateMode:"all",exactDate:"",month:"",start:"",end:""};
 let savingsRange="month";
 let savingsMonthCursor=addMonths(firstOfMonth(new Date()),-1);
-const HISTORICAL_BUDGETS={"2026-02-01":{"income":[["Mason's income",3248.37],["Kasey's income",2162.84]],"monthlyBills":[["Mortgage + home insurance",1676.91],["Student Loans",208.1],["Car Insurance (Progressive)",173.0],["Discover (Kasey's Credit Card)",11.13],["Trash",35.0],["Electric bill from previous month",51.0],["Internet",59.9],["Phone bill from previous month",89.28],["Spotify",18.14],["Apple",0.99],["Netflix",8.9],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.0]],"weeklyBills":[],"weekly_needs":300,"weekly_savings":250,"weekly_fun":154.4764097,"perPersonFun":77.23820483,"savedTotal":1000},"2026-03-01":{"income":[["Mason's income",3248.37],["Kasey's income",2162.84]],"monthlyBills":[["Mortgage + home insurance",1878.26],["Student Loans",208.1],["Car Insurance (Progressive)",173.0],["Discover (Kasey's Credit Card)",11.13],["Trash",35.0],["Electric bill from previous month",288.19],["Internet",59.9],["Phone bill from previous month",89.3],["Spotify",18.14],["Apple",0.99],["Netflix",8.9],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.0]],"weeklyBills":[],"weekly_needs":300,"weekly_savings":200,"weekly_fun":103.5420023,"perPersonFun":51.77100115,"savedTotal":800},"2026-04-01":{"income":[["Mason's income",3243.76],["Kasey's income",1886.48]],"monthlyBills":[["Mortgage + home insurance",1880.36],["Student Loans",208.1],["Car Insurance (Progressive)",173.64],["Discover (Kasey's Credit Card)",11.13],["Trash",35.0],["Electric bill from previous month",420.16],["Internet",58.63],["Phone bill from previous month",84.18],["Spotify",18.14],["Apple",0.99],["Netflix",8.9],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.0]],"weeklyBills":[],"weekly_needs":300,"weekly_savings":200,"weekly_fun":9.344073648,"perPersonFun":4.672036824,"savedTotal":1000},"2026-05-01":{"income":[["Mason's income",3243.76],["Kasey's income",2058.45]],"monthlyBills":[["Mortgage + home insurance",1882.47],["Student Loans",208.1],["Car Insurance (Progressive)",173.64],["Discover (Kasey's Credit Card)",11.13],["Trash",35.0],["Electric bill from previous month",206.09],["Internet",58.63],["Phone bill from previous month",89.24],["Spotify",20.27],["Apple",1.98],["Netflix",8.9],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.56]],"weeklyBills":[["Childcare",100]],"weekly_needs":300,"weekly_savings":100,"weekly_fun":95.69390104,"perPersonFun":47.84695052,"savedTotal":400},"2026-06-01":{"income":[["Mason's income",3326.25],["Kasey's income",2299.01],["Mason's CC cash back",65.27]],"monthlyBills":[["Mortgage + home insurance",1884.62],["Student Loans",208.1],["Car Insurance (Progressive)",173.64],["Discover (Kasey's Credit Card)",11.13],["Trash",35.0],["Electric bill from previous month",210.56],["Internet",58.63],["Phone bill from previous month",89.22],["Spotify",20.27],["Apple",1.98],["Netflix",8.9],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.56]],"weeklyBills":[["Childcare",100]],"weekly_needs":300,"weekly_savings":200,"weekly_fun":83.54660529,"perPersonFun":41.77330265,"savedTotal":800},"2026-07-01":{"income":[["Mason's income",3326.24],["Kasey's income",2191.16],["Mason's CC cash back",13.21]],"monthlyBills":[["Mortgage + home insurance",1886.78],["Student Loans",208.1],["Car Insurance (Progressive)",173.64],["Discover (Kasey's Credit Card)",11.13],["Trash",35.0],["Electric bill from previous month",210.26],["Internet",58.63],["Phone bill from previous month",96.76],["Spotify",20.27],["Apple",1.98],["Netflix",10.01],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.56]],"weeklyBills":[["Childcare",100]],"weekly_needs":250,"weekly_savings":200,"weekly_fun":94.32220944,"perPersonFun":47.16110472,"savedTotal":1000},"2026-08-01":{"income":[["Mason's income",3326.25],["Kasey's income",2152.91],["Mason's CC cash back",16.79]],"monthlyBills":[["Mortgage + home insurance",1888.97],["Student Loans",208.1],["Car Insurance (Progressive)",173.64],["Discover (Kasey's Credit Card)",10.66],["Trash",35.0],["Electric bill from previous month",237.42],["Internet",58.63],["Phone bill from previous month",96.76],["Spotify",20.27],["Apple",1.98],["Netflix",10.01],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.56]],"weeklyBills":[["Childcare",100]],"weekly_needs":250,"weekly_savings":200,"weekly_fun":79.69850403,"perPersonFun":39.84925201,"savedTotal":800},"2026-09-01":{"income":[["Mason's income",4989.37],["Kasey's income",2254.95],["Mason's CC cash back",14.41]],"monthlyBills":[["Mortgage + home insurance",1891.17],["Student Loans",208.1],["Car Insurance (Progressive)",173.64],["Discover (Kasey's Credit Card)",10.66],["Trash",35.0],["Electric bill from previous month",327.84],["Internet",58.63],["Phone bill from previous month",96.8],["Spotify",20.27],["Apple",1.98],["Netflix",10.01],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.56]],"weeklyBills":[["Childcare",100]],"weekly_needs":275,"weekly_savings":400,"weekly_fun":106.232,"perPersonFun":53.116,"savedTotal":2000}};
+const HISTORICAL_BUDGETS={"2026-02-01":{"income":[["Mason's income",3248.37],["Kasey's income",2162.84]],"monthlyBills":[["Mortgage + home insurance",1676.91],["Student Loans",208.1],["Car Insurance (Progressive)",173.0],["Discover (Kasey's Credit Card)",11.13],["Trash",35.0],["Electric bill from previous month",51.0],["Internet",59.9],["Phone bill from previous month",89.28],["Spotify",18.14],["Apple",0.99],["Netflix",8.9],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.0]],"weeklyBills":[],"weekly_needs":300,"weekly_savings":250,"weekly_fun":154.4764097,"perPersonFun":77.23820483,"savedTotal":1000,"calculation_mode":"average_4_345"},"2026-03-01":{"income":[["Mason's income",3248.37],["Kasey's income",2162.84]],"monthlyBills":[["Mortgage + home insurance",1878.26],["Student Loans",208.1],["Car Insurance (Progressive)",173.0],["Discover (Kasey's Credit Card)",11.13],["Trash",35.0],["Electric bill from previous month",288.19],["Internet",59.9],["Phone bill from previous month",89.3],["Spotify",18.14],["Apple",0.99],["Netflix",8.9],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.0]],"weeklyBills":[],"weekly_needs":300,"weekly_savings":200,"weekly_fun":103.5420023,"perPersonFun":51.77100115,"savedTotal":800,"calculation_mode":"average_4_345"},"2026-04-01":{"income":[["Mason's income",3243.76],["Kasey's income",1886.48]],"monthlyBills":[["Mortgage + home insurance",1880.36],["Student Loans",208.1],["Car Insurance (Progressive)",173.64],["Discover (Kasey's Credit Card)",11.13],["Trash",35.0],["Electric bill from previous month",420.16],["Internet",58.63],["Phone bill from previous month",84.18],["Spotify",18.14],["Apple",0.99],["Netflix",8.9],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.0]],"weeklyBills":[],"weekly_needs":300,"weekly_savings":200,"weekly_fun":9.344073648,"perPersonFun":4.672036824,"savedTotal":1000,"calculation_mode":"average_4_345"},"2026-05-01":{"income":[["Mason's income",3243.76],["Kasey's income",2058.45]],"monthlyBills":[["Mortgage + home insurance",1882.47],["Student Loans",208.1],["Car Insurance (Progressive)",173.64],["Discover (Kasey's Credit Card)",11.13],["Trash",35.0],["Electric bill from previous month",206.09],["Internet",58.63],["Phone bill from previous month",89.24],["Spotify",20.27],["Apple",1.98],["Netflix",8.9],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.56]],"weeklyBills":[["Childcare",100]],"weekly_needs":300,"weekly_savings":100,"weekly_fun":95.69390104,"perPersonFun":47.84695052,"savedTotal":400,"calculation_mode":"average_4_345"},"2026-06-01":{"income":[["Mason's income",3326.25],["Kasey's income",2299.01],["Mason's CC cash back",65.27]],"monthlyBills":[["Mortgage + home insurance",1884.62],["Student Loans",208.1],["Car Insurance (Progressive)",173.64],["Discover (Kasey's Credit Card)",11.13],["Trash",35.0],["Electric bill from previous month",210.56],["Internet",58.63],["Phone bill from previous month",89.22],["Spotify",20.27],["Apple",1.98],["Netflix",8.9],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.56]],"weeklyBills":[["Childcare",100]],"weekly_needs":300,"weekly_savings":200,"weekly_fun":83.54660529,"perPersonFun":41.77330265,"savedTotal":800,"calculation_mode":"average_4_345"},"2026-07-01":{"income":[["Mason's income",3326.24],["Kasey's income",2191.16],["Mason's CC cash back",13.21]],"monthlyBills":[["Mortgage + home insurance",1886.78],["Student Loans",208.1],["Car Insurance (Progressive)",173.64],["Discover (Kasey's Credit Card)",11.13],["Trash",35.0],["Electric bill from previous month",210.26],["Internet",58.63],["Phone bill from previous month",96.76],["Spotify",20.27],["Apple",1.98],["Netflix",10.01],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.56]],"weeklyBills":[["Childcare",100]],"weekly_needs":250,"weekly_savings":200,"weekly_fun":94.32220944,"perPersonFun":47.16110472,"savedTotal":1000,"calculation_mode":"average_4_345"},"2026-08-01":{"income":[["Mason's income",3326.25],["Kasey's income",2152.91],["Mason's CC cash back",16.79]],"monthlyBills":[["Mortgage + home insurance",1888.97],["Student Loans",208.1],["Car Insurance (Progressive)",173.64],["Discover (Kasey's Credit Card)",10.66],["Trash",35.0],["Electric bill from previous month",237.42],["Internet",58.63],["Phone bill from previous month",96.76],["Spotify",20.27],["Apple",1.98],["Netflix",10.01],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.56]],"weeklyBills":[["Childcare",100]],"weekly_needs":250,"weekly_savings":200,"weekly_fun":79.69850403,"perPersonFun":39.84925201,"savedTotal":800,"calculation_mode":"average_4_345"},"2026-09-01":{"income":[["Mason's income",4989.37],["Kasey's income",2254.95],["Mason's CC cash back",14.41]],"monthlyBills":[["Mortgage + home insurance",1891.17],["Student Loans",208.1],["Car Insurance (Progressive)",173.64],["Discover (Kasey's Credit Card)",10.66],["Trash",35.0],["Electric bill from previous month",327.84],["Internet",58.63],["Phone bill from previous month",96.8],["Spotify",20.27],["Apple",1.98],["Netflix",10.01],["Amazon Prime",12.91],["Disney/Hulu (Kasey's Credit Card)",5.56]],"weeklyBills":[["Childcare",100]],"weekly_needs":275,"weekly_savings":400,"weekly_fun":106.232,"perPersonFun":53.116,"savedTotal":2000,"calculation_mode":"hard"}};
 let settingsSwitchTarget=null;
+function budgetCalculationLabel(mode){
+return mode==="average_4_345"?"4.345 average weeks":"Hard Budget";
+}
 let toastTimer=null;
 const themeData={
 cedar:{
@@ -1938,22 +2095,44 @@ closeSettings();
 }
 function resetSettingsState(){
 const shell=document.getElementById("settingsScreen"),menu=document.getElementById("settingsMenuView"),detail=document.getElementById("settingsDetailView");
-shell.classList.remove("detail-open");shell.style.transform="";
-menu.classList.remove("dragging");detail.classList.remove("dragging");
-menu.style.transform="";detail.style.transform="";menu.style.transition="";detail.style.transition="";
-settingsSection="menu";settingsSwitchTarget=null;renderSettingsSection();
+settingsSection="menu";
+settingsSwitchTarget=null;
+shell.classList.remove("detail-open");
+shell.style.transform="";
+menu.classList.remove("dragging");
+detail.classList.remove("dragging");
+menu.style.transition="none";
+detail.style.transition="none";
+menu.style.transform="translate3d(0,0,0)";
+detail.style.transform="translate3d(100%,0,0)";
+renderSettingsSection();
+requestAnimationFrame(()=>{
+menu.style.transition="";
+detail.style.transition="";
+menu.style.transform="";
+detail.style.transform="";
+});
 }
 function openSettings(section="menu"){
 resetSettingsState();
-const shell=document.getElementById("settingsScreen");shell.classList.add("open");
+const shell=document.getElementById("settingsScreen");
+document.getElementById("settingsGear")?.classList.add("hidden");
+shell.classList.add("open");
 if(section!=="menu")requestAnimationFrame(()=>setSettingsDetail(section,true));
 }
 function closeSettings(){
-const shell=document.getElementById("settingsScreen");shell.classList.remove("open","detail-open");
+const shell=document.getElementById("settingsScreen");
+shell.classList.remove("open","detail-open");
 const menu=document.getElementById("settingsMenuView"),detail=document.getElementById("settingsDetailView");
-shell.style.transform="";menu.style.transform="";detail.style.transform="";
-menu.classList.remove("dragging");detail.classList.remove("dragging");
-settingsSection="menu";settingsSwitchTarget=null;
+shell.style.transform="";
+menu.style.transform="";
+detail.style.transform="";
+menu.classList.remove("dragging");
+detail.classList.remove("dragging");
+settingsSection="menu";
+settingsSwitchTarget=null;
+renderSettingsSection();
+if(currentProfile)document.getElementById("settingsGear")?.classList.remove("hidden");
 }
 function bindSettingsSwipeBack(){
 const screen=document.getElementById("settingsScreen"),menu=document.getElementById("settingsMenuView"),detail=document.getElementById("settingsDetailView");
@@ -2204,9 +2383,16 @@ const monthKey=dateOnly(month);
 document.getElementById("currentBudgetMonth").textContent=month.toLocaleDateString("en-US",{month:"long",year:"numeric"});
 const weeks=getBudgetWeekCount(month);
 const warning=document.getElementById("currentFiveWeekWarning");
-if(weeks===5){warning.textContent=`${month.toLocaleDateString("en-US",{month:"long"})} has 5 budget weeks.`;warning.classList.remove("hidden")}else warning.classList.add("hidden");
-
 const historical=HISTORICAL_BUDGETS[monthKey]||null;
+const historicalLegacy=Boolean(historical&&historical.calculation_mode==="average_4_345");
+if(historicalLegacy){
+warning.textContent="Historical budget: this month used the old 4.345 average-weeks calculation. It is preserved as originally budgeted and is not recalculated using Hard Budget weeks.";
+warning.classList.remove("hidden");
+}else if(weeks===5){
+warning.textContent=`${month.toLocaleDateString("en-US",{month:"long"})} has 5 budget weeks.`;
+warning.classList.remove("hidden");
+}else warning.classList.add("hidden");
+
 const [{data:dbPlan,error:planError},{data:dbItems,error:itemError},{data:allocations,error:allocationError}]=await Promise.all([
 supabaseClient.from("budget_plans").select("*").eq("household_id",householdId).eq("budget_month",monthKey).maybeSingle(),
 supabaseClient.from("budget_items").select("*").eq("household_id",householdId).eq("budget_month",monthKey),
@@ -2233,20 +2419,30 @@ const weeklyBills=weeklyBillItems.reduce((s,x)=>s+Number(x[1]||0),0);
 const weeklyNeeds=Number(plan.weekly_needs||0);
 const weeklySavings=Number(plan.weekly_savings||0);
 const weeklyFun=Number(plan.weekly_fun||0);
+const calculationMode=historical?.calculation_mode||plan.calculation_mode||(monthKey<"2026-09-01"?"average_4_345":"hard");
+const monthlyMultiplier=calculationMode==="average_4_345"?4.345:weeks;
 const rows=[
+["Calculation Method",calculationMode==="average_4_345"?"Historical · 4.345 average weeks":"Hard Budget · actual budget weeks"],
 ["Total Income",money(income)],
 ["Total Monthly Bills",`-${money(monthlyBills)}`],
 ["Total Weekly Bills",`-${money(weeklyBills)}/week`],
 ["Weekly Needs",`${money(weeklyNeeds)}/week`],
 ["Weekly Savings",`${money(weeklySavings)}/week`],
 ["Total Fun Money",`${money(weeklyFun)}/week`],
-["Planned Needs This Month",money(weeklyNeeds*weeks)],
-["Planned Savings This Month",money(weeklySavings*weeks)],
-["Planned Fun Money This Month",money(weeklyFun*weeks)]
+["Planned Needs This Month",money(weeklyNeeds*monthlyMultiplier)],
+["Planned Savings This Month",money(weeklySavings*monthlyMultiplier)],
+["Planned Fun Money This Month",money(weeklyFun*monthlyMultiplier)]
 ];
 
 const allocationRows=[];
-if((allocations||[]).length){
+if(historicalLegacy&&historical){
+const names=[...profileMap.values()].map(p=>p.display_name);
+if(names.length>=2){
+allocationRows.push([`${names[0]}'s Fun Money`,`${money(historical.perPersonFun)}/week`],[`${names[1]}'s Fun Money`,`${money(historical.perPersonFun)}/week`]);
+}else{
+allocationRows.push(["Each person's Fun Money",`${money(historical.perPersonFun)}/week`]);
+}
+}else if((allocations||[]).length){
 for(const allocation of allocations){
 const profile=profileMap.get(allocation.profile_id);
 allocationRows.push([`${profile?.display_name||"Profile"}'s Fun Money`,`${money(allocation.weekly_fun_amount??allocation.weekly_amount??0)}/week`]);
@@ -2638,7 +2834,13 @@ document.querySelectorAll(
 )
 ];
 if(!inputs.length)return;
-const availableCents=
+/*
+Split the exact pool evenly, then round DOWN to whole cents
+for each profile. A leftover cent remains unassigned instead
+of making one person's weekly allowance a cent higher.
+Example: $69.69 / 2 => $34.84 each, with $0.01 unassigned.
+*/
+const poolCents=
 Math.max(
 0,
 Math.floor(
@@ -2646,57 +2848,17 @@ Number(pool||0)*100+
 0.0000001
 )
 );
-const baseCents=
+const eachCents=
 Math.floor(
-availableCents/
+poolCents/
 inputs.length
 );
-let remainder=
-availableCents-
-baseCents*inputs.length;
-const ownerId=[...
-profileMap.values()
-]
-.find(
-profile=>
-profile.access_level==="owner"
-)
-?.id;
 inputs.forEach(
 input=>{
-let cents=
-baseCents;
-if(
-input.dataset.profileId===ownerId &&
-remainder>0
-){
-cents++;
-remainder--;
-}
 input.value=
-money(cents/100);
+money(eachCents/100);
 }
 );
-/*
-More than two profiles can theoretically produce
-more than one leftover cent.
-Hand remaining cents out one-by-one.
-*/
-for(
-let i=0;
-remainder>0 && i<inputs.length;
-i++
-){
-const input=
-inputs[i];
-const cents=
-Math.round(
-parseMoney(input.value)*100
-)+1;
-input.value=
-money(cents/100);
-remainder--;
-}
 }
 function allocationTotal(){
 return[...
@@ -3063,14 +3225,118 @@ function expenseFilterSummaryText(){const parts=[];const t=expenseFilters.type;i
 function refreshExpenseHistory(){renderExpenseHistory(applyExpenseFiltersToItems(allExpenseHistory));const el=document.getElementById("expenseFilterSummary"),txt=expenseFilterSummaryText();el.textContent=txt?`Filtered: ${txt}`:"";el.classList.toggle("hidden",!txt)}
 function renderExpenseFilterTypeOptions(){const select=document.getElementById("expenseFilterType");let html='<option value="all">All Activity</option><option value="needs">Needs</option><option value="fun">All Fun Money</option>';for(const p of profileMap.values()){const n=escapeHtml(p.display_name);html+=`<option value="fun:${p.id}">${n} Fun Money</option><option value="allprofile:${p.id}">All inputs by ${n}</option><option value="needsprofile:${p.id}">Needs input by ${n}</option>`}select.innerHTML=html;select.value=expenseFilters.type||"all"}
 function updateExpenseFilterDateFields(){const m=document.getElementById("expenseFilterDateMode").value;document.getElementById("expenseFilterExactWrap").classList.toggle("hidden",m!=="date");document.getElementById("expenseFilterMonthWrap").classList.toggle("hidden",m!=="month");document.getElementById("expenseFilterCustomWrap").classList.toggle("hidden",m!=="custom")}
-function getKnownCategories(){const defaults=["Groceries","Gas","Dining","Bill","Shopping","Entertainment","Transportation","Medical","Other"];const custom=(allExpenseHistory||[]).filter(x=>x.activity_type!=="adjustment").map(x=>(x.category||"").trim()).filter(Boolean);return [...new Set([...defaults,...custom])].sort((a,b)=>a.localeCompare(b))}
-function refreshCategoryControls(){const cats=getKnownCategories();const list=document.getElementById("expenseCategoryOptions");if(list)list.innerHTML=cats.map(c=>`<option value="${escapeHtml(c)}"></option>`).join("");const filter=document.getElementById("expenseFilterCategory");if(filter){const keep=filter.value||expenseFilters.category||"all";filter.innerHTML='<option value="all">All Categories</option><option value="Added Funds">Added Funds</option>'+cats.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");filter.value=(cats.includes(keep)||keep==="all"||keep==="Added Funds")?keep:"all"}}
+function categoryStorageKey(){return `bicycleBudgetCategories:${householdId||"unknown"}`}
+function loadLocalHouseholdCategories(){
+try{
+const value=JSON.parse(localStorage.getItem(categoryStorageKey())||"[]");
+return Array.isArray(value)?value.filter(Boolean):[];
+}catch{return[]}
+}
+function saveLocalHouseholdCategories(){
+try{localStorage.setItem(categoryStorageKey(),JSON.stringify(householdCategories))}catch{}
+}
+async function loadHouseholdCategories(){
+const local=loadLocalHouseholdCategories();
+try{
+const {data,error}=await supabaseClient
+.from("expense_categories")
+.select("name")
+.eq("household_id",householdId)
+.order("name");
+if(error)throw error;
+categoryTableAvailable=true;
+householdCategories=[...new Set([...(data||[]).map(x=>String(x.name||"").trim()).filter(Boolean),...local])];
+saveLocalHouseholdCategories();
+}catch(error){
+categoryTableAvailable=false;
+householdCategories=[...new Set(local)];
+console.warn("Custom category table unavailable; using this device until SQL setup is complete.",error);
+}
+}
+function getKnownCategories(){
+const defaults=["Groceries","Gas","Dining","Bill","Shopping","Entertainment","Transportation","Medical","Other"];
+const used=(allExpenseHistory||[]).filter(x=>x.activity_type!=="adjustment").map(x=>String(x.category||"").trim()).filter(Boolean);
+const seen=new Set();
+return [...defaults,...householdCategories,...used].filter(name=>{
+const key=name.toLocaleLowerCase();
+if(seen.has(key))return false;
+seen.add(key);
+return true;
+});
+}
+function refreshCategoryControls(preferred=null){
+const cats=getKnownCategories();
+const select=document.getElementById("expenseCategory");
+if(select){
+const keep=preferred||select.value||"Other";
+select.innerHTML=cats.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("")+'<option value="__add__">+ Add Category</option>';
+select.value=cats.some(c=>c===keep)?keep:"Other";
+}
+const filter=document.getElementById("expenseFilterCategory");
+if(filter){
+const keep=filter.value||expenseFilters.category||"all";
+filter.innerHTML='<option value="all">All Categories</option><option value="Added Funds">Added Funds</option>'+cats.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
+filter.value=(cats.includes(keep)||keep==="all"||keep==="Added Funds")?keep:"all";
+}
+}
+function closeInlineCategoryAdder(resetSelect=true){
+document.getElementById("categoryAddInline")?.classList.add("hidden");
+document.getElementById("categorySaveMessage").textContent="";
+document.getElementById("newExpenseCategory").value="";
+if(resetSelect&&document.getElementById("expenseCategory").value==="__add__"){
+document.getElementById("expenseCategory").value="Other";
+}
+}
+function openInlineCategoryAdder(){
+document.getElementById("categoryAddInline").classList.remove("hidden");
+document.getElementById("categorySaveMessage").textContent="";
+const input=document.getElementById("newExpenseCategory");
+input.value="";
+requestAnimationFrame(()=>input.focus({preventScroll:false}));
+}
+async function saveInlineCategory(){
+const input=document.getElementById("newExpenseCategory");
+const message=document.getElementById("categorySaveMessage");
+const name=input.value.trim().replace(/\s+/g," ");
+if(!name){message.textContent="Enter a category name.";return}
+if(name.length>60){message.textContent="Category names can be up to 60 characters.";return}
+const existing=getKnownCategories().find(c=>c.toLocaleLowerCase()===name.toLocaleLowerCase());
+if(existing){
+refreshCategoryControls(existing);
+closeInlineCategoryAdder(false);
+return;
+}
+if(categoryTableAvailable){
+const {error}=await supabaseClient.from("expense_categories").insert({
+household_id:householdId,
+name,
+created_by:currentUser.id
+});
+if(error){
+if(error.code!=="23505"){
+message.textContent="Could not save category. It will be available on this device.";
+categoryTableAvailable=false;
+}else{
+const {data}=await supabaseClient.from("expense_categories").select("name").eq("household_id",householdId);
+householdCategories=(data||[]).map(x=>x.name);
+}
+}
+}
+if(!householdCategories.some(c=>c.toLocaleLowerCase()===name.toLocaleLowerCase())){
+householdCategories.push(name);
+}
+saveLocalHouseholdCategories();
+refreshCategoryControls(name);
+closeInlineCategoryAdder(false);
+showToast("Category added");
+}
 function openExpenseFilters(){renderExpenseFilterTypeOptions();refreshCategoryControls();document.getElementById("expenseFilterCategory").value=expenseFilters.category;document.getElementById("expenseFilterDateMode").value=expenseFilters.dateMode;document.getElementById("expenseFilterExactDate").value=expenseFilters.exactDate;document.getElementById("expenseFilterMonth").value=expenseFilters.month;document.getElementById("expenseFilterStart").value=expenseFilters.start;document.getElementById("expenseFilterEnd").value=expenseFilters.end;updateExpenseFilterDateFields();document.getElementById("expenseFilterModal").classList.remove("hidden")}
 function closeExpenseFilters(){document.getElementById("expenseFilterModal").classList.add("hidden")}
 function applyExpenseFilterForm(){expenseFilters={type:document.getElementById("expenseFilterType").value,category:document.getElementById("expenseFilterCategory").value,dateMode:document.getElementById("expenseFilterDateMode").value,exactDate:document.getElementById("expenseFilterExactDate").value,month:document.getElementById("expenseFilterMonth").value,start:document.getElementById("expenseFilterStart").value,end:document.getElementById("expenseFilterEnd").value};closeExpenseFilters();refreshExpenseHistory()}
 function clearExpenseFilterForm(){expenseFilters={type:"all",category:"all",dateMode:"all",exactDate:"",month:"",start:"",end:""};closeExpenseFilters();refreshExpenseHistory()}
 async function loadExpenses(){
 await loadProfiles();
+await loadHouseholdCategories();
 const [{data:expenses,error:expenseError},{data:adjustments,error:adjustmentError}]=await Promise.all([
 supabaseClient.from("expenses").select("*").eq("household_id",householdId).order("spent_at",{ascending:false}).limit(1000),
 supabaseClient.from("fund_adjustments").select("*").eq("household_id",householdId).order("adjusted_at",{ascending:false}).limit(1000)
@@ -3145,10 +3411,8 @@ document
 .getElementById("expenseFund")
 .value=
 expense?.fund||fund;
-document
-.getElementById("expenseCategory")
-.value=
-expense?.category||"Other";
+refreshCategoryControls(expense?.category||"Other");
+closeInlineCategoryAdder(false);
 document
 .getElementById("expenseDate")
 .value=
@@ -3209,6 +3473,7 @@ document.getElementById("fundAdjustmentAmount")
 }
 function closeTransactionModal(){
 editingExpenseId=null;
+closeInlineCategoryAdder(false);
 document
 .getElementById("transactionModal")
 .classList.add("hidden");
@@ -3234,10 +3499,16 @@ const fund=
 document
 .getElementById("expenseFund")
 .value;
-const category=
+const categoryValue=
 document
 .getElementById("expenseCategory")
-.value.trim()||"Other";
+.value;
+if(categoryValue==="__add__"){
+openInlineCategoryAdder();
+return;
+}
+const category=
+String(categoryValue||"Other").trim()||"Other";
 const date=
 document
 .getElementById("expenseDate")
@@ -3380,104 +3651,188 @@ showToast("Funds added");
 }
 async function calculateBalances(){
 const [
-{data:needsDeposits},
-{data:funDeposits},
-{data:expenses},
-{data:adjustments}
-]=
-await Promise.all([
+{data:needsDeposits,error:needsDepositError},
+{data:funDeposits,error:funDepositError},
+{data:expenses,error:expenseError},
+{data:adjustments,error:adjustmentError}
+]=await Promise.all([
 supabaseClient
 .from("allowance_deposits")
-.select("amount")
+.select("amount,week_start,fund")
 .eq("household_id",householdId)
-.eq("fund","needs"),
+.eq("fund","needs")
+.order("week_start",{ascending:true}),
 supabaseClient
 .from("profile_fun_deposits")
-.select("amount")
+.select("amount,week_start,profile_id")
 .eq("household_id",householdId)
-.eq("profile_id",currentProfile.id),
+.eq("profile_id",currentProfile.id)
+.order("week_start",{ascending:true}),
 supabaseClient
 .from("expenses")
-.select("amount,fund,profile_id")
-.eq("household_id",householdId),
+.select("amount,fund,profile_id,spent_at")
+.eq("household_id",householdId)
+.order("spent_at",{ascending:true}),
 supabaseClient
 .from("fund_adjustments")
-.select("amount,fund,profile_id")
+.select("amount,fund,profile_id,adjusted_at")
 .eq("household_id",householdId)
+.order("adjusted_at",{ascending:true})
 ]);
+if(needsDepositError)throw needsDepositError;
+if(funDepositError)throw funDepositError;
+if(expenseError)throw expenseError;
+if(adjustmentError)throw adjustmentError;
+
 const needs=
-(needsDeposits||[])
-.reduce(
-(s,x)=>s+Number(x.amount||0),
-0
-)
+(needsDeposits||[]).reduce((s,x)=>s+Number(x.amount||0),0)
 +
-(adjustments||[])
-.filter(x=>x.fund==="needs")
-.reduce(
-(s,x)=>s+Number(x.amount||0),
-0
-)
+(adjustments||[]).filter(x=>x.fund==="needs").reduce((s,x)=>s+Number(x.amount||0),0)
 -
-(expenses||[])
-.filter(x=>x.fund==="needs")
-.reduce(
-(s,x)=>s+Number(x.amount||0),
-0
-);
+(expenses||[]).filter(x=>x.fund==="needs").reduce((s,x)=>s+Number(x.amount||0),0);
+
 const fun=
-(funDeposits||[])
-.reduce(
-(s,x)=>s+Number(x.amount||0),
-0
-)
+(funDeposits||[]).reduce((s,x)=>s+Number(x.amount||0),0)
 +
-(adjustments||[])
-.filter(
-x=>
-x.fund==="fun" &&
-x.profile_id===currentProfile.id
-)
-.reduce(
-(s,x)=>s+Number(x.amount||0),
-0
-)
+(adjustments||[]).filter(x=>x.fund==="fun"&&x.profile_id===currentProfile.id).reduce((s,x)=>s+Number(x.amount||0),0)
 -
-(expenses||[])
-.filter(
-x=>
-x.fund==="fun" &&
-x.profile_id===currentProfile.id
-)
-.reduce(
-(s,x)=>s+Number(x.amount||0),
-0
+(expenses||[]).filter(x=>x.fund==="fun"&&x.profile_id===currentProfile.id).reduce((s,x)=>s+Number(x.amount||0),0);
+
+document.getElementById("needsBalance").textContent=money(needs);
+document.getElementById("funBalance").textContent=money(fun);
+document.getElementById("funProfileLabel").textContent=`${currentProfile.display_name}'s Current Balance`;
+document.getElementById("needsBalance").classList.toggle("negative",needs<0);
+document.getElementById("funBalance").classList.toggle("negative",fun<0);
+
+weeklyBalanceHistoryCache.needs=buildWeeklyStartingBalanceHistory(
+"needs",
+needsDeposits||[],
+expenses||[],
+adjustments||[]
 );
-document
-.getElementById("needsBalance")
-.textContent=
-money(needs);
-document
-.getElementById("funBalance")
-.textContent=
-money(fun);
-document
-.getElementById("funProfileLabel")
-.textContent=
-`${currentProfile.display_name}'s Current Balance`;
-document
-.getElementById("needsBalance")
-.classList.toggle(
-"negative",
-needs<0
+weeklyBalanceHistoryCache.fun=buildWeeklyStartingBalanceHistory(
+"fun",
+funDeposits||[],
+expenses||[],
+adjustments||[]
 );
-document
-.getElementById("funBalance")
-.classList.toggle(
-"negative",
-fun<0
-);
+
+const currentWeekKey=dateOnly(weekStart(new Date()));
+const needsCurrent=weeklyBalanceHistoryCache.needs.find(x=>x.week_start===currentWeekKey);
+const funCurrent=weeklyBalanceHistoryCache.fun.find(x=>x.week_start===currentWeekKey);
+document.getElementById("needsWeekStartBalance").textContent=money(needsCurrent?.starting_balance||0);
+document.getElementById("funWeekStartBalance").textContent=money(funCurrent?.starting_balance||0);
+
 await loadHomeExpenseLists();
+}
+
+function buildWeeklyStartingBalanceHistory(fund,deposits,expenses,adjustments){
+const currentWeek=weekStart(new Date());
+const firstCandidates=[];
+
+for(const d of deposits||[]){
+const dt=parseLocalDate(d.week_start);
+if(dt&&!Number.isNaN(dt.getTime()))firstCandidates.push(weekStart(dt));
+}
+for(const e of expenses||[]){
+if(e.fund!==fund)continue;
+if(fund==="fun"&&e.profile_id!==currentProfile.id)continue;
+const dt=new Date(e.spent_at);
+if(!Number.isNaN(dt.getTime()))firstCandidates.push(weekStart(dt));
+}
+for(const a of adjustments||[]){
+if(a.fund!==fund)continue;
+if(fund==="fun"&&a.profile_id!==currentProfile.id)continue;
+const dt=new Date(a.adjusted_at);
+if(!Number.isNaN(dt.getTime()))firstCandidates.push(weekStart(dt));
+}
+
+if(!firstCandidates.length)firstCandidates.push(currentWeek);
+let firstWeek=new Date(Math.min(...firstCandidates.map(d=>d.getTime())));
+if(firstWeek>currentWeek)firstWeek=currentWeek;
+
+const rows=[];
+for(let ws=new Date(firstWeek);ws<=currentWeek;ws=new Date(ws.getFullYear(),ws.getMonth(),ws.getDate()+7)){
+const wsDate=new Date(ws.getFullYear(),ws.getMonth(),ws.getDate());
+const nextWeek=new Date(wsDate.getFullYear(),wsDate.getMonth(),wsDate.getDate()+7);
+const wsKey=dateOnly(wsDate);
+
+const depositTotal=(deposits||[])
+.filter(d=>{
+if(fund==="fun"&&d.profile_id&&d.profile_id!==currentProfile.id)return false;
+const dKey=String(d.week_start||"").slice(0,10);
+return dKey<=wsKey;
+})
+.reduce((sum,d)=>sum+Number(d.amount||0),0);
+
+const priorExpenses=(expenses||[])
+.filter(e=>{
+if(e.fund!==fund)return false;
+if(fund==="fun"&&e.profile_id!==currentProfile.id)return false;
+return new Date(e.spent_at)<wsDate;
+})
+.reduce((sum,e)=>sum+Number(e.amount||0),0);
+
+const priorAdjustments=(adjustments||[])
+.filter(a=>{
+if(a.fund!==fund)return false;
+if(fund==="fun"&&a.profile_id!==currentProfile.id)return false;
+return new Date(a.adjusted_at)<wsDate;
+})
+.reduce((sum,a)=>sum+Number(a.amount||0),0);
+
+/*
+"Started week with" is the carryover balance plus that week's
+automatic deposit. Manual Add Funds transactions occurring later
+in the week are intentionally excluded.
+*/
+const startingBalance=depositTotal+priorAdjustments-priorExpenses;
+
+const thisWeekDeposit=(deposits||[])
+.filter(d=>String(d.week_start||"").slice(0,10)===wsKey)
+.reduce((sum,d)=>sum+Number(d.amount||0),0);
+
+rows.push({
+week_start:wsKey,
+week_end:dateOnly(new Date(nextWeek.getFullYear(),nextWeek.getMonth(),nextWeek.getDate()-1)),
+starting_balance:startingBalance,
+weekly_deposit:thisWeekDeposit
+});
+}
+return rows.reverse();
+}
+
+function formatWeekRange(startKey,endKey){
+const start=parseLocalDate(startKey),end=parseLocalDate(endKey);
+const sameYear=start.getFullYear()===end.getFullYear();
+const startText=start.toLocaleDateString("en-US",{month:"short",day:"numeric",...(sameYear?{}:{year:"numeric"})});
+const endText=end.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+return `${startText}–${endText}`;
+}
+
+function openWeeklyBalanceHistory(fund){
+const rows=weeklyBalanceHistoryCache[fund]||[];
+const title=fund==="needs"?"Needs — Weekly History":`${currentProfile.display_name}'s Fun Money — Weekly History`;
+document.getElementById("weeklyBalanceHistoryTitle").textContent=title;
+document.getElementById("weeklyBalanceHistorySubtitle").textContent="Starting balance is the amount available immediately after that week's automatic budget deposit.";
+const list=document.getElementById("weeklyBalanceHistoryList");
+if(!rows.length){
+list.innerHTML='<div class="subtext" style="padding:12px 2px">No weekly history yet.</div>';
+}else{
+list.innerHTML=rows.map(row=>`
+<div class="week-history-row">
+<div class="week-history-dates">
+${escapeHtml(formatWeekRange(row.week_start,row.week_end))}
+<div class="subtext">Weekly deposit: ${money(row.weekly_deposit)}</div>
+</div>
+<div class="week-history-amount">${money(row.starting_balance)}</div>
+</div>`).join("");
+}
+document.getElementById("weeklyBalanceHistoryModal").classList.remove("hidden");
+}
+
+function closeWeeklyBalanceHistory(){
+document.getElementById("weeklyBalanceHistoryModal").classList.add("hidden");
 }
 async function loadHomeExpenseLists(){
 const start=weekStart(new Date()).toISOString();
@@ -4317,6 +4672,15 @@ p_theme:
 showToast("Profile created");
 await renderProfiles();
 };
+document.getElementById("expenseCategory").onchange=e=>{
+if(e.target.value==="__add__")openInlineCategoryAdder();
+else closeInlineCategoryAdder(false);
+};
+document.getElementById("saveNewCategoryButton").onclick=saveInlineCategory;
+document.getElementById("cancelNewCategoryButton").onclick=()=>closeInlineCategoryAdder(true);
+document.getElementById("newExpenseCategory").addEventListener("keydown",e=>{
+if(e.key==="Enter"){e.preventDefault();saveInlineCategory();}
+});
 document
 .getElementById("settingsGear")
 .onclick=
@@ -4541,6 +4905,25 @@ false
 };
 document.getElementById("needsFundCard").onclick=()=>openTransactionModal("needs",null,true);
 document.getElementById("funFundCard").onclick=()=>openTransactionModal("fun",null,true);
+
+["homeNeedsExpenses","homeFunExpenses"].forEach(id=>{
+const box=document.getElementById(id);
+box.addEventListener("click",e=>e.stopPropagation());
+box.addEventListener("pointerdown",e=>e.stopPropagation());
+});
+
+document.getElementById("needsWeekStartButton").onclick=e=>{
+e.stopPropagation();
+openWeeklyBalanceHistory("needs");
+};
+document.getElementById("funWeekStartButton").onclick=e=>{
+e.stopPropagation();
+openWeeklyBalanceHistory("fun");
+};
+document.getElementById("closeWeeklyBalanceHistory").onclick=closeWeeklyBalanceHistory;
+document.getElementById("weeklyBalanceHistoryModal").onclick=e=>{
+if(e.target.id==="weeklyBalanceHistoryModal")closeWeeklyBalanceHistory();
+};
 document
 .querySelectorAll(
 "[data-transaction-tab]"
