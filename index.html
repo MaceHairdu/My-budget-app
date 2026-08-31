@@ -17,10 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Nunito:wght@500;700;800;900&family=Press+Start+2P&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">document.getElementById("budgetMonthStartedOk").onclick=acknowledgeBudgetMonthStarted;
-document.getElementById("prepareMonthReminderGo").onclick=()=>dismissPrepareMonthReminder(true);
-document.getElementById("prepareMonthReminderDismiss").onclick=()=>dismissPrepareMonthReminder(false);
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{
 box-sizing:border-box;
@@ -5512,6 +5509,10 @@ currentUser=session.user;
 await startApp();
 }
 })();
+
+document.getElementById("budgetMonthStartedOk").onclick=acknowledgeBudgetMonthStarted;
+document.getElementById("prepareMonthReminderGo").onclick=()=>dismissPrepareMonthReminder(true);
+document.getElementById("prepareMonthReminderDismiss").onclick=()=>dismissPrepareMonthReminder(false);
 </script>
 </body>
 </html>
