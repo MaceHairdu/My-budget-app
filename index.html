@@ -7,17 +7,20 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Bicycle Budget">
-<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v8.png">
-<link rel="apple-touch-icon-precomposed" sizes="180x180" href="./apple-touch-icon-v8.png">
-<link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v8.png">
-<link rel="icon" type="image/png" sizes="512x512" href="./icon-512-v8.png">
-<link rel="manifest" href="./manifest-v8.webmanifest">
-<link rel="shortcut icon" href="./icon-192-v8.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" sizes="180x180" href="./apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="shortcut icon" href="./icon-192.png">
 <title>Bicycle Budget</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Nunito:wght@500;700;800;900&family=Press+Start+2P&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">document.getElementById("budgetMonthStartedOk").onclick=acknowledgeBudgetMonthStarted;
+document.getElementById("prepareMonthReminderGo").onclick=()=>dismissPrepareMonthReminder(true);
+document.getElementById("prepareMonthReminderDismiss").onclick=()=>dismissPrepareMonthReminder(false);
+</script>
 <style>
 *{
 box-sizing:border-box;
@@ -411,6 +414,7 @@ input,select{
 width:100%;
 max-width:100%;
 min-width:0;
+box-sizing:border-box;
 padding:12px 13px;
 border:1px solid var(--input);
 border-radius:10px;
@@ -581,6 +585,16 @@ scrollbar-color:var(--edge) color-mix(in srgb,var(--panel) 75%,var(--bg))
 .modal-card h2{
 margin-top:0
 }
+
+.modal-card input[type="date"],
+.modal-card input[type="month"]{
+display:block;
+width:100%;
+max-width:100%;
+min-width:0;
+box-sizing:border-box;
+}
+
 .modal-actions{
 display:flex;
 gap:10px;
@@ -1731,9 +1745,24 @@ Close
 </div>
 </div>
 </div>
-<div class="modal-overlay hidden" id="expenseFilterModal"><div class="card modal-card"><h2>Filter Expense History</h2><label>Expense / Profile</label><select id="expenseFilterType"></select><label>Category</label><select id="expenseFilterCategory"><option value="all">All Categories</option><option>Groceries</option><option>Gas</option><option>Dining</option><option>Bill</option><option>Shopping</option><option>Entertainment</option><option>Transportation</option><option>Medical</option><option>Other</option></select><label>Date Filter</label><select id="expenseFilterDateMode"><option value="all">All Dates</option><option value="date">Exact Date</option><option value="month">Month</option><option value="custom">Custom Date Range</option></select><div id="expenseFilterExactWrap" class="hidden"><label>Date</label><input id="expenseFilterExactDate" type="date"></div><div id="expenseFilterMonthWrap" class="hidden"><label>Month</label><input id="expenseFilterMonth" type="month"></div><div id="expenseFilterCustomWrap" class="custom-date-grid hidden"><div><label>Start</label><input id="expenseFilterStart" type="date"></div><div><label>End</label><input id="expenseFilterEnd" type="date"></div></div><div class="modal-actions"><button class="primary-button" id="applyExpenseFilters">Apply Filters</button><button class="secondary-button" id="clearExpenseFilters">Clear</button></div><button class="secondary-button" id="closeExpenseFilters" style="width:100%;margin-top:11px">Cancel</button></div></div>
+<div class="modal-overlay hidden" id="expenseFilterModal"><div class="card modal-card"><h2>Filter Expense History</h2><label>Expense / Profile</label><select id="expenseFilterType"></select><label>Category</label><select id="expenseFilterCategory"><option value="all">All Categories</option><option>Groceries</option><option>Gas</option><option>Restaurants</option><option>Bill</option><option>Clothes</option><option>Home</option><option>Entertainment</option><option>Transportation</option><option>Medical</option><option>Other</option></select><label>Date Filter</label><select id="expenseFilterDateMode"><option value="all">All Dates</option><option value="date">Exact Date</option><option value="month">Month</option><option value="custom">Custom Date Range</option></select><div id="expenseFilterExactWrap" class="hidden"><label>Date</label><input id="expenseFilterExactDate" type="date"></div><div id="expenseFilterMonthWrap" class="hidden"><label>Month</label><input id="expenseFilterMonth" type="month"></div><div id="expenseFilterCustomWrap" class="custom-date-grid hidden"><div><label>Start</label><input id="expenseFilterStart" type="date"></div><div><label>End</label><input id="expenseFilterEnd" type="date"></div></div><div class="modal-actions"><button class="primary-button" id="applyExpenseFilters">Apply Filters</button><button class="secondary-button" id="clearExpenseFilters">Clear</button></div><button class="secondary-button" id="closeExpenseFilters" style="width:100%;margin-top:11px">Cancel</button></div></div>
 
 <div class="modal-overlay hidden" id="categoryHistoryModal"><div class="card modal-card"><h2 id="categoryHistoryTitle">Category Expenses</h2><div class="subtext" id="categoryHistoryRange" style="margin-bottom:12px"></div><div id="categoryHistoryList"></div><button class="secondary-button" id="closeCategoryHistory" style="width:100%;margin-top:16px">Close</button></div></div>
+<div class="modal-overlay hidden" id="budgetMonthStartedModal">
+<div class="card modal-card">
+<h2 id="budgetMonthStartedTitle">New Budget Month</h2>
+<p id="budgetMonthStartedCopy"></p>
+<button class="primary-button" id="budgetMonthStartedOk" style="width:100%">Got It</button>
+</div>
+</div>
+<div class="modal-overlay hidden" id="prepareMonthReminderModal">
+<div class="card modal-card">
+<h2>Time to Prepare Next Month's Budget</h2>
+<p id="prepareMonthReminderCopy"></p>
+<button class="primary-button" id="prepareMonthReminderGo" style="width:100%">Prepare Your Budget</button>
+<button class="secondary-button" id="prepareMonthReminderDismiss" style="width:100%;margin-top:10px">Dismiss</button>
+</div>
+</div>
 <div class="toast" id="appToast">Saved</div>
 <script>
 const SUPABASE_URL="https://jivygwszzlaxnhhvxxsg.supabase.co";
@@ -2399,6 +2428,28 @@ selectedFontSize=
 Number(data.font_size||16);
 applyAppearance();
 }
+function orderedProfilesForFunDistribution(){
+const profiles=[...profileMap.values()];
+/*
+The first profile in the household's profile order is treated as the
+household owner for automatic remainder-cent distribution. Profiles
+are loaded in created_at order, so the original/owner profile receives
+the first extra cent, then subsequent profiles receive additional
+remainder cents in order.
+*/
+return profiles;
+}
+function distributeFunCents(pool,profiles=orderedProfilesForFunDistribution()){
+if(!profiles.length)return[];
+const poolCents=Math.max(0,Math.floor(Number(pool||0)*100+0.0000001));
+const base=Math.floor(poolCents/profiles.length);
+let remainder=poolCents-(base*profiles.length);
+return profiles.map(profile=>{
+const cents=base+(remainder>0?1:0);
+if(remainder>0)remainder--;
+return{profile_id:profile.id,amount:cents/100};
+});
+}
 async function ensureCurrentWeekDeposits(){
 const month=activeBudgetMonth();
 const monthKey=dateOnly(month);
@@ -2411,66 +2462,28 @@ const {data:plan,error:planError}=await supabaseClient
 .eq("budget_month",monthKey)
 .maybeSingle();
 if(planError)throw planError;
-if(!plan)return;
+if(!plan)return false;
 
-const householdProfiles=[...profileMap.values()];
+const householdProfiles=orderedProfilesForFunDistribution();
 if(!householdProfiles.length)throw new Error("No household profiles are loaded.");
 
-const {data:allocations,error:allocationError}=await supabaseClient
-.from("budget_profile_allocations")
-.select("id,profile_id,weekly_fun_amount,weekly_amount")
-.eq("household_id",householdId)
-.eq("budget_month",monthKey);
-if(allocationError)throw allocationError;
+const normalized=distributeFunCents(plan.weekly_fun,householdProfiles);
 
 /*
-The budget's Fun Money pool is authoritative.
-September example:
-$106.232 => 10,623 whole cents available.
-10,623 / 2 = 5,311 cents each with 1 cent left over.
-Mason $53.11 + Kasey $53.11 + $0.01 to Savings.
+The active budget is determined by week ownership, not calendar date.
+Example: Sun Aug 30-Sat Sep 5 is owned by September, so September's
+weekly deposits are written with week_start=2026-08-30.
+These upserts are idempotent: reopening repairs the same rows instead
+of creating duplicate allowances.
 */
-const poolCents=Math.max(0,Math.floor(Number(plan.weekly_fun||0)*100+0.0000001));
-const equalCents=Math.floor(poolCents/householdProfiles.length);
-const assignedCents=equalCents*householdProfiles.length;
-const leftoverFunCents=Math.max(0,poolCents-assignedCents);
-const equalAmount=equalCents/100;
-
-const normalized=householdProfiles.map(profile=>{
-const existing=(allocations||[]).find(a=>a.profile_id===profile.id);
-return{
-id:existing?.id||null,
-profile_id:profile.id,
-amount:equalAmount
-};
-});
-
-for(const allocation of normalized){
-if(!allocation.id)continue;
-const {error:updateError}=await supabaseClient
-.from("budget_profile_allocations")
-.update({
-weekly_fun_amount:allocation.amount,
-weekly_amount:allocation.amount,
-updated_at:new Date().toISOString()
-})
-.eq("id",allocation.id);
-if(updateError)throw updateError;
-}
-
-const savingsAmount=
-(Math.round(Number(plan.weekly_savings||0)*100)+leftoverFunCents)/100;
-
 const {error:needsError}=await supabaseClient
 .from("allowance_deposits")
 .upsert({
 household_id:householdId,
 week_start:ws,
 fund:"needs",
-amount:Number(plan.weekly_needs||0)
-},{
-onConflict:"household_id,week_start,fund"
-});
+amount:Math.round(Number(plan.weekly_needs||0)*100)/100
+},{onConflict:"household_id,week_start,fund"});
 if(needsError)throw needsError;
 
 const {error:savingsError}=await supabaseClient
@@ -2479,10 +2492,8 @@ const {error:savingsError}=await supabaseClient
 household_id:householdId,
 week_start:ws,
 fund:"savings",
-amount:savingsAmount
-},{
-onConflict:"household_id,week_start,fund"
-});
+amount:Math.round(Number(plan.weekly_savings||0)*100)/100
+},{onConflict:"household_id,week_start,fund"});
 if(savingsError)throw savingsError;
 
 const funRows=normalized.map(allocation=>({
@@ -2491,13 +2502,28 @@ profile_id:allocation.profile_id,
 week_start:ws,
 amount:allocation.amount
 }));
-
 const {error:funError}=await supabaseClient
 .from("profile_fun_deposits")
-.upsert(funRows,{
-onConflict:"household_id,profile_id,week_start"
-});
+.upsert(funRows,{onConflict:"household_id,profile_id,week_start"});
 if(funError)throw funError;
+
+/* Keep saved hard-budget allocation rows synchronized with the same split. */
+const {data:allocations,error:allocationError}=await supabaseClient
+.from("budget_profile_allocations")
+.select("id,profile_id")
+.eq("household_id",householdId)
+.eq("budget_month",monthKey);
+if(allocationError)throw allocationError;
+for(const allocation of allocations||[]){
+const amount=normalized.find(x=>x.profile_id===allocation.profile_id)?.amount;
+if(amount==null)continue;
+const {error:updateError}=await supabaseClient
+.from("budget_profile_allocations")
+.update({weekly_fun_amount:amount,weekly_amount:amount,updated_at:new Date().toISOString()})
+.eq("id",allocation.id);
+if(updateError)throw updateError;
+}
+return true;
 }
 async function ensureSavingsHistory(){
 return;
@@ -2571,12 +2597,12 @@ allocationRows.push([`${names[0]}'s Fun Money`,`${money(historical.perPersonFun)
 allocationRows.push(["Each person's Fun Money",`${money(historical.perPersonFun)}/week`]);
 }
 }else{
-const profiles=[...profileMap.values()];
+const profiles=orderedProfilesForFunDistribution();
 if(profiles.length){
-const poolCents=Math.max(0,Math.floor(weeklyFun*100+0.0000001));
-const eachCents=Math.floor(poolCents/profiles.length);
+const split=distributeFunCents(weeklyFun,profiles);
 for(const profile of profiles){
-allocationRows.push([`${profile.display_name}'s Fun Money`,`${money(eachCents/100)}/week`]);
+const amount=split.find(x=>x.profile_id===profile.id)?.amount||0;
+allocationRows.push([`${profile.display_name}'s Fun Money`,`${money(amount)}/week`]);
 }
 }
 }
@@ -2977,37 +3003,14 @@ Fun Money automatic split:
 No fractional cent rounding.
 */
 function autoSplitFunPool(pool){
-const inputs=[...
-document.querySelectorAll(
-".allocation-input"
-)
-];
+const inputs=[...document.querySelectorAll(".allocation-input")];
 if(!inputs.length)return;
-/*
-Split the exact pool evenly, then round DOWN to whole cents
-for each profile. A leftover cent remains unassigned instead
-of making one person's weekly allowance a cent higher.
-Example: $69.69 / 2 => $34.84 each, with $0.01 unassigned.
-*/
-const poolCents=
-Math.max(
-0,
-Math.floor(
-Number(pool||0)*100+
-0.0000001
-)
-);
-const eachCents=
-Math.floor(
-poolCents/
-inputs.length
-);
-inputs.forEach(
-input=>{
-input.value=
-money(eachCents/100);
-}
-);
+const profiles=inputs.map(input=>profileMap.get(input.dataset.profileId)||{id:input.dataset.profileId});
+const split=distributeFunCents(pool,profiles);
+inputs.forEach(input=>{
+const amount=split.find(x=>x.profile_id===input.dataset.profileId)?.amount||0;
+input.value=money(amount);
+});
 }
 function allocationTotal(){
 return[...
@@ -3275,10 +3278,10 @@ let allocationInputs=[...
 document.querySelectorAll(".allocation-input")
 ];
 let allocationAmounts=allocationInputs.map(input=>Math.abs(parseMoney(input.value)));
-if(!allocationUserEdited && allocationAmounts.length>1 && calc.funPool>=0){
-const poolCents=Math.max(0,Math.floor(calc.funPool*100+0.0000001));
-const each=Math.floor(poolCents/allocationAmounts.length)/100;
-allocationAmounts=allocationAmounts.map(()=>each);
+if(!allocationUserEdited && allocationAmounts.length>0 && calc.funPool>=0){
+const profiles=allocationInputs.map(input=>profileMap.get(input.dataset.profileId)||{id:input.dataset.profileId});
+const split=distributeFunCents(calc.funPool,profiles);
+allocationAmounts=allocationInputs.map(input=>split.find(x=>x.profile_id===input.dataset.profileId)?.amount||0);
 allocationInputs.forEach((input,index)=>{input.value=money(allocationAmounts[index])});
 }
 const allocations=allocationInputs.map(
@@ -3383,7 +3386,9 @@ function renderExpenseFilterTypeOptions(){const select=document.getElementById("
 function updateExpenseFilterDateFields(){const m=document.getElementById("expenseFilterDateMode").value;document.getElementById("expenseFilterExactWrap").classList.toggle("hidden",m!=="date");document.getElementById("expenseFilterMonthWrap").classList.toggle("hidden",m!=="month");document.getElementById("expenseFilterCustomWrap").classList.toggle("hidden",m!=="custom")}
 function normalizeCategoryName(name){
 const value=String(name||"").trim();
-if(value.toLocaleLowerCase()==="dining")return "Restaurants";
+const normalized=value.toLocaleLowerCase();
+if(normalized==="dining")return "Restaurants";
+if(normalized==="shopping")return "Clothes";
 return value;
 }
 function categoryStorageKey(){return `bicycleBudgetCategories:${householdId||"unknown"}`}
@@ -3415,7 +3420,7 @@ console.warn("Custom category table unavailable; using this device until SQL set
 }
 }
 function getKnownCategories(){
-const defaults=["Groceries","Gas","Restaurants","Bill","Shopping","Entertainment","Transportation","Medical","Other"];
+const defaults=["Groceries","Gas","Restaurants","Bill","Clothes","Home","Entertainment","Transportation","Medical","Other"];
 const used=(allExpenseHistory||[]).filter(x=>x.activity_type!=="adjustment").map(x=>normalizeCategoryName(x.category)).filter(Boolean);
 const seen=new Set();
 return [...defaults,...householdCategories,...used].filter(name=>{
@@ -3495,6 +3500,28 @@ function openExpenseFilters(){renderExpenseFilterTypeOptions();refreshCategoryCo
 function closeExpenseFilters(){document.getElementById("expenseFilterModal").classList.add("hidden")}
 function applyExpenseFilterForm(){expenseFilters={type:document.getElementById("expenseFilterType").value,category:document.getElementById("expenseFilterCategory").value,dateMode:document.getElementById("expenseFilterDateMode").value,exactDate:document.getElementById("expenseFilterExactDate").value,month:document.getElementById("expenseFilterMonth").value,start:document.getElementById("expenseFilterStart").value,end:document.getElementById("expenseFilterEnd").value};closeExpenseFilters();refreshExpenseHistory()}
 function clearExpenseFilterForm(){expenseFilters={type:"all",category:"all",dateMode:"all",exactDate:"",month:"",start:"",end:""};closeExpenseFilters();refreshExpenseHistory()}
+async function migrateShoppingToClothes(){
+const key=`bicycleBudgetShoppingMigrationV17:${householdId}`;
+if(localStorage.getItem(key)==="1")return;
+
+const {error}=await supabaseClient
+.from("expenses")
+.update({category:"Clothes"})
+.eq("household_id",householdId)
+.eq("category","Shopping");
+
+if(error){
+console.error("Shopping to Clothes migration failed",error);
+return;
+}
+
+householdCategories=householdCategories
+.map(normalizeCategoryName)
+.filter(Boolean);
+saveLocalHouseholdCategories();
+
+localStorage.setItem(key,"1");
+}
 async function migrateDiningToRestaurants(){
 const key=`bicycleBudgetDiningMigrationV14:${householdId}`;
 if(localStorage.getItem(key)==="1")return;
@@ -3521,6 +3548,7 @@ async function loadExpenses(){
 await loadProfiles();
 await loadHouseholdCategories();
 await migrateDiningToRestaurants();
+await migrateShoppingToClothes();
 const [{data:expenses,error:expenseError},{data:adjustments,error:adjustmentError}]=await Promise.all([
 supabaseClient.from("expenses").select("*").eq("household_id",householdId).order("spent_at",{ascending:false}).limit(1000),
 supabaseClient.from("fund_adjustments").select("*").eq("household_id",householdId).order("adjusted_at",{ascending:false}).limit(1000)
@@ -4686,6 +4714,45 @@ showToast("CSV created");
 );
 }
 function recenterHomeImmediately(){if(window.innerWidth>900)return;activePanelIndex=2;const track=document.getElementById("mobileTrack");track.style.transition="none";requestAnimationFrame(()=>requestAnimationFrame(()=>showPanel(2,false)));}
+function monthName(date){return date.toLocaleDateString("en-US",{month:"long"});}
+function prepareTargetMonth(){return addMonths(firstOfMonth(new Date()),1);}
+function openPrepareBudgetPanel(){
+document.getElementById("prepareMonthReminderModal")?.classList.add("hidden");
+showPanel(4,true);
+document.getElementById("monthlyBudgetPanel")?.scrollTo?.({top:0,behavior:"smooth"});
+}
+function maybeShowMonthlyLifecycleReminders(){
+const now=new Date();
+const active=activeBudgetMonth();
+const activeKey=dateOnly(active);
+const budgetSeenKey=`bicycleBudgetActiveMonthSeen:${householdId}:${currentProfile.id}:${activeKey}`;
+if(localStorage.getItem(budgetSeenKey)!=="1"){
+document.getElementById("budgetMonthStartedTitle").textContent=`You're Now Using the ${monthName(active)} Budget`;
+document.getElementById("budgetMonthStartedCopy").textContent=`Your ${monthName(active)} weekly allowances are now active.`;
+document.getElementById("budgetMonthStartedModal").classList.remove("hidden");
+return;
+}
+const calendarKey=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+const reminderKey=`bicycleBudgetPrepareReminderSeen:${householdId}:${currentProfile.id}:${calendarKey}`;
+if(localStorage.getItem(reminderKey)!=="1"){
+const target=prepareTargetMonth();
+document.getElementById("prepareMonthReminderCopy").textContent=`It's the first of the month! You can fill out your budget sheet and prepare the ${monthName(target)} budget now.`;
+document.getElementById("prepareMonthReminderModal").classList.remove("hidden");
+}
+}
+function acknowledgeBudgetMonthStarted(){
+const active=activeBudgetMonth();
+localStorage.setItem(`bicycleBudgetActiveMonthSeen:${householdId}:${currentProfile.id}:${dateOnly(active)}`,"1");
+document.getElementById("budgetMonthStartedModal").classList.add("hidden");
+maybeShowMonthlyLifecycleReminders();
+}
+function dismissPrepareMonthReminder(goToBudget=false){
+const now=new Date();
+const calendarKey=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+localStorage.setItem(`bicycleBudgetPrepareReminderSeen:${householdId}:${currentProfile.id}:${calendarKey}`,"1");
+document.getElementById("prepareMonthReminderModal").classList.add("hidden");
+if(goToBudget)openPrepareBudgetPanel();
+}
 async function enterProfile(){
 await loadProfileSettings();
 await loadProfiles();
@@ -4704,7 +4771,13 @@ document
 renderDateStrip();
 currentBudgetMonthCursor=activeBudgetMonth();
 /* Core app data must load even if an optional analytics/backfill task fails. */
-try{await ensureCurrentWeekDeposits()}catch(error){console.error("Current-week deposit sync failed",error)}
+let depositsReady=false;
+try{
+depositsReady=await ensureCurrentWeekDeposits();
+}catch(error){
+console.error("Current-week deposit sync failed",error);
+alert(`Your weekly allowance could not be deposited: ${error.message}`);
+}
 await Promise.all([
 loadCurrentBudget(),
 openBudgetSetup(),
@@ -4722,6 +4795,7 @@ await updateAnalytics();
 }catch(error){
 console.error("Analytics failed to load",error);
 }
+if(depositsReady)maybeShowMonthlyLifecycleReminders();
 /* Savings-history backfill is secondary and must never block the app. */
 ensureSavingsHistory().then(()=>updateSavingsAnalytics()).catch(error=>console.error("Savings history sync failed",error));
 /*
