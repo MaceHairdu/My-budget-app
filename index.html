@@ -1336,6 +1336,36 @@ body:not(.theme-cedar) .date-day.today span{
 }
 .adjustment-row.clickable{cursor:pointer}
 
+
+/* v13 weekly history toolbar */
+.weekly-balance-history-card{
+  position:relative;
+}
+.weekly-history-toolbar{
+  position:relative;
+  min-height:54px;
+  margin-bottom:14px;
+}
+.weekly-history-toolbar .settings-detail-back{
+  position:absolute;
+  left:0;
+  top:0;
+  margin:0!important;
+}
+.weekly-history-gear{
+  position:absolute!important;
+  right:0!important;
+  top:0!important;
+  display:flex!important;
+}
+.weekly-history-heading{
+  padding-top:2px;
+  margin-bottom:10px;
+}
+.weekly-history-heading h2{
+  margin-top:0;
+}
+
 </style>
 </head>
 <body class="theme-cedar font-system">
@@ -1614,12 +1644,13 @@ Save Budget
 </section>
 <div class="modal-overlay hidden" id="weeklyBalanceHistoryModal">
 <div class="card modal-card weekly-balance-history-card">
-<div class="modal-header">
-<div>
+<div class="weekly-history-toolbar">
+<button class="settings-detail-back secondary-button" id="closeWeeklyBalanceHistory" type="button">Back</button>
+<button class="weekly-history-gear settings-gear" id="weeklyHistoryGear" type="button" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2Z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
+</div>
+<div class="weekly-history-heading">
 <h2 id="weeklyBalanceHistoryTitle">Weekly Balance History</h2>
 <div class="subtext" id="weeklyBalanceHistorySubtitle"></div>
-</div>
-<button class="icon-button" id="closeWeeklyBalanceHistory" type="button" aria-label="Close">×</button>
 </div>
 <div class="weekly-balance-history-list" id="weeklyBalanceHistoryList"></div>
 </div>
@@ -2382,38 +2413,37 @@ const {data:plan,error:planError}=await supabaseClient
 if(planError)throw planError;
 if(!plan)return;
 
-const [{data:profiles,error:profilesError},{data:allocations,error:allocationError}]=await Promise.all([
-supabaseClient.from("profiles").select("id,display_name").eq("household_id",householdId).order("created_at"),
-supabaseClient.from("budget_profile_allocations").select("id,profile_id,weekly_fun_amount,weekly_amount").eq("household_id",householdId).eq("budget_month",monthKey)
-]);
-if(profilesError||allocationError)throw(profilesError||allocationError);
+const householdProfiles=[...profileMap.values()];
+if(!householdProfiles.length)throw new Error("No household profiles are loaded.");
 
+const {data:allocations,error:allocationError}=await supabaseClient
+.from("budget_profile_allocations")
+.select("id,profile_id,weekly_fun_amount,weekly_amount")
+.eq("household_id",householdId)
+.eq("budget_month",monthKey);
+if(allocationError)throw allocationError;
+
+/*
+The budget's Fun Money pool is authoritative.
+September example:
+$106.232 => 10,623 whole cents available.
+10,623 / 2 = 5,311 cents each with 1 cent left over.
+Mason $53.11 + Kasey $53.11 + $0.01 to Savings.
+*/
 const poolCents=Math.max(0,Math.floor(Number(plan.weekly_fun||0)*100+0.0000001));
-let normalized=(allocations||[]).map(row=>({
-...row,
-amount:Number(row.weekly_fun_amount??row.weekly_amount??0)
-}));
+const equalCents=Math.floor(poolCents/householdProfiles.length);
+const assignedCents=equalCents*householdProfiles.length;
+const leftoverFunCents=Math.max(0,poolCents-assignedCents);
+const equalAmount=equalCents/100;
 
-const allocationCents=normalized.map(x=>Math.round(x.amount*100));
-const assignedBefore=allocationCents.reduce((s,x)=>s+x,0);
-const nearlyEqual=allocationCents.length>1 &&
-(Math.max(...allocationCents)-Math.min(...allocationCents)<=1);
-const needsEqualRepair=
-normalized.length!==profiles.length ||
-!normalized.length ||
-(assignedBefore>poolCents && nearlyEqual);
-
-if(needsEqualRepair){
-const eachCents=profiles.length?Math.floor(poolCents/profiles.length):0;
-normalized=(profiles||[]).map(profile=>{
+const normalized=householdProfiles.map(profile=>{
 const existing=(allocations||[]).find(a=>a.profile_id===profile.id);
 return{
 id:existing?.id||null,
 profile_id:profile.id,
-amount:eachCents/100
+amount:equalAmount
 };
 });
-}
 
 for(const allocation of normalized){
 if(!allocation.id)continue;
@@ -2428,8 +2458,6 @@ updated_at:new Date().toISOString()
 if(updateError)throw updateError;
 }
 
-const assignedCents=normalized.reduce((sum,x)=>sum+Math.round(Number(x.amount||0)*100),0);
-const leftoverFunCents=Math.max(0,poolCents-assignedCents);
 const savingsAmount=
 (Math.round(Number(plan.weekly_savings||0)*100)+leftoverFunCents)/100;
 
@@ -2457,38 +2485,19 @@ onConflict:"household_id,week_start,fund"
 });
 if(savingsError)throw savingsError;
 
-async function writeFunDeposit(profileId,amount){
-const {data:existing,error:readError}=await supabaseClient
-.from("profile_fun_deposits")
-.select("id")
-.eq("household_id",householdId)
-.eq("profile_id",profileId)
-.eq("week_start",ws)
-.maybeSingle();
-if(readError)throw readError;
-
-if(existing?.id){
-const {error}=await supabaseClient
-.from("profile_fun_deposits")
-.update({amount})
-.eq("id",existing.id);
-if(error)throw error;
-}else{
-const {error}=await supabaseClient
-.from("profile_fun_deposits")
-.insert({
+const funRows=normalized.map(allocation=>({
 household_id:householdId,
-profile_id:profileId,
+profile_id:allocation.profile_id,
 week_start:ws,
-amount
-});
-if(error)throw error;
-}
-}
+amount:allocation.amount
+}));
 
-for(const allocation of normalized){
-await writeFunDeposit(allocation.profile_id,allocation.amount);
-}
+const {error:funError}=await supabaseClient
+.from("profile_fun_deposits")
+.upsert(funRows,{
+onConflict:"household_id,profile_id,week_start"
+});
+if(funError)throw funError;
 }
 async function ensureSavingsHistory(){
 return;
@@ -2561,31 +2570,14 @@ allocationRows.push([`${names[0]}'s Fun Money`,`${money(historical.perPersonFun)
 }else{
 allocationRows.push(["Each person's Fun Money",`${money(historical.perPersonFun)}/week`]);
 }
-}else if((allocations||[]).length){
-let displayAllocations=(allocations||[]).map(a=>({
-...a,
-displayAmount:Number(a.weekly_fun_amount??a.weekly_amount??0)
-}));
-if(displayAllocations.length>1){
-const poolCents=Math.max(0,Math.floor(weeklyFun*100+0.0000001));
-const vals=displayAllocations.map(a=>Math.round(a.displayAmount*100));
-const sum=vals.reduce((s,x)=>s+x,0);
-const nearlyEqual=Math.max(...vals)-Math.min(...vals)<=1;
-if(sum>poolCents&&nearlyEqual){
-const each=Math.floor(poolCents/displayAllocations.length)/100;
-displayAllocations=displayAllocations.map(a=>({...a,displayAmount:each}));
-}
-}
-for(const allocation of displayAllocations){
-const profile=profileMap.get(allocation.profile_id);
-allocationRows.push([`${profile?.display_name||"Profile"}'s Fun Money`,`${money(allocation.displayAmount)}/week`]);
-}
-}else if(historical){
-const names=[...profileMap.values()].map(p=>p.display_name);
-if(names.length>=2){
-allocationRows.push([`${names[0]}'s Fun Money`,`${money(historical.perPersonFun)}/week`],[`${names[1]}'s Fun Money`,`${money(historical.perPersonFun)}/week`]);
 }else{
-allocationRows.push(["Each person's Fun Money",`${money(historical.perPersonFun)}/week`]);
+const profiles=[...profileMap.values()];
+if(profiles.length){
+const poolCents=Math.max(0,Math.floor(weeklyFun*100+0.0000001));
+const eachCents=Math.floor(poolCents/profiles.length);
+for(const profile of profiles){
+allocationRows.push([`${profile.display_name}'s Fun Money`,`${money(eachCents/100)}/week`]);
+}
 }
 }
 rows.push(...allocationRows);
@@ -3389,11 +3381,16 @@ function expenseFilterSummaryText(){const parts=[];const t=expenseFilters.type;i
 function refreshExpenseHistory(){renderExpenseHistory(applyExpenseFiltersToItems(allExpenseHistory));const el=document.getElementById("expenseFilterSummary"),txt=expenseFilterSummaryText();el.textContent=txt?`Filtered: ${txt}`:"";el.classList.toggle("hidden",!txt)}
 function renderExpenseFilterTypeOptions(){const select=document.getElementById("expenseFilterType");let html='<option value="all">All Activity</option><option value="needs">Needs</option><option value="fun">All Fun Money</option>';for(const p of profileMap.values()){const n=escapeHtml(p.display_name);html+=`<option value="fun:${p.id}">${n} Fun Money</option><option value="allprofile:${p.id}">All inputs by ${n}</option><option value="needsprofile:${p.id}">Needs input by ${n}</option>`}select.innerHTML=html;select.value=expenseFilters.type||"all"}
 function updateExpenseFilterDateFields(){const m=document.getElementById("expenseFilterDateMode").value;document.getElementById("expenseFilterExactWrap").classList.toggle("hidden",m!=="date");document.getElementById("expenseFilterMonthWrap").classList.toggle("hidden",m!=="month");document.getElementById("expenseFilterCustomWrap").classList.toggle("hidden",m!=="custom")}
+function normalizeCategoryName(name){
+const value=String(name||"").trim();
+if(value.toLocaleLowerCase()==="dining")return "Restaurants";
+return value;
+}
 function categoryStorageKey(){return `bicycleBudgetCategories:${householdId||"unknown"}`}
 function loadLocalHouseholdCategories(){
 try{
 const value=JSON.parse(localStorage.getItem(categoryStorageKey())||"[]");
-return Array.isArray(value)?value.filter(Boolean):[];
+return Array.isArray(value)?value.map(normalizeCategoryName).filter(Boolean):[];
 }catch{return[]}
 }
 function saveLocalHouseholdCategories(){
@@ -3409,7 +3406,7 @@ const {data,error}=await supabaseClient
 .order("name");
 if(error)throw error;
 categoryTableAvailable=true;
-householdCategories=[...new Set([...(data||[]).map(x=>String(x.name||"").trim()).filter(Boolean),...local])];
+householdCategories=[...new Set([...(data||[]).map(x=>normalizeCategoryName(x.name)).filter(Boolean),...local])];
 saveLocalHouseholdCategories();
 }catch(error){
 categoryTableAvailable=false;
@@ -3418,8 +3415,8 @@ console.warn("Custom category table unavailable; using this device until SQL set
 }
 }
 function getKnownCategories(){
-const defaults=["Groceries","Gas","Dining","Bill","Shopping","Entertainment","Transportation","Medical","Other"];
-const used=(allExpenseHistory||[]).filter(x=>x.activity_type!=="adjustment").map(x=>String(x.category||"").trim()).filter(Boolean);
+const defaults=["Groceries","Gas","Restaurants","Bill","Shopping","Entertainment","Transportation","Medical","Other"];
+const used=(allExpenseHistory||[]).filter(x=>x.activity_type!=="adjustment").map(x=>normalizeCategoryName(x.category)).filter(Boolean);
 const seen=new Set();
 return [...defaults,...householdCategories,...used].filter(name=>{
 const key=name.toLocaleLowerCase();
@@ -3432,7 +3429,7 @@ function refreshCategoryControls(preferred=null){
 const cats=getKnownCategories();
 const select=document.getElementById("expenseCategory");
 if(select){
-const keep=preferred||select.value||"Other";
+const keep=normalizeCategoryName(preferred||select.value||"Other");
 select.innerHTML=cats.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("")+'<option value="__add__">+ Add Category</option>';
 select.value=cats.some(c=>c===keep)?keep:"Other";
 }
@@ -3461,7 +3458,7 @@ requestAnimationFrame(()=>input.focus({preventScroll:false}));
 async function saveInlineCategory(){
 const input=document.getElementById("newExpenseCategory");
 const message=document.getElementById("categorySaveMessage");
-const name=input.value.trim().replace(/\s+/g," ");
+const name=normalizeCategoryName(input.value.trim().replace(/\s+/g," "));
 if(!name){message.textContent="Enter a category name.";return}
 if(name.length>60){message.textContent="Category names can be up to 60 characters.";return}
 const existing=getKnownCategories().find(c=>c.toLocaleLowerCase()===name.toLocaleLowerCase());
@@ -3498,15 +3495,38 @@ function openExpenseFilters(){renderExpenseFilterTypeOptions();refreshCategoryCo
 function closeExpenseFilters(){document.getElementById("expenseFilterModal").classList.add("hidden")}
 function applyExpenseFilterForm(){expenseFilters={type:document.getElementById("expenseFilterType").value,category:document.getElementById("expenseFilterCategory").value,dateMode:document.getElementById("expenseFilterDateMode").value,exactDate:document.getElementById("expenseFilterExactDate").value,month:document.getElementById("expenseFilterMonth").value,start:document.getElementById("expenseFilterStart").value,end:document.getElementById("expenseFilterEnd").value};closeExpenseFilters();refreshExpenseHistory()}
 function clearExpenseFilterForm(){expenseFilters={type:"all",category:"all",dateMode:"all",exactDate:"",month:"",start:"",end:""};closeExpenseFilters();refreshExpenseHistory()}
+async function migrateDiningToRestaurants(){
+const key=`bicycleBudgetDiningMigrationV14:${householdId}`;
+if(localStorage.getItem(key)==="1")return;
+
+const {error}=await supabaseClient
+.from("expenses")
+.update({category:"Restaurants"})
+.eq("household_id",householdId)
+.eq("category","Dining");
+
+if(error){
+console.error("Dining to Restaurants migration failed",error);
+return;
+}
+
+householdCategories=householdCategories
+.map(normalizeCategoryName)
+.filter(Boolean);
+saveLocalHouseholdCategories();
+
+localStorage.setItem(key,"1");
+}
 async function loadExpenses(){
 await loadProfiles();
 await loadHouseholdCategories();
+await migrateDiningToRestaurants();
 const [{data:expenses,error:expenseError},{data:adjustments,error:adjustmentError}]=await Promise.all([
 supabaseClient.from("expenses").select("*").eq("household_id",householdId).order("spent_at",{ascending:false}).limit(1000),
 supabaseClient.from("fund_adjustments").select("*").eq("household_id",householdId).order("adjusted_at",{ascending:false}).limit(1000)
 ]);
 if(expenseError||adjustmentError)throw(expenseError||adjustmentError);
-const expenseActivities=(expenses||[]).map(x=>({...x,activity_type:"expense"}));
+const expenseActivities=(expenses||[]).map(x=>({...x,category:normalizeCategoryName(x.category),activity_type:"expense"}));
 const adjustmentActivities=(adjustments||[]).map(x=>({...x,source_id:x.id,id:`adjustment:${x.id}`,activity_type:"adjustment",category:"Added Funds",spent_at:x.adjusted_at}));
 allExpenseHistory=[...expenseActivities,...adjustmentActivities].sort((a,b)=>new Date(b.spent_at)-new Date(a.spent_at));
 refreshCategoryControls();
@@ -3678,7 +3698,7 @@ openInlineCategoryAdder();
 return;
 }
 const category=
-String(categoryValue||"Other").trim()||"Other";
+normalizeCategoryName(categoryValue||"Other")||"Other";
 const date=
 document
 .getElementById("expenseDate")
@@ -4332,10 +4352,6 @@ total+=Number(historical.savedTotal||0);
 }
 }
 
-const hardStart=new Date(Math.max(
-range.start.getTime(),
-new Date(2026,7,30,0,0,0,0).getTime()
-));
 const {data:deposits,error}=await supabaseClient
 .from("allowance_deposits")
 .select("amount,week_start")
@@ -4345,9 +4361,24 @@ if(error){
 console.error("Total Saved load failed",error);
 return;
 }
+
 for(const row of deposits||[]){
-const d=parseLocalDate(row.week_start);
-if(d>=hardStart&&d<=range.end){
+const weekDate=parseLocalDate(row.week_start);
+const ownedMonth=budgetMonthForWeek(weekDate);
+const ownedStart=firstOfMonth(ownedMonth);
+const ownedEnd=new Date(
+ownedStart.getFullYear(),
+ownedStart.getMonth()+1,
+0,
+23,59,59,999
+);
+
+if(
+householdId===LEGACY_SOFT_BUDGET_HOUSEHOLD_ID &&
+ownedStart<new Date(2026,8,1)
+)continue;
+
+if(ownedEnd>=range.start&&ownedStart<=range.end){
 total+=Number(row.amount||0);
 }
 }
@@ -4357,7 +4388,7 @@ document.getElementById("analyticsSavingsRange").textContent=formatAnalyticsDate
 }
 function initializeSavingsControls(){
 const now=new Date(),years=document.getElementById("savingsYearSelect");
-savingsMonthCursor=addMonths(firstOfMonth(now),-1);
+savingsMonthCursor=activeBudgetMonth();
 renderSavingsMonthLabel();
 years.innerHTML="";
 for(let y=now.getFullYear();y>=2020;y--){
@@ -5232,6 +5263,10 @@ e.stopPropagation();
 openWeeklyBalanceHistory("fun");
 };
 document.getElementById("closeWeeklyBalanceHistory").onclick=closeWeeklyBalanceHistory;
+document.getElementById("weeklyHistoryGear").onclick=()=>{
+closeWeeklyBalanceHistory();
+openSettings("menu");
+};
 document.getElementById("weeklyBalanceHistoryModal").onclick=e=>{
 if(e.target.id==="weeklyBalanceHistoryModal")closeWeeklyBalanceHistory();
 };
