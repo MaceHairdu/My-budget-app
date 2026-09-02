@@ -1797,7 +1797,7 @@ Close
 <div class="card modal-card">
 <h2 id="budgetMonthStartedTitle">New Budget Month</h2>
 <p id="budgetMonthStartedCopy"></p>
-<button class="primary-button" id="budgetMonthStartedOk" style="width:100%">Got It</button>
+<button class="primary-button" id="budgetMonthStartedOk" type="button" onclick="acknowledgeBudgetMonthStarted(event)" style="width:100%;touch-action:manipulation">Got It</button>
 </div>
 </div>
 <div class="modal-overlay hidden" id="prepareMonthReminderModal">
@@ -4970,7 +4970,9 @@ const budgetSeenKey=`bicycleBudgetActiveMonthSeen:${householdId}:${currentProfil
 if(localStorage.getItem(budgetSeenKey)!=="1"){
 document.getElementById("budgetMonthStartedTitle").textContent=`You're Now Using the ${monthName(active)} Budget`;
 document.getElementById("budgetMonthStartedCopy").textContent=`Your ${monthName(active)} weekly allowances are now active.`;
-document.getElementById("budgetMonthStartedModal").classList.remove("hidden");
+const startedModal=document.getElementById("budgetMonthStartedModal");
+startedModal.style.display="";
+startedModal.classList.remove("hidden");
 return;
 }
 const calendarKey=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
@@ -4985,11 +4987,18 @@ document.getElementById("prepareMonthReminderCopy").textContent=`It's a new mont
 document.getElementById("prepareMonthReminderModal").classList.remove("hidden");
 }
 }
-function acknowledgeBudgetMonthStarted(){
+function acknowledgeBudgetMonthStarted(event){
+event?.preventDefault?.();
+event?.stopPropagation?.();
 const active=activeBudgetMonth();
-localStorage.setItem(`bicycleBudgetActiveMonthSeen:${householdId}:${currentProfile.id}:${dateOnly(active)}`,"1");
-document.getElementById("budgetMonthStartedModal").classList.add("hidden");
-maybeShowMonthlyLifecycleReminders();
+const seenKey=`bicycleBudgetActiveMonthSeen:${householdId}:${currentProfile.id}:${dateOnly(active)}`;
+try{localStorage.setItem(seenKey,"1")}catch(error){console.error("Could not save budget-month acknowledgement",error)}
+const modal=document.getElementById("budgetMonthStartedModal");
+modal.classList.add("hidden");
+modal.style.display="none";
+/* Let the first modal fully close before considering the separate calendar reminder. */
+setTimeout(()=>maybeShowMonthlyLifecycleReminders(),80);
+return false;
 }
 async function dismissPrepareMonthReminder(goToBudget=false){
 const now=new Date();
@@ -5782,10 +5791,14 @@ await startApp();
 }
 })();
 
-document.getElementById("budgetMonthStartedOk").onclick=acknowledgeBudgetMonthStarted;
+document.getElementById("budgetMonthStartedOk").addEventListener("touchend",e=>{
+e.preventDefault();
+acknowledgeBudgetMonthStarted(e);
+},{passive:false});
 document.getElementById("prepareMonthReminderGo").onclick=()=>dismissPrepareMonthReminder(true);
 document.getElementById("prepareMonthReminderDismiss").onclick=()=>dismissPrepareMonthReminder(false);
+
+function bindEnterToAction(container,action){container.addEventListener("keydown",e=>{if(e.key!=="Enter"||e.shiftKey||e.ctrlKey||e.altKey||e.metaKey||e.target.tagName==="TEXTAREA"||e.target.tagName==="BUTTON")return;e.preventDefault();action()})}
 </script>
 </body>
-</html>function bindEnterToAction(container,action){container.addEventListener("keydown",e=>{if(e.key!=="Enter"||e.shiftKey||e.ctrlKey||e.altKey||e.metaKey||e.target.tagName==="TEXTAREA"||e.target.tagName==="BUTTON")return;e.preventDefault();action()})}
-
+</html>
