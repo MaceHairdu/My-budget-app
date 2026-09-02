@@ -108,7 +108,8 @@ body.theme-plum{
 body.theme-meadow{--bg:#b8c7a3;--panel:#f3ead4;--text:#314536;--muted:#657460;--accent:#d4a35f;--accent-edge:#9d733b;--edge:#96a486;--input:#c3c3a5}
 body.theme-ocean{--bg:#92b6c2;--panel:#eef3ed;--text:#234654;--muted:#56737c;--accent:#e0a071;--accent-edge:#a96c45;--edge:#7f9ca5;--input:#aec1bd}
 body.theme-rosewood{--bg:#b9a2a1;--panel:#f1dfd2;--text:#542f34;--muted:#7a585c;--accent:#c8896d;--accent-edge:#945f4d;--edge:#a68b87;--input:#c5aaa0}
-body.theme-midnight{--bg:#66727f;--panel:#e6e2d8;--text:#26313c;--muted:#59636c;--accent:#a8a3c9;--accent-edge:#746e9d;--edge:#87909a;--input:#aeb2b4}
+body.theme-dusk{--bg:#66727f;--panel:#e6e2d8;--text:#26313c;--muted:#59636c;--accent:#a8a3c9;--accent-edge:#746e9d;--edge:#87909a;--input:#aeb2b4}
+body.theme-midnight{--bg:#10151b;--panel:#1b232c;--text:#f3efe7;--muted:#b2bdc7;--accent:#b79ad8;--accent-edge:#8167a0;--edge:#34414e;--input:#27323d}
 
 body.font-system{
 --font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif
@@ -1909,7 +1910,8 @@ bg:"#b9a5b5"
 meadow:{colors:["#b8c7a3","#f3ead4","#314536","#d4a35f"],bg:"#b8c7a3"},
 ocean:{colors:["#92b6c2","#eef3ed","#234654","#e0a071"],bg:"#92b6c2"},
 rosewood:{colors:["#b9a2a1","#f1dfd2","#542f34","#c8896d"],bg:"#b9a2a1"},
-midnight:{colors:["#66727f","#e6e2d8","#26313c","#a8a3c9"],bg:"#66727f"}
+dusk:{colors:["#66727f","#e6e2d8","#26313c","#a8a3c9"],bg:"#66727f"},
+midnight:{colors:["#10151b","#1b232c","#f3efe7","#b79ad8"],bg:"#10151b"}
 };
 const analyticsColors=[
 "var(--accent)",
@@ -2503,8 +2505,34 @@ await supabaseClient
 .single();
 if(error)throw error;
 currentProfile=data;
-selectedTheme=
-data.theme||"cedar";
+const themeRenameKey=`bicycleBudgetThemeRenameV27:${currentProfile.id}`;
+if(!localStorage.getItem(themeRenameKey)){
+if(data.theme==="midnight"){
+selectedTheme="dusk";
+const {error:themeRenameError}=await supabaseClient.rpc(
+"set_profile_settings",
+{
+p_profile_id:currentProfile.id,
+p_avatar:currentProfile.avatar||"knight",
+p_calculation_mode:"hard",
+p_font_size:Number(currentProfile.font_size||16),
+p_font_family:currentProfile.font_family||"system",
+p_theme:"dusk"
+}
+);
+if(themeRenameError){
+console.error("Midnight-to-Dusk theme migration failed",themeRenameError);
+}else{
+currentProfile.theme="dusk";
+localStorage.setItem(themeRenameKey,"1");
+}
+}else{
+selectedTheme=data.theme||"cedar";
+localStorage.setItem(themeRenameKey,"1");
+}
+}else{
+selectedTheme=data.theme||"cedar";
+}
 selectedFont=
 data.font_family||"system";
 selectedFontSize=
@@ -2671,8 +2699,9 @@ const moneyRow=(name,amount,negative=false,suffix="")=>`<div class="budget-summa
 const section=(title,html)=>`<div class="current-budget-section"><h3>${escapeHtml(title)}</h3>${html}</div>`;
 const incomeHtml=incomeItems.map(([name,amount])=>moneyRow(name,amount)).join("")+moneyRow("Total Income",income);
 const billHtml=monthlyBillItems.map(([name,amount])=>moneyRow(name,amount,true)).join("")+moneyRow("Total Monthly Bills",monthlyBills,true);
-const weeklyHtml=weeklyBillItems.map(([name,amount])=>moneyRow(name,amount,true,"/week")).join("")+moneyRow("Needs",weeklyNeeds,false,"/week")+moneyRow("Savings",weeklySavings,false,"/week")+allocationRows.map(([name,amount])=>moneyRow(name,amount,false,"/week")).join("");
-document.getElementById("currentBudgetSummary").innerHTML=section("Income",incomeHtml)+section("Bills",billHtml)+section("Weekly Allocations",weeklyHtml);
+const weeklyHtml=weeklyBillItems.map(([name,amount])=>moneyRow(name,amount,true,"/week")).join("")+moneyRow("Needs",weeklyNeeds,true,"/week")+moneyRow("Savings",weeklySavings,true,"/week");
+const remainingHtml=allocationRows.map(([name,amount])=>moneyRow(name,amount,false,"/week")).join("");
+document.getElementById("currentBudgetSummary").innerHTML=section("Income",incomeHtml)+section("Bills",billHtml)+section("Weekly Allocations",weeklyHtml)+section("Remaining Allocation",remainingHtml);
 }
 
 
@@ -4096,38 +4125,36 @@ if(
 !amount||
 !date
 )return;
-const payload={
-household_id:
-householdId,
-user_id:
-currentUser.id,
 /*
-Save profile_id for BOTH Needs and Fun Money.
-Needs still uses one shared bucket.
-profile_id only identifies who entered it.
+Ownership is immutable during an edit. Existing expenses must never be
+reassigned just because another profile edits the description, amount,
+fund, date, or category. Only a brand-new expense receives the active
+profile's ownership fields.
 */
-profile_id:
-editingExpenseId
-?(editingExpenseProfileId||currentProfile.id)
-:currentProfile.id,
+const editablePayload={
 amount,
 fund,
 description,
 category,
-spent_at:
-`${date}T12:00:00`,
-updated_at:
-new Date().toISOString()
+spent_at:`${date}T12:00:00`,
+updated_at:new Date().toISOString()
+};
+const insertPayload={
+...editablePayload,
+household_id:householdId,
+user_id:currentUser.id,
+profile_id:currentProfile.id
 };
 const result=
 editingExpenseId
 ?await supabaseClient
 .from("expenses")
-.update(payload)
+.update(editablePayload)
 .eq("id",editingExpenseId)
+.eq("household_id",householdId)
 :await supabaseClient
 .from("expenses")
-.insert(payload);
+.insert(insertPayload);
 if(result.error){
 alert(result.error.message);
 return;
@@ -4525,7 +4552,18 @@ const years=document.getElementById("analyticsYearSelect");years.innerHTML="";fo
 document.getElementById("analyticsStartDate").value=`${now.getFullYear()}-01-01`;document.getElementById("analyticsEndDate").value=dateOnly(now);
 }
 function analyticsDates(){
-if(analyticsRange==="month"){const y=analyticsMonthCursor.getFullYear(),m=analyticsMonthCursor.getMonth();return{start:new Date(y,m,1),end:new Date(y,m+1,0,23,59,59,999),label:analyticsMonthCursor.toLocaleDateString("en-US",{month:"long",year:"numeric"})}}
+if(analyticsRange==="month"){
+const weeks=getBudgetWeeks(analyticsMonthCursor);
+if(weeks.length){
+const start=new Date(weeks[0]);
+const end=new Date(weeks[weeks.length-1]);
+end.setDate(end.getDate()+6);
+end.setHours(23,59,59,999);
+return{start,end,label:analyticsMonthCursor.toLocaleDateString("en-US",{month:"long",year:"numeric"})};
+}
+const y=analyticsMonthCursor.getFullYear(),m=analyticsMonthCursor.getMonth();
+return{start:new Date(y,m,1),end:new Date(y,m+1,0,23,59,59,999),label:analyticsMonthCursor.toLocaleDateString("en-US",{month:"long",year:"numeric"})};
+}
 if(analyticsRange==="year"){const year=Number(document.getElementById("analyticsYearSelect").value);return{start:new Date(year,0,1),end:new Date(year,11,31,23,59,59,999),label:String(year)}}
 if(analyticsRange==="custom"){const a=document.getElementById("analyticsStartDate").value,b=document.getElementById("analyticsEndDate").value;return{start:new Date(`${a}T00:00:00`),end:new Date(`${b}T23:59:59`),label:`${new Date(`${a}T00:00:00`).toLocaleDateString()} – ${new Date(`${b}T00:00:00`).toLocaleDateString()}`}}
 return{start:new Date(2000,0,1),end:new Date(2100,0,1),label:"All Time"};
@@ -4990,6 +5028,7 @@ if(error){
 alert(error.message);
 return;
 }
+localStorage.setItem(`bicycleBudgetThemeRenameV27:${currentProfile.id}`,"1");
 await loadProfileSettings();
 settingsSection="menu";
 renderSettingsSection();
@@ -5135,7 +5174,7 @@ const start=`${month}T00:00:00`;
 const next=addMonths(parseLocalDate(month),1);
 const end=`${dateOnly(next)}T00:00:00`;
 const [{data:expenses,error:expenseError},{data:adjustments,error:adjustmentError}]=await Promise.all([
-supabaseClient.from("expenses").select("id,amount,fund,description,spent_at,category,profile_id,created_at,updated_at").eq("household_id",householdId).gte("spent_at",start).lt("spent_at",end).order("spent_at",{ascending:true}),
+supabaseClient.from("expenses").select("id,amount,fund,description,spent_at,category,profile_id,updated_at").eq("household_id",householdId).gte("spent_at",start).lt("spent_at",end).order("spent_at",{ascending:true}),
 supabaseClient.from("fund_adjustments").select("id,amount,fund,description,adjusted_at,profile_id,created_at").eq("household_id",householdId).gte("adjusted_at",start).lt("adjusted_at",end).order("adjusted_at",{ascending:true})
 ]);
 if(expenseError||adjustmentError){alert(expenseError?.message||adjustmentError?.message);return}
