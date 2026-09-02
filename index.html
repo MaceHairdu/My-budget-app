@@ -1408,6 +1408,18 @@ body:not(.theme-cedar) .date-day.today span{
 #monthlyBudgetPanel .saved-row.reorder-hold{cursor:grabbing;opacity:.25}
 .budget-row-drag-ghost{position:fixed!important;z-index:5000!important;pointer-events:none!important;margin:0!important;opacity:.98!important;transform:scale(1.02);box-shadow:0 12px 28px rgba(0,0,0,.25)!important;background:var(--panel)!important;border-radius:10px}
 .budget-row-drop-marker{height:4px;border-radius:99px;background:var(--accent-edge);margin:3px 0}
+
+/* v26 mobile header clearance + transaction editor placement */
+@media(max-width:900px){
+  #currentBudgetPanel .panel-header,
+  #monthlyBudgetPanel .panel-header{padding-right:58px}
+  #currentBudgetPanel .panel-header .screen-title,
+  #monthlyBudgetPanel .panel-header .screen-title{min-width:0;max-width:calc(100% - 4px)}
+  #currentBudgetPanel .panel-header>div{flex:0 0 auto}
+  #transactionModal{align-items:flex-start;padding-top:calc(env(safe-area-inset-top,0px) + 64px)!important}
+  #transactionModal .modal-card{max-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 88px)!important}
+}
+
 </style>
 </head>
 <body class="theme-cedar font-system">
@@ -1705,7 +1717,10 @@ Save Budget
 <div class="card settings-card"><h2>Font</h2><label>Font Style</label><select id="fontFamilySelect"><option value="system">Clean</option><option value="rounded">Rounded</option><option value="serif">Book</option><option value="mono">Monospace</option><option value="pixel">Pixel</option></select><label>Font Size</label><div class="range-row"><input id="fontSizeRange" type="range" min="12" max="22" step="1"><strong id="fontSizeLabel">16px</strong></div><button class="primary-button" id="saveAppearanceButton" style="width:100%;margin-top:15px">Save Appearance</button></div>
 </div>
 <div id="profileSettings" class="hidden"><div class="card settings-card"><h2>Security</h2><p class="subtext">Security emails are sent only to the email address used for this account.</p><div id="accountEmailDisplay" style="font-weight:900;overflow-wrap:anywhere"></div><button class="secondary-button" id="resetPinEmailButton" style="width:100%;margin-top:14px">Email Me a PIN Reset Link</button><button class="secondary-button" id="resetPasswordSettingsButton" style="width:100%;margin-top:10px">Email Me a Password Reset Link</button><div id="securityMessage" class="subtext" style="margin-top:12px"></div></div></div>
-<div id="budgetSettings" class="hidden"><div class="card settings-card"><h2>Budget Info</h2><p class="subtext">Saved monthly budgets are stored here.</p><div id="budgetHistoryList"></div><button class="secondary-button" id="exportBudgetCsvButton" style="width:100%;margin-top:14px">Export Budget History as CSV</button></div></div>
+<div id="budgetSettings" class="hidden">
+<div class="card settings-card"><h2>Budget Info</h2><p class="subtext">Saved monthly budgets are stored here.</p><div id="budgetHistoryList"></div><button class="secondary-button" id="exportBudgetCsvButton" style="width:100%;margin-top:14px">Export Budget History as CSV</button></div>
+<div class="card settings-card"><h2>Download Your Records</h2><p class="subtext">Choose a month to download a detailed copy of the budget or an expense ledger you can review outside the app.</p><label for="dataExportMonth">Month</label><input id="dataExportMonth" type="month"><button class="secondary-button" id="exportMonthlyBudgetCsvButton" type="button" style="width:100%;margin-top:14px">Download Monthly Budget CSV</button><button class="secondary-button" id="exportExpenseLedgerCsvButton" type="button" style="width:100%;margin-top:10px">Download Monthly Expense Ledger CSV</button></div>
+</div>
 <div id="switchProfileSettings" class="hidden"><div class="card settings-card"><h2>Switch Profile</h2><div class="settings-switch-profile-list" id="settingsProfileList"></div><div class="settings-switch-pin hidden" id="settingsSwitchPinArea"><h3 id="settingsSwitchPinName"></h3><div class="pin-boxes" id="settingsSwitchPinBoxes"></div><div id="settingsSwitchPinError" class="login-error hidden"></div></div></div></div>
 </div></div></div>
 </section>
@@ -1805,7 +1820,7 @@ Close
 <div class="card modal-card">
 <h2 id="budgetMonthStartedTitle">New Budget Month</h2>
 <p id="budgetMonthStartedCopy"></p>
-<button class="primary-button" id="budgetMonthStartedOk" type="button" onclick="acknowledgeBudgetMonthStarted(event)" style="width:100%;touch-action:manipulation">Got It</button>
+<button class="primary-button" id="budgetMonthStartedOk" type="button" style="width:100%;touch-action:manipulation">Got It</button>
 </div>
 </div>
 <div class="modal-overlay hidden" id="prepareMonthReminderModal">
@@ -1846,7 +1861,10 @@ let selectedNewPinLength=4;
 let moneyEditorKind=null;
 let moneyEditorId=null;
 let editingExpenseId=null;
+let editingExpenseProfileId=null;
 let editingAdjustmentId=null;
+let categoryHistoryReturnCategory=null;
+let budgetMonthNoticeDismissedThisSession=false;
 let transactionFund="needs";
 let activeTransactionTab="expense";
 let preparedBudgetPlan=null;
@@ -1894,16 +1912,24 @@ rosewood:{colors:["#b9a2a1","#f1dfd2","#542f34","#c8896d"],bg:"#b9a2a1"},
 midnight:{colors:["#66727f","#e6e2d8","#26313c","#a8a3c9"],bg:"#66727f"}
 };
 const analyticsColors=[
-"#c77f63",
-"#304638",
-"#a2ad8f",
-"#d5a557",
-"#788da4",
-"#b77f9a",
-"#729174",
-"#9c765e",
-"#747474"
+"var(--accent)",
+"var(--text)",
+"var(--accent-edge)",
+"color-mix(in srgb,var(--text) 58%,var(--panel))",
+"color-mix(in srgb,var(--accent) 68%,var(--text))",
+"color-mix(in srgb,var(--edge) 76%,var(--text))",
+"color-mix(in srgb,var(--accent) 52%,var(--panel))",
+"color-mix(in srgb,var(--text) 42%,var(--bg))",
+"color-mix(in srgb,var(--accent-edge) 60%,var(--panel))",
+"color-mix(in srgb,var(--edge) 55%,var(--panel))"
 ];
+const analyticsCategoryColorSlots={"Other":0,"Groceries":1,"Gas":2,"Restaurants":3,"Bill":4,"Clothes":5,"Home":6,"Entertainment":7,"Transportation":8,"Medical":9};
+function analyticsColorForCategory(name){
+const normalized=normalizeCategoryName(name||"Other")||"Other";
+if(Object.prototype.hasOwnProperty.call(analyticsCategoryColorSlots,normalized))return analyticsColors[analyticsCategoryColorSlots[normalized]%analyticsColors.length];
+let hash=0;for(const ch of normalized)hash=((hash*31)+ch.charCodeAt(0))>>>0;
+return analyticsColors[hash%analyticsColors.length];
+}
 const money=n=>
 Number(n||0).toLocaleString(
 "en-US",
@@ -3752,12 +3778,14 @@ function getKnownCategories(){
 const defaults=["Groceries","Gas","Restaurants","Bill","Clothes","Home","Entertainment","Transportation","Medical","Other"];
 const used=(allExpenseHistory||[]).filter(x=>x.activity_type!=="adjustment").map(x=>normalizeCategoryName(x.category)).filter(Boolean);
 const seen=new Set();
-return [...defaults,...householdCategories,...used].filter(name=>{
+const unique=[...defaults,...householdCategories,...used].filter(name=>{
 const key=name.toLocaleLowerCase();
 if(seen.has(key))return false;
 seen.add(key);
 return true;
 });
+const other=unique.find(x=>x.toLocaleLowerCase()==="other")||"Other";
+return unique.filter(x=>x.toLocaleLowerCase()!=="other").sort((a,b)=>a.localeCompare(b,undefined,{sensitivity:"base"})).concat(other);
 }
 function refreshCategoryControls(preferred=null){
 const cats=getKnownCategories();
@@ -3927,6 +3955,8 @@ transactionFund=
 expense?.fund||fund;
 editingExpenseId=
 expense?.id||null;
+editingExpenseProfileId=
+expense?.profile_id||null;
 editingAdjustmentId=null;
 document
 .getElementById("transactionTabs")
@@ -4019,6 +4049,7 @@ document.getElementById("fundAdjustmentAmount")
 }
 function closeTransactionModal(){
 editingExpenseId=null;
+editingExpenseProfileId=null;
 editingAdjustmentId=null;
 closeInlineCategoryAdder(false);
 document
@@ -4076,7 +4107,9 @@ Needs still uses one shared bucket.
 profile_id only identifies who entered it.
 */
 profile_id:
-currentProfile.id,
+editingExpenseId
+?(editingExpenseProfileId||currentProfile.id)
+:currentProfile.id,
 amount,
 fund,
 description,
@@ -4099,10 +4132,13 @@ if(result.error){
 alert(result.error.message);
 return;
 }
+const returnCategory=categoryHistoryReturnCategory;
+categoryHistoryReturnCategory=null;
 closeTransactionModal();
 await loadExpenses();
 await calculateBalances();
 await updateAnalytics();
+if(returnCategory)openCategoryHistory(returnCategory);
 showToast("Expense saved");
 }
 async function editExpense(id){
@@ -4604,10 +4640,7 @@ total
 ?value/total*100
 :0;
 const color=
-analyticsColors[
-index%
-analyticsColors.length
-];
+analyticsColorForCategory(name);
 const start=
 running;
 running+=pct;
@@ -4759,7 +4792,7 @@ const prev=addMonths(firstOfMonth(now),-1);
 document.getElementById("savingsStartDate").value=`${prev.getFullYear()}-01-01`;
 document.getElementById("savingsEndDate").value=dateOnly(now);
 }
-function openCategoryHistory(category){const range=analyticsDates(),items=analyticsFilteredExpenses.filter(x=>(x.category||"Other")===category).sort((a,b)=>new Date(b.spent_at)-new Date(a.spent_at));document.getElementById("categoryHistoryTitle").textContent=category;document.getElementById("categoryHistoryRange").textContent=formatAnalyticsDateRange(range.start,range.end);const box=document.getElementById("categoryHistoryList");box.innerHTML=items.length?items.map(x=>`<div class="transaction category-history-item" data-expense-id="${x.id}"><div class="transaction-main"><div class="transaction-name">${escapeHtml(x.description)}</div><div class="transaction-meta">${escapeHtml(expenseMeta(x))}</div></div><div class="transaction-amount">-${money(x.amount)}</div></div>`).join(""):'<p class="subtext">No expenses in this category for this period.</p>';box.querySelectorAll("[data-expense-id]").forEach(row=>row.onclick=()=>{closeCategoryHistory();editExpense(row.dataset.expenseId)});document.getElementById("categoryHistoryModal").classList.remove("hidden")}
+function openCategoryHistory(category){const range=analyticsDates(),items=analyticsFilteredExpenses.filter(x=>(x.category||"Other")===category).sort((a,b)=>new Date(b.spent_at)-new Date(a.spent_at));document.getElementById("categoryHistoryTitle").textContent=category;document.getElementById("categoryHistoryRange").textContent=formatAnalyticsDateRange(range.start,range.end);const box=document.getElementById("categoryHistoryList");box.innerHTML=items.length?items.map(x=>`<div class="transaction category-history-item" data-expense-id="${x.id}"><div class="transaction-main"><div class="transaction-name">${escapeHtml(x.description)}</div><div class="transaction-meta">${escapeHtml(expenseMeta(x))}</div></div><div class="transaction-amount">-${money(x.amount)}</div></div>`).join(""):'<p class="subtext">No expenses in this category for this period.</p>';box.querySelectorAll("[data-expense-id]").forEach(row=>row.onclick=()=>{categoryHistoryReturnCategory=category;closeCategoryHistory();editExpense(row.dataset.expenseId)});document.getElementById("categoryHistoryModal").classList.remove("hidden")}
 function closeCategoryHistory(){document.getElementById("categoryHistoryModal").classList.add("hidden")}
 function renderThemes(){
 const box=
@@ -4812,7 +4845,7 @@ document.getElementById("settingsMenuProfileName").textContent=currentProfile?.d
 if(settingsSection==="menu")return;
 if(settingsSection==="appearance"){document.getElementById("settingsTitle").textContent="Appearance";document.getElementById("appearanceSettings").classList.remove("hidden");renderThemes();document.getElementById("fontFamilySelect").value=selectedFont;document.getElementById("fontSizeRange").value=selectedFontSize;document.getElementById("fontSizeLabel").textContent=`${selectedFontSize}px`;return}
 if(settingsSection==="profile"){document.getElementById("settingsTitle").textContent="Profile";document.getElementById("profileSettings").classList.remove("hidden");document.getElementById("accountEmailDisplay").textContent=currentUser.email;return}
-if(settingsSection==="budget"){document.getElementById("settingsTitle").textContent="Budget Info";document.getElementById("budgetSettings").classList.remove("hidden");loadBudgetHistory();return}
+if(settingsSection==="budget"){document.getElementById("settingsTitle").textContent="Budget Info";document.getElementById("budgetSettings").classList.remove("hidden");const exportMonth=document.getElementById("dataExportMonth");if(exportMonth&&!exportMonth.value)exportMonth.value=dateOnly(activeBudgetMonth()).slice(0,7);loadBudgetHistory();return}
 if(settingsSection==="switch"){document.getElementById("settingsTitle").textContent="Switch Profile";document.getElementById("switchProfileSettings").classList.remove("hidden");renderSettingsProfileList();}
 }
 async function renderSettingsProfileList(){const profiles=await loadProfiles(),box=document.getElementById("settingsProfileList");box.innerHTML="";document.getElementById("settingsSwitchPinArea").classList.add("hidden");profiles.forEach(profile=>{const b=document.createElement("button");b.className="secondary-button";b.textContent=profile.display_name;b.onclick=()=>selectSettingsProfile(profile);box.appendChild(b)})}
@@ -5042,6 +5075,81 @@ showToast("CSV created");
 }
 );
 }
+
+function downloadCsvFile(filename,rows){
+const csv=rows.map(row=>row.map(value=>`"${String(value??"").replaceAll('"','""')}"`).join(",")).join("\n");
+const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
+const url=URL.createObjectURL(blob);
+const a=document.createElement("a");
+a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+setTimeout(()=>URL.revokeObjectURL(url),0);
+}
+function selectedExportMonth(){
+const raw=document.getElementById("dataExportMonth")?.value;
+if(raw&&/^\d{4}-\d{2}$/.test(raw))return `${raw}-01`;
+return dateOnly(activeBudgetMonth());
+}
+async function exportMonthlyBudgetCsv(){
+const month=selectedExportMonth();
+const [{data:plan,error:planError},{data:items,error:itemError},{data:allocations,error:allocationError}]=await Promise.all([
+supabaseClient.from("budget_plans").select("*").eq("household_id",householdId).eq("budget_month",month).maybeSingle(),
+supabaseClient.from("budget_items").select("*").eq("household_id",householdId).eq("budget_month",month),
+supabaseClient.from("budget_profile_allocations").select("*").eq("household_id",householdId).eq("budget_month",month)
+]);
+if(planError||itemError||allocationError){alert(planError?.message||itemError?.message||allocationError?.message);return}
+const historical=HISTORICAL_BUDGETS[month]||null;
+if(!plan&&!historical){alert("No saved budget was found for that month.");return}
+const rows=[["Budget Month",month,"Budget Weeks",getBudgetWeekCount(parseLocalDate(month))],["Section","Item","Amount","Frequency / Note"]];
+const sourceItems=items||[];
+const sortItems=list=>[...list].sort((a,b)=>(a.position??a.sort_order??0)-(b.position??b.sort_order??0));
+if(sourceItems.length){
+sortItems(sourceItems.filter(x=>x.item_type==="income")).forEach(x=>rows.push(["Income",x.name,Number(x.amount||0),"Monthly"]));
+sortItems(sourceItems.filter(x=>x.item_type==="monthly_bill")).forEach(x=>rows.push(["Monthly Bills",x.name,Number(x.amount||0),"Monthly"]));
+sortItems(sourceItems.filter(x=>x.item_type==="weekly_bill")).forEach(x=>rows.push(["Weekly Bills",x.name,Number(x.amount||0),"Per week"]));
+}else if(historical){
+historical.income.forEach(([name,amount])=>rows.push(["Income",name,amount,"Monthly"]));
+historical.monthlyBills.forEach(([name,amount])=>rows.push(["Monthly Bills",name,amount,"Monthly"]));
+historical.weeklyBills.forEach(([name,amount])=>rows.push(["Weekly Bills",name,amount,"Per week"]));
+}
+const weeklyNeeds=Number(plan?.weekly_needs??historical?.weekly_needs??0);
+const weeklySavings=Number(plan?.weekly_savings??historical?.weekly_savings??0);
+const weeklyFun=Number(plan?.weekly_fun??historical?.weekly_fun??0);
+rows.push(["Weekly Allocations","Needs",weeklyNeeds,"Per week"]);
+rows.push(["Weekly Allocations","Savings",weeklySavings,"Per week"]);
+if((allocations||[]).length){
+for(const allocation of allocations){
+const profile=profileMap.get(allocation.profile_id);
+rows.push(["Weekly Allocations",`${profile?.display_name||"Profile"} Fun Money`,Number(allocation.weekly_fun_amount??allocation.weekly_amount??0),"Per week"]);
+}
+}else{
+for(const part of distributeFunCents(weeklyFun)){
+rows.push(["Weekly Allocations",`${profileMap.get(part.profile_id)?.display_name||"Profile"} Fun Money`,part.amount,"Per week"]);
+}
+}
+downloadCsvFile(`bicycle-budget-${month.slice(0,7)}.csv`,rows);
+showToast("Monthly budget CSV created");
+}
+async function exportExpenseLedgerCsv(){
+const month=selectedExportMonth();
+const start=`${month}T00:00:00`;
+const next=addMonths(parseLocalDate(month),1);
+const end=`${dateOnly(next)}T00:00:00`;
+const [{data:expenses,error:expenseError},{data:adjustments,error:adjustmentError}]=await Promise.all([
+supabaseClient.from("expenses").select("id,amount,fund,description,spent_at,category,profile_id,created_at,updated_at").eq("household_id",householdId).gte("spent_at",start).lt("spent_at",end).order("spent_at",{ascending:true}),
+supabaseClient.from("fund_adjustments").select("id,amount,fund,description,adjusted_at,profile_id,created_at").eq("household_id",householdId).gte("adjusted_at",start).lt("adjusted_at",end).order("adjusted_at",{ascending:true})
+]);
+if(expenseError||adjustmentError){alert(expenseError?.message||adjustmentError?.message);return}
+const rows=[["Date","Type","Description","Amount","Fund","Profile","Category","Record ID"]];
+const detail=[];
+for(const e of expenses||[])detail.push([String(e.spent_at||"").slice(0,10),"Expense",e.description,Number(e.amount||0),e.fund==="fun"?"Fun Money":"Needs",profileMap.get(e.profile_id)?.display_name||"",normalizeCategoryName(e.category||"Other")||"Other",e.id]);
+for(const a of adjustments||[])detail.push([String(a.adjusted_at||"").slice(0,10),"Added Funds",a.description||"Added Funds",Number(a.amount||0),a.fund==="fun"?"Fun Money":"Needs",profileMap.get(a.profile_id)?.display_name||"","",a.id]);
+detail.sort((a,b)=>String(a[0]).localeCompare(String(b[0]))||String(a[1]).localeCompare(String(b[1])));
+rows.push(...detail);
+downloadCsvFile(`bicycle-expenses-${month.slice(0,7)}.csv`,rows);
+showToast("Expense ledger CSV created");
+}
+
+
 function recenterHomeImmediately(){if(window.innerWidth>900)return;activePanelIndex=2;const track=document.getElementById("mobileTrack");track.style.transition="none";requestAnimationFrame(()=>requestAnimationFrame(()=>showPanel(2,false)));}
 function monthName(date){return date.toLocaleDateString("en-US",{month:"long"});}
 function prepareTargetMonth(){return addMonths(firstOfMonth(new Date()),1);}
@@ -5055,18 +5163,13 @@ const now=new Date();
 const active=activeBudgetMonth();
 const activeKey=dateOnly(active);
 const budgetSeenKey=`bicycleBudgetActiveMonthSeen:${householdId}:${currentProfile.id}:${activeKey}`;
-if(localStorage.getItem(budgetSeenKey)!=="1"){
-if(window.innerWidth<=900){
-try{localStorage.setItem(budgetSeenKey,"1")}catch(error){console.error("Could not save budget-month acknowledgement",error)}
-showToast(`You're now using the ${monthName(active)} Budget`);
-}else{
+if(localStorage.getItem(budgetSeenKey)!=="1"&&!budgetMonthNoticeDismissedThisSession){
 document.getElementById("budgetMonthStartedTitle").textContent=`You're Now Using the ${monthName(active)} Budget`;
 document.getElementById("budgetMonthStartedCopy").textContent=`Your ${monthName(active)} weekly allowances are now active.`;
 const startedModal=document.getElementById("budgetMonthStartedModal");
-startedModal.style.display="";
+startedModal.style.removeProperty("display");
 startedModal.classList.remove("hidden");
 return;
-}
 }
 const calendarKey=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
 const lifecycleKey=`bicycleBudgetCalendarLifecycle:${householdId}:${currentProfile.id}`;
@@ -5083,14 +5186,13 @@ document.getElementById("prepareMonthReminderModal").classList.remove("hidden");
 function acknowledgeBudgetMonthStarted(event){
 event?.preventDefault?.();
 event?.stopPropagation?.();
+budgetMonthNoticeDismissedThisSession=true;
 const active=activeBudgetMonth();
 const seenKey=`bicycleBudgetActiveMonthSeen:${householdId}:${currentProfile.id}:${dateOnly(active)}`;
 try{localStorage.setItem(seenKey,"1")}catch(error){console.error("Could not save budget-month acknowledgement",error)}
 const modal=document.getElementById("budgetMonthStartedModal");
 modal.classList.add("hidden");
 modal.style.display="none";
-/* Let the first modal fully close before considering the separate calendar reminder. */
-setTimeout(()=>maybeShowMonthlyLifecycleReminders(),80);
 return false;
 }
 async function dismissPrepareMonthReminder(goToBudget=false){
@@ -5841,6 +5943,8 @@ document
 .getElementById("exportBudgetCsvButton")
 .onclick=
 exportBudgetCsv;
+document.getElementById("exportMonthlyBudgetCsvButton").onclick=exportMonthlyBudgetCsv;
+document.getElementById("exportExpenseLedgerCsvButton").onclick=exportExpenseLedgerCsv;
 bindFluidSwipe();
 bindSettingsSwipeBack();
 window.addEventListener("pageshow",()=>{if(!document.getElementById("appScreen").classList.contains("hidden"))showPanel(activePanelIndex,false)});
@@ -5884,10 +5988,9 @@ await startApp();
 }
 })();
 
-document.getElementById("budgetMonthStartedOk").addEventListener("touchend",e=>{
-e.preventDefault();
-acknowledgeBudgetMonthStarted(e);
-},{passive:false});
+const budgetMonthStartedOk=document.getElementById("budgetMonthStartedOk");
+budgetMonthStartedOk.onclick=acknowledgeBudgetMonthStarted;
+budgetMonthStartedOk.addEventListener("pointerup",e=>{if(e.pointerType==="touch")acknowledgeBudgetMonthStarted(e);});
 document.getElementById("prepareMonthReminderGo").onclick=()=>dismissPrepareMonthReminder(true);
 document.getElementById("prepareMonthReminderDismiss").onclick=()=>dismissPrepareMonthReminder(false);
 
