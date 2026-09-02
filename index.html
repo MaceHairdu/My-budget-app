@@ -1395,6 +1395,11 @@ body:not(.theme-cedar) .date-day.today span{
     min-width:96px!important;
   }
 }
+
+@keyframes prepareBudgetGlow{0%{filter:none}30%{box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 55%,transparent),0 0 24px color-mix(in srgb,var(--accent) 45%,transparent)}100%{filter:none}}
+#monthlyBudgetPanel.prepare-focus-glow{animation:prepareBudgetGlow 1.8s ease-out}
+#monthlyBudgetPanel .saved-row{cursor:grab;user-select:none;-webkit-user-select:none;touch-action:pan-y}
+#monthlyBudgetPanel .saved-row.reorder-hold{cursor:grabbing;transform:scale(1.015);opacity:.94;box-shadow:0 7px 18px rgba(0,0,0,.16);z-index:20}
 </style>
 </head>
 <body class="theme-cedar font-system">
@@ -2873,6 +2878,21 @@ replacePreparationTableWithNames("weekly_bills",weeklyBillNames)
 
 localStorage.setItem(key,"1");
 }
+function budgetListOrderKey(kind){return `bicycleBudgetListOrder:${householdId}:${dateOnly(preparationMonth())}:${kind}`}
+function applySavedBudgetListOrder(data,kind){let order=[];try{order=JSON.parse(localStorage.getItem(budgetListOrderKey(kind))||"[]")}catch{}if(!Array.isArray(order)||!order.length)return data;const rank=new Map(order.map((id,index)=>[id,index]));return [...data].sort((a,b)=>(rank.get(a.id)??9999)-(rank.get(b.id)??9999))}
+function saveBudgetListOrder(box,kind){localStorage.setItem(budgetListOrderKey(kind),JSON.stringify([...box.querySelectorAll(".saved-row")].map(r=>r.dataset.itemId).filter(Boolean)))}
+function enableBudgetListReorder(box,kind){
+let held=null,timer=null,startY=0;
+box.querySelectorAll(".saved-row").forEach(row=>{
+row.draggable=true;
+row.addEventListener("dragstart",e=>{held=row;row.classList.add("reorder-hold");e.dataTransfer.effectAllowed="move"});
+row.addEventListener("dragover",e=>{if(!held||held===row)return;e.preventDefault();const r=row.getBoundingClientRect();box.insertBefore(held,e.clientY<r.top+r.height/2?row:row.nextSibling)});
+row.addEventListener("dragend",()=>{row.classList.remove("reorder-hold");saveBudgetListOrder(box,kind);held=null});
+row.addEventListener("touchstart",e=>{if(e.touches.length!==1)return;startY=e.touches[0].clientY;timer=setTimeout(()=>{held=row;row.classList.add("reorder-hold")},450)},{passive:true});
+row.addEventListener("touchmove",e=>{if(!held){if(Math.abs(e.touches[0].clientY-startY)>8)clearTimeout(timer);return}e.preventDefault();const t=document.elementFromPoint(e.touches[0].clientX,e.touches[0].clientY)?.closest(".saved-row");if(t&&t!==held&&t.parentElement===box){const r=t.getBoundingClientRect();box.insertBefore(held,e.touches[0].clientY<r.top+r.height/2?t:t.nextSibling)}},{passive:false});
+row.addEventListener("touchend",()=>{clearTimeout(timer);if(held){held.classList.remove("reorder-hold");saveBudgetListOrder(box,kind);held=null}});
+});
+}
 async function loadBudgetLists(){
 await Promise.all([
 loadMoneyTable(
@@ -2911,11 +2931,13 @@ if(error)throw error;
 const box=
 document.getElementById(listId);
 box.innerHTML="";
-(data||[]).forEach(
+const orderedData=applySavedBudgetListOrder(data||[],kind);
+orderedData.forEach(
 item=>{
 const row=
 document.createElement("div");
 row.className="saved-row";
+row.dataset.itemId=item.id;
 const amountValue=Math.abs(Number(item.amount)||0);
 const amountText=amountValue===0?"$____":`${negative?"-":""}${money(amountValue)}`;
 row.innerHTML=`<div class="saved-row-main"><div class="saved-row-name">${escapeHtml(item.name)}</div></div><div class="saved-row-amount">${amountText}</div>`;
@@ -2923,6 +2945,7 @@ row.onclick=()=>openMoneyEditor(kind,item);
 box.appendChild(row);
 }
 );
+enableBudgetListReorder(box,kind);
 }
 function tableForMoneyKind(kind){
 if(kind==="income"){
@@ -4968,12 +4991,19 @@ localStorage.setItem(`bicycleBudgetActiveMonthSeen:${householdId}:${currentProfi
 document.getElementById("budgetMonthStartedModal").classList.add("hidden");
 maybeShowMonthlyLifecycleReminders();
 }
-function dismissPrepareMonthReminder(goToBudget=false){
+async function dismissPrepareMonthReminder(goToBudget=false){
 const now=new Date();
 const calendarKey=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
 localStorage.setItem(`bicycleBudgetPrepareReminderSeen:${householdId}:${currentProfile.id}:${calendarKey}`,"1");
 document.getElementById("prepareMonthReminderModal").classList.add("hidden");
-if(goToBudget)openPrepareBudgetPanel();
+if(goToBudget){
+await openPrepareBudgetPanel();
+if(window.innerWidth>900){
+const panel=document.getElementById("monthlyBudgetPanel");
+panel.classList.remove("prepare-focus-glow");void panel.offsetWidth;panel.classList.add("prepare-focus-glow");
+setTimeout(()=>panel.classList.remove("prepare-focus-glow"),1900);
+}
+}
 }
 async function enterProfile(){
 await loadProfileSettings();
@@ -5464,6 +5494,10 @@ document
 .getElementById("moneyEditorCancelButton")
 .onclick=
 closeMoneyEditor;
+bindEnterToAction(document.getElementById("moneyEditorModal"),saveMoneyEditor);
+bindEnterToAction(document.getElementById("expenseFormSection"),saveExpense);
+bindEnterToAction(document.getElementById("fundFormSection"),saveFundAdjustment);
+
 document
 .getElementById("saveBudgetButton")
 .onclick=
@@ -5753,4 +5787,5 @@ document.getElementById("prepareMonthReminderGo").onclick=()=>dismissPrepareMont
 document.getElementById("prepareMonthReminderDismiss").onclick=()=>dismissPrepareMonthReminder(false);
 </script>
 </body>
-</html>
+</html>function bindEnterToAction(container,action){container.addEventListener("keydown",e=>{if(e.key!=="Enter"||e.shiftKey||e.ctrlKey||e.altKey||e.metaKey||e.target.tagName==="TEXTAREA"||e.target.tagName==="BUTTON")return;e.preventDefault();action()})}
+
