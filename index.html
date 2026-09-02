@@ -1165,8 +1165,8 @@ body{padding-top:env(safe-area-inset-top)}
 /* v7 expense-history activity cleanup */
 #expenseHistoryPanel .transaction{border-bottom:0!important;border-radius:0!important;padding-left:5px;padding-right:5px}
 #expenseHistoryPanel .transaction.same-day-follow{border-top:1px solid color-mix(in srgb,var(--text) 30%,transparent)!important}
-#expenseHistoryPanel .transaction.adjustment-row{cursor:default}
-#expenseHistoryPanel .transaction.adjustment-row:hover{background:transparent}
+#expenseHistoryPanel .transaction.adjustment-row{cursor:pointer}
+#expenseHistoryPanel .transaction.adjustment-row:hover{background:color-mix(in srgb,var(--edge) 14%,transparent)}
 .transaction-amount.positive,.home-expense-amount.positive{font-weight:1000}
 
 
@@ -1377,6 +1377,24 @@ body:not(.theme-cedar) .date-day.today span{
   margin-top:0;
 }
 
+
+@media(min-width:901px){
+  #expenseHistoryPanel .history-header-actions{display:flex;align-items:stretch;gap:8px}
+  #expenseHistoryPanel #expenseFilterButton,
+  #expenseHistoryPanel #addExpenseButton{
+    height:36px!important;
+    min-height:36px!important;
+    padding-top:0!important;
+    padding-bottom:0!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+  }
+  #expenseHistoryPanel #addExpenseButton{
+    width:auto!important;
+    min-width:96px!important;
+  }
+}
 </style>
 </head>
 <body class="theme-cedar font-system">
@@ -1560,12 +1578,34 @@ Started week with <strong id="funWeekStartBalance">$0.00</strong>
 <div class="panel-inner">
 <div class="panel-header">
 <h1 class="screen-title">Current Budget</h1>
+<div style="display:flex;gap:8px">
+<button class="secondary-button small-button hidden" id="cancelCurrentBudgetEditButton" type="button">Cancel</button>
 <button class="secondary-button small-button" id="editCurrentBudgetButton" type="button">Edit</button>
+</div>
 </div>
 <div class="current-budget-nav"><button class="secondary-button small-button" id="currentBudgetPrev" type="button">‹</button><div class="subtext" id="currentBudgetMonth"></div><button class="secondary-button small-button" id="currentBudgetNext" type="button">›</button></div>
 <div class="warning-note hidden" id="currentFiveWeekWarning"></div>
 <div class="card" style="padding:17px;margin-top:16px">
 <div class="budget-summary" id="currentBudgetSummary"></div>
+<div class="hidden" id="currentBudgetInlineEditor">
+<h3>Income</h3>
+<div class="saved-list" id="currentEditIncomeList"></div>
+<button class="secondary-button small-button current-edit-add" id="currentEditAddIncome" type="button">+ Add Income</button>
+<h3 style="margin-top:18px">Bills</h3>
+<div class="saved-list" id="currentEditMonthlyBillList"></div>
+<button class="secondary-button small-button current-edit-add" id="currentEditAddMonthlyBill" type="button">+ Add Monthly Bill</button>
+<h3 style="margin-top:18px">Weekly Bills</h3>
+<div class="saved-list" id="currentEditWeeklyBillList"></div>
+<button class="secondary-button small-button current-edit-add" id="currentEditAddWeeklyBill" type="button">+ Add Weekly Bill</button>
+<h3 style="margin-top:18px">Weekly Allocations</h3>
+<label>Needs</label>
+<input id="currentEditNeeds" inputmode="decimal">
+<label>Savings</label>
+<input id="currentEditSavings" inputmode="decimal">
+<div id="currentEditFunAllocations"></div>
+<div class="warning-note hidden" id="currentEditNegativeWarning" style="margin-top:12px"></div>
+<button class="primary-button" id="saveCurrentBudgetEditButton" type="button" style="width:100%;margin-top:16px">Save Changes</button>
+</div>
 </div>
 </div>
 </section>
@@ -1797,7 +1837,6 @@ let editingAdjustmentId=null;
 let transactionFund="needs";
 let activeTransactionTab="expense";
 let preparedBudgetPlan=null;
-let editingBudgetMonthOverride=null;
 let allocationUserEdited=false;
 let analyticsRange="month";
 let analyticsFilteredExpenses=[];
@@ -2593,38 +2632,166 @@ const weeklyHtml=weeklyBillItems.map(([name,amount])=>moneyRow(name,amount,true,
 document.getElementById("currentBudgetSummary").innerHTML=section("Income",incomeHtml)+section("Bills",billHtml)+section("Weekly Allocations",weeklyHtml);
 }
 
-async function replaceWorkingBudgetTable(table,items){
-const {error:deleteError}=await supabaseClient.from(table).delete().eq("household_id",householdId);
-if(deleteError)throw deleteError;
-if(!items.length)return;
-const rows=items.map(([name,amount])=>({household_id:householdId,name,amount:Math.abs(Number(amount||0))}));
-const {error:insertError}=await supabaseClient.from(table).insert(rows);
-if(insertError)throw insertError;
+
+let currentBudgetEditData=null;
+
+function currentEditListHtml(items,kind){
+return items.map((item,index)=>`<div class="saved-row current-edit-row" data-kind="${kind}" data-index="${index}">
+<div class="saved-row-main">
+<div class="saved-row-name">${escapeHtml(item.name)}</div>
+<div class="saved-row-amount">${money(item.amount)}</div>
+</div>
+<button class="secondary-button small-button current-edit-remove" type="button" aria-label="Remove">×</button>
+</div>`).join("");
+}
+function renderCurrentBudgetInlineEditor(){
+if(!currentBudgetEditData)return;
+document.getElementById("currentEditIncomeList").innerHTML=currentEditListHtml(currentBudgetEditData.income,"income");
+document.getElementById("currentEditMonthlyBillList").innerHTML=currentEditListHtml(currentBudgetEditData.monthly,"monthly");
+document.getElementById("currentEditWeeklyBillList").innerHTML=currentEditListHtml(currentBudgetEditData.weekly,"weekly");
+document.getElementById("currentEditNeeds").value=money(currentBudgetEditData.needs);
+document.getElementById("currentEditSavings").value=money(currentBudgetEditData.savings);
+
+const profiles=orderedProfilesForFunDistribution();
+document.getElementById("currentEditFunAllocations").innerHTML=profiles.map(profile=>{
+const amount=currentBudgetEditData.allocations.get(profile.id)||0;
+return `<label>${escapeHtml(profile.display_name)} Fun Money</label><input class="current-edit-fun" data-profile-id="${profile.id}" inputmode="decimal" value="${money(amount)}">`;
+}).join("");
+
+document.querySelectorAll(".current-edit-remove").forEach(button=>{
+button.onclick=()=>{
+const row=button.closest(".current-edit-row"),kind=row.dataset.kind,index=Number(row.dataset.index);
+currentBudgetEditData[kind].splice(index,1);
+renderCurrentBudgetInlineEditor();
+};
+});
+document.querySelectorAll("#currentBudgetInlineEditor input").forEach(input=>bindMoneyInput(input));
+updateCurrentBudgetEditMath();
+}
+function updateCurrentBudgetEditMath(){
+if(!currentBudgetEditData)return;
+currentBudgetEditData.needs=Math.abs(parseMoney(document.getElementById("currentEditNeeds").value));
+currentBudgetEditData.savings=Math.abs(parseMoney(document.getElementById("currentEditSavings").value));
+const income=currentBudgetEditData.income.reduce((s,x)=>s+Number(x.amount||0),0);
+const monthly=currentBudgetEditData.monthly.reduce((s,x)=>s+Number(x.amount||0),0);
+const weeklyBills=currentBudgetEditData.weekly.reduce((s,x)=>s+Number(x.amount||0),0);
+const weeks=getBudgetWeekCount(currentBudgetEditData.month);
+const pool=((income-monthly)/(weeks||1))-weeklyBills-currentBudgetEditData.needs-currentBudgetEditData.savings;
+const warning=document.getElementById("currentEditNegativeWarning");
+if(pool<0){
+warning.textContent=`This budget is short by ${money(Math.abs(pool))} per week.`;
+warning.classList.remove("hidden");
+}else warning.classList.add("hidden");
+return {income,monthly,weeklyBills,weeks,pool};
+}
+function openCurrentEditItem(kind,index=null){
+const existing=index===null?null:currentBudgetEditData[kind][index];
+const label=kind==="income"?"Income":kind==="monthly"?"Monthly Bill":"Weekly Bill";
+const name=prompt(`${existing?"Edit":"Add"} ${label} name`,existing?.name||"");
+if(name===null||!name.trim())return;
+const amountText=prompt(`${label} amount`,existing?String(existing.amount):"");
+if(amountText===null)return;
+const amount=Math.abs(parseMoney(amountText));
+const item={name:name.trim(),amount};
+if(index===null)currentBudgetEditData[kind].push(item);
+else currentBudgetEditData[kind][index]=item;
+renderCurrentBudgetInlineEditor();
 }
 async function editCurrentBudget(){
 const month=currentBudgetMonthCursor||activeBudgetMonth();
 const monthKey=dateOnly(month);
-const [{data:plan,error:planError},{data:items,error:itemError}]=await Promise.all([
+const [{data:plan,error:planError},{data:items,error:itemError},{data:allocations,error:allocationError}]=await Promise.all([
 supabaseClient.from("budget_plans").select("*").eq("household_id",householdId).eq("budget_month",monthKey).maybeSingle(),
-supabaseClient.from("budget_items").select("*").eq("household_id",householdId).eq("budget_month",monthKey)
+supabaseClient.from("budget_items").select("*").eq("household_id",householdId).eq("budget_month",monthKey),
+supabaseClient.from("budget_profile_allocations").select("*").eq("household_id",householdId).eq("budget_month",monthKey)
 ]);
-if(planError||itemError){alert((planError||itemError).message);return;}
+if(planError||itemError||allocationError){alert((planError||itemError||allocationError).message);return;}
 if(!plan){alert("There is no saved budget to edit for this month.");return;}
-const income=(items||[]).filter(x=>x.item_type==="income").map(x=>[x.name,x.amount]);
-const monthly=(items||[]).filter(x=>x.item_type==="monthly_bill").map(x=>[x.name,x.amount]);
-const weekly=(items||[]).filter(x=>x.item_type==="weekly_bill").map(x=>[x.name,x.amount]);
-try{
-await replaceWorkingBudgetTable("income_sources",income);
-await replaceWorkingBudgetTable("bills",monthly);
-await replaceWorkingBudgetTable("weekly_bills",weekly);
-editingBudgetMonthOverride=new Date(month);
-await openBudgetSetup();
-showPanel(4,true);
-document.getElementById("monthlyBudgetPanel")?.scrollTo?.({top:0,behavior:"smooth"});
-}catch(error){editingBudgetMonthOverride=null;alert(`Could not open this budget for editing: ${error.message}`);}
+currentBudgetEditData={
+month:new Date(month),
+plan,
+income:(items||[]).filter(x=>x.item_type==="income").map(x=>({name:x.name,amount:Math.abs(Number(x.amount||0))})),
+monthly:(items||[]).filter(x=>x.item_type==="monthly_bill").map(x=>({name:x.name,amount:Math.abs(Number(x.amount||0))})),
+weekly:(items||[]).filter(x=>x.item_type==="weekly_bill").map(x=>({name:x.name,amount:Math.abs(Number(x.amount||0))})),
+needs:Number(plan.weekly_needs||0),
+savings:Number(plan.weekly_savings||0),
+allocations:new Map((allocations||[]).map(x=>[x.profile_id,Number(x.weekly_fun_amount??x.weekly_amount??0)]))
+};
+document.getElementById("currentBudgetSummary").classList.add("hidden");
+document.getElementById("currentBudgetInlineEditor").classList.remove("hidden");
+document.getElementById("editCurrentBudgetButton").classList.add("hidden");
+document.getElementById("cancelCurrentBudgetEditButton").classList.remove("hidden");
+document.getElementById("currentBudgetPrev").disabled=true;
+document.getElementById("currentBudgetNext").disabled=true;
+renderCurrentBudgetInlineEditor();
+}
+function cancelCurrentBudgetEdit(){
+currentBudgetEditData=null;
+document.getElementById("currentBudgetInlineEditor").classList.add("hidden");
+document.getElementById("currentBudgetSummary").classList.remove("hidden");
+document.getElementById("editCurrentBudgetButton").classList.remove("hidden");
+document.getElementById("cancelCurrentBudgetEditButton").classList.add("hidden");
+document.getElementById("currentBudgetPrev").disabled=false;
+document.getElementById("currentBudgetNext").disabled=false;
+}
+async function saveCurrentBudgetEdit(){
+if(!currentBudgetEditData)return;
+const calc=updateCurrentBudgetEditMath();
+if(calc.pool<0&&!confirm(`This budget is short by ${money(Math.abs(calc.pool))} per week. Save it anyway?`))return;
+
+const funInputs=[...document.querySelectorAll(".current-edit-fun")];
+const funAmounts=funInputs.map(input=>Math.abs(parseMoney(input.value)));
+const assigned=funAmounts.reduce((s,x)=>s+x,0);
+if(calc.pool>=0&&assigned>calc.pool+.01){alert("Profile Fun Money allocations exceed the available Fun Money.");return;}
+
+const month=currentBudgetEditData.month,monthKey=dateOnly(month),planId=currentBudgetEditData.plan.id;
+const {error:planError}=await supabaseClient.from("budget_plans").update({
+weekly_needs:currentBudgetEditData.needs,
+weekly_savings:currentBudgetEditData.savings,
+weekly_fun:calc.pool,
+updated_at:new Date().toISOString()
+}).eq("id",planId);
+if(planError){alert(planError.message);return;}
+
+const {error:deleteError}=await supabaseClient.from("budget_items").delete().eq("budget_plan_id",planId);
+if(deleteError){alert(deleteError.message);return;}
+const snapshotRows=[];
+const add=(list,type)=>list.forEach((item,index)=>snapshotRows.push({
+budget_plan_id:planId,household_id:householdId,budget_month:monthKey,item_type:type,
+name:item.name,amount:item.amount,position:index
+}));
+add(currentBudgetEditData.income,"income");
+add(currentBudgetEditData.monthly,"monthly_bill");
+add(currentBudgetEditData.weekly,"weekly_bill");
+if(snapshotRows.length){
+let result=await supabaseClient.from("budget_items").insert(snapshotRows);
+if(result.error&&String(result.error.message||"").toLowerCase().includes("position")){
+const fallback=snapshotRows.map(({position,...row})=>({...row,sort_order:position}));
+result=await supabaseClient.from("budget_items").insert(fallback);
+}
+if(result.error){alert(result.error.message);return;}
+}
+
+const monthlyBudget=await ensureMonthlyBudget(month);
+const allocationRows=funInputs.map((input,index)=>{
+const amount=funAmounts[index];
+return {
+budget_id:monthlyBudget.id,profile_id:input.dataset.profileId,
+percentage:calc.pool>0?amount/calc.pool*100:0,weekly_amount:amount,
+household_id:householdId,budget_month:monthKey,weekly_fun_amount:amount,
+updated_at:new Date().toISOString()
+};
+});
+if(allocationRows.length){
+const {error}=await supabaseClient.from("budget_profile_allocations").upsert(allocationRows,{onConflict:"budget_id,profile_id"});
+if(error){alert(error.message);return;}
+}
+if(monthKey===dateOnly(activeBudgetMonth()))await ensureCurrentWeekDeposits();
+cancelCurrentBudgetEdit();
+await Promise.all([loadCurrentBudget(),loadExpenses(),calculateBalances(),updateAnalytics(),loadBudgetHistory()]);
+showToast("Budget updated");
 }
 async function determinePreparationMonth(){
-if(editingBudgetMonthOverride)return new Date(editingBudgetMonthOverride);
 const current=
 activeBudgetMonth();
 const {data,error}=
@@ -2645,25 +2812,65 @@ return data
 ?addMonths(current,1)
 :current;
 }
-function preparationIncomeResetKey(month){
-return `bicycleBudgetIncomeReset:${householdId}:${dateOnly(month)}`;
+
+function preparationCarryForwardKey(month){
+return `bicycleBudgetCarryForwardV21:${householdId}:${dateOnly(month)}`;
 }
-async function resetIncomeAmountsForNewPreparationMonth(month){
-const key=preparationIncomeResetKey(month);
+async function replacePreparationTableWithNames(table,names){
+const {error:deleteError}=await supabaseClient
+.from(table)
+.delete()
+.eq("household_id",householdId);
+if(deleteError)throw deleteError;
+const clean=[...new Set((names||[]).map(name=>String(name||"").trim()).filter(Boolean))];
+if(!clean.length)return;
+const {error:insertError}=await supabaseClient
+.from(table)
+.insert(clean.map(name=>({household_id:householdId,name,amount:0})));
+if(insertError)throw insertError;
+}
+async function initializePreparationListsFromPreviousBudget(month){
+const key=preparationCarryForwardKey(month);
 if(localStorage.getItem(key)==="1")return;
-const {data:plan}=await supabaseClient
+
+const monthKey=dateOnly(month);
+const {data:targetPlan,error:targetPlanError}=await supabaseClient
 .from("budget_plans")
 .select("preparation_completed")
 .eq("household_id",householdId)
-.eq("budget_month",dateOnly(month))
+.eq("budget_month",monthKey)
 .maybeSingle();
-if(!plan?.preparation_completed){
-const {error}=await supabaseClient
-.from("income_sources")
-.update({amount:0})
-.eq("household_id",householdId);
-if(error)throw error;
+if(targetPlanError)throw targetPlanError;
+
+if(targetPlan?.preparation_completed){
+localStorage.setItem(key,"1");
+return;
 }
+
+const previous=addMonths(month,-1);
+const previousKey=dateOnly(previous);
+const {data:previousItems,error:previousItemsError}=await supabaseClient
+.from("budget_items")
+.select("item_type,name,amount")
+.eq("household_id",householdId)
+.eq("budget_month",previousKey);
+if(previousItemsError)throw previousItemsError;
+
+let incomeNames=(previousItems||[]).filter(x=>x.item_type==="income").map(x=>x.name);
+let monthlyBillNames=(previousItems||[]).filter(x=>x.item_type==="monthly_bill").map(x=>x.name);
+let weeklyBillNames=(previousItems||[]).filter(x=>x.item_type==="weekly_bill").map(x=>x.name);
+
+const historical=HISTORICAL_BUDGETS[previousKey]||null;
+if(!incomeNames.length&&historical?.income)incomeNames=historical.income.map(x=>x[0]);
+if(!monthlyBillNames.length&&historical?.monthlyBills)monthlyBillNames=historical.monthlyBills.map(x=>x[0]);
+if(!weeklyBillNames.length&&historical?.weeklyBills)weeklyBillNames=historical.weeklyBills.map(x=>x[0]);
+
+await Promise.all([
+replacePreparationTableWithNames("income_sources",incomeNames),
+replacePreparationTableWithNames("bills",monthlyBillNames),
+replacePreparationTableWithNames("weekly_bills",weeklyBillNames)
+]);
+
 localStorage.setItem(key,"1");
 }
 async function loadBudgetLists(){
@@ -2710,7 +2917,7 @@ const row=
 document.createElement("div");
 row.className="saved-row";
 const amountValue=Math.abs(Number(item.amount)||0);
-const amountText=(kind==="income"&&amountValue===0)?"$____":`${negative?"-":""}${money(amountValue)}`;
+const amountText=amountValue===0?"$____":`${negative?"-":""}${money(amountValue)}`;
 row.innerHTML=`<div class="saved-row-main"><div class="saved-row-name">${escapeHtml(item.name)}</div></div><div class="saved-row-amount">${amountText}</div>`;
 row.onclick=()=>openMoneyEditor(kind,item);
 box.appendChild(row);
@@ -2748,7 +2955,7 @@ item?.name||"";
 document
 .getElementById("moneyEditorAmount")
 .value=
-item
+item&&Math.abs(Number(item.amount)||0)>0
 ?`${negative?"-":""}${money(Math.abs(Number(item.amount)||0))}`
 :"";
 document
@@ -2860,7 +3067,7 @@ const monthKey=
 dateOnly(month);
 const current=
 activeBudgetMonth();
-const editingCurrent=Boolean(editingBudgetMonthOverride);
+const editingCurrent=false;
 const firstTime=
 !editingCurrent&&monthKey===dateOnly(current);
 const {data,error}=
@@ -2921,7 +3128,7 @@ document.getElementById("weeklyNeeds")
 bindMoneyInput(
 document.getElementById("weeklySavings")
 );
-if(!editingCurrent)await resetIncomeAmountsForNewPreparationMonth(month);
+await initializePreparationListsFromPreviousBudget(month);
 await loadBudgetLists();
 await renderProfileAllocations(month);
 updateBudgetCalculation();
@@ -2932,7 +3139,6 @@ const x=incomeMonth.toLocaleDateString("en-US",{month:"long"}),y=billMonth.toLoc
 document.getElementById("budgetHelpCopy").innerHTML=`<p>This budget is designed to give you time to prepare for the coming month. To do this, you will input all the income you earned in the previous month (<strong>${x}</strong>), all the bills you paid throughout that month and on the first of this month (<strong>${x} and ${y}</strong>), and the budget that is set will be for the next month (<strong>${z}</strong>).</p><p>Once you’ve input all the income and bills, you will then input the dollar value you wish to allow yourself each week for the coming month for <strong>Needs</strong>, such as groceries and gas.</p><p>Then you will input the dollar value you wish to add to your savings each week.</p><p>Once your monthly bills, weekly bills, weekly Needs, and weekly Savings have been deducted from the income available for the budget, the remaining amount will be considered your <strong>Fun Money</strong>. Fun Money is designated for wants as opposed to necessities, such as going out to eat or buying a soda on a whim.</p><p>If your Fun Money calculation is negative, this means the expenses and allowances entered are greater than the money available. Reduce Needs and/or Savings, or review your bills and income, until Fun Money becomes zero or a positive number. If the numbers are correct and the budget remains negative, the app will show the weekly shortfall and allow you to save the negative budget after confirming it.</p>`;
 }
 function preparationMonth(){
-if(editingBudgetMonthOverride)return new Date(editingBudgetMonthOverride);
 const title=
 document
 .getElementById("budgetSetupTitle")
@@ -3356,10 +3562,6 @@ loadCurrentBudget(),
 updateAnalytics(),
 loadBudgetHistory()
 ]);
-if(editingBudgetMonthOverride){
-editingBudgetMonthOverride=null;
-await openBudgetSetup();
-}
 }catch(error){
 alert(
 `Budget saved, but related data failed: ${error.message}`
@@ -5282,6 +5484,18 @@ document
 document.getElementById("currentBudgetPrev").onclick=async()=>{currentBudgetMonthCursor=addMonths(currentBudgetMonthCursor,-1);await loadCurrentBudget()};
 document.getElementById("currentBudgetNext").onclick=async()=>{const next=addMonths(currentBudgetMonthCursor,1),now=activeBudgetMonth();if(next>now)return;currentBudgetMonthCursor=next;await loadCurrentBudget()};
 document.getElementById("editCurrentBudgetButton").onclick=editCurrentBudget;
+document.getElementById("cancelCurrentBudgetEditButton").onclick=cancelCurrentBudgetEdit;
+document.getElementById("saveCurrentBudgetEditButton").onclick=saveCurrentBudgetEdit;
+document.getElementById("currentEditAddIncome").onclick=()=>openCurrentEditItem("income");
+document.getElementById("currentEditAddMonthlyBill").onclick=()=>openCurrentEditItem("monthly");
+document.getElementById("currentEditAddWeeklyBill").onclick=()=>openCurrentEditItem("weekly");
+document.getElementById("currentBudgetInlineEditor").addEventListener("click",e=>{
+const row=e.target.closest(".current-edit-row");
+if(row&&!e.target.closest(".current-edit-remove"))openCurrentEditItem(row.dataset.kind,Number(row.dataset.index));
+});
+document.getElementById("currentBudgetInlineEditor").addEventListener("input",e=>{
+if(e.target.matches("#currentEditNeeds,#currentEditSavings,.current-edit-fun"))updateCurrentBudgetEditMath();
+});
 document
 .getElementById("budgetHelpButton")
 .onclick=
