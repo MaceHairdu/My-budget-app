@@ -597,6 +597,16 @@ width:100%;
 max-width:100%;
 min-width:0;
 box-sizing:border-box;
+overflow:hidden;
+}
+
+/* v28: keep iOS date controls inside transaction modals.
+   Mobile Safari can give native date inputs an intrinsic width wider than their parent. */
+#transactionModal #expenseDate,
+#transactionModal #fundAdjustmentDate{
+inline-size:100%;
+max-inline-size:100%;
+min-inline-size:0;
 }
 
 .modal-actions{
@@ -1419,11 +1429,56 @@ body:not(.theme-cedar) .date-day.today span{
   #currentBudgetPanel .panel-header>div{flex:0 0 auto}
   #transactionModal{align-items:flex-start;padding-top:calc(env(safe-area-inset-top,0px) + 64px)!important}
   #transactionModal .modal-card{max-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 88px)!important}
+  #transactionModal #expenseDate,
+  #transactionModal #fundAdjustmentDate{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    inline-size:100%!important;
+    max-inline-size:100%!important;
+  }
 }
+
+/* v29: cover startup initialization so partially loaded UI never flashes. */
+.startup-loading{
+position:fixed;
+inset:0;
+z-index:5000;
+display:grid;
+place-items:center;
+background:var(--bg);
+color:var(--text);
+transition:opacity .18s ease
+}
+.startup-loading.hidden{display:none}
+.startup-loading-card{
+display:grid;
+justify-items:center;
+gap:14px;
+padding:24px;
+text-align:center
+}
+.startup-loading-title{font-size:1.35em;font-weight:900}
+.startup-spinner{
+width:34px;
+height:34px;
+border:4px solid color-mix(in srgb,var(--text) 22%,transparent);
+border-top-color:var(--text);
+border-radius:50%;
+animation:startup-spin .8s linear infinite
+}
+@keyframes startup-spin{to{transform:rotate(360deg)}}
 
 </style>
 </head>
 <body class="theme-cedar font-system">
+<div class="startup-loading" id="startupLoading" role="status" aria-live="polite" aria-label="Loading Bicycle Budget">
+  <div class="startup-loading-card">
+    <div class="startup-loading-title">Bicycle Budget</div>
+    <div class="startup-spinner" aria-hidden="true"></div>
+    <div class="subtext">Loading your budget…</div>
+  </div>
+</div>
 <button class="settings-gear hidden" id="settingsGear" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2Z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
 <section class="login" id="loginScreen">
 <div class="card" id="loginCard">
@@ -4886,7 +4941,7 @@ if(settingsSection==="profile"){document.getElementById("settingsTitle").textCon
 if(settingsSection==="budget"){document.getElementById("settingsTitle").textContent="Budget Info";document.getElementById("budgetSettings").classList.remove("hidden");const exportMonth=document.getElementById("dataExportMonth");if(exportMonth&&!exportMonth.value)exportMonth.value=dateOnly(activeBudgetMonth()).slice(0,7);loadBudgetHistory();return}
 if(settingsSection==="switch"){document.getElementById("settingsTitle").textContent="Switch Profile";document.getElementById("switchProfileSettings").classList.remove("hidden");renderSettingsProfileList();}
 }
-async function renderSettingsProfileList(){const profiles=await loadProfiles(),box=document.getElementById("settingsProfileList");box.innerHTML="";document.getElementById("settingsSwitchPinArea").classList.add("hidden");profiles.forEach(profile=>{const b=document.createElement("button");b.className="secondary-button";b.textContent=profile.display_name;b.onclick=()=>selectSettingsProfile(profile);box.appendChild(b)})}
+async function renderSettingsProfileList(){const profiles=await loadProfiles(),box=document.getElementById("settingsProfileList");box.innerHTML="";document.getElementById("settingsSwitchPinArea").classList.add("hidden");profiles.filter(profile=>profile.id!==currentProfile?.id).forEach(profile=>{const b=document.createElement("button");b.className="secondary-button";b.textContent=profile.display_name;b.onclick=()=>selectSettingsProfile(profile);box.appendChild(b)})}
 function selectSettingsProfile(profile){settingsSwitchTarget=profile;document.getElementById("settingsSwitchPinName").textContent=`Enter ${profile.display_name}'s PIN`;document.getElementById("settingsSwitchPinArea").classList.remove("hidden");document.getElementById("settingsSwitchPinError").classList.add("hidden");renderPinBoxes("settingsSwitchPinBoxes",Number(profile.pin_length||4),submitSettingsProfilePin);const firstPin=document.querySelector("#settingsSwitchPinBoxes .pin-box");firstPin?.focus({preventScroll:true});setTimeout(()=>firstPin?.focus({preventScroll:true}),60)}
 async function submitSettingsProfilePin(){if(!settingsSwitchTarget)return;const pin=getPinFromBoxes("settingsSwitchPinBoxes"),required=Number(settingsSwitchTarget.pin_length||4);if(pin.length!==required)return;const {data,error}=await supabaseClient.rpc("create_profile_session",{p_profile_id:settingsSwitchTarget.id,p_pin:pin,p_session_minutes:1440});if(error){const e=document.getElementById("settingsSwitchPinError");e.textContent="Incorrect PIN.";e.classList.remove("hidden");clearPinBoxes("settingsSwitchPinBoxes");return}localStorage.setItem("profileSessionToken",data);localStorage.setItem("profileId",settingsSwitchTarget.id);currentProfile=settingsSwitchTarget;closeSettings();await enterProfile();showToast(`Switched to ${currentProfile.display_name}`)}
 async function loadBudgetHistory(){
@@ -5248,7 +5303,10 @@ setTimeout(()=>panel.classList.remove("prepare-focus-glow"),1900);
 }
 }
 }
+function showStartupLoading(){document.getElementById("startupLoading")?.classList.remove("hidden")}
+function hideStartupLoading(){document.getElementById("startupLoading")?.classList.add("hidden")}
 async function enterProfile(){
+showStartupLoading();
 await loadProfileSettings();
 await loadProfiles();
 document
@@ -5298,6 +5356,7 @@ Always open exactly on HOME.
 This runs after the mobile layout has rendered.
 */
 recenterHomeImmediately();
+hideStartupLoading();
 }
 async function startApp(){
 await loadHousehold();
@@ -5339,6 +5398,7 @@ document
 .getElementById("profileScreen")
 .classList.remove("hidden");
 await renderProfiles();
+hideStartupLoading();
 }
 async function login(){
 const email=
@@ -5377,6 +5437,7 @@ card.classList.add("shake");
 return;
 }
 currentUser=data.user;
+showStartupLoading();
 await startApp();
 }
 async function logout(){
@@ -6024,8 +6085,10 @@ await supabaseClient.auth
 if(session?.user){
 currentUser=session.user;
 await startApp();
+}else{
+hideStartupLoading();
 }
-})();
+})().catch(error=>{console.error("Startup failed",error);hideStartupLoading();});
 
 const budgetMonthStartedOk=document.getElementById("budgetMonthStartedOk");
 budgetMonthStartedOk.onclick=acknowledgeBudgetMonthStarted;
