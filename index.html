@@ -1439,7 +1439,7 @@ body:not(.theme-cedar) .date-day.today span{
   }
 }
 
-/* v29: cover startup initialization so partially loaded UI never flashes. */
+/* v30: startup animation + narrow iPhone Home/date-layout fixes. */
 .startup-loading{
 position:fixed;
 inset:0;
@@ -1452,22 +1452,118 @@ transition:opacity .18s ease
 }
 .startup-loading.hidden{display:none}
 .startup-loading-card{
+width:min(360px,88vw);
 display:grid;
 justify-items:center;
-gap:14px;
+gap:13px;
 padding:24px;
 text-align:center
 }
 .startup-loading-title{font-size:1.35em;font-weight:900}
-.startup-spinner{
-width:34px;
-height:34px;
-border:4px solid color-mix(in srgb,var(--text) 22%,transparent);
-border-top-color:var(--text);
-border-radius:50%;
-animation:startup-spin .8s linear infinite
+.startup-ride{
+position:relative;
+width:min(290px,78vw);
+height:116px;
+overflow:hidden;
 }
-@keyframes startup-spin{to{transform:rotate(360deg)}}
+.startup-bike{
+position:absolute;
+left:50%;
+bottom:27px;
+width:76px;
+height:76px;
+object-fit:cover;
+border-radius:18px;
+transform:translateX(-50%);
+filter:drop-shadow(0 4px 4px rgba(0,0,0,.14));
+animation:startup-bike-bob .45s ease-in-out infinite alternate;
+z-index:2
+}
+.startup-road{
+position:absolute;
+left:0;
+right:0;
+bottom:22px;
+height:3px;
+border-radius:99px;
+background:color-mix(in srgb,var(--text) 56%,transparent)
+}
+.startup-rock{
+position:absolute;
+bottom:25px;
+right:-26px;
+width:18px;
+height:11px;
+border-radius:55% 48% 38% 44%;
+background:color-mix(in srgb,var(--text) 48%,var(--bg));
+box-shadow:inset 2px 2px 0 color-mix(in srgb,var(--panel) 35%,transparent);
+animation:startup-rock-pass 1.65s linear infinite
+}
+.startup-rock.rock-two{
+width:12px;
+height:8px;
+animation-duration:2.15s;
+animation-delay:-1.05s;
+opacity:.72
+}
+.startup-road-mark{
+position:absolute;
+bottom:15px;
+right:-52px;
+width:46px;
+height:2px;
+background:color-mix(in srgb,var(--text) 30%,transparent);
+animation:startup-road-pass .92s linear infinite
+}
+.startup-road-mark.mark-two{animation-delay:-.46s}
+@keyframes startup-bike-bob{from{transform:translate(-50%,0)}to{transform:translate(-50%,-2px)}}
+@keyframes startup-rock-pass{from{transform:translateX(0)}to{transform:translateX(-340px)}}
+@keyframes startup-road-pass{from{transform:translateX(0)}to{transform:translateX(-350px)}}
+
+/* Keep the balance/header fixed; only the activity ledger scrolls. */
+.fund-card>.fund-label,
+.fund-card>.fund-period,
+.fund-card>.balance,
+.fund-card>.week-start-balance{flex:0 0 auto!important}
+.fund-card>.home-expenses{
+height:auto!important;
+flex:1 1 0!important;
+min-height:0!important;
+max-height:none!important;
+overflow-y:auto!important;
+overflow-x:hidden!important;
+-webkit-overflow-scrolling:touch!important;
+touch-action:pan-y!important;
+}
+
+/* iOS can ignore a date input's intrinsic width. The shell owns the visible border
+   and clips the native control so it cannot extend past neighboring fields. */
+.date-input-shell{
+width:100%;
+max-width:100%;
+min-width:0;
+overflow:hidden;
+border:1px solid var(--input);
+border-radius:10px;
+background:var(--panel)
+}
+.date-input-shell input[type="date"]{
+display:block!important;
+width:100%!important;
+max-width:100%!important;
+min-width:0!important;
+inline-size:100%!important;
+max-inline-size:100%!important;
+border:0!important;
+border-radius:0!important;
+background:transparent!important;
+box-shadow:none!important;
+-webkit-appearance:none;
+appearance:none;
+}
+.date-input-shell:focus-within{
+box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 58%,transparent)
+}
 
 </style>
 </head>
@@ -1475,7 +1571,14 @@ animation:startup-spin .8s linear infinite
 <div class="startup-loading" id="startupLoading" role="status" aria-live="polite" aria-label="Loading Bicycle Budget">
   <div class="startup-loading-card">
     <div class="startup-loading-title">Bicycle Budget</div>
-    <div class="startup-spinner" aria-hidden="true"></div>
+    <div class="startup-ride" aria-hidden="true">
+      <img class="startup-bike" src="./apple-touch-icon.png?v=24" alt="">
+      <div class="startup-road"></div>
+      <div class="startup-road-mark"></div>
+      <div class="startup-road-mark mark-two"></div>
+      <div class="startup-rock"></div>
+      <div class="startup-rock rock-two"></div>
+    </div>
     <div class="subtext">Loading your budget…</div>
   </div>
 </div>
@@ -1846,7 +1949,7 @@ Close
 <div class="subtext" id="categorySaveMessage" style="margin-top:8px"></div>
 </div>
 <label>Date</label>
-<input id="expenseDate" type="date">
+<div class="date-input-shell"><input id="expenseDate" type="date"></div>
 <div class="modal-actions">
 <button class="primary-button" id="saveExpenseButton">Save</button>
 <button class="danger-button hidden" id="deleteExpenseButton">Delete</button>
@@ -1860,7 +1963,7 @@ Close
 <label>Amount</label>
 <input id="fundAdjustmentAmount" class="money-input" inputmode="decimal">
 <label>Date</label>
-<input id="fundAdjustmentDate" type="date">
+<div class="date-input-shell"><input id="fundAdjustmentDate" type="date"></div>
 <div class="modal-actions">
 <button class="primary-button" id="saveFundAdjustmentButton">Add Funds</button>
 <button class="danger-button hidden" id="deleteFundAdjustmentButton">Delete</button>
@@ -2451,7 +2554,10 @@ await loadProfiles();
 const box=
 document.getElementById("profileList");
 box.innerHTML="";
-profiles.forEach(
+const visibleProfiles=currentProfile
+?profiles.filter(profile=>profile.id!==currentProfile.id)
+:profiles;
+visibleProfiles.forEach(
 profile=>{
 const row=
 document.createElement("div");
