@@ -1562,6 +1562,24 @@ appearance:none;
 box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 58%,transparent)
 }
 
+
+/* v32: the Home fund cards are simultaneously tappable cards and native
+   vertical scroll regions. Avoid moving the card itself while a finger is
+   down; transforms on an active scroll container can interrupt iOS scrolling. */
+@media(max-width:900px){
+  .fund-card:active{transform:none!important}
+  .fund-card>.home-expenses{
+    overflow-y:scroll!important;
+    overflow-x:hidden!important;
+    -webkit-overflow-scrolling:touch!important;
+    touch-action:pan-y!important;
+    overscroll-behavior-y:contain;
+    pointer-events:auto!important;
+    position:relative;
+    z-index:1;
+  }
+}
+
 </style>
 </head>
 <body class="theme-cedar font-system">
@@ -6000,23 +6018,40 @@ false
 };
 function bindFundCardTap(cardId,fund){
 const card=document.getElementById(cardId);
+let startX=0;
+let startY=0;
+let moved=false;
+let suppressClickUntil=0;
 card.onclick=null;
+card.addEventListener("touchstart",event=>{
+if(event.touches.length!==1)return;
+startX=event.touches[0].clientX;
+startY=event.touches[0].clientY;
+moved=false;
+},{passive:true});
+card.addEventListener("touchmove",event=>{
+if(event.touches.length!==1)return;
+const dx=event.touches[0].clientX-startX;
+const dy=event.touches[0].clientY-startY;
+if(Math.hypot(dx,dy)>8)moved=true;
+},{passive:true});
+card.addEventListener("touchend",()=>{
+if(moved)suppressClickUntil=Date.now()+450;
+},{passive:true});
 card.addEventListener("click",event=>{
-if(event.target.closest(".week-start-balance,.home-expenses"))return;
+/* The fund card is both a button and a scroll surface. A true tap anywhere,
+   including on an expense row, opens Add Expense. A drag remains a scroll. */
+if(Date.now()<suppressClickUntil)return;
+if(event.target.closest(".week-start-balance,button,a,input,select,textarea,label"))return;
 openTransactionModal(fund,null,true);
-},true);
+});
 }
 bindFundCardTap("needsFundCard","needs");
 bindFundCardTap("funFundCard","fun");
 
-/* v31: the Home activity lists own vertical touch gestures.
-   Do not let the workspace's horizontal swipe handler compete with them. */
-["homeNeedsExpenses","homeFunExpenses"].forEach(id=>{
-const list=document.getElementById(id);
-if(!list)return;
-list.addEventListener("touchstart",e=>e.stopPropagation(),{passive:true});
-list.addEventListener("touchmove",e=>e.stopPropagation(),{passive:true});
-});
+/* v32: do not intercept touches inside the activity ledger. The workspace
+   swipe handler already ignores gestures that start in .home-expenses, so
+   Mobile Safari can own vertical scrolling natively and consistently. */
 
 document.getElementById("needsWeekStartButton").onpointerdown=e=>e.stopPropagation();
 document.getElementById("funWeekStartButton").onpointerdown=e=>e.stopPropagation();
