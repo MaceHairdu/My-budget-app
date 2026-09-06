@@ -722,6 +722,22 @@ font-size:1.55em;
 font-weight:900;
 border-radius:9px
 }
+/* v33 monthly expense report */
+.expense-report-preview{margin-top:16px;padding:16px;border:1px solid var(--edge);border-radius:12px;background:color-mix(in srgb,var(--panel) 92%,var(--bg));white-space:normal}
+.expense-report-month-title{margin:0 0 14px;font-size:1.55em}
+.expense-report-week{padding:14px 0;border-top:1px solid color-mix(in srgb,var(--edge) 55%,transparent)}
+.expense-report-week:first-of-type{border-top:0;padding-top:0}
+.expense-report-week h3{margin:0 0 12px}
+.expense-report-section{margin:14px 0 0}
+.expense-report-section h4{margin:0 0 7px;font-size:1em}
+.expense-report-line{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:baseline;padding:3px 0}
+.expense-report-line .report-date{font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap}
+.expense-report-line .report-description{min-width:0;overflow-wrap:anywhere}
+.expense-report-line .report-amount{font-variant-numeric:tabular-nums;font-weight:800;white-space:nowrap}
+.expense-report-remaining{display:flex;justify-content:space-between;gap:12px;margin-top:7px;padding-top:7px;border-top:1px dashed color-mix(in srgb,var(--edge) 65%,transparent);font-weight:900}
+.expense-report-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:14px}
+@media(max-width:560px){.expense-report-actions{grid-template-columns:1fr}.expense-report-line{grid-template-columns:48px minmax(0,1fr) auto;gap:7px}}
+
 .settings-shell{
 position:fixed;
 inset:0;
@@ -1880,6 +1896,7 @@ Save Budget
 <button class="folder-button" data-settings-section="appearance"><span>Appearance</span><span>›</span></button>
 <button class="folder-button" data-settings-section="profile"><span>Profile</span><span>›</span></button>
 <button class="folder-button" data-settings-section="budget"><span>Budget Info</span><span>›</span></button>
+<button class="folder-button" data-settings-section="expenseReport"><span>Monthly Expense Report</span><span>›</span></button>
 <button class="folder-button" id="settingsSwitchProfileButton"><span>Switch Profile</span><span>›</span></button>
 <button class="danger-button" id="settingsLogoutButton" style="width:100%;margin-top:5px">Log Out</button>
 </div></div>
@@ -1894,6 +1911,20 @@ Save Budget
 <div id="budgetSettings" class="hidden">
 <div class="card settings-card"><h2>Budget Info</h2><p class="subtext">Saved monthly budgets are stored here.</p><div id="budgetHistoryList"></div><button class="secondary-button" id="exportBudgetCsvButton" style="width:100%;margin-top:14px">Export Budget History as CSV</button></div>
 <div class="card settings-card"><h2>Download Your Records</h2><p class="subtext">Choose a month to download a detailed copy of the budget or an expense ledger you can review outside the app.</p><label for="dataExportMonth">Month</label><input id="dataExportMonth" type="month"><button class="secondary-button" id="exportMonthlyBudgetCsvButton" type="button" style="width:100%;margin-top:14px">Download Monthly Budget CSV</button><button class="secondary-button" id="exportExpenseLedgerCsvButton" type="button" style="width:100%;margin-top:10px">Download Monthly Expense Ledger CSV</button></div>
+</div>
+<div id="expenseReportSettings" class="hidden">
+<div class="card settings-card expense-report-card">
+<h2>Monthly Expense Report</h2>
+<p class="subtext">A week-by-week household spending report in the same format as your old budget document.</p>
+<label for="expenseReportMonth">Month</label>
+<input id="expenseReportMonth" type="month">
+<div class="expense-report-preview" id="expenseReportPreview"><div class="subtext">Choose a month to view its report.</div></div>
+<div class="expense-report-actions">
+<button class="secondary-button" id="copyExpenseReportTextButton" type="button">Copy Text</button>
+<button class="secondary-button" id="downloadExpenseReportTextButton" type="button">Download Text</button>
+<button class="secondary-button" id="downloadExpenseReportCsvButton" type="button">Download CSV</button>
+</div>
+</div>
 </div>
 <div id="switchProfileSettings" class="hidden"><div class="card settings-card"><h2>Switch Profile</h2><div class="settings-switch-profile-list" id="settingsProfileList"></div><div class="settings-switch-pin hidden" id="settingsSwitchPinArea"><h3 id="settingsSwitchPinName"></h3><div class="pin-boxes" id="settingsSwitchPinBoxes"></div><div id="settingsSwitchPinError" class="login-error hidden"></div></div></div></div>
 </div></div></div>
@@ -5061,12 +5092,13 @@ box.appendChild(button);
 );
 }
 function renderSettingsSection(){
-["appearanceSettings","profileSettings","budgetSettings","switchProfileSettings"].forEach(id=>document.getElementById(id).classList.add("hidden"));
+["appearanceSettings","profileSettings","budgetSettings","expenseReportSettings","switchProfileSettings"].forEach(id=>document.getElementById(id).classList.add("hidden"));
 document.getElementById("settingsMenuProfileName").textContent=currentProfile?.display_name||"";document.getElementById("settingsProfileName").textContent=currentProfile?.display_name||"";
 if(settingsSection==="menu")return;
 if(settingsSection==="appearance"){document.getElementById("settingsTitle").textContent="Appearance";document.getElementById("appearanceSettings").classList.remove("hidden");renderThemes();document.getElementById("fontFamilySelect").value=selectedFont;document.getElementById("fontSizeRange").value=selectedFontSize;document.getElementById("fontSizeLabel").textContent=`${selectedFontSize}px`;return}
 if(settingsSection==="profile"){document.getElementById("settingsTitle").textContent="Profile";document.getElementById("profileSettings").classList.remove("hidden");document.getElementById("accountEmailDisplay").textContent=currentUser.email;return}
 if(settingsSection==="budget"){document.getElementById("settingsTitle").textContent="Budget Info";document.getElementById("budgetSettings").classList.remove("hidden");const exportMonth=document.getElementById("dataExportMonth");if(exportMonth&&!exportMonth.value)exportMonth.value=dateOnly(activeBudgetMonth()).slice(0,7);loadBudgetHistory();return}
+if(settingsSection==="expenseReport"){document.getElementById("settingsTitle").textContent="Monthly Expense Report";document.getElementById("expenseReportSettings").classList.remove("hidden");const reportMonth=document.getElementById("expenseReportMonth");if(reportMonth&&!reportMonth.value)reportMonth.value=dateOnly(activeBudgetMonth()).slice(0,7);refreshMonthlyExpenseReport();return}
 if(settingsSection==="switch"){document.getElementById("settingsTitle").textContent="Switch Profile";document.getElementById("switchProfileSettings").classList.remove("hidden");renderSettingsProfileList();}
 }
 async function renderSettingsProfileList(){const profiles=await loadProfiles(),box=document.getElementById("settingsProfileList");box.innerHTML="";document.getElementById("settingsSwitchPinArea").classList.add("hidden");profiles.filter(profile=>profile.id!==currentProfile?.id).forEach(profile=>{const b=document.createElement("button");b.className="secondary-button";b.textContent=profile.display_name;b.onclick=()=>selectSettingsProfile(profile);box.appendChild(b)})}
@@ -5369,6 +5401,118 @@ detail.sort((a,b)=>String(a[0]).localeCompare(String(b[0]))||String(a[1]).locale
 rows.push(...detail);
 downloadCsvFile(`bicycle-expenses-${month.slice(0,7)}.csv`,rows);
 showToast("Expense ledger CSV created");
+}
+
+
+let monthlyExpenseReportCache=null;
+function selectedExpenseReportMonth(){
+const raw=document.getElementById("expenseReportMonth")?.value;
+if(raw&&/^\d{4}-\d{2}$/.test(raw))return `${raw}-01`;
+return dateOnly(activeBudgetMonth());
+}
+function reportShortDate(value){
+const d=value instanceof Date?value:parseLocalDate(String(value||"").slice(0,10));
+if(!d||Number.isNaN(d.getTime()))return "";
+return `${d.getMonth()+1}/${d.getDate()}`;
+}
+function reportWeekLabel(ws,index){
+const end=new Date(ws);end.setDate(end.getDate()+6);
+return `Week ${index+1} (${reportShortDate(ws)} - ${reportShortDate(end)})`;
+}
+function reportSectionTitle(fund,profile){
+return fund==="needs"?"Needs":`${profile?.display_name||"Profile"}'s Spending`;
+}
+function signedReportMoney(amount,type){
+const n=Math.abs(Number(amount||0));
+return type==="adjustment"?`+$${money(n)}`:`-$${money(n)}`;
+}
+async function buildMonthlyExpenseReport(monthKey){
+await loadProfiles();
+const monthDate=parseLocalDate(monthKey);
+let weeks=getBudgetWeeks(monthDate);
+const today=weekStart(new Date());
+const selectedMonthStart=firstOfMonth(monthDate);
+const activeMonthStart=activeBudgetMonth();
+if(selectedMonthStart>activeMonthStart)weeks=[];
+else if(selectedMonthStart.getTime()===activeMonthStart.getTime())weeks=weeks.filter(ws=>ws<=today);
+if(!weeks.length){
+return {monthKey,monthDate,weeks:[],sections:[],text:`${monthDate.toLocaleDateString("en-US",{month:"long",year:"numeric"})}\n\nNo budget weeks are available for this month yet.`,csv:[["Month","Week","Week Start","Week End","Fund","Profile","Date","Type","Description","Amount","Remaining End of Week"]]};
+}
+const reportEnd=new Date(weeks[weeks.length-1]);reportEnd.setDate(reportEnd.getDate()+7);
+const endIso=`${dateOnly(reportEnd)}T00:00:00`;
+const [{data:expenses,error:expenseError},{data:adjustments,error:adjustmentError},{data:needsDeposits,error:needsDepositError},{data:funDeposits,error:funDepositError}]=await Promise.all([
+supabaseClient.from("expenses").select("id,amount,fund,description,spent_at,profile_id").eq("household_id",householdId).lt("spent_at",endIso).order("spent_at",{ascending:true}),
+supabaseClient.from("fund_adjustments").select("id,amount,fund,description,adjusted_at,profile_id").eq("household_id",householdId).lt("adjusted_at",endIso).order("adjusted_at",{ascending:true}),
+supabaseClient.from("allowance_deposits").select("amount,week_start,fund").eq("household_id",householdId).eq("fund","needs").lt("week_start",dateOnly(reportEnd)).order("week_start",{ascending:true}),
+supabaseClient.from("profile_fun_deposits").select("amount,week_start,profile_id").eq("household_id",householdId).lt("week_start",dateOnly(reportEnd)).order("week_start",{ascending:true})
+]);
+if(expenseError||adjustmentError||needsDepositError||funDepositError)throw(expenseError||adjustmentError||needsDepositError||funDepositError);
+const profiles=[...profileMap.values()];
+const allSections=[];
+const textLines=[monthDate.toLocaleDateString("en-US",{month:"long",year:"numeric"}),""];
+const csv=[["Month","Week","Week Start","Week End","Fund","Profile","Date","Type","Description","Amount","Remaining End of Week"]];
+for(let i=0;i<weeks.length;i++){
+const ws=new Date(weeks[i]);const we=new Date(ws);we.setDate(we.getDate()+6);const next=new Date(ws);next.setDate(next.getDate()+7);
+const wsKey=dateOnly(ws),nextKey=dateOnly(next),weekTitle=reportWeekLabel(ws,i);
+textLines.push(weekTitle,"");
+const sectionDefs=[{fund:"needs",profile:null},...profiles.map(profile=>({fund:"fun",profile}))];
+const weekSections=[];
+for(const def of sectionDefs){
+const profileId=def.profile?.id||null;
+const weekExpenses=(expenses||[]).filter(e=>e.fund===def.fund&&(def.fund!=="fun"||e.profile_id===profileId)&&String(e.spent_at||"").slice(0,10)>=wsKey&&String(e.spent_at||"").slice(0,10)<nextKey).map(e=>({date:String(e.spent_at||"").slice(0,10),type:"expense",description:e.description||"Expense",amount:Number(e.amount||0)}));
+const weekAdjustments=(adjustments||[]).filter(a=>a.fund===def.fund&&(def.fund!=="fun"||a.profile_id===profileId)&&String(a.adjusted_at||"").slice(0,10)>=wsKey&&String(a.adjusted_at||"").slice(0,10)<nextKey).map(a=>({date:String(a.adjusted_at||"").slice(0,10),type:"adjustment",description:a.description||"Added Funds",amount:Number(a.amount||0)}));
+const activities=[...weekExpenses,...weekAdjustments].sort((a,b)=>a.date.localeCompare(b.date)||a.type.localeCompare(b.type));
+let depositsToEnd=0;
+if(def.fund==="needs")depositsToEnd=(needsDeposits||[]).filter(d=>String(d.week_start||"").slice(0,10)<nextKey).reduce((sum,d)=>sum+Number(d.amount||0),0);
+else depositsToEnd=(funDeposits||[]).filter(d=>d.profile_id===profileId&&String(d.week_start||"").slice(0,10)<nextKey).reduce((sum,d)=>sum+Number(d.amount||0),0);
+const expensesToEnd=(expenses||[]).filter(e=>e.fund===def.fund&&(def.fund!=="fun"||e.profile_id===profileId)&&String(e.spent_at||"").slice(0,10)<nextKey).reduce((sum,e)=>sum+Number(e.amount||0),0);
+const adjustmentsToEnd=(adjustments||[]).filter(a=>a.fund===def.fund&&(def.fund!=="fun"||a.profile_id===profileId)&&String(a.adjusted_at||"").slice(0,10)<nextKey).reduce((sum,a)=>sum+Number(a.amount||0),0);
+const remaining=depositsToEnd+adjustmentsToEnd-expensesToEnd;
+const title=reportSectionTitle(def.fund,def.profile);
+weekSections.push({title,fund:def.fund,profile:def.profile,activities,remaining});
+textLines.push(title);
+if(activities.length){
+for(const item of activities){textLines.push(`${reportShortDate(item.date)}  ${signedReportMoney(item.amount,item.type)}  ${item.description}`);csv.push([monthDate.toLocaleDateString("en-US",{month:"long",year:"numeric"}),`Week ${i+1}`,wsKey,dateOnly(we),def.fund==="needs"?"Needs":"Fun Money",def.profile?.display_name||"",item.date,item.type==="adjustment"?"Added Funds":"Expense",item.description,item.type==="adjustment"?Number(item.amount||0):-Number(item.amount||0),""]);}
+}else textLines.push("No activity");
+textLines.push(`Remaining: $${money(remaining)}`,"");
+csv.push([monthDate.toLocaleDateString("en-US",{month:"long",year:"numeric"}),`Week ${i+1}`,wsKey,dateOnly(we),def.fund==="needs"?"Needs":"Fun Money",def.profile?.display_name||"","","Remaining","","",remaining]);
+}
+allSections.push({weekTitle,weekStart:wsKey,weekEnd:dateOnly(we),sections:weekSections});
+}
+return {monthKey,monthDate,weeks:allSections,text:textLines.join("\n").trim(),csv};
+}
+function renderMonthlyExpenseReport(report){
+const box=document.getElementById("expenseReportPreview");if(!box)return;
+if(!report.weeks.length){box.innerHTML=`<h3 class="expense-report-month-title">${escapeHtml(report.monthDate.toLocaleDateString("en-US",{month:"long",year:"numeric"}))}</h3><div class="subtext">No budget weeks are available for this month yet.</div>`;return;}
+box.innerHTML=`<h3 class="expense-report-month-title">${escapeHtml(report.monthDate.toLocaleDateString("en-US",{month:"long",year:"numeric"}))}</h3>`+report.weeks.map(week=>`<div class="expense-report-week"><h3>${escapeHtml(week.weekTitle)}</h3>${week.sections.map(section=>`<div class="expense-report-section"><h4>${escapeHtml(section.title)}</h4>${section.activities.length?section.activities.map(item=>`<div class="expense-report-line"><span class="report-date">${escapeHtml(reportShortDate(item.date))}</span><span class="report-description">${escapeHtml(item.description)}</span><span class="report-amount">${escapeHtml(signedReportMoney(item.amount,item.type))}</span></div>`).join(""):`<div class="subtext">No activity</div>`}<div class="expense-report-remaining"><span>Remaining</span><span>$${money(section.remaining)}</span></div></div>`).join("")}</div>`).join("");
+}
+async function refreshMonthlyExpenseReport(){
+const box=document.getElementById("expenseReportPreview");if(box)box.innerHTML='<div class="subtext">Loading report…</div>';
+try{monthlyExpenseReportCache=await buildMonthlyExpenseReport(selectedExpenseReportMonth());renderMonthlyExpenseReport(monthlyExpenseReportCache);}catch(error){monthlyExpenseReportCache=null;if(box)box.textContent=error?.message||"Could not load this expense report.";}
+}
+async function ensureMonthlyExpenseReport(){
+const month=selectedExpenseReportMonth();
+if(!monthlyExpenseReportCache||monthlyExpenseReportCache.monthKey!==month){monthlyExpenseReportCache=await buildMonthlyExpenseReport(month);renderMonthlyExpenseReport(monthlyExpenseReportCache);}
+return monthlyExpenseReportCache;
+}
+function downloadTextFile(filename,text){
+const blob=new Blob([text],{type:"text/plain;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),0);
+}
+async function copyMonthlyExpenseReportText(){
+try{
+const report=await ensureMonthlyExpenseReport();
+if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(report.text);
+else{
+const area=document.createElement("textarea");area.value=report.text;area.setAttribute("readonly","");area.style.position="fixed";area.style.opacity="0";document.body.appendChild(area);area.select();document.execCommand("copy");area.remove();
+}
+showToast("Expense report copied");
+}catch(error){alert(error?.message||"Could not copy the report.");}
+}
+async function downloadMonthlyExpenseReportText(){
+try{const report=await ensureMonthlyExpenseReport();downloadTextFile(`bicycle-expense-report-${report.monthKey.slice(0,7)}.txt`,report.text);showToast("Text expense report created");}catch(error){alert(error?.message||"Could not create the report.");}
+}
+async function downloadMonthlyExpenseReportCsv(){
+try{const report=await ensureMonthlyExpenseReport();downloadCsvFile(`bicycle-expense-report-${report.monthKey.slice(0,7)}.csv`,report.csv);showToast("Expense report CSV created");}catch(error){alert(error?.message||"Could not create the report.");}
 }
 
 
@@ -6199,6 +6343,10 @@ document
 exportBudgetCsv;
 document.getElementById("exportMonthlyBudgetCsvButton").onclick=exportMonthlyBudgetCsv;
 document.getElementById("exportExpenseLedgerCsvButton").onclick=exportExpenseLedgerCsv;
+document.getElementById("expenseReportMonth").addEventListener("change",()=>{monthlyExpenseReportCache=null;refreshMonthlyExpenseReport()});
+document.getElementById("copyExpenseReportTextButton").onclick=copyMonthlyExpenseReportText;
+document.getElementById("downloadExpenseReportTextButton").onclick=downloadMonthlyExpenseReportText;
+document.getElementById("downloadExpenseReportCsvButton").onclick=downloadMonthlyExpenseReportCsv;
 bindFluidSwipe();
 bindSettingsSwipeBack();
 window.addEventListener("pageshow",()=>{if(!document.getElementById("appScreen").classList.contains("hidden"))showPanel(activePanelIndex,false)});
