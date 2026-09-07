@@ -5103,10 +5103,31 @@ style="background:${color}"
 </div>
 `;
 button.onclick=
-()=>{
+async()=>{
+const previousTheme=selectedTheme;
 selectedTheme=name;
 applyAppearance();
 renderThemes();
+const {error}=await supabaseClient.rpc(
+"set_profile_settings",
+{
+p_profile_id:currentProfile.id,
+p_avatar:currentProfile.avatar||"knight",
+p_calculation_mode:"hard",
+p_font_size:selectedFontSize,
+p_font_family:selectedFont,
+p_theme:selectedTheme
+}
+);
+if(error){
+selectedTheme=previousTheme;
+applyAppearance();
+renderThemes();
+alert(error.message);
+return;
+}
+currentProfile.theme=selectedTheme;
+localStorage.setItem(`bicycleBudgetThemeRenameV27:${currentProfile.id}`,"1");
 };
 box.appendChild(button);
 }
