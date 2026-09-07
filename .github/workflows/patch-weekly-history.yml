@@ -1,0 +1,45 @@
+name: Patch weekly history
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch weekly history details
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+
+          old_css='''.week-history-value-label{\n  color:var(--muted);\n  font-size:.72em;\n  font-weight:800;\n}\n.adjustment-row.clickable{cursor:pointer}\n'''
+          new_css='''.week-history-value-label{\n  color:var(--muted);\n  font-size:.72em;\n  font-weight:800;\n}\n.week-history-row{\n  display:block!important;\n  padding:18px 4px!important;\n}\n.week-history-topline,\n.week-history-ledger-row,\n.week-history-remainder{\n  display:grid;\n  grid-template-columns:minmax(0,1fr) auto;\n  gap:12px;\n  align-items:baseline;\n}\n.week-history-topline{\n  margin-top:10px;\n  padding:9px 0;\n  border-top:1px solid color-mix(in srgb,var(--edge) 38%,transparent);\n  border-bottom:1px solid color-mix(in srgb,var(--edge) 38%,transparent);\n}\n.week-history-start-label{\n  color:var(--muted);\n  font-size:.78em;\n  font-weight:800;\n}\n.week-history-start-amount,\n.week-history-remainder strong{\n  font-weight:900;\n  white-space:nowrap;\n}\n.week-history-ledger{\n  padding:5px 0;\n}\n.week-history-ledger-row{\n  padding:7px 0;\n}\n.week-history-ledger-main{\n  min-width:0;\n}\n.week-history-ledger-date{\n  color:var(--muted);\n  font-size:.72em;\n  font-weight:800;\n  margin-right:7px;\n}\n.week-history-ledger-name{\n  font-weight:800;\n}\n.week-history-ledger-amount{\n  font-weight:900;\n  white-space:nowrap;\n}\n.week-history-ledger-amount.positive{color:var(--text)}\n.week-history-empty{\n  padding:10px 0;\n  color:var(--muted);\n  font-size:.78em;\n  font-weight:700;\n}\n.week-history-remainder{\n  margin-top:4px;\n  padding-top:10px;\n  border-top:2px solid color-mix(in srgb,var(--edge) 62%,transparent);\n  font-weight:900;\n}\n.adjustment-row.clickable{cursor:pointer}\n'''
+          if old_css not in s:
+              raise SystemExit('Weekly history CSS anchor not found; refusing to modify index.html')
+          s=s.replace(old_css,new_css,1)
+
+          old_rows='''const thisWeekDeposit=(deposits||[])\n.filter(d=>String(d.week_start||\"\").slice(0,10)===wsKey)\n.reduce((sum,d)=>sum+Number(d.amount||0),0);\n\nrows.push({\nweek_start:wsKey,\nweek_end:dateOnly(new Date(nextWeek.getFullYear(),nextWeek.getMonth(),nextWeek.getDate()-1)),\nstarting_balance:startingBalance,\nweekly_deposit:thisWeekDeposit\n});'''
+          new_rows='''const thisWeekDeposit=(deposits||[])\n.filter(d=>String(d.week_start||\"\").slice(0,10)===wsKey)\n.reduce((sum,d)=>sum+Number(d.amount||0),0);\n\nconst nextWeekKey=dateOnly(nextWeek);\nconst weekExpenses=(expenses||[])\n.filter(e=>{\nif(e.fund!==fund)return false;\nif(fund===\"fun\"&&e.profile_id!==currentProfile.id)return false;\nconst key=String(e.spent_at||\"\").slice(0,10);\nreturn key>=wsKey&&key<nextWeekKey;\n})\n.map(e=>({\nkind:\"expense\",\ndate:String(e.spent_at||\"\").slice(0,10),\ndescription:e.description||\"Expense\",\namount:Number(e.amount||0)\n}));\n\nconst weekAdjustments=(adjustments||[])\n.filter(a=>{\nif(a.fund!==fund)return false;\nif(fund===\"fun\"&&a.profile_id!==currentProfile.id)return false;\nconst key=String(a.adjusted_at||\"\").slice(0,10);\nreturn key>=wsKey&&key<nextWeekKey;\n})\n.map(a=>({\nkind:\"adjustment\",\ndate:String(a.adjusted_at||\"\").slice(0,10),\ndescription:a.description||\"Added Funds\",\namount:Number(a.amount||0)\n}));\n\nconst activity=[...weekExpenses,...weekAdjustments]\n.sort((a,b)=>a.date.localeCompare(b.date)||a.kind.localeCompare(b.kind));\nconst endingBalance=startingBalance\n+weekAdjustments.reduce((sum,a)=>sum+a.amount,0)\n-weekExpenses.reduce((sum,e)=>sum+e.amount,0);\n\nrows.push({\nweek_start:wsKey,\nweek_end:dateOnly(new Date(nextWeek.getFullYear(),nextWeek.getMonth(),nextWeek.getDate()-1)),\nstarting_balance:startingBalance,\nweekly_deposit:thisWeekDeposit,\nactivity,\nending_balance:endingBalance\n});'''
+          if old_rows not in s:
+              raise SystemExit('Weekly history row builder anchor not found; refusing to modify index.html')
+          s=s.replace(old_rows,new_rows,1)
+
+          old_open='''function openWeeklyBalanceHistory(fund){\nconst rows=weeklyBalanceHistoryCache[fund]||[];\nconst title=fund===\"needs\"?\"Needs — Weekly History\":`${currentProfile.display_name}'s Fun Money — Weekly History`;\ndocument.getElementById(\"weeklyBalanceHistoryTitle\").textContent=title;\ndocument.getElementById(\"weeklyBalanceHistorySubtitle\").textContent=\"Starting balance is the amount available immediately after that week's automatic budget deposit.\";\nconst list=document.getElementById(\"weeklyBalanceHistoryList\");\nif(!rows.length){\nlist.innerHTML='<div class=\"subtext\" style=\"padding:12px 2px\">No weekly history yet.</div>';\n}else{\nlist.innerHTML=rows.map(row=>`\n<div class=\"week-history-row\">\n<div class=\"week-history-dates\">\n${escapeHtml(formatWeekRange(row.week_start,row.week_end))}\n<div class=\"subtext\">Weekly deposit: ${money(row.weekly_deposit)}</div>\n</div>\n<div class=\"week-history-amount\"><span class=\"week-history-value-label\">Starting Value:</span> ${money(row.starting_balance)}</div>\n</div>`).join(\"\");\n}\ndocument.getElementById(\"weeklyBalanceHistoryModal\").classList.remove(\"hidden\");\n}\n\nfunction closeWeeklyBalanceHistory(){\ndocument.getElementById(\"weeklyBalanceHistoryModal\").classList.add(\"hidden\");\n}'''
+          new_open='''function openWeeklyBalanceHistory(fund){\nconst rows=weeklyBalanceHistoryCache[fund]||[];\nconst title=fund===\"needs\"?\"Needs — Weekly History\":`${currentProfile.display_name}'s Fun Money — Weekly History`;\ndocument.getElementById(\"weeklyBalanceHistoryTitle\").textContent=title;\ndocument.getElementById(\"weeklyBalanceHistorySubtitle\").textContent=\"Each week shows the starting value after the automatic deposit, every expense or added-funds entry, and the resulting remainder.\";\nconst list=document.getElementById(\"weeklyBalanceHistoryList\");\nif(!rows.length){\nlist.innerHTML='<div class=\"subtext\" style=\"padding:12px 2px\">No weekly history yet.</div>';\n}else{\nlist.innerHTML=rows.map(row=>{\nconst activity=(row.activity||[]).map(item=>{\nconst d=parseLocalDate(item.date);\nconst dateText=d.toLocaleDateString(\"en-US\",{month:\"numeric\",day:\"numeric\"});\nconst positive=item.kind===\"adjustment\";\nreturn `<div class=\"week-history-ledger-row\"><div class=\"week-history-ledger-main\"><span class=\"week-history-ledger-date\">${escapeHtml(dateText)}</span><span class=\"week-history-ledger-name\">${escapeHtml(item.description)}</span></div><div class=\"week-history-ledger-amount ${positive?\"positive\":\"\"}\">${positive?\"+\":\"-\"}${money(item.amount)}</div></div>`;\n}).join(\"\");\nreturn `\n<div class=\"week-history-row\">\n<div class=\"week-history-dates\">${escapeHtml(formatWeekRange(row.week_start,row.week_end))}</div>\n<div class=\"week-history-topline\">\n<div><div class=\"week-history-start-label\">Starting Value</div><div class=\"subtext\">Includes weekly deposit of ${money(row.weekly_deposit)}</div></div>\n<div class=\"week-history-start-amount\">${money(row.starting_balance)}</div>\n</div>\n<div class=\"week-history-ledger\">${activity||'<div class=\"week-history-empty\">No expenses or added funds this week.</div>'}</div>\n<div class=\"week-history-remainder\"><span>Remainder</span><strong>${money(row.ending_balance)}</strong></div>\n</div>`;\n}).join(\"\");\n}\ndocument.getElementById(\"settingsGear\").classList.add(\"hidden\");\ndocument.getElementById(\"weeklyBalanceHistoryModal\").classList.remove(\"hidden\");\n}\n\nfunction closeWeeklyBalanceHistory(){\ndocument.getElementById(\"weeklyBalanceHistoryModal\").classList.add(\"hidden\");\nif(currentProfile)document.getElementById(\"settingsGear\").classList.remove(\"hidden\");\n}'''
+          if old_open not in s:
+              raise SystemExit('Weekly history renderer anchor not found; refusing to modify index.html')
+          s=s.replace(old_open,new_open,1)
+
+          p.write_text(s)
+      - name: Commit patch and remove temporary workflow
+        run: |
+          rm -f .github/workflows/patch-weekly-history.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/patch-weekly-history.yml
+          git commit -m "Show weekly expense ledger and fix duplicate settings gear"
+          git push
