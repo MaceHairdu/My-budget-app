@@ -1,0 +1,36 @@
+name: Persist theme on select
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch theme selection persistence
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path("index.html")
+          s = p.read_text()
+          old = '''button.onclick=\n()=>{\nselectedTheme=name;\napplyAppearance();\nrenderThemes();\n};'''
+          new = '''button.onclick=\nasync()=>{\nconst previousTheme=selectedTheme;\nselectedTheme=name;\napplyAppearance();\nrenderThemes();\nconst {error}=await supabaseClient.rpc(\n"set_profile_settings",\n{\np_profile_id:currentProfile.id,\np_avatar:currentProfile.avatar||"knight",\np_calculation_mode:"hard",\np_font_size:selectedFontSize,\np_font_family:selectedFont,\np_theme:selectedTheme\n}\n);\nif(error){\nselectedTheme=previousTheme;\napplyAppearance();\nrenderThemes();\nalert(error.message);\nreturn;\n}\ncurrentProfile.theme=selectedTheme;\nlocalStorage.setItem(`bicycleBudgetThemeRenameV27:${currentProfile.id}`,"1");\n};'''
+          if old in s:
+              p.write_text(s.replace(old, new, 1))
+              print("Patched index.html")
+          elif new in s:
+              print("Already patched")
+          else:
+              raise SystemExit("Expected theme handler not found; refusing to modify index.html")
+      - name: Commit patch if needed
+        run: |
+          if git diff --quiet; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Persist profile palette when selected"
+          git push
