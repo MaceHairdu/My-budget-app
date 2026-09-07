@@ -1,0 +1,45 @@
+name: Fix weekly history descriptions
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Include descriptions in weekly history queries
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path("index.html")
+          s = p.read_text()
+          old_exp = '.select("amount,fund,profile_id,spent_at")'
+          new_exp = '.select("amount,fund,profile_id,spent_at,description")'
+          old_adj = '.select("amount,fund,profile_id,adjusted_at")'
+          new_adj = '.select("amount,fund,profile_id,adjusted_at,description")'
+          changed = False
+          if old_exp in s:
+              s = s.replace(old_exp, new_exp, 1)
+              changed = True
+          if old_adj in s:
+              s = s.replace(old_adj, new_adj, 1)
+              changed = True
+          if not changed and (new_exp not in s or new_adj not in s):
+              raise SystemExit("Expected weekly-history query strings not found; refusing to modify index.html")
+          p.write_text(s)
+      - name: Commit patch if needed
+        run: |
+          if git diff --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Show expense descriptions in weekly history"
+          git push
+      - name: Remove temporary workflow
+        run: |
+          git pull --rebase
+          git rm .github/workflows/fix-weekly-history-descriptions.yml
+          git commit -m "Remove temporary weekly history description workflow"
+          git push
