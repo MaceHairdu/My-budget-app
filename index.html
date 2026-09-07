@@ -4611,12 +4611,12 @@ supabaseClient
 .order("week_start",{ascending:true}),
 supabaseClient
 .from("expenses")
-.select("amount,fund,profile_id,spent_at")
+.select("amount,fund,profile_id,spent_at,description")
 .eq("household_id",householdId)
 .order("spent_at",{ascending:true}),
 supabaseClient
 .from("fund_adjustments")
-.select("amount,fund,profile_id,adjusted_at")
+.select("amount,fund,profile_id,adjusted_at,description")
 .eq("household_id",householdId)
 .order("adjusted_at",{ascending:true})
 ]);
