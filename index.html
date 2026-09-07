@@ -1649,6 +1649,9 @@ Sign In
 <button class="secondary-button" id="forgotPasswordButton" style="width:100%;margin-top:11px">
 Forgot Password?
 </button>
+<button class="secondary-button" id="createAccountButton" style="width:100%;margin-top:11px">
+Create Account
+</button>
 <div id="loginError" class="login-error hidden"></div>
 </div>
 </section>
@@ -2877,7 +2880,7 @@ const monthKey=dateOnly(month);
 document.getElementById("currentBudgetMonth").textContent=month.toLocaleDateString("en-US",{month:"long",year:"numeric"});
 const weeks=getBudgetWeekCount(month);
 const warning=document.getElementById("currentFiveWeekWarning");
-const historical=HISTORICAL_BUDGETS[monthKey]||null;
+const historical=householdId===LEGACY_SOFT_BUDGET_HOUSEHOLD_ID?(HISTORICAL_BUDGETS[monthKey]||null):null;
 const historicalLegacy=Boolean(
 historical &&
 historical.calculation_mode==="average_4_345" &&
@@ -3164,7 +3167,7 @@ let incomeNames=(previousItems||[]).filter(x=>x.item_type==="income").map(x=>x.n
 let monthlyBillNames=(previousItems||[]).filter(x=>x.item_type==="monthly_bill").map(x=>x.name);
 let weeklyBillNames=(previousItems||[]).filter(x=>x.item_type==="weekly_bill").map(x=>x.name);
 
-const historical=HISTORICAL_BUDGETS[previousKey]||null;
+const historical=householdId===LEGACY_SOFT_BUDGET_HOUSEHOLD_ID?(HISTORICAL_BUDGETS[previousKey]||null):null;
 if(!incomeNames.length&&historical?.income)incomeNames=historical.income.map(x=>x[0]);
 if(!monthlyBillNames.length&&historical?.monthlyBills)monthlyBillNames=historical.monthlyBills.map(x=>x[0]);
 if(!weeklyBillNames.length&&historical?.weeklyBills)weeklyBillNames=historical.weeklyBills.map(x=>x[0]);
@@ -5155,7 +5158,7 @@ box.innerHTML="";
 for(const plan of plans||[]){
 const monthKey=String(plan.budget_month).slice(0,10);
 const month=new Date(`${monthKey}T00:00:00`);
-const historical=HISTORICAL_BUDGETS[monthKey]||null;
+const historical=householdId===LEGACY_SOFT_BUDGET_HOUSEHOLD_ID?(HISTORICAL_BUDGETS[monthKey]||null):null;
 const legacySoft=Boolean(
 historical?.calculation_mode==="average_4_345" &&
 householdId===LEGACY_SOFT_BUDGET_HOUSEHOLD_ID
@@ -5369,7 +5372,7 @@ supabaseClient.from("budget_items").select("*").eq("household_id",householdId).e
 supabaseClient.from("budget_profile_allocations").select("*").eq("household_id",householdId).eq("budget_month",month)
 ]);
 if(planError||itemError||allocationError){alert(planError?.message||itemError?.message||allocationError?.message);return}
-const historical=HISTORICAL_BUDGETS[month]||null;
+const historical=householdId===LEGACY_SOFT_BUDGET_HOUSEHOLD_ID?(HISTORICAL_BUDGETS[month]||null):null;
 if(!plan&&!historical){alert("No saved budget was found for that month.");return}
 const rows=[["Budget Month",month,"Budget Weeks",getBudgetWeekCount(parseLocalDate(month))],["Section","Item","Amount","Frequency / Note"]];
 const sourceItems=items||[];
@@ -5790,6 +5793,10 @@ document
 .getElementById("loginButton")
 .onclick=
 login;
+document
+.getElementById("createAccountButton")
+.onclick=
+()=>{location.href="./signup.html";};
 document
 .getElementById("loginEmail")
 .addEventListener(
