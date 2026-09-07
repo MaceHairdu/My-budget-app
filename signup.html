@@ -32,7 +32,6 @@ button,a.button{display:block;width:100%;border:0;border-radius:10px;padding:13p
 <input id="confirmPassword" type="password" minlength="8" autocomplete="new-password">
 <button class="primary" id="sendCodeButton" type="button">Send Verification Code</button>
 </section>
-
 <section id="verifyStep" class="hidden">
 <h1>Check Your Email</h1>
 <p class="subtext" id="verifyCopy">Enter the verification code sent to your email. Your Bicycle Budget household will not be created until the code is confirmed.</p>
@@ -41,11 +40,9 @@ button,a.button{display:block;width:100%;border:0;border-radius:10px;padding:13p
 <button class="primary" id="verifyButton" type="button">Verify & Create Account</button>
 <button class="secondary" id="backButton" type="button">Back</button>
 </section>
-
 <div id="message" class="message hidden" role="status" aria-live="polite"></div>
 <a class="button secondary" href="./index.html">Back to Sign In</a>
 </main>
-
 <script>
 const SUPABASE_URL="https://jivygwszzlaxnhhvxxsg.supabase.co";
 const SUPABASE_KEY="sb_publishable_cZM-7AaU0xD6L_fMa_foOw_-Cjk2edj";
@@ -57,14 +54,9 @@ const verifyStep=document.getElementById("verifyStep");
 const message=document.getElementById("message");
 const sendCodeButton=document.getElementById("sendCodeButton");
 const verifyButton=document.getElementById("verifyButton");
-
-function showMessage(text,type="error"){
-  message.textContent=text;
-  message.className=`message ${type}`;
-}
+function showMessage(text,type="error"){message.textContent=text;message.className=`message ${type}`;}
 function clearMessage(){message.className="message hidden";message.textContent="";}
 function setBusy(button,busy,busyText,normalText){button.disabled=busy;button.textContent=busy?busyText:normalText;}
-
 async function sendVerificationCode(){
   clearMessage();
   const householdName=(document.getElementById("householdName").value.trim()||"My Household");
@@ -76,20 +68,13 @@ async function sendVerificationCode(){
   if(password!==confirmPassword){showMessage("The passwords do not match.");return;}
   setBusy(sendCodeButton,true,"Sending Code…","Send Verification Code");
   try{
-    const {data,error}=await supabaseClient.auth.signUp({
-      email,
-      password,
-      options:{data:{pending_household_name:householdName}}
-    });
+    const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{pending_household_name:householdName}}});
     if(error)throw error;
     pendingEmail=email;
     pendingHouseholdName=householdName;
     sessionStorage.setItem("bicycleBudgetPendingSignupEmail",pendingEmail);
     sessionStorage.setItem("bicycleBudgetPendingHouseholdName",pendingHouseholdName);
-    if(data.session){
-      await finishAccount();
-      return;
-    }
+    if(data.session){await finishAccount();return;}
     detailsStep.classList.add("hidden");
     verifyStep.classList.remove("hidden");
     document.getElementById("verifyCopy").textContent=`Enter the verification code sent to ${email}. Your Bicycle Budget household will not be created until the code is confirmed.`;
@@ -97,7 +82,6 @@ async function sendVerificationCode(){
   }catch(error){showMessage(error?.message||"Could not start account creation.");}
   finally{setBusy(sendCodeButton,false,"Sending Code…","Send Verification Code");}
 }
-
 async function verifyCode(){
   clearMessage();
   pendingEmail=pendingEmail||sessionStorage.getItem("bicycleBudgetPendingSignupEmail")||"";
@@ -107,13 +91,12 @@ async function verifyCode(){
   if(!token){showMessage("Enter the verification code from your email.");return;}
   setBusy(verifyButton,true,"Verifying…","Verify & Create Account");
   try{
-    const {error}=await supabaseClient.auth.verifyOtp({email:pendingEmail,token,type:"signup"});
+    const {error}=await supabaseClient.auth.verifyOtp({email:pendingEmail,token,type:"email"});
     if(error)throw error;
     await finishAccount();
   }catch(error){showMessage(error?.message||"The verification code could not be confirmed.");}
   finally{setBusy(verifyButton,false,"Verifying…","Verify & Create Account");}
 }
-
 async function finishAccount(){
   const {data:{user},error:userError}=await supabaseClient.auth.getUser();
   if(userError||!user)throw(userError||new Error("Email verification did not complete."));
@@ -125,7 +108,6 @@ async function finishAccount(){
   showMessage("Account verified and created. Opening Bicycle Budget…","success");
   setTimeout(()=>{location.href="./index.html";},650);
 }
-
 document.getElementById("sendCodeButton").onclick=sendVerificationCode;
 document.getElementById("verifyButton").onclick=verifyCode;
 document.getElementById("backButton").onclick=()=>{clearMessage();verifyStep.classList.add("hidden");detailsStep.classList.remove("hidden");};
