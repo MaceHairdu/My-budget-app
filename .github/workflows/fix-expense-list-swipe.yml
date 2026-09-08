@@ -11,25 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Patch swipe handling
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p = Path('index.html')
-          s = p.read_text()
-          old = '''if(
-window.innerWidth>900 ||
-e.touches.length!==1 ||
-isHomeActivityScrollTarget(e.target)
-){'''
-          new = '''if(
-window.innerWidth>900 ||
-e.touches.length!==1
-){'''
-          if old not in s:
-              raise SystemExit('Target swipe guard not found')
-          s = s.replace(old, new, 1)
-          p.write_text(s)
-          PY
+        run: >-
+          python -c "from pathlib import Path; p=Path('index.html'); s=p.read_text(); old='if(\\nwindow.innerWidth>900 ||\\ne.touches.length!==1 ||\\nisHomeActivityScrollTarget(e.target)\\n){'; new='if(\\nwindow.innerWidth>900 ||\\ne.touches.length!==1\\n){'; assert old in s, 'Target swipe guard not found'; p.write_text(s.replace(old,new,1))"
       - name: Commit app fix
         run: |
           git config user.name "github-actions[bot]"
