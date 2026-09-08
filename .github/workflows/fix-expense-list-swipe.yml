@@ -1,0 +1,45 @@
+name: Fix expense list swipe
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-expense-list-swipe.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch swipe handling
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text()
+          old = '''if(
+window.innerWidth>900 ||
+e.touches.length!==1 ||
+isHomeActivityScrollTarget(e.target)
+){'''
+          new = '''if(
+window.innerWidth>900 ||
+e.touches.length!==1
+){'''
+          if old not in s:
+              raise SystemExit('Target swipe guard not found')
+          s = s.replace(old, new, 1)
+          p.write_text(s)
+          PY
+      - name: Commit app fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Allow panel swipes from expense lists"
+          git push
+      - name: Remove temporary workflow
+        run: |
+          git pull --rebase
+          git rm .github/workflows/fix-expense-list-swipe.yml
+          git commit -m "Remove temporary expense list swipe workflow"
+          git push
