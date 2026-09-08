@@ -2527,8 +2527,7 @@ area.addEventListener(
 e=>{
 if(
 window.innerWidth>900 ||
-e.touches.length!==1 ||
-isHomeActivityScrollTarget(e.target)
+e.touches.length!==1
 ){
 dragging=false;
 return;
