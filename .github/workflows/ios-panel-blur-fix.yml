@@ -1,0 +1,46 @@
+name: iOS panel blur fix
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove blurred panel shadow
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text()
+          old = '''.card,.panel{
+          background:var(--panel);
+          border-radius:17px;
+          box-shadow:
+          0 0 0 1px var(--edge),
+          0 8px 0 var(--edge),
+          0 18px 36px rgba(40,35,25,.14)
+          }'''
+          new = '''.card,.panel{
+          background:var(--panel);
+          border-radius:17px;
+          box-shadow:
+          0 0 0 1px var(--edge),
+          0 8px 0 var(--edge)
+          }'''
+          if old not in s:
+              raise SystemExit('Expected card/panel shadow block not found; no changes made.')
+          s = s.replace(old, new, 1)
+          p.write_text(s)
+          PY
+      - name: Commit patch and remove temporary workflow
+        run: |
+          rm -f .github/workflows/ios-panel-blur-fix.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/ios-panel-blur-fix.yml
+          git commit -m "Remove blurred panel shadow on iOS"
+          git push
