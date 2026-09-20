@@ -1,4 +1,4 @@
-name: Fix iOS top safe-area blur
+name: Fix iOS viewport safe areas
 
 on:
   push:
@@ -15,21 +15,41 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Remove edge-to-edge viewport rendering
+      - name: Fix iOS safe areas and dynamic viewport height
         run: |
           python3 - <<'PY'
           from pathlib import Path
           p = Path('index.html')
           s = p.read_text()
-          old = 'width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover'
-          new = 'width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no'
-          if old not in s:
-              raise SystemExit('Expected viewport meta not found; refusing to modify file')
-          s = s.replace(old, new, 1)
-          marker = '\n</style>'
-          css = '''\n\n/* iOS 27: keep app content out of Safari's edge-effect/status-bar compositing zone.\n   viewport-fit=cover is intentionally disabled above; the browser owns its safe area. */\nhtml, body {\n  background-color: var(--bg) !important;\n}\n'''
-          if css.strip() not in s:
-              s = s.replace(marker, css + marker, 1)
+
+          # Restore edge-to-edge viewport so CSS safe-area insets are available.
+          old = 'width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no'
+          new = 'width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover'
+          if old in s and 'viewport-fit=cover' not in s:
+              s = s.replace(old, new, 1)
+
+          # Stop using the legacy 100vh sizing that extends underneath Safari's bottom UI.
+          s = s.replace('#mainWorkspace{\nwidth:100%;height:100vh;padding:12px;overflow:hidden\n}', '''#mainWorkspace{
+width:100%;
+height:100dvh;
+padding-top:max(12px, env(safe-area-inset-top));
+padding-right:max(12px, env(safe-area-inset-right));
+padding-bottom:max(12px, env(safe-area-inset-bottom));
+padding-left:max(12px, env(safe-area-inset-left));
+overflow:hidden
+}''', 1)
+
+          s = s.replace('.workspace-panel{\nwidth:100%;min-width:0;height:calc(100vh - 24px);min-height:0\n}', '''.workspace-panel{
+width:100%;
+min-width:0;
+height:100%;
+min-height:0
+}''', 1)
+
+          # Remove the previous workaround; it no longer applies now that safe areas are explicit.
+          old_css = '''\n\n/* iOS 27: keep app content out of Safari's edge-effect/status-bar compositing zone.\n   viewport-fit=cover is intentionally disabled above; the browser owns its safe area. */\nhtml, body {\n  background-color: var(--bg) !important;\n}\n'''
+          s = s.replace(old_css, '\n')
+
           p.write_text(s)
           PY
       - name: Commit fix
@@ -38,5 +58,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
           git diff --cached --quiet && exit 0
-          git commit -m "Remove iOS edge-to-edge top blur"
+          git commit -m "Fix iOS safe-area blur and bottom overflow"
           git push
