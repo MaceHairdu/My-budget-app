@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta id="themeColorMeta" name="theme-color" content="#aebca5">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Bicycle Budget">
 <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=24">
 <link rel="apple-touch-icon-precomposed" sizes="180x180" href="./apple-touch-icon.png?v=24">
@@ -1692,6 +1692,25 @@ box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 58%,transparent)
   -webkit-appearance:none;
   appearance:none;
   text-align:center;
+}
+
+
+/* iOS 27: keep the app crisp and prevent accidental text selection/callouts. */
+html, body, #mainWorkspace, .mobile-track, .workspace-panel, .panel, .panel-inner {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  filter: none !important;
+}
+html, body, #mainWorkspace, .mobile-track, .workspace-panel,
+.panel, .panel-inner, .fund-card, .fund-card * {
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none !important;
+}
+input, textarea, select {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  -webkit-touch-callout: default !important;
 }
 
 </style>
