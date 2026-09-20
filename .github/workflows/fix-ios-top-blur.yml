@@ -11,7 +11,6 @@ permissions:
 
 jobs:
   fix:
-    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,13 +21,11 @@ jobs:
           p = Path('index.html')
           s = p.read_text()
 
-          # Restore edge-to-edge viewport so CSS safe-area insets are available.
           old = 'width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no'
           new = 'width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover'
           if old in s and 'viewport-fit=cover' not in s:
               s = s.replace(old, new, 1)
 
-          # Stop using the legacy 100vh sizing that extends underneath Safari's bottom UI.
           s = s.replace('#mainWorkspace{\nwidth:100%;height:100vh;padding:12px;overflow:hidden\n}', '''#mainWorkspace{
 width:100%;
 height:100dvh;
@@ -45,10 +42,6 @@ min-width:0;
 height:100%;
 min-height:0
 }''', 1)
-
-          # Remove the previous workaround; it no longer applies now that safe areas are explicit.
-          old_css = '''\n\n/* iOS 27: keep app content out of Safari's edge-effect/status-bar compositing zone.\n   viewport-fit=cover is intentionally disabled above; the browser owns its safe area. */\nhtml, body {\n  background-color: var(--bg) !important;\n}\n'''
-          s = s.replace(old_css, '\n')
 
           p.write_text(s)
           PY
