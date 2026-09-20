@@ -1,0 +1,42 @@
+name: Fix iOS top safe-area blur
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-ios-top-blur.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove edge-to-edge viewport rendering
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text()
+          old = 'width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover'
+          new = 'width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no'
+          if old not in s:
+              raise SystemExit('Expected viewport meta not found; refusing to modify file')
+          s = s.replace(old, new, 1)
+          marker = '\n</style>'
+          css = '''\n\n/* iOS 27: keep app content out of Safari's edge-effect/status-bar compositing zone.\n   viewport-fit=cover is intentionally disabled above; the browser owns its safe area. */\nhtml, body {\n  background-color: var(--bg) !important;\n}\n'''
+          if css.strip() not in s:
+              s = s.replace(marker, css + marker, 1)
+          p.write_text(s)
+          PY
+      - name: Commit fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Remove iOS edge-to-edge top blur"
+          git push
