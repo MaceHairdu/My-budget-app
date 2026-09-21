@@ -1723,9 +1723,25 @@ html, body {
   background-color: var(--bg) !important;
 }
 
+
+/* v34 iOS 27: suppress WebKit's automatic top scroll-edge blur.
+   A real viewport-constrained opaque element at the top edge makes WebKit
+   use a solid edge fill instead of compositing the page through its scroll pocket. */
+.ios-scroll-edge-shield{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:2px;
+  background:var(--bg);
+  z-index:2147483646;
+  pointer-events:none;
+}
+
 </style>
 </head>
 <body class="theme-cedar font-system">
+<div class="ios-scroll-edge-shield" aria-hidden="true"></div>
 <div class="startup-loading" id="startupLoading" role="status" aria-live="polite" aria-label="Loading Bicycle Budget">
   <div class="startup-loading-card">
     <div class="startup-loading-title">Bicycle Budget</div>
