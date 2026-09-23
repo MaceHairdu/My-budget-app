@@ -2129,6 +2129,10 @@ Close
 <option value="needs">Needs</option>
 <option value="fun">Fun Money</option>
 </select>
+<div id="expenseFunProfileWrap" class="hidden">
+<label for="expenseFunProfile">Fun Money Profile</label>
+<select id="expenseFunProfile"></select>
+</div>
 <label>Category</label>
 <select id="expenseCategory"></select>
 <div class="category-add-inline hidden" id="categoryAddInline">
@@ -4333,6 +4337,21 @@ document
 tab!=="funds"
 );
 }
+function isOwnerProfile(){
+const profiles=orderedProfilesForFunDistribution();
+return Boolean(currentProfile&&profiles.length&&profiles[0].id===currentProfile.id);
+}
+function refreshExpenseFunProfilePicker(expense=null){
+const wrap=document.getElementById("expenseFunProfileWrap");
+const select=document.getElementById("expenseFunProfile");
+if(!wrap||!select)return;
+const profiles=orderedProfilesForFunDistribution();
+const fund=document.getElementById("expenseFund")?.value||transactionFund;
+const canChoose=isOwnerProfile()&&profiles.length>1&&fund==="fun"&&!expense;
+wrap.classList.toggle("hidden",!canChoose);
+select.innerHTML=profiles.map(profile=>`<option value="${profile.id}">${escapeHtml(profile.display_name)}</option>`).join("");
+select.value=expense?.profile_id||currentProfile?.id||profiles[0]?.id||"";
+}
 function openTransactionModal(
 fund="needs",
 expense=null,
@@ -4373,6 +4392,7 @@ document
 .getElementById("expenseFund")
 .value=
 expense?.fund||fund;
+refreshExpenseFunProfilePicker(expense);
 refreshCategoryControls(expense?.category||"Other");
 closeInlineCategoryAdder(false);
 document
@@ -4446,6 +4466,7 @@ document
 document
 .getElementById("expenseFund")
 .disabled=false;
+document.getElementById("expenseFunProfileWrap")?.classList.add("hidden");
 }
 async function saveExpense(){
 const description=
@@ -4498,11 +4519,16 @@ category,
 spent_at:`${date}T12:00:00`,
 updated_at:new Date().toISOString()
 };
+const funProfileSelect=document.getElementById("expenseFunProfile");
+const selectedProfileId=
+fund==="fun"&&isOwnerProfile()&&profileMap.size>1&&funProfileSelect&&!funProfileSelect.closest(".hidden")
+?funProfileSelect.value
+:currentProfile.id;
 const insertPayload={
 ...editablePayload,
 household_id:householdId,
 user_id:currentUser.id,
-profile_id:currentProfile.id
+profile_id:selectedProfileId
 };
 const result=
 editingExpenseId
@@ -6648,6 +6674,8 @@ document.getElementById("prepareMonthReminderGo").onclick=()=>dismissPrepareMont
 document.getElementById("prepareMonthReminderDismiss").onclick=()=>dismissPrepareMonthReminder(false);
 
 function bindEnterToAction(container,action){container.addEventListener("keydown",e=>{if(e.key!=="Enter"||e.shiftKey||e.ctrlKey||e.altKey||e.metaKey||e.target.tagName==="TEXTAREA"||e.target.tagName==="BUTTON")return;e.preventDefault();action()})}
+
+document.getElementById("expenseFund")?.addEventListener("change",()=>refreshExpenseFunProfilePicker());
 </script>
 </body>
 </html>
