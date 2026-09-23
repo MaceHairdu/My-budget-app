@@ -1,0 +1,64 @@
+name: Add owner fun expense profile picker
+on:
+  push:
+    paths:
+      - '.github/workflows/add-owner-fun-expense-profile-picker.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch index.html
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+
+          old='''<label id="expenseFundLabel">Use Money From</label>\n<select id="expenseFund">\n<option value="needs">Needs</option>\n<option value="fun">Fun Money</option>\n</select>\n<label>Category</label>'''
+          new='''<label id="expenseFundLabel">Use Money From</label>\n<select id="expenseFund">\n<option value="needs">Needs</option>\n<option value="fun">Fun Money</option>\n</select>\n<div id="expenseFunProfileWrap" class="hidden">\n<label for="expenseFunProfile">Fun Money Profile</label>\n<select id="expenseFunProfile"></select>\n</div>\n<label>Category</label>'''
+          assert old in s
+          s=s.replace(old,new,1)
+
+          old='''function openTransactionModal(\nfund="needs",\nexpense=null,\nallowTabs=true\n){\nrefreshCategoryControls();'''
+          new='''function isOwnerProfile(){\nconst profiles=orderedProfilesForFunDistribution();\nreturn Boolean(currentProfile&&profiles.length&&profiles[0].id===currentProfile.id);\n}\nfunction refreshExpenseFunProfilePicker(expense=null){\nconst wrap=document.getElementById("expenseFunProfileWrap");\nconst select=document.getElementById("expenseFunProfile");\nif(!wrap||!select)return;\nconst profiles=orderedProfilesForFunDistribution();\nconst fund=document.getElementById("expenseFund")?.value||transactionFund;\nconst canChoose=isOwnerProfile()&&profiles.length>1&&fund==="fun"&&!expense;\nwrap.classList.toggle("hidden",!canChoose);\nselect.innerHTML=profiles.map(profile=>`<option value="${profile.id}">${escapeHtml(profile.display_name)}</option>`).join("");\nselect.value=expense?.profile_id||currentProfile?.id||profiles[0]?.id||"";\n}\nfunction openTransactionModal(\nfund="needs",\nexpense=null,\nallowTabs=true\n){\nrefreshCategoryControls();'''
+          assert old in s
+          s=s.replace(old,new,1)
+
+          old='''document\n.getElementById("expenseFund")\n.value=\nexpense?.fund||fund;\nrefreshCategoryControls(expense?.category||"Other");'''
+          new='''document\n.getElementById("expenseFund")\n.value=\nexpense?.fund||fund;\nrefreshExpenseFunProfilePicker(expense);\nrefreshCategoryControls(expense?.category||"Other");'''
+          assert old in s
+          s=s.replace(old,new,1)
+
+          old='''const insertPayload={\n...editablePayload,\nhousehold_id:householdId,\nuser_id:currentUser.id,\nprofile_id:currentProfile.id\n};'''
+          new='''const funProfileSelect=document.getElementById("expenseFunProfile");\nconst selectedProfileId=\nfund==="fun"&&isOwnerProfile()&&profileMap.size>1&&funProfileSelect&&!funProfileSelect.closest(".hidden")\n?funProfileSelect.value\n:currentProfile.id;\nconst insertPayload={\n...editablePayload,\nhousehold_id:householdId,\nuser_id:currentUser.id,\nprofile_id:selectedProfileId\n};'''
+          assert old in s
+          s=s.replace(old,new,1)
+
+          marker='''document\n.getElementById("expenseFund")\n.disabled=false;\n}'''
+          repl='''document\n.getElementById("expenseFund")\n.disabled=false;\ndocument.getElementById("expenseFunProfileWrap")?.classList.add("hidden");\n}'''
+          assert marker in s
+          s=s.replace(marker,repl,1)
+
+          # Keep picker synchronized if the fund selector is available while creating an expense.
+          hook='''document.getElementById("expenseCategory").addEventListener("change",()=>{'''
+          if hook in s:
+            s=s.replace(hook,'''document.getElementById("expenseFund").addEventListener("change",()=>refreshExpenseFunProfilePicker());\n'''+hook,1)
+          else:
+            # Add a delegated listener before the final script close if the category hook layout changed.
+            pos=s.rfind('</script>')
+            assert pos!=-1
+            s=s[:pos]+'''\ndocument.getElementById("expenseFund")?.addEventListener("change",()=>refreshExpenseFunProfilePicker());\n'''+s[pos:]
+
+          p.write_text(s)
+      - name: Remove one-time workflow
+        run: rm .github/workflows/add-owner-fun-expense-profile-picker.yml
+      - name: Commit patch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/add-owner-fun-expense-profile-picker.yml
+          git commit -m "Add owner fun expense profile picker"
+          git push
