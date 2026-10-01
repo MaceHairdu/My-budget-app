@@ -3668,15 +3668,13 @@ const x=incomeMonth.toLocaleDateString("en-US",{month:"long"}),y=billMonth.toLoc
 document.getElementById("budgetHelpCopy").innerHTML=`<p>This budget is designed to give you time to prepare for the coming month. To do this, you will input all the income you earned in the previous month (<strong>${x}</strong>), all the bills you paid throughout that month and on the first of this month (<strong>${x} and ${y}</strong>), and the budget that is set will be for the next month (<strong>${z}</strong>).</p><p>Once you’ve input all the income and bills, you will then input the dollar value you wish to allow yourself each week for the coming month for <strong>Needs</strong>, such as groceries and gas.</p><p>Then you will input the dollar value you wish to add to your savings each week.</p><p>Once your monthly bills, weekly bills, weekly Needs, and weekly Savings have been deducted from the income available for the budget, the remaining amount will be considered your <strong>Fun Money</strong>. Fun Money is designated for wants as opposed to necessities, such as going out to eat or buying a soda on a whim.</p><p>If your Fun Money calculation is negative, this means the expenses and allowances entered are greater than the money available. Reduce Needs and/or Savings, or review your bills and income, until Fun Money becomes zero or a positive number. If the numbers are correct and the budget remains negative, the app will show the weekly shortfall and allow you to save the negative budget after confirming it.</p>`;
 }
 function preparationMonth(){
-const title=
-document
-.getElementById("budgetSetupTitle")
-.textContent;
-const current=
-activeBudgetMonth();
-return title.startsWith("Set Up")
-?current
-:addMonths(current,1);
+const title=document.getElementById("budgetSetupTitle").textContent;
+const match=title.match(/(?:Set Up Your|Prepare Your|Edit Your)\s+([A-Za-z]+)\s+(\d{4})\s+Budget/);
+if(match){
+const parsed=new Date(Number(match[2]),new Date(`${match[1]} 1, 2000`).getMonth(),1);
+if(!Number.isNaN(parsed.getTime()))return parsed;
+}
+return firstOfMonth(new Date());
 }
 function updateBudgetCalculation(){
 const income=
