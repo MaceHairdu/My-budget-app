@@ -3227,25 +3227,25 @@ await Promise.all([loadCurrentBudget(),loadExpenses(),calculateBalances(),update
 showToast("Budget updated");
 }
 async function determinePreparationMonth(){
-const current=
-activeBudgetMonth();
+const calendarMonth=firstOfMonth(new Date());
 const {data,error}=
 await supabaseClient
 .from("budget_plans")
 .select("id")
 .eq("household_id",householdId)
-.eq("budget_month",dateOnly(current))
+.eq("budget_month",dateOnly(calendarMonth))
 .maybeSingle();
 if(error)throw error;
 /*
-First-time user:
-setup CURRENT month.
-Established user:
-prepare NEXT month.
+Preparation follows the calendar month, not week ownership.
+If the current calendar month already has a budget, prepare next month.
+This prevents the first few days of a month from reopening the prior
+preparation cycle when that Sunday-Saturday week belongs to the prior
+budget month.
 */
 return data
-?addMonths(current,1)
-:current;
+?addMonths(calendarMonth,1)
+:calendarMonth;
 }
 
 function preparationCarryForwardKey(month){
