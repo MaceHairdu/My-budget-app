@@ -3469,7 +3469,7 @@ button.classList.add("hidden");
 button.textContent="";
 button.onclick=null;
 if(!item?.name)return;
-const itemType=kind==="income"?"income":kind==="monthlyBill"?"monthly":"weekly";
+const itemType=kind==="income"?"income":kind==="monthlyBill"?"monthly_bill":"weekly_bill";
 const month=preparationMonth();
 const previousKey=dateOnly(addMonths(month,-1));
 const {data,error}=await supabaseClient
