@@ -2105,6 +2105,7 @@ Close
 <input id="moneyEditorName">
 <label>Amount</label>
 <input id="moneyEditorAmount" class="money-input" inputmode="decimal">
+<button class="secondary-button hidden" id="moneyEditorPreviousAmountButton" type="button" style="width:100%;margin-top:10px"></button>
 <div class="modal-actions">
 <button class="primary-button" id="moneyEditorSaveButton">Save</button>
 <button class="danger-button hidden" id="moneyEditorDeleteButton">Delete</button>
@@ -3462,6 +3463,35 @@ return"bills";
 }
 return"weekly_bills";
 }
+async function loadPreviousMoneyEditorAmount(kind,item){
+const button=document.getElementById("moneyEditorPreviousAmountButton");
+button.classList.add("hidden");
+button.textContent="";
+button.onclick=null;
+if(!item?.name)return;
+const itemType=kind==="income"?"income":kind==="monthlyBill"?"monthly":"weekly";
+const month=preparationMonth();
+const previousKey=dateOnly(addMonths(month,-1));
+const {data,error}=await supabaseClient
+.from("budget_items")
+.select("amount")
+.eq("household_id",householdId)
+.eq("budget_month",previousKey)
+.eq("item_type",itemType)
+.eq("name",item.name)
+.limit(1)
+.maybeSingle();
+if(error){console.error("Could not load previous amount",error);return;}
+const amount=Math.abs(Number(data?.amount)||0);
+if(!amount)return;
+button.textContent=`Use Previous Month: ${money(amount)}`;
+button.classList.remove("hidden");
+button.onclick=()=>{
+const negative=kind!=="income";
+document.getElementById("moneyEditorAmount").value=`${negative?"-":""}${money(amount)}`;
+document.getElementById("moneyEditorAmount").dispatchEvent(new Event("input",{bubbles:true}));
+};
+}
 function openMoneyEditor(kind,item=null){
 moneyEditorKind=kind;
 moneyEditorId=item?.id||null;
@@ -3502,11 +3532,16 @@ document.getElementById(
 ),
 negative
 );
+loadPreviousMoneyEditorAmount(kind,item);
 }
 function closeMoneyEditor(){
 document
 .getElementById("moneyEditorModal")
 .classList.add("hidden");
+const previousButton=document.getElementById("moneyEditorPreviousAmountButton");
+previousButton.classList.add("hidden");
+previousButton.textContent="";
+previousButton.onclick=null;
 moneyEditorKind=null;
 moneyEditorId=null;
 }
