@@ -878,10 +878,23 @@ min-width:0;
 max-width:100%
 }
 .custom-date-grid{
+width:100%;
+min-width:0;
 display:grid;
-grid-template-columns:1fr 1fr;
+grid-template-columns:minmax(0,1fr) minmax(0,1fr);
 gap:10px;
-margin-bottom:14px
+margin-bottom:14px;
+overflow:hidden
+}
+.custom-date-grid input{
+display:block;
+width:100%;
+min-width:0;
+max-width:100%;
+box-sizing:border-box;
+font-size:.92em;
+padding-left:10px;
+padding-right:8px
 }
 .analytics-grid{
 width:100%;
@@ -1826,6 +1839,8 @@ Log Out
 <div class="panel-inner">
 <h1 class="screen-title">Analytics</h1>
 <div class="analytics-controls" id="analyticsRangeButtons">
+<button class="secondary-button small-button" data-range="week">This Week</button>
+<button class="secondary-button small-button" data-range="last7">Last 7 Days</button>
 <button class="secondary-button small-button selected" data-range="month">Month</button>
 <button class="secondary-button small-button" data-range="year">Year</button>
 <button class="secondary-button small-button" data-range="all">All Time</button>
@@ -5087,7 +5102,15 @@ const y=analyticsMonthCursor.getFullYear(),m=analyticsMonthCursor.getMonth();
 return{start:new Date(y,m,1),end:new Date(y,m+1,0,23,59,59,999),label:analyticsMonthCursor.toLocaleDateString("en-US",{month:"long",year:"numeric"})};
 }
 if(analyticsRange==="year"){const year=Number(document.getElementById("analyticsYearSelect").value);return{start:new Date(year,0,1),end:new Date(year,11,31,23,59,59,999),label:String(year)}}
-if(analyticsRange==="custom"){const a=document.getElementById("analyticsStartDate").value,b=document.getElementById("analyticsEndDate").value;return{start:new Date(`${a}T00:00:00`),end:new Date(`${b}T23:59:59`),label:`${new Date(`${a}T00:00:00`).toLocaleDateString()} – ${new Date(`${b}T00:00:00`).toLocaleDateString()}`}}
+if(analyticsRange==="week"){
+const start=weekStart(new Date()),end=new Date(start);end.setDate(end.getDate()+6);end.setHours(23,59,59,999);
+return{start,end,label:formatAnalyticsDateRange(start,end)};
+}
+if(analyticsRange==="last7"){
+const end=new Date();end.setHours(23,59,59,999);const start=new Date(end);start.setDate(start.getDate()-6);start.setHours(0,0,0,0);
+return{start,end,label:formatAnalyticsDateRange(start,end)};
+}
+if(analyticsRange==="custom"){const a=document.getElementById("analyticsStartDate").value,b=document.getElementById("analyticsEndDate").value;return{start:new Date(`${a}T00:00:00`),end:new Date(`${b}T23:59:59`),label:formatAnalyticsDateRange(new Date(`${a}T00:00:00`),new Date(`${b}T00:00:00`))}}
 return{start:new Date(2000,0,1),end:new Date(2100,0,1),label:"All Time"};
 }
 function formatAnalyticsDateRange(start,end){return `${start.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})} – ${end.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}`}
