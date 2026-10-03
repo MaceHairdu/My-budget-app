@@ -1764,6 +1764,40 @@ html, body {
   pointer-events:none;
 }
 
+
+/* v36 analytics range strip: force a single horizontally scrollable row on mobile */
+@media(max-width:900px){
+  #analyticsPanel #analyticsRangeButtons{
+    display:flex!important;
+    flex-direction:row!important;
+    flex-wrap:nowrap!important;
+    justify-content:flex-start!important;
+    align-items:stretch!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    overflow-x:scroll!important;
+    overflow-y:hidden!important;
+    -webkit-overflow-scrolling:touch!important;
+    overscroll-behavior-x:contain;
+    touch-action:pan-x!important;
+    gap:8px!important;
+    padding:2px 2px 9px!important;
+    margin-bottom:7px!important;
+    scrollbar-width:none;
+  }
+  #analyticsPanel #analyticsRangeButtons::-webkit-scrollbar{display:none!important}
+  #analyticsPanel #analyticsRangeButtons>button{
+    display:block!important;
+    flex:0 0 auto!important;
+    width:auto!important;
+    min-width:max-content!important;
+    max-width:none!important;
+    white-space:nowrap!important;
+    padding:9px 12px!important;
+    font-size:.82em!important;
+  }
+}
 </style>
 </head>
 <body class="theme-cedar font-system">
