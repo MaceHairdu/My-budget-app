@@ -1885,13 +1885,15 @@ Log Out
 <section class="panel workspace-panel" id="analyticsPanel">
 <div class="panel-inner">
 <h1 class="screen-title">Analytics</h1>
-<div class="analytics-controls" id="analyticsRangeButtons">
-<button class="secondary-button small-button" data-range="week">This Week</button>
-<button class="secondary-button small-button" data-range="last7">Last 7 Days</button>
-<button class="secondary-button small-button selected" data-range="month">Month</button>
-<button class="secondary-button small-button" data-range="year">Year</button>
-<button class="secondary-button small-button" data-range="all">All Time</button>
-<button class="secondary-button small-button" data-range="custom">Custom</button>
+<div id="analyticsRangeScroller" style="width:100%;max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-x;margin-bottom:14px">
+<div class="analytics-controls" id="analyticsRangeButtons" style="display:flex;flex-flow:row nowrap;width:max-content;min-width:max-content;gap:8px;margin:0;padding:2px 2px 8px">
+<button class="secondary-button small-button" style="flex:none;white-space:nowrap" data-range="week">This Week</button>
+<button class="secondary-button small-button" style="flex:none;white-space:nowrap" data-range="last7">Last 7 Days</button>
+<button class="secondary-button small-button selected" style="flex:none;white-space:nowrap" data-range="month">Month</button>
+<button class="secondary-button small-button" style="flex:none;white-space:nowrap" data-range="year">Year</button>
+<button class="secondary-button small-button" style="flex:none;white-space:nowrap" data-range="all">All Time</button>
+<button class="secondary-button small-button" style="flex:none;white-space:nowrap" data-range="custom">Custom</button>
+</div>
 </div>
 <div class="analytics-month-wrap" id="analyticsMonthControls">
 <div class="month-stepper">
