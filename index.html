@@ -3252,6 +3252,44 @@ return data
 function preparationCarryForwardKey(month){
 return `bicycleBudgetCarryForwardV21:${householdId}:${dateOnly(month)}`;
 }
+function preparationDraftKey(month){
+return `bicycleBudgetDraftV35:${householdId}:${dateOnly(month)}`;
+}
+function readPreparationDraft(month){
+try{return JSON.parse(localStorage.getItem(preparationDraftKey(month))||"null")}catch{return null}
+}
+function writePreparationDraft(month){
+const draft={
+income:{},monthlyBill:{},weeklyBill:{},
+weeklyNeeds:document.getElementById("weeklyNeeds")?.value||"",
+weeklySavings:document.getElementById("weeklySavings")?.value||""
+};
+[["incomeList","income"],["monthlyBillList","monthlyBill"],["weeklyBillList","weeklyBill"]].forEach(([id,kind])=>{
+document.querySelectorAll(`#${id} .saved-row`).forEach(row=>{
+const name=row.querySelector(".saved-row-name")?.textContent||"";
+const amount=Math.abs(parseMoney(row.querySelector(".saved-row-amount")?.textContent||""));
+if(name)draft[kind][name]=amount;
+});
+});
+localStorage.setItem(preparationDraftKey(month),JSON.stringify(draft));
+}
+async function restorePreparationDraft(month){
+const draft=readPreparationDraft(month);
+if(!draft)return false;
+const updates=[];
+[["income_sources","income"],["bills","monthlyBill"],["weekly_bills","weeklyBill"]].forEach(([table,kind])=>{
+Object.entries(draft[kind]||{}).forEach(([name,amount])=>{
+updates.push(supabaseClient.from(table).update({amount:Number(amount)||0}).eq("household_id",householdId).eq("name",name));
+});
+});
+const results=await Promise.all(updates);
+const failed=results.find(x=>x.error);
+if(failed)throw failed.error;
+return true;
+}
+function clearPreparationDraft(month){
+localStorage.removeItem(preparationDraftKey(month));
+}
 async function replacePreparationTableWithNames(table,names){
 const {error:deleteError}=await supabaseClient
 .from(table)
@@ -3586,7 +3624,8 @@ return;
 closeMoneyEditor();
 await loadBudgetLists();
 updateBudgetCalculation();
-showToast("Saved");
+writePreparationDraft(preparationMonth());
+showToast("Draft saved");
 }
 async function deleteMoneyEditor(){
 if(!moneyEditorId)return;
@@ -3692,8 +3731,18 @@ document.getElementById("weeklyNeeds")
 bindMoneyInput(
 document.getElementById("weeklySavings")
 );
+["weeklyNeeds","weeklySavings"].forEach(id=>{
+const el=document.getElementById(id);
+el.addEventListener("change",()=>writePreparationDraft(preparationMonth()));
+});
 await initializePreparationListsFromPreviousBudget(month);
+await restorePreparationDraft(month);
 await loadBudgetLists();
+const draft=readPreparationDraft(month);
+if(draft){
+document.getElementById("weeklyNeeds").value=draft.weeklyNeeds||"";
+document.getElementById("weeklySavings").value=draft.weeklySavings||"";
+}
 await renderProfileAllocations(month);
 updateBudgetCalculation();
 }
@@ -4112,6 +4161,7 @@ await saveBudgetSnapshots(
 plan.id,
 month
 );
+clearPreparationDraft(month);
 showToast("Budget saved");
 if(dateOnly(month)===dateOnly(activeBudgetMonth())){
 await ensureCurrentWeekDeposits();
