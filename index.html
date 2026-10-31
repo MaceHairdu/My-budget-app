@@ -1798,6 +1798,11 @@ html, body {
     font-size:.82em!important;
   }
 }
+
+/* v37: isolate horizontal analytics scrolling from panel swipe navigation */
+#analyticsPanel #analyticsRangeScroller{overflow-x:auto!important;overflow-y:hidden!important;touch-action:pan-x!important;overscroll-behavior-x:contain!important;pointer-events:auto!important}
+#analyticsPanel #analyticsRangeButtons{display:flex!important;flex-wrap:nowrap!important;width:max-content!important;min-width:max-content!important;max-width:none!important;overflow:visible!important;touch-action:pan-x!important}
+#analyticsPanel #analyticsRangeButtons>button{flex:0 0 auto!important;white-space:nowrap!important}
 </style>
 </head>
 <body class="theme-cedar font-system">
@@ -1885,7 +1890,7 @@ Log Out
 <section class="panel workspace-panel" id="analyticsPanel">
 <div class="panel-inner">
 <h1 class="screen-title">Analytics</h1>
-<div id="analyticsRangeScroller" style="width:100%;max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-x;margin-bottom:14px">
+<div id="analyticsRangeScroller" style="position:relative;display:block;width:100%;max-width:100%;min-width:0;overflow-x:scroll;overflow-y:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-x;overscroll-behavior-x:contain;margin-bottom:14px">
 <div class="analytics-controls" id="analyticsRangeButtons" style="display:flex;flex-flow:row nowrap;width:max-content;min-width:max-content;gap:8px;margin:0;padding:2px 2px 8px">
 <button class="secondary-button small-button" style="flex:none;white-space:nowrap" data-range="week">This Week</button>
 <button class="secondary-button small-button" style="flex:none;white-space:nowrap" data-range="last7">Last 7 Days</button>
