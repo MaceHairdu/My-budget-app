@@ -1309,7 +1309,7 @@ body{padding-top:env(safe-area-inset-top)}
 /* Match Safari's top margin in the installed iOS Home Screen app. */
 @media(max-width:900px) and (display-mode:standalone){
   #mainWorkspace{
-    padding-top:max(78px, calc(env(safe-area-inset-top,0px) + 12px))!important;
+    padding-top:calc(env(safe-area-inset-top,0px) + 12px)!important;
   }
   .mobile-track,.workspace-panel{height:100%!important}
 }
