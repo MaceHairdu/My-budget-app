@@ -1,10 +1,7 @@
 name: Fix iOS viewport safe areas
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/fix-ios-top-blur.yml'
+  workflow_dispatch:
 
 permissions:
   contents: write
