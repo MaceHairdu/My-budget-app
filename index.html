@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta id="themeColorMeta" name="theme-color" content="#aebca5">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -1267,27 +1267,33 @@ body{padding-top:env(safe-area-inset-top)}
   font-size:.82em;
   font-weight:800;
 }
+/* Keep all app panels inside the currently visible iOS viewport.
+   100lvh extends under Safari's translucent browser chrome. */
 @media(max-width:900px){
   html,body,#mainWorkspace,.mobile-track{
-    height:100lvh!important;
-    min-height:100lvh!important;
+    height:100dvh!important;
+    min-height:100dvh!important;
   }
+  #mainWorkspace{
+    padding-top:calc(env(safe-area-inset-top,0px) + 12px)!important;
+    padding-bottom:calc(env(safe-area-inset-bottom,0px) + 12px)!important;
+  }
+  .mobile-track{height:100%!important}
   .workspace-panel{
-    height:calc(100lvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 6px)!important;
-    margin-top:calc(env(safe-area-inset-top,0px) + 4px)!important;
-    margin-bottom:2px!important;
+    height:100%!important;
+    margin-top:0!important;
+    margin-bottom:0!important;
   }
   .workspace-panel .panel-inner{
-    padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))!important;
+    padding-bottom:18px!important;
   }
   .home-panel .panel-inner{
-    padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))!important;
+    padding-bottom:10px!important;
   }
   .settings{
-    height:calc(100lvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))!important;
+    height:100%!important;
   }
 }
-
 
 /* v9 Home activity scrolling + weekly starting-balance history */
 .home-expenses{
