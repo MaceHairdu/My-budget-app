@@ -1309,9 +1309,18 @@ body{padding-top:env(safe-area-inset-top)}
 /* Match Safari's top margin in the installed iOS Home Screen app. */
 @media(max-width:900px) and (display-mode:standalone){
   #mainWorkspace{
+    height:100dvh!important;
     padding-top:calc(env(safe-area-inset-top,0px) + 12px)!important;
+    padding-bottom:calc(env(safe-area-inset-bottom,0px) + 12px)!important;
+    box-sizing:border-box!important;
   }
-  .mobile-track,.workspace-panel{height:100%!important}
+  .mobile-track{height:100%!important;min-height:0!important}
+  .workspace-panel{
+    height:100%!important;
+    min-height:0!important;
+    margin-top:0!important;
+    margin-bottom:0!important;
+  }
 }
 
 /* v9 Home activity scrolling + weekly starting-balance history */
