@@ -1306,6 +1306,14 @@ body{padding-top:env(safe-area-inset-top)}
   .workspace-panel{height:100%!important;margin-top:0!important;margin-bottom:0!important}
 }
 
+/* Match Safari's top margin in the installed iOS Home Screen app. */
+@media(max-width:900px) and (display-mode:standalone){
+  #mainWorkspace{
+    padding-top:max(78px, calc(env(safe-area-inset-top,0px) + 12px))!important;
+  }
+  .mobile-track,.workspace-panel{height:100%!important}
+}
+
 /* v9 Home activity scrolling + weekly starting-balance history */
 .home-expenses{
   flex:1 1 auto!important;
@@ -2554,8 +2562,13 @@ const input=document.createElement("input");
 input.className="pin-box";
 input.type="password";
 input.inputMode="numeric";
+input.pattern="[0-9]*";
 input.maxLength=1;
 input.autocomplete="off";
+input.setAttribute("autocorrect","off");
+input.setAttribute("autocapitalize","off");
+input.setAttribute("spellcheck","false");
+input.setAttribute("data-1p-ignore","true");
 input.addEventListener(
 "input",
 ()=>{
