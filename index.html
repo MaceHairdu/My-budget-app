@@ -1295,6 +1295,17 @@ body{padding-top:env(safe-area-inset-top)}
   }
 }
 
+/* Safari browser only: reserve space for the translucent top browser chrome.
+   Installed Home Screen mode keeps its existing layout. */
+@media(max-width:900px) and (display-mode:browser){
+  #mainWorkspace{
+    padding-top:max(78px, calc(env(safe-area-inset-top,0px) + 12px))!important;
+    padding-bottom:max(105px, calc(env(safe-area-inset-bottom,0px) + 12px))!important;
+  }
+  .mobile-track{height:100%!important}
+  .workspace-panel{height:100%!important;margin-top:0!important;margin-bottom:0!important}
+}
+
 /* v9 Home activity scrolling + weekly starting-balance history */
 .home-expenses{
   flex:1 1 auto!important;
