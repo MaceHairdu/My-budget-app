@@ -1804,10 +1804,31 @@ html, body {
 #analyticsPanel #analyticsRangeButtons{display:flex!important;flex-wrap:nowrap!important;width:max-content!important;min-width:max-content!important;max-width:none!important;overflow:visible!important;touch-action:pan-x!important}
 #analyticsPanel #analyticsRangeButtons>button{flex:0 0 auto!important;white-space:nowrap!important}
 
-/* Remove iOS top-edge haze from workspace panels. */
+/* iOS: keep the scrolling content below an opaque, non-scrolling panel cap.
+   The cap masks the native scroll-edge compositing zone without blocking taps
+   or changing any application state. */
 @media(max-width:900px){
-.workspace-panel{background:var(--panel)!important;filter:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
-.workspace-panel .panel-inner{background:var(--panel)!important;filter:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  .workspace-panel{
+    position:relative!important;
+    isolation:isolate;
+    background:var(--panel)!important;
+  }
+  .workspace-panel .panel-inner{
+    background:var(--panel)!important;
+    overscroll-behavior-y:none!important;
+  }
+  .workspace-panel::after{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:24px;
+    background:var(--panel);
+    border-radius:17px 17px 0 0;
+    pointer-events:none;
+    z-index:2;
+  }
 }
 </style>
 </head>
