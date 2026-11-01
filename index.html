@@ -3553,7 +3553,7 @@ document.createElement("div");
 row.className="saved-row";
 row.dataset.itemId=item.id;
 const amountValue=Math.abs(Number(item.amount)||0);
-const amountText=amountValue===0?"$____":`${negative?"-":""}${money(amountValue)}`;
+const amountText=amountValue===0?"$0.00":`${negative?"-":""}${money(amountValue)}`;
 row.innerHTML=`<div class="saved-row-main"><div class="saved-row-name">${escapeHtml(item.name)}</div></div><div class="saved-row-amount">${amountText}</div>`;
 row.onclick=()=>openMoneyEditor(kind,item);
 box.appendChild(row);
